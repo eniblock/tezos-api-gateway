@@ -1,0 +1,23 @@
+kube-prometheus-stack:
+  alertmanager.enabled: false
+prometheus:
+  prometheusSpec:
+    scrapeInterval: 5s
+    evaluationInterval: 15s
+    retention: 30d
+    additionalAlertManagerConfigs:
+    - scheme: https
+      basic_auth:
+        username: "ALERT_MANAGER_USER"
+        password: "ALERT_MANAGER_PASSWORD"
+      static_configs:
+        - targets:
+          - monitoring.bxdev.tech
+    externalLabels:
+      app: "APPLICATION"
+      env: "ENVIRONMENT"
+grafana:
+  grafana.ini:
+    server:
+      root_url: http://localhost/grafana
+      serve_from_sub_path: true
