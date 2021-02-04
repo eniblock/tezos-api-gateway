@@ -48,14 +48,17 @@ spec:
             - name: http
               containerPort: 3333
               protocol: TCP
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: 3333
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: 3333
+            - name: prometheus
+              containerPort: 9464
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 9464
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 9464
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
