@@ -7,7 +7,7 @@ replicaCount: 1
 image:
   # the registry to pull the image. Should end with a '/' if not empty.
   registry: ""
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
