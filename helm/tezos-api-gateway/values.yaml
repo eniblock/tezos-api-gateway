@@ -67,10 +67,13 @@ tolerations: []
 affinity: {}
 
 
-postgresql:
+db:
   postgresqlDatabase: tezos_api_gateway
   postgresqlPassword: randompwd
   postgresqlUsername: tezos-service
+  persistence:
+    enabled: true
+    size: 1Gi
 
 rabbitmq:
   auth:
