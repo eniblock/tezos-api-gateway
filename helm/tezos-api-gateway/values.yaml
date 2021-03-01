@@ -74,6 +74,8 @@ db:
   persistence:
     enabled: true
     size: 1Gi
+  image:
+    tag: 12.6.0-debian-10-r14
 
 rabbitmq:
   auth:
