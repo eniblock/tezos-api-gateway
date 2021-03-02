@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   # the registry to pull the image. Should end with a '/' if not empty.
-  registry: ""
+  registry: "k3d-registry.localhost:5000/"
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
