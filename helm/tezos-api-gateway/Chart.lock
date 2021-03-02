@@ -1,9 +1,15 @@
 dependencies:
+- name: tezos-api-gateway-api
+  repository: ""
+  version: 0.1.0
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
   version: 10.2.5
 - name: rabbitmq
   repository: https://charts.bitnami.com/bitnami
   version: 8.8.0
-digest: sha256:7ed9c76b49e310ea8a542f5c14bbd73023e718db3d729c56e032976b581b064a
-generated: "2021-01-28T14:12:09.821974607+01:00"
+- name: vault
+  repository: https://helm.releases.hashicorp.com
+  version: 0.9.1
+digest: sha256:e331ff50366e283437edf0e7a92e51cef19e4938c33c34d1cc9b6677bff9a6c7
+generated: "2021-03-02T19:22:09.762902505+01:00"
