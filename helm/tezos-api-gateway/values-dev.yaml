@@ -1,0 +1,2 @@
+image:
+  registry: "k3d-registry.localhost:5000/"

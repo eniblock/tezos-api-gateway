@@ -1,13 +1,5 @@
-import { NodeTracerProvider } from "@opentelemetry/node";
 import {PrometheusExporter} from "@opentelemetry/exporter-prometheus";
 import {MeterProvider} from "@opentelemetry/metrics";
-import { ConsoleSpanExporter, SimpleSpanProcessor } from '@opentelemetry/tracing';
-
-const provider = new NodeTracerProvider();
-const consoleExporter = new ConsoleSpanExporter();
-const spanProcessor = new SimpleSpanProcessor(consoleExporter);
-provider.addSpanProcessor(spanProcessor);
-provider.register();
 
 // Add your port and startServer to the Prometheus options
 const options = {port: 9464, startServer: true};
