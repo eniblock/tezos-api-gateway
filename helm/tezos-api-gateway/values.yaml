@@ -22,3 +22,15 @@ tezos-api-gateway-api:
   rabbitmq:
     auth:
       password: randompwd
+
+tezos-api-gateway-check-operation-status-worker:
+  numberOfOperationConfirmation: 1
+
+  postgresql:
+    postgresqlDatabase: tezos_api_gateway
+    postgresqlPassword: randompwd
+    postgresqlUsername: tezos-service
+
+  rabbitmq:
+    auth:
+      password: randompwd

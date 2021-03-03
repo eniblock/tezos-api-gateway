@@ -1,0 +1,79 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "tezos-api-gateway-check-operation-status-worker.fullname" . }}
+  labels:
+    {{- include "tezos-api-gateway-check-operation-status-worker.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "tezos-api-gateway-check-operation-status-worker.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "tezos-api-gateway-check-operation-status-worker.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "tezos-api-gateway-check-operation-status-worker.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["node", "build/src/processes/workers/check-operation-status/index.js"]
+          env:
+            - name: DB_USERNAME
+              value: {{ .Values.postgresql.postgresqlUsername | quote }}
+            - name: DB_NAME
+              value: {{ .Values.postgresql.postgresqlDatabase | quote }}
+            - name: DB_PWD
+              value: {{ .Values.postgresql.postgresqlPassword | quote }}
+            - name: DB_HOST
+              value: "{{ .Release.Name }}-postgresql"
+            - name: AMQP_URL
+              value: "amqp://user:{{ .Values.rabbitmq.auth.password }}@{{ .Release.Name }}-rabbitmq"
+            - name: VAULT_URL
+              value: "http://{{ .Release.Name }}-vault:8200/v1/"
+            - name: VAULT_TOKEN
+              value: {{ .Values.vault.server.dev.devRootToken | quote }}
+            - name: NUMBER_OF_OPERATION_CONFIRMATION
+              value: {{ .Values.numberOfOperationConfirmation | quote }}
+          ports:
+            - name: prometheus
+              containerPort: 9464
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: 9464
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: 9464
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
