@@ -1,3 +1,13 @@
+vault:
+  server:
+    dev:
+      enabled: true
+      devRootToken: myroot
+
 tezos-api-gateway-api:
   image:
     repository: "k3d-registry.localhost:5000/tezos-api-gateway"
+  vault:
+    server:
+      dev:
+        devRootToken: myroot

@@ -12,3 +12,13 @@ rabbitmq:
   auth:
     password: randompwd
     erlangCookie: 94155874a93041aca19378c9a4ee28ac
+
+tezos-api-gateway-api:
+  postgresql:
+    postgresqlDatabase: tezos_api_gateway
+    postgresqlPassword: randompwd
+    postgresqlUsername: tezos-service
+
+  rabbitmq:
+    auth:
+      password: randompwd

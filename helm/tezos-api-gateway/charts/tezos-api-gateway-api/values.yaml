@@ -82,13 +82,14 @@ postgresql:
   postgresqlDatabase: tezos_api_gateway
   postgresqlPassword: randompwd
   postgresqlUsername: tezos-service
-  persistence:
-    enabled: true
-    size: 1Gi
-  image:
-    tag: 12.6.0-debian-10-r14
 
 rabbitmq:
   auth:
     password: randompwd
     erlangCookie: 94155874a93041aca19378c9a4ee28ac
+
+vault:
+  server:
+    dev:
+      enabled: true
+      devRootToken: myroot
