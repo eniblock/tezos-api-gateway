@@ -7,7 +7,7 @@ import {PrometheusExporter} from "@opentelemetry/exporter-prometheus";
 import {MeterProvider} from "@opentelemetry/metrics";
 
 // Add your port and startServer to the Prometheus options
-const options = {port: 9464, startServer: true};
+const options = {port: 9465, startServer: true};
 const exporter = new PrometheusExporter(options);
 
 // Register the exporter

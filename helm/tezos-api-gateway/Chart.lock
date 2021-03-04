@@ -5,6 +5,9 @@ dependencies:
 - name: tezos-api-gateway-check-operation-status-worker
   repository: ""
   version: 0.1.0
+- name: tezos-api-gateway-send-transactions-worker
+  repository: ""
+  version: 0.1.0
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
   version: 10.2.5
@@ -14,5 +17,5 @@ dependencies:
 - name: vault
   repository: https://helm.releases.hashicorp.com
   version: 0.9.1
-digest: sha256:4c06756bfeb7892862329a2dad1a1ba9c7bc5f49e978ecde6fd80bd8e282d5cb
-generated: "2021-03-03T18:17:43.106869009+01:00"
+digest: sha256:c38a2f28618630db66f515db4f5a0648febd851c1e1d90a45ad7747cc3bbe944
+generated: "2021-03-04T13:44:13.486237287+01:00"

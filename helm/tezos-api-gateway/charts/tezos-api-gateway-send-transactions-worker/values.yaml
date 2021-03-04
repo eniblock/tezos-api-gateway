@@ -1,4 +1,4 @@
-# Default values for tezos-api-gateway-check-operation-status-worker.
+# Default values for tezos-api-gateway-send-transactions-worker.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -26,7 +26,7 @@ serviceAccount:
 podAnnotations: {}
 
 podSecurityContext: {}
-# fsGroup: 2000
+  # fsGroup: 2000
 
 securityContext: {}
   # capabilities:
@@ -34,19 +34,19 @@ securityContext: {}
   #   - ALL
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
-# runAsUser: 1000
+  # runAsUser: 1000
 
 service:
   type: ClusterIP
-  port: 9464
+  port: 9466
 
 ingress:
   enabled: false
   annotations: {}
     # kubernetes.io/ingress.class: nginx
-  # kubernetes.io/tls-acme: "true"
+    # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: tezos-api-gateway.local
+    - host: chart-example.local
       paths: []
   tls: []
   #  - secretName: chart-example-tls
@@ -63,7 +63,7 @@ resources: {}
   #   memory: 128Mi
   # requests:
   #   cpu: 100m
-#   memory: 128Mi
+  #   memory: 128Mi
 
 autoscaling:
   enabled: false
@@ -82,51 +82,15 @@ postgresql:
   postgresqlDatabase: tezos_api_gateway
   postgresqlPassword: randompwd
   postgresqlUsername: tezos-service
-  persistence:
-    enabled: true
-    size: 1Gi
-  image:
-    tag: 12.6.0-debian-10-r14
 
 rabbitmq:
-  service:
-    type: LoadBalancer
-  ingress:
-    enabled: true
   auth:
     password: randompwd
     erlangCookie: 94155874a93041aca19378c9a4ee28ac
 
-tezos-api-gateway-api:
-  postgresql:
-    postgresqlDatabase: tezos_api_gateway
-    postgresqlPassword: randompwd
-    postgresqlUsername: tezos-service
+vault:
+  server:
+    dev:
+      enabled: true
+      devRootToken: myroot
 
-  rabbitmq:
-    auth:
-      password: randompwd
-
-tezos-api-gateway-check-operation-status-worker:
-  numberOfOperationConfirmation: 1
-
-  postgresql:
-    postgresqlDatabase: tezos_api_gateway
-    postgresqlPassword: randompwd
-    postgresqlUsername: tezos-service
-
-  rabbitmq:
-    auth:
-      password: randompwd
-
-tezos-api-gateway-send-transactions-worker:
-  numberOfOperationConfirmation: 1
-
-  postgresql:
-    postgresqlDatabase: tezos_api_gateway
-    postgresqlPassword: randompwd
-    postgresqlUsername: tezos-service
-
-  rabbitmq:
-    auth:
-      password: randompwd

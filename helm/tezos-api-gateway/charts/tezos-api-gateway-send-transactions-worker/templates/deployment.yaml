@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "tezos-api-gateway-check-operation-status-worker.fullname" . }}
+  name: {{ include "tezos-api-gateway-send-transactions-worker.fullname" . }}
   labels:
-    {{- include "tezos-api-gateway-check-operation-status-worker.labels" . | nindent 4 }}
+    {{- include "tezos-api-gateway-send-transactions-worker.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "tezos-api-gateway-check-operation-status-worker.selectorLabels" . | nindent 6 }}
+      {{- include "tezos-api-gateway-send-transactions-worker.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,13 +18,13 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "tezos-api-gateway-check-operation-status-worker.selectorLabels" . | nindent 8 }}
+        {{- include "tezos-api-gateway-send-transactions-worker.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "tezos-api-gateway-check-operation-status-worker.serviceAccountName" . }}
+      serviceAccountName: {{ include "tezos-api-gateway-send-transactions-worker.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -33,7 +33,7 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["node", "build/src/processes/workers/check-operation-status/index.js"]
+          command: ["node", "build/src/processes/workers/send-transactions/index.js"]
           env:
             - name: DB_USERNAME
               value: {{ .Values.postgresql.postgresqlUsername | quote }}
@@ -53,16 +53,16 @@ spec:
               value: {{ .Values.numberOfOperationConfirmation | quote }}
           ports:
             - name: prometheus
-              containerPort: 9465
+              containerPort: 9466
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /metrics
-              port: 9465
+              port: 9466
           readinessProbe:
             httpGet:
               path: /metrics
-              port: 9465
+              port: 9466
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
