@@ -40,9 +40,12 @@ spec:
             - name: DB_NAME
               value: {{ .Values.postgresql.postgresqlDatabase | quote }}
             - name: DB_PWD
-              value: {{ .Values.postgresql.postgresqlPassword | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-{{ .Values.postgresql.name }}"
+                  key: postgresql-password
             - name: DB_HOST
-              value: "{{ .Release.Name }}-postgresql"
+              value: "{{ .Release.Name }}-{{ .Values.postgresql.name }}"
             - name: AMQP_URL
               value: "amqp://user:{{ .Values.rabbitmq.auth.password }}@{{ .Release.Name }}-rabbitmq"
             - name: VAULT_URL

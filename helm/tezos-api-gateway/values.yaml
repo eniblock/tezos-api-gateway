@@ -78,7 +78,7 @@ tolerations: []
 
 affinity: {}
 
-postgresql:
+db:
   postgresqlDatabase: tezos_api_gateway
   postgresqlPassword: randompwd
   postgresqlUsername: tezos-service
@@ -98,7 +98,10 @@ rabbitmq:
     erlangCookie: 94155874a93041aca19378c9a4ee28ac
 
 tezos-api-gateway-api:
+  numberOfOperationConfirmation: 1
+
   postgresql:
+    name: db
     postgresqlDatabase: tezos_api_gateway
     postgresqlPassword: randompwd
     postgresqlUsername: tezos-service
@@ -111,6 +114,7 @@ tezos-api-gateway-check-operation-status-worker:
   numberOfOperationConfirmation: 1
 
   postgresql:
+    name: db
     postgresqlDatabase: tezos_api_gateway
     postgresqlPassword: randompwd
     postgresqlUsername: tezos-service
@@ -123,6 +127,7 @@ tezos-api-gateway-send-transactions-worker:
   numberOfOperationConfirmation: 1
 
   postgresql:
+    name: db
     postgresqlDatabase: tezos_api_gateway
     postgresqlPassword: randompwd
     postgresqlUsername: tezos-service

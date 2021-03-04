@@ -30,6 +30,7 @@ dependencies:
   - name: tezos-api-gateway-send-transactions-worker
     version: "0.1.0"
   - name: postgresql
+    alias: db
     version: "10.2.5"
     repository: "https://charts.bitnami.com/bitnami"
   - name: rabbitmq
