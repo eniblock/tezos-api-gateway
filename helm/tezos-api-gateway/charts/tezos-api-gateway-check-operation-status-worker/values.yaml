@@ -81,16 +81,19 @@ affinity: {}
 numberOfOperationConfirmation: 1
 
 postgresql:
+  name: db
   postgresqlDatabase: tezos_api_gateway
   postgresqlPassword: randompwd
   postgresqlUsername: tezos-service
 
 rabbitmq:
+  name: rabbitmq
   auth:
     password: randompwd
     erlangCookie: 94155874a93041aca19378c9a4ee28ac
 
 vault:
+  name: vault
   server:
     dev:
       enabled: true
