@@ -45,10 +45,15 @@ spec:
                   key: postgresql-password
             - name: DB_HOST
               value: "{{ .Release.Name }}-{{ .Values.postgresql.name }}"
+            - name: AMQP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-{{ .Values.rabbitmq.name }}"
+                  key: rabbitmq-password
             - name: AMQP_URL
-              value: "amqp://user:{{ .Values.rabbitmq.auth.password }}@{{ .Release.Name }}-rabbitmq"
+              value: "amqp://user:$(AMQP_PASSWORD)@{{ .Release.Name }}-{{ .Values.rabbitmq.name }}"
             - name: VAULT_URL
-              value: "http://{{ .Release.Name }}-vault:8200/v1/"
+              value: "http://{{ .Release.Name }}-{{ .Values.vault.name }}:{{ .Values.vault.port }}/v1/"
             - name: VAULT_TOKEN
               value: {{ .Values.vault.server.dev.devRootToken | quote }}
           ports:

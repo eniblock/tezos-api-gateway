@@ -107,8 +107,13 @@ tezos-api-gateway-api:
     postgresqlUsername: tezos-service
 
   rabbitmq:
+    name: rabbitmq
     auth:
       password: randompwd
+
+  vault:
+    name: vault
+    port: 8200
 
 tezos-api-gateway-check-operation-status-worker:
   numberOfOperationConfirmation: 1
@@ -120,8 +125,13 @@ tezos-api-gateway-check-operation-status-worker:
     postgresqlUsername: tezos-service
 
   rabbitmq:
+    name: rabbitmq
     auth:
       password: randompwd
+
+  vault:
+    name: vault
+    port: 8200
 
 tezos-api-gateway-send-transactions-worker:
   numberOfOperationConfirmation: 1
@@ -133,5 +143,10 @@ tezos-api-gateway-send-transactions-worker:
     postgresqlUsername: tezos-service
 
   rabbitmq:
+    name: rabbitmq
     auth:
       password: randompwd
+
+  vault:
+    name: vault
+    port: 8200
