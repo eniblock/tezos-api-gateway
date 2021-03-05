@@ -103,6 +103,9 @@ rabbitmq:
       existingSecretFullChain: true
     password: randompwd
     erlangCookie: 94155874a93041aca19378c9a4ee28ac
+  persistence:
+    enabled: true
+    size: 1Gi
 
 tezos-api-gateway-api:
   ingress:
