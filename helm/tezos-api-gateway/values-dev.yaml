@@ -17,6 +17,17 @@ vault:
 tezos-api-gateway-api:
   image:
     repository: "k3d-registry.localhost:5000/tezos-api-gateway"
+  ingress:
+    annotations:
+      cert-manager.io/common-name: tezos-api-gateway.localhost
+    hosts:
+      - host: tezos-api-gateway.localhost
+        paths:
+          - path: "/"
+    tls:
+      - secretName: tezos-api-gateway.localhost-tls
+        hosts:
+          - tezos-api-gateway.localhost
   vault:
     server:
       dev:
