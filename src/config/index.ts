@@ -87,7 +87,7 @@ export const nbOfConfirmation = parseInt(
   3,
   process.env.NUMBER_OF_OPERATION_CONFIRMATION,
 );
-console.log(nbOfConfirmation);
+
 export const nbOfRetry = parseInt(3, process.env.NUMBER_OF_INDEXERS_RETRY);
 
 export const vaultClientConfig = {
