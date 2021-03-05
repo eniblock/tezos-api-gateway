@@ -22,7 +22,7 @@ test:
   script:
     - npm test
 
-publish:
+publish-docker:
   stage: publish
   image: docker:stable
   services:
@@ -32,3 +32,15 @@ publish:
   script:
     - docker build --pull -t $CONTAINER_TEST_IMAGE .
     - docker push $CONTAINER_TEST_IMAGE
+
+publish-helm:
+  stage: publish
+  image:
+    name: alpine/helm:3.2.1
+    entrypoint: ["/bin/sh", "-c"]
+  variables:
+    HELM_EXPERIMENTAL_OCI: 1
+  script:
+    - helm registry login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - helm chart save helloworld $CONTAINER_TEST_IMAGE
+    - helm chart push $CONTAINER_TEST_IMAGE
