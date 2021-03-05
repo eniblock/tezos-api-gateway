@@ -42,5 +42,5 @@ publish-helm:
     HELM_EXPERIMENTAL_OCI: 1
   script:
     - helm registry login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - helm chart save helloworld $CONTAINER_TEST_IMAGE
+    - helm chart save ./helm/tezos-api-gateway $CONTAINER_TEST_IMAGE
     - helm chart push $CONTAINER_TEST_IMAGE
