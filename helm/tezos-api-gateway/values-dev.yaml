@@ -1,3 +1,13 @@
+rabbitmq:
+  ingress:
+    hostname: rabbitmq.tezos-api-gateway.localhost
+    annotations:
+      cert-manager.io/common-name: rabbitmq.tezos-api-gateway.localhost
+  auth:
+    tls:
+      existingSecret: rabbitmq.tezos-api-gateway.localhost-tls
+      sslOptionsVerify: verify_none
+
 vault:
   server:
     dev:

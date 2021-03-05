@@ -144,6 +144,17 @@ npm run prettier:write
 | TEZOS_NODE_EDONET_TEST      | https://api.tez.ie/rpc/edonet                            | A Tezos Node URL                                |
 | TEZOS_NODE_EDONET_TEST_URLS | https://api.tez.ie/rpc/edonet,https://edonet.smartpy.io/ | List of Tezos Node Urls, separated by comma `,` |
 
+## Kubernetes Installation
+
+### Cert manager
+```shell
+kubectl create namespace cert-manager
+helm repo add jetstack https://charts.jetstack.io
+
+helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.2.0 --create-namespace --set installCRDs=true
+```
+
+
 [1]: src/processes/web/README.md
 [2]: src/processes/generated-api-web/README.md
 [3]: src/processes/workers/injection/README.md
