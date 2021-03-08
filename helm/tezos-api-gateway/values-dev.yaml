@@ -1,3 +1,6 @@
+image:
+  repository: "k3d-registry.localhost:5000/tezos-api-gateway"
+
 rabbitmq:
   ingress:
     hostname: rabbitmq.tezos-api-gateway.localhost
@@ -14,9 +17,7 @@ vault:
       enabled: true
       devRootToken: myroot
 
-tezos-api-gateway-api:
-  image:
-    repository: "k3d-registry.localhost:5000/tezos-api-gateway"
+api:
   ingress:
     annotations:
       cert-manager.io/common-name: tezos-api-gateway.localhost
@@ -28,22 +29,19 @@ tezos-api-gateway-api:
       - secretName: tezos-api-gateway.localhost-tls
         hosts:
           - tezos-api-gateway.localhost
+
   vault:
     server:
       dev:
         devRootToken: myroot
 
-tezos-api-gateway-check-operation-status-worker:
-  image:
-    repository: "k3d-registry.localhost:5000/tezos-api-gateway"
+checkOperationStatusWorker:
   vault:
     server:
       dev:
         devRootToken: myroot
 
-tezos-api-gateway-send-transactions-worker:
-  image:
-    repository: "k3d-registry.localhost:5000/tezos-api-gateway"
+sendTransactionsWorker:
   vault:
     server:
       dev:

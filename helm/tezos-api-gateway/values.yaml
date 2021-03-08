@@ -1,9 +1,3 @@
-# Default values for tezos-api-gateway-check-operation-status-worker.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
-replicaCount: 1
-
 image:
   repository: "k3d-registry.localhost:5000/tezos-api-gateway"
   pullPolicy: Always
@@ -14,100 +8,35 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-serviceAccount:
-  # Specifies whether a service account should be created
-  create: true
-  # Annotations to add to the service account
-  annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
+api:
+  replicaCount: 1
 
-podAnnotations: {}
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: ""
 
-podSecurityContext: {}
-# fsGroup: 2000
+  podAnnotations: {}
 
-securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-# runAsUser: 1000
+  podSecurityContext: {}
+  # fsGroup: 2000
 
-service:
-  type: ClusterIP
-  port: 9464
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+  # runAsUser: 1000
 
-ingress:
-  enabled: false
-  annotations: {}
-    # kubernetes.io/ingress.class: nginx
-  # kubernetes.io/tls-acme: "true"
-  hosts:
-    - host: tezos-api-gateway.localhost
-      paths: []
-  tls: []
-  #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
-
-resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-#   memory: 128Mi
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
-
-nodeSelector: {}
-
-tolerations: []
-
-affinity: {}
-
-db:
-  postgresqlDatabase: tezos_api_gateway
-  postgresqlPassword: randompwd
-  postgresqlUsername: tezos-service
-  persistence:
-    enabled: true
-    size: 1Gi
-  image:
-    tag: 12.6.0-debian-10-r14
-
-rabbitmq:
   service:
-    type: LoadBalancer
-  ingress:
-    enabled: true
-    certManager: true
-    tls: true
-    annotations:
-      cert-manager.io/cluster-issuer: tezos-api-gateway
-  auth:
-    tls:
-      enabled: true
-      existingSecretFullChain: true
-    password: randompwd
-    erlangCookie: 94155874a93041aca19378c9a4ee28ac
-  persistence:
-    enabled: true
-    size: 1Gi
+    type: ClusterIP
+    port: 3333
 
-tezos-api-gateway-api:
   ingress:
     enabled: true
     certManager: true
@@ -125,6 +54,31 @@ tezos-api-gateway-api:
         hosts:
           - tezos-api-gateway.localhost
 
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+  #   memory: 128Mi
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
   numberOfOperationConfirmation: 1
 
   postgresql:
@@ -142,7 +96,63 @@ tezos-api-gateway-api:
     name: vault
     port: 8200
 
-tezos-api-gateway-check-operation-status-worker:
+checkOperationStatusWorker:
+  replicaCount: 1
+
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: ""
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+  # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+  service:
+    type: ClusterIP
+    port: 9465
+
+  ingress:
+    enabled: false
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
   numberOfOperationConfirmation: 1
 
   postgresql:
@@ -160,7 +170,63 @@ tezos-api-gateway-check-operation-status-worker:
     name: vault
     port: 8200
 
-tezos-api-gateway-send-transactions-worker:
+sendTransactionsWorker:
+  replicaCount: 1
+
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: ""
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+  # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+  service:
+    type: ClusterIP
+    port: 9466
+
+  ingress:
+    enabled: false
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
   numberOfOperationConfirmation: 1
 
   postgresql:
@@ -177,3 +243,33 @@ tezos-api-gateway-send-transactions-worker:
   vault:
     name: vault
     port: 8200
+
+db:
+  postgresqlDatabase: tezos_api_gateway
+  postgresqlPassword: randompwd
+  postgresqlUsername: tezos-service
+  persistence:
+    enabled: true
+    size: 1Gi
+  image:
+    tag: 12.6.0-debian-10-r14
+
+rabbitmq:
+  name: rabbitmq
+  service:
+    type: LoadBalancer
+  ingress:
+    enabled: true
+    certManager: true
+    tls: true
+    annotations:
+      cert-manager.io/cluster-issuer: tezos-api-gateway
+  auth:
+    tls:
+      enabled: true
+      existingSecretFullChain: true
+    password: randompwd
+    erlangCookie: 94155874a93041aca19378c9a4ee28ac
+  persistence:
+    enabled: true
+    size: 1Gi

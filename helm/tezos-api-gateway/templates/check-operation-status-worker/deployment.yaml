@@ -1,0 +1,85 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "tezos-api-gateway.fullname" . }}-check-operation-status-worker
+  labels:
+    {{- include "tezos-api-gateway.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.checkOperationStatusWorker.autoscaling.enabled }}
+  replicas: {{ .Values.checkOperationStatusWorker.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "tezos-api-gateway.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.checkOperationStatusWorker.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "tezos-api-gateway.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: tezos-api-gateway-check-operation-status-worker
+      securityContext:
+        {{- toYaml .Values.checkOperationStatusWorker.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.checkOperationStatusWorker.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["node", "build/src/processes/workers/check-operation-status/index.js"]
+          env:
+            - name: DB_USERNAME
+              value: {{ .Values.checkOperationStatusWorker.postgresql.postgresqlUsername | quote }}
+            - name: DB_NAME
+              value: {{ .Values.checkOperationStatusWorker.postgresql.postgresqlDatabase | quote }}
+            - name: DB_PWD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-{{ .Values.checkOperationStatusWorker.postgresql.name }}"
+                  key: postgresql-password
+            - name: DB_HOST
+              value: "{{ .Release.Name }}-{{ .Values.checkOperationStatusWorker.postgresql.name }}"
+            - name: AMQP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-{{ .Values.checkOperationStatusWorker.rabbitmq.name }}"
+                  key: rabbitmq-password
+            - name: AMQP_URL
+              value: "amqp://user:$(AMQP_PASSWORD)@{{ .Release.Name }}-{{ .Values.checkOperationStatusWorker.rabbitmq.name }}"
+            - name: VAULT_URL
+              value: "http://{{ .Release.Name }}-{{ .Values.checkOperationStatusWorker.vault.name }}:{{ .Values.checkOperationStatusWorker.vault.port }}/v1/"
+            - name: VAULT_TOKEN
+              value: {{ .Values.checkOperationStatusWorker.vault.server.dev.devRootToken | quote }}
+          ports:
+            - name: prometheus
+              containerPort: 9465
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: prometheus
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: prometheus
+          resources:
+            {{- toYaml .Values.checkOperationStatusWorker.resources | nindent 12 }}
+      {{- with .Values.checkOperationStatusWorker.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.checkOperationStatusWorker.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.checkOperationStatusWorker.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

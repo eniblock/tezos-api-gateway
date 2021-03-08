@@ -1,61 +1,61 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "tezos-api-gateway-api.fullname" . }}
+  name: {{ include "tezos-api-gateway.fullname" . }}-api
   labels:
-    {{- include "tezos-api-gateway-api.labels" . | nindent 4 }}
+    {{- include "tezos-api-gateway.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
+  {{- if not .Values.api.autoscaling.enabled }}
+  replicas: {{ .Values.api.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "tezos-api-gateway-api.selectorLabels" . | nindent 6 }}
+      {{- include "tezos-api-gateway.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
+      {{- with .Values.api.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "tezos-api-gateway-api.selectorLabels" . | nindent 8 }}
+        {{- include "tezos-api-gateway.selectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "tezos-api-gateway-api.serviceAccountName" . }}
+      serviceAccountName: tezos-api-gateway-api
       securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+        {{- toYaml .Values.api.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
+            {{- toYaml .Values.api.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: DB_USERNAME
-              value: {{ .Values.postgresql.postgresqlUsername | quote }}
+              value: {{ .Values.api.postgresql.postgresqlUsername | quote }}
             - name: DB_NAME
-              value: {{ .Values.postgresql.postgresqlDatabase | quote }}
+              value: {{ .Values.api.postgresql.postgresqlDatabase | quote }}
             - name: DB_PWD
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Release.Name }}-{{ .Values.postgresql.name }}"
+                  name: "{{ .Release.Name }}-{{ .Values.api.postgresql.name }}"
                   key: postgresql-password
             - name: DB_HOST
-              value: "{{ .Release.Name }}-{{ .Values.postgresql.name }}"
+              value: "{{ .Release.Name }}-{{ .Values.api.postgresql.name }}"
             - name: AMQP_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Release.Name }}-{{ .Values.rabbitmq.name }}"
+                  name: "{{ .Release.Name }}-{{ .Values.api.rabbitmq.name }}"
                   key: rabbitmq-password
             - name: AMQP_URL
-              value: "amqp://user:$(AMQP_PASSWORD)@{{ .Release.Name }}-{{ .Values.rabbitmq.name }}"
+              value: "amqp://user:$(AMQP_PASSWORD)@{{ .Release.Name }}-{{ .Values.api.rabbitmq.name }}"
             - name: VAULT_URL
-              value: "http://{{ .Release.Name }}-{{ .Values.vault.name }}:{{ .Values.vault.port }}/v1/"
+              value: "http://{{ .Release.Name }}-{{ .Values.api.vault.name }}:{{ .Values.api.vault.port }}/v1/"
             - name: VAULT_TOKEN
-              value: {{ .Values.vault.server.dev.devRootToken | quote }}
+              value: {{ .Values.api.vault.server.dev.devRootToken | quote }}
           ports:
             - name: http
               containerPort: 3333
@@ -66,22 +66,22 @@ spec:
           livenessProbe:
             httpGet:
               path: /metrics
-              port: 9464
+              port: prometheus
           readinessProbe:
             httpGet:
               path: /metrics
-              port: 9464
+              port: prometheus
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
+            {{- toYaml .Values.api.resources | nindent 12 }}
+      {{- with .Values.api.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.affinity }}
+      {{- with .Values.api.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.tolerations }}
+      {{- with .Values.api.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}

@@ -1,6 +1,6 @@
-{{- if .Values.ingress.enabled -}}
-{{- $fullName := include "tezos-api-gateway-api.fullname" . -}}
-{{- $svcPort := .Values.service.port -}}
+{{- if .Values.sendTransactionsWorker.ingress.enabled -}}
+{{- $fullName := include "tezos-api-gateway.fullname" . -}}
+{{- $svcPort := .Values.sendTransactionsWorker.service.port -}}
 {{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1beta1
 {{- else -}}
@@ -10,15 +10,15 @@ kind: Ingress
 metadata:
   name: {{ $fullName }}
   labels:
-    {{- include "tezos-api-gateway-api.labels" . | nindent 4 }}
-  {{- with .Values.ingress.annotations }}
+    {{- include "tezos-api-gateway.labels" . | nindent 4 }}
+  {{- with .Values.sendTransactionsWorker.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if .Values.ingress.tls }}
+  {{- if .Values.sendTransactionsWorker.ingress.tls }}
   tls:
-    {{- range .Values.ingress.tls }}
+    {{- range .Values.sendTransactionsWorker.ingress.tls }}
     - hosts:
         {{- range .hosts }}
         - {{ . | quote }}
@@ -27,7 +27,7 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    {{- range .Values.ingress.hosts }}
+    {{- range .Values.sendTransactionsWorker.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
