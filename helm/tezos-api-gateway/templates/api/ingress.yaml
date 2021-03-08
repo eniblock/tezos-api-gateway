@@ -1,5 +1,5 @@
 {{- if .Values.api.ingress.enabled -}}
-{{- $fullName := include "tezos-api-gateway.fullname" . -}}
+{{- $fullName := include "tezos-api-gateway.fullname" . -}}-api
 {{- $svcPort := .Values.api.service.port -}}
 {{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1beta1

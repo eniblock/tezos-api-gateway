@@ -40,7 +40,7 @@ publish-helm:
     entrypoint: ["/bin/sh", "-c"]
   variables:
     HELM_EXPERIMENTAL_OCI: 1
-    HELM_IMAGE: $CI_REGISTRY_IMAGE/helm:$CI_COMMIT_REF_SLUG
+    HELM_IMAGE: $CI_REGISTRY_IMAGE/helm/tezos-api-gateway:0.1.0
   script:
     - helm registry login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - helm chart save ./helm/tezos-api-gateway $HELM_IMAGE
