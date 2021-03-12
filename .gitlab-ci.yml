@@ -43,5 +43,6 @@ publish_helm:
     HELM_IMAGE: $CI_REGISTRY_IMAGE/helm/tezos-api-gateway:0.1.0
   script:
     - helm registry login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - helm dependency update ./helm/tezos-api-gateway
     - helm chart save ./helm/tezos-api-gateway $HELM_IMAGE
     - helm chart push $HELM_IMAGE
