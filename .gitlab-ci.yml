@@ -22,7 +22,7 @@ test:
   script:
     - npm test
 
-publish-docker:
+publish_docker:
   stage: publish
   image: docker:stable
   services:
@@ -33,7 +33,7 @@ publish-docker:
     - docker build --pull -t $CONTAINER_TEST_IMAGE .
     - docker push $CONTAINER_TEST_IMAGE
 
-publish-helm:
+publish_helm:
   stage: publish
   image:
     name: alpine/helm:3.5.2
