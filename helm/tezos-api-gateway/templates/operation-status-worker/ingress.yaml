@@ -1,6 +1,6 @@
-{{- if .Values.checkOperationStatusWorker.ingress.enabled -}}
+{{- if .Values.operationStatusWorker.ingress.enabled -}}
 {{- $fullName := include "tezos-api-gateway.fullname" . -}}
-{{- $svcPort := .Values.checkOperationStatusWorker.service.port -}}
+{{- $svcPort := .Values.operationStatusWorker.service.port -}}
 {{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
 apiVersion: networking.k8s.io/v1beta1
 {{- else -}}
@@ -8,17 +8,17 @@ apiVersion: extensions/v1beta1
 {{- end }}
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
+  name: {{ $fullName }}-operation-status-worker
   labels:
     {{- include "tezos-api-gateway.labels" . | nindent 4 }}
-  {{- with .Values.checkOperationStatusWorker.ingress.annotations }}
+  {{- with .Values.operationStatusWorker.ingress.annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if .Values.checkOperationStatusWorker.ingress.tls }}
+  {{- if .Values.operationStatusWorker.ingress.tls }}
   tls:
-    {{- range .Values.checkOperationStatusWorker.ingress.tls }}
+    {{- range .Values.operationStatusWorker.ingress.tls }}
     - hosts:
         {{- range .hosts }}
         - {{ . | quote }}
@@ -27,14 +27,14 @@ spec:
     {{- end }}
   {{- end }}
   rules:
-    {{- range .Values.checkOperationStatusWorker.ingress.hosts }}
+    {{- range .Values.operationStatusWorker.ingress.hosts }}
     - host: {{ .host | quote }}
       http:
         paths:
           {{- range .paths }}
           - path: {{ .path }}
             backend:
-              serviceName: {{ $fullName }}
+              serviceName: {{ $fullName }}-operation-status-worker
               servicePort: {{ $svcPort }}
           {{- end }}
     {{- end }}

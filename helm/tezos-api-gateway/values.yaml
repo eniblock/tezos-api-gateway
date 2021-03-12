@@ -4,7 +4,8 @@ image:
   # Overrides the image tag whose default is the chart appVersion.
   tag: ""
 
-imagePullSecrets: []
+imagePullSecrets:
+  - name: gitlab-registry
 nameOverride: ""
 fullnameOverride: ""
 
@@ -93,7 +94,7 @@ api:
     name: vault
     port: 8200
 
-checkOperationStatusWorker:
+operationStatusWorker:
   replicaCount: 1
 
   serviceAccount:
@@ -262,3 +263,20 @@ rabbitmq:
   persistence:
     enabled: true
     size: 1Gi
+
+vault:
+  server:
+    debug: false
+
+    dev:
+      enabled: false
+
+    standalone:
+      enabled: true
+      sealType:
+      googleProject:
+      googleRegion:
+      gcpckmsSealKeyRing:
+      gcpckmsSealCryptoKey:
+      initPath:
+      initToken:

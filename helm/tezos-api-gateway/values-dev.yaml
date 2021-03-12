@@ -17,9 +17,14 @@ rabbitmq:
 
 vault:
   server:
+    debug: true
+
     dev:
       enabled: true
-      devRootToken: myroot
+      devRootToken: "myroot"
+
+    standalone:
+      enabled: false
 
 api:
   ingress:
@@ -33,32 +38,3 @@ api:
       - secretName: tezos-api-gateway.localhost-tls
         hosts:
           - tezos-api-gateway.localhost
-
-  rabbitmq:
-    auth:
-      password: randompwd
-
-  vault:
-    server:
-      dev:
-        devRootToken: myroot
-
-checkOperationStatusWorker:
-  rabbitmq:
-    auth:
-      password: randompwd
-
-  vault:
-    server:
-      dev:
-        devRootToken: myroot
-
-sendTransactionsWorker:
-  rabbitmq:
-    auth:
-      password: randompwd
-
-  vault:
-    server:
-      dev:
-        devRootToken: myroot

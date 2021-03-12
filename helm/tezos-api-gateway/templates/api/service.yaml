@@ -4,6 +4,7 @@ metadata:
   name: {{ include "tezos-api-gateway.fullname" . }}-api
   labels:
     {{- include "tezos-api-gateway.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
 spec:
   type: {{ .Values.api.service.type }}
   ports:
@@ -13,3 +14,4 @@ spec:
       name: http
   selector:
     {{- include "tezos-api-gateway.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: api

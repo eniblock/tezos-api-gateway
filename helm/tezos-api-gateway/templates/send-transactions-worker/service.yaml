@@ -4,6 +4,7 @@ metadata:
   name: {{ include "tezos-api-gateway.fullname" . }}-send-transactions-worker
   labels:
     {{- include "tezos-api-gateway.labels" . | nindent 4 }}
+    app.kubernetes.io/component: send-transactions-worker
 spec:
   type: {{ .Values.sendTransactionsWorker.service.type }}
   ports:
@@ -13,3 +14,4 @@ spec:
       name: prometheus
   selector:
     {{- include "tezos-api-gateway.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: send-transactions-worker

@@ -6,7 +6,7 @@ dependencies:
   repository: https://charts.bitnami.com/bitnami
   version: 8.8.0
 - name: vault
-  repository: https://helm.releases.hashicorp.com
-  version: 0.9.1
-digest: sha256:2cab821c87fad9c22eec2657d8600202c6ab09339d3cad92b0f696711a164822
-generated: "2021-03-08T15:19:04.875305068+01:00"
+  repository: oci://registry.gitlab.com/the-blockchain-xdev/xdev-product/enterprise-business-network/vault/helm
+  version: 1.0.2
+digest: sha256:946e11ce7512b88d3624c5f2b6bcdcc5bcc48beb589b9f074ec119c11789b648
+generated: "2021-03-12T11:25:17.355541353+01:00"

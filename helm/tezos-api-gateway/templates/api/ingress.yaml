@@ -8,7 +8,7 @@ apiVersion: extensions/v1beta1
 {{- end }}
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
+  name: {{ $fullName }}-api
   labels:
     {{- include "tezos-api-gateway.labels" . | nindent 4 }}
   {{- with .Values.api.ingress.annotations }}
@@ -34,7 +34,7 @@ spec:
           {{- range .paths }}
           - path: {{ .path }}
             backend:
-              serviceName: {{ $fullName }}
+              serviceName: {{ $fullName }}-api
               servicePort: {{ $svcPort }}
           {{- end }}
     {{- end }}

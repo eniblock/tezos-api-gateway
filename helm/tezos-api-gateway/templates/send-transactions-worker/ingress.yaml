@@ -8,7 +8,7 @@ apiVersion: extensions/v1beta1
 {{- end }}
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
+  name: {{ $fullName }}-send-transactions-worker
   labels:
     {{- include "tezos-api-gateway.labels" . | nindent 4 }}
   {{- with .Values.sendTransactionsWorker.ingress.annotations }}
@@ -34,7 +34,7 @@ spec:
           {{- range .paths }}
           - path: {{ .path }}
             backend:
-              serviceName: {{ $fullName }}
+              serviceName: {{ $fullName }}-send-transactions-worker
               servicePort: {{ $svcPort }}
           {{- end }}
     {{- end }}

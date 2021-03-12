@@ -1,62 +1,68 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "tezos-api-gateway.fullname" . }}-check-operation-status-worker
+  name: {{ include "tezos-api-gateway.fullname" . }}-operation-status-worker
   labels:
     {{- include "tezos-api-gateway.labels" . | nindent 4 }}
+    app.kubernetes.io/component: operation-status-worker
 spec:
-  {{- if not .Values.checkOperationStatusWorker.autoscaling.enabled }}
-  replicas: {{ .Values.checkOperationStatusWorker.replicaCount }}
+  {{- if not .Values.operationStatusWorker.autoscaling.enabled }}
+  replicas: {{ .Values.operationStatusWorker.replicaCount }}
   {{- end }}
   selector:
     matchLabels:
       {{- include "tezos-api-gateway.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: operation-status-worker
   template:
     metadata:
-      {{- with .Values.checkOperationStatusWorker.podAnnotations }}
+      {{- with .Values.operationStatusWorker.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
         {{- include "tezos-api-gateway.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: operation-status-worker
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: tezos-api-gateway-check-operation-status-worker
+      serviceAccountName: tezos-api-gateway-operation-status-worker
       securityContext:
-        {{- toYaml .Values.checkOperationStatusWorker.podSecurityContext | nindent 8 }}
+        {{- toYaml .Values.operationStatusWorker.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
-            {{- toYaml .Values.checkOperationStatusWorker.securityContext | nindent 12 }}
+            {{- toYaml .Values.operationStatusWorker.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           command: ["node", "build/src/processes/workers/check-operation-status/index.js"]
           env:
             - name: DB_USERNAME
-              value: {{ .Values.checkOperationStatusWorker.postgresql.postgresqlUsername | quote }}
+              value: {{ .Values.operationStatusWorker.postgresql.postgresqlUsername | quote }}
             - name: DB_NAME
-              value: {{ .Values.checkOperationStatusWorker.postgresql.postgresqlDatabase | quote }}
+              value: {{ .Values.operationStatusWorker.postgresql.postgresqlDatabase | quote }}
             - name: DB_PWD
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Release.Name }}-{{ .Values.checkOperationStatusWorker.postgresql.name }}"
+                  name: "{{ .Release.Name }}-{{ .Values.operationStatusWorker.postgresql.name }}"
                   key: postgresql-password
             - name: DB_HOST
-              value: "{{ .Release.Name }}-{{ .Values.checkOperationStatusWorker.postgresql.name }}"
+              value: "{{ .Release.Name }}-{{ .Values.operationStatusWorker.postgresql.name }}"
             - name: AMQP_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Release.Name }}-{{ .Values.checkOperationStatusWorker.rabbitmq.name }}"
+                  name: "{{ .Release.Name }}-{{ .Values.operationStatusWorker.rabbitmq.name }}"
                   key: rabbitmq-password
             - name: AMQP_URL
-              value: "amqp://user:$(AMQP_PASSWORD)@{{ .Release.Name }}-{{ .Values.checkOperationStatusWorker.rabbitmq.name }}"
+              value: "amqp://user:$(AMQP_PASSWORD)@{{ .Release.Name }}-{{ .Values.operationStatusWorker.rabbitmq.name }}"
             - name: VAULT_URL
-              value: "http://{{ .Release.Name }}-{{ .Values.checkOperationStatusWorker.vault.name }}:{{ .Values.checkOperationStatusWorker.vault.port }}/v1/"
+              value: "http://{{ .Release.Name }}-{{ .Values.operationStatusWorker.vault.name }}:{{ .Values.operationStatusWorker.vault.port }}/v1/"
             - name: VAULT_TOKEN
-              value: {{ .Values.checkOperationStatusWorker.vault.server.dev.devRootToken | quote }}
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-{{ .Values.operationStatusWorker.vault.name }}"
+                  key: vault-app-token
           ports:
             - name: prometheus
               containerPort: 9465
@@ -70,16 +76,16 @@ spec:
               path: /metrics
               port: prometheus
           resources:
-            {{- toYaml .Values.checkOperationStatusWorker.resources | nindent 12 }}
-      {{- with .Values.checkOperationStatusWorker.nodeSelector }}
+            {{- toYaml .Values.operationStatusWorker.resources | nindent 12 }}
+      {{- with .Values.operationStatusWorker.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.checkOperationStatusWorker.affinity }}
+      {{- with .Values.operationStatusWorker.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- with .Values.checkOperationStatusWorker.tolerations }}
+      {{- with .Values.operationStatusWorker.tolerations }}
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
