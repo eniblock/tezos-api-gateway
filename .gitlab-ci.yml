@@ -21,6 +21,12 @@ test:
     - npm i
   script:
     - npm test
+  only:
+    changes:
+      - src/**/*
+      - test/*
+      - "*.json"
+      - "*.js"
 
 publish_docker:
   stage: publish
