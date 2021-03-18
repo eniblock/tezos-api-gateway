@@ -45,15 +45,6 @@ api:
       kubernetes.io/ingress.class: traefik
       kubernetes.io/tls-acme: "true"
       cert-manager.io/cluster-issuer: tezos-api-gateway
-      cert-manager.io/common-name: tezos-api-gateway.localhost
-    hosts:
-      - host: tezos-api-gateway.localhost
-        paths:
-          - path: "/"
-    tls:
-      - secretName: tezos-api-gateway.localhost-tls
-        hosts:
-          - tezos-api-gateway.localhost
 
   resources: {}
     # We usually recommend not to specify default resources and to leave this as a conscious

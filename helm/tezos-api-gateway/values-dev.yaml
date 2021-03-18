@@ -1,5 +1,6 @@
 image:
   repository: "k3d-registry.localhost:5000/tezos-api-gateway"
+  tag: "0.1.0"
 
 db:
   postgresqlPassword: randompwd
@@ -28,6 +29,7 @@ vault:
 
 api:
   ingress:
+    hostname: tezos-api-gateway.localhost
     annotations:
       cert-manager.io/common-name: tezos-api-gateway.localhost
     hosts:
