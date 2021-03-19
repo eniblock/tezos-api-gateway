@@ -148,9 +148,7 @@ npm run prettier:write
 
 ### Cert manager
 ```shell
-kubectl create namespace cert-manager
 helm repo add jetstack https://charts.jetstack.io
-
 helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.2.0 --create-namespace --set installCRDs=true
 ```
 

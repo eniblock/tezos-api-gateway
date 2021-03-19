@@ -1,7 +1,3 @@
-image:
-  repository: "k3d-registry.localhost:5000/tezos-api-gateway"
-  tag: "0.1.0"
-
 db:
   postgresqlPassword: randompwd
 
