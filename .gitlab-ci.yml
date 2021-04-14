@@ -1,0 +1,34 @@
+stages:
+  - test
+  - publish
+
+variables:
+  CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+
+test:
+  stage: test
+  image: node:14.15.4-alpine3.12
+  services:
+    - postgres:13.1-alpine
+    - rabbitmq:3-management-alpine
+  variables:
+    POSTGRES_DB: tezos_api_gateway_test
+    POSTGRES_USER: tezos-service
+    POSTGRES_PASSWORD: randompwd
+    DB_HOST_TEST: postgres
+    AMQP_URL: amqp://rabbitmq
+  before_script:
+    - npm i
+  script:
+    - npm test
+
+publish:
+  stage: publish
+  image: docker:stable
+  services:
+    - docker:dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker build --pull -t $CONTAINER_TEST_IMAGE .
+    - docker push $CONTAINER_TEST_IMAGE

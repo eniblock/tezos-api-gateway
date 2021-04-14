@@ -1,0 +1,324 @@
+{
+	"info": {
+		"_postman_id": "360eb048-5b6e-4380-bcd7-0e28fcea06aa",
+		"name": "Tezos API Gateway",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Forge",
+			"item": [
+				{
+					"name": "Forge Operation",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"transactions\": [\n        {\n            \"contractAddress\": \"KT1Nk7KLuuWJz8muPN1hFZhFtneepKNAsJSU\",\n            \"entryPoint\": \"transfer\",\n            \"entryPointParams\": {\n                \"tokens\": 1,\n                \"destination\": \"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw\"\n            }\n        },\n        {\n            \"contractAddress\": \"KT1Nk7KLuuWJz8muPN1hFZhFtneepKNAsJSU\",\n            \"entryPoint\": \"transfer\",\n            \"entryPointParams\": {\n                \"tokens\": 1,\n                \"destination\": \"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw\"\n            }\n        }\n    ],\n    \"sourceAddress\": \"tz1iaJAxXAa5SCkdPBLA7f5Lj4LXS5vNa33E\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/api/forge/jobs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"api",
+								"forge",
+								"jobs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Forge Operation With FA2 Contract",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"transactions\": [\n        {\n            \"contractAddress\": \"KT1Lg27CAuosMBmvPK9vAo1sJcYxJSwYPv6r\",\n            \"entryPoint\": \"mint\",\n            \"entryPointParams\": {\n                \"amount\": 100,\n                \"address\": \"tz1iaJAxXAa5SCkdPBLA7f5Lj4LXS5vNa33E\",\n                \"token_id\": 1,\n                \"metadata\": [\n                    {\n                        \"key\": \"name\",\n                        \"value\": \"54686520546f6b656e204f6e65\"\n                    },\n                    {\n                        \"key\": \"decimals\",\n                        \"value\": \"32\"\n                    },\n                    {\n                        \"key\": \"symbol\",\n                        \"value\": \"544b30\"\n                    }\n                ]\n            }\n        },\n        {\n            \"contractAddress\": \"KT1Lg27CAuosMBmvPK9vAo1sJcYxJSwYPv6r\",\n            \"entryPoint\": \"transfer\",\n            \"entryPointParams\":  [\n                    {\n                        \"from_\": \"tz1iaJAxXAa5SCkdPBLA7f5Lj4LXS5vNa33E\",\n                        \"txs\": [\n                            {\n                                \"to_\": \"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw\",\n                                \"amount\": 1,\n                                \"token_id\": \"1\"\n                            }\n                        ]\n                    }\n                ]\n        }\n    ],\n    \"sourceAddress\": \"tz1iaJAxXAa5SCkdPBLA7f5Lj4LXS5vNa33E\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/api/forge/jobs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"api",
+								"forge",
+								"jobs"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Send Transactions",
+			"item": [
+				{
+					"name": "Send Transactions",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"transactions\": [\n        {\n            \"contractAddress\": \"KT18pnvb86uTiPK3uSG4EnS9NxsftdCxx5N6\",\n            \"entryPoint\": \"transfer\",\n            \"entryPointParams\": {\n                \"destination\": \"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw\",\n                \"tokens\": 1\n            }\n        },\n        {\n            \"contractAddress\": \"KT18pnvb86uTiPK3uSG4EnS9NxsftdCxx5N6\",\n            \"entryPoint\": \"transfer\",\n            \"entryPointParams\": {\n                \"destination\": \"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw\",\n                \"tokens\": 1\n            }\n        }\n    ],\n    \"secureKeyName\": \"psa\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/api/send/jobs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"api",
+								"send",
+								"jobs"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Get contract storage",
+			"item": [
+				{
+					"name": "Get contract storage by tezos  node (whole storage)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3333/api/tezos_node/storage/KT1TVGnujXh7VhaSP7K1aEji5HvAKRyn6cXf",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"api",
+								"tezos_node",
+								"storage",
+								"KT1TVGnujXh7VhaSP7K1aEji5HvAKRyn6cXf"
+							],
+							"query": [
+								{
+									"key": "data_fields[0][organizations][0][key][address]",
+									"value": "tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw",
+									"disabled": true
+								},
+								{
+									"key": "data_fields[0][organizations][0][key][jwtToken]",
+									"value": "jwt",
+									"disabled": true
+								},
+								{
+									"key": "data_fields[0][organizations][0][dataFields][0]",
+									"value": "publicKey",
+									"disabled": true
+								},
+								{
+									"key": "data_fields[0][organizations][1][key][address]",
+									"value": "tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK",
+									"disabled": true
+								},
+								{
+									"key": "data_fields[0][organizations][1][key][jwtToken]",
+									"value": "jwt",
+									"disabled": true
+								},
+								{
+									"key": "data_fields[0][organizations][1][dataFields][0]",
+									"value": "name",
+									"disabled": true
+								},
+								{
+									"key": "data_fields[0][organizations][1][dataFields][1]",
+									"value": "publicKeyHashsss",
+									"disabled": true
+								},
+								{
+									"key": "data_fields[0]",
+									"value": "accessRequests",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get contract storage (complicated map object)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"dataFields\": [\n        {\n            \"organizations\": [\n                {\n                    \"key\": {\n                        \"address\": \"tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw\",\n                        \"jwtToken\": \"jwt\"\n                    },\n                    \"dataFields\": [\n                        \"name\",\n                        {\n                            \"datasources\": [\n                                {\n                                    \"key\": \"datasource4\"\n                                }\n                            ]\n                        }\n                    ]\n                }\n            ]\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/api/tezos_node/storage/KT1TVGnujXh7VhaSP7K1aEji5HvAKRyn6cXf",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"api",
+								"tezos_node",
+								"storage",
+								"KT1TVGnujXh7VhaSP7K1aEji5HvAKRyn6cXf"
+							],
+							"query": [
+								{
+									"key": "data_fields[0][organizations][0][key][address]",
+									"value": "tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw",
+									"disabled": true
+								},
+								{
+									"key": "data_fields[0][organizations][0][key][jwtToken]",
+									"value": "jwt",
+									"disabled": true
+								},
+								{
+									"key": "data_fields[0][organizations][0][dataFields][0]",
+									"value": "name",
+									"disabled": true
+								},
+								{
+									"key": "data_fields[0][organizations][0][dataFields][1]",
+									"value": "[]",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get contract storage (partial storage)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"dataFields\": [\"totalIncomes\", \"investors\", \"nav\"] }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/api/tezos_node/storage/KT1BxLgrhC9mL44PE51wTL5Gx55fR5RU8w82",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"api",
+								"tezos_node",
+								"storage",
+								"KT1BxLgrhC9mL44PE51wTL5Gx55fR5RU8w82"
+							],
+							"query": [
+								{
+									"key": "data_fields[1][nav][1][key]",
+									"value": "1614812400000",
+									"disabled": true
+								},
+								{
+									"key": "data_fields[1][nav][0][key]",
+									"value": "1614898800000",
+									"disabled": true
+								},
+								{
+									"key": "data_fields[0]",
+									"value": "investors",
+									"disabled": true
+								},
+								{
+									"key": "data_fields[2]",
+									"value": "lastDivYear",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Inject Operation",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"jobId\": 53,\n    \"signedTransaction\": \"d4ffc254b1d6234812dd6f8c74b1ab316d562110ad79c04b11fa6560d4e02c6c6c00fb9626b622aa106138f4664ab806d951ba7d2145cc13c3a707b0a401430001849fba68030a599010d33bb851053c7e77d372ee00ffff087472616e7366657200000066020000006107070100000024747a3169614a41785841613553436b6450424c413766354c6a344c585335764e61333345020000003107070100000024747a315a51594d4445546f644e42416332585662685a46476d65384b6e697550717253770707000100013fd51b74a423a56c4ba5f57fd7789c793567e63975bc4158d2509322473dbb87741e314d69955e87bb698443e8c81f58e1d89dec6d1927f765288b6a35dc3f04\",\n    \"signature\": \"edsigtgA8HWzFyzGsB69XWyAYTvs51yjvpVmfjZJUTfGzcUKRXbGKfYNvnK3i3SAUFjCVSRGfmxnjVLCd8GMbZbboEPFLNXgzVd\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3333/api/inject/jobs",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3333",
+					"path": [
+						"api",
+						"inject",
+						"jobs"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

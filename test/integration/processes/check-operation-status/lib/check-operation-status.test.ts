@@ -1,0 +1,231 @@
+import {
+  amqpConfig,
+  postgreConfig,
+  tezosNodeEdonetUrl,
+} from '../../../../__fixtures__/config';
+import { logger } from '../../../../__fixtures__/services/logger';
+import { resetTable, selectData } from '../../../../__utils__/postgre';
+
+import { PostgreService } from '../../../../../src/services/postgre';
+import { TezosService } from '../../../../../src/services/tezos';
+import { PostgreTables } from '../../../../../src/const/postgre/postgre-tables';
+import { JobStatus } from '../../../../../src/const/job-status';
+import {
+  notFoundOperationHash,
+  operationHash,
+} from '../../../../__fixtures__/operation';
+import { checkOperationStatus } from '../../../../../src/processes/workers/check-operation-status/lib/check-operation-status';
+import { IndexerPool } from '../../../../../src/services/indexer-pool';
+import { nbOfConfirmation, nbOfRetry } from '../../../../../src/config';
+import { AmqpService } from '../../../../../src/services/amqp';
+import { insertTransactionWithParametersJson } from '../../../../../src/models/transactions';
+import { selectJobs } from '../../../../../src/models/jobs';
+import { Jobs } from '../../../../../src/const/interfaces/jobs';
+
+describe('[check-operation-status/lib/check-operation-status]', () => {
+  const postgreService = new PostgreService(postgreConfig);
+  const tezosService = new TezosService(tezosNodeEdonetUrl);
+  const amqpService = new AmqpService(amqpConfig, logger);
+  const indexerPool = new IndexerPool(logger);
+
+  beforeAll(async () => {
+    await postgreService.initializeDatabase();
+    await indexerPool.initializeIndexers();
+  });
+
+  beforeEach(async () => {
+    await resetTable(postgreService.pool, PostgreTables.TRANSACTION);
+    await resetTable(postgreService.pool, PostgreTables.JOBS);
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  afterAll(async () => {
+    await postgreService.disconnect();
+  });
+
+  describe('#checkOperationStatus', () => {
+    const loggerErrorSpy = jest.spyOn(logger, 'error');
+    beforeEach(async () => {
+      await postgreService.pool.query(
+        `INSERT INTO ${PostgreTables.JOBS} (status,raw_transaction,operation_hash)
+        VALUES('${JobStatus.CREATED}', 'raw_transaction', NULL),
+        ('${JobStatus.PUBLISHED}', 'raw_transaction_2', '${operationHash}'),
+        ('${JobStatus.CREATED}', 'raw_transaction_3', '${operationHash}')`,
+      );
+    });
+
+    it('should correctly update the job with the correct operation hash and status', async () => {
+      await postgreService.pool.query(
+        `INSERT INTO ${PostgreTables.JOBS} (status,raw_transaction,operation_hash)
+        VALUES ('${JobStatus.PUBLISHED}', 'raw_transaction_4', '${notFoundOperationHash}')`,
+      );
+      await checkOperationStatus(
+        { postgreService, tezosService, amqpService, indexerPool },
+        logger,
+      );
+
+      await expect(
+        selectData(postgreService.pool, {
+          tableName: PostgreTables.JOBS,
+          selectFields: 'status, operation_hash, raw_transaction',
+        }),
+      ).resolves.toEqual([
+        {
+          status: 'created',
+          raw_transaction: 'raw_transaction',
+          operation_hash: null,
+        },
+        {
+          status: 'created',
+          raw_transaction: 'raw_transaction_3',
+          operation_hash: operationHash,
+        },
+        {
+          status: 'published',
+          raw_transaction: 'raw_transaction_4',
+          operation_hash: notFoundOperationHash,
+        },
+        {
+          status: 'done',
+          raw_transaction: 'raw_transaction_2',
+          operation_hash: operationHash,
+        },
+      ]);
+
+      expect(loggerErrorSpy).toHaveBeenCalledTimes(0);
+    }, 10000);
+
+    it('should correctly publish the message with the parameters', async () => {
+      const publishSpy = jest
+        .spyOn(amqpService, 'publishMessage')
+        .mockImplementation();
+
+      const [publishedJob] = (await selectJobs(
+        postgreService.pool,
+        'id',
+        `status='${JobStatus.PUBLISHED}'`,
+      )) as Jobs[];
+
+      await insertTransactionWithParametersJson(postgreService.pool, {
+        destination: 'destination',
+        source: 'source',
+        parameters_json: {
+          entrypoint: 'entrypoint',
+          value: { entrypoint: { name: 'toto' } },
+        },
+        jobId: publishedJob.id,
+      });
+      await insertTransactionWithParametersJson(postgreService.pool, {
+        destination: 'destination2',
+        source: 'source2',
+        parameters_json: {
+          entrypoint: 'entrypoint2',
+          value: { entrypoint2: { name: 'tata' } },
+        },
+        jobId: publishedJob.id,
+      });
+
+      await checkOperationStatus(
+        { postgreService, tezosService, amqpService, indexerPool },
+        logger,
+      );
+
+      expect(publishSpy).toHaveBeenCalledTimes(2);
+      expect(publishSpy).toHaveBeenCalledWith(
+        'headers-exchange',
+        '',
+        {
+          contractAddress: 'destination',
+          entrypoint: 'entrypoint',
+          parameters: {
+            entrypoint: 'entrypoint',
+            value: { entrypoint: { name: 'toto' } },
+          },
+        },
+        {
+          headers: {
+            entrypoint: 'entrypoint',
+            contractAddress: 'destination',
+          },
+        },
+      );
+      expect(publishSpy).toHaveBeenCalledWith(
+        'headers-exchange',
+        '',
+        {
+          contractAddress: 'destination2',
+          entrypoint: 'entrypoint2',
+          parameters: {
+            entrypoint: 'entrypoint2',
+            value: { entrypoint2: { name: 'tata' } },
+          },
+        },
+        {
+          headers: {
+            entrypoint: 'entrypoint2',
+            contractAddress: 'destination2',
+          },
+        },
+      );
+
+      expect(loggerErrorSpy).toHaveBeenCalledTimes(0);
+    }, 10000);
+
+    it('should log error if unexpected error happened', async () => {
+      const checkIfOperationIsConfirmedByRandomIndexerSpy = jest
+        .spyOn(indexerPool, 'checkIfOperationIsConfirmedByRandomIndexer')
+        .mockRejectedValue(new Error('Unexpected error'));
+
+      await checkOperationStatus(
+        { postgreService, tezosService, amqpService, indexerPool },
+        logger,
+      );
+
+      await expect(
+        selectData(postgreService.pool, {
+          tableName: PostgreTables.JOBS,
+          selectFields: 'status, operation_hash, raw_transaction',
+        }),
+      ).resolves.toEqual([
+        {
+          status: 'created',
+          raw_transaction: 'raw_transaction',
+          operation_hash: null,
+        },
+        {
+          status: 'published',
+          raw_transaction: 'raw_transaction_2',
+          operation_hash: operationHash,
+        },
+        {
+          status: 'created',
+          raw_transaction: 'raw_transaction_3',
+          operation_hash: operationHash,
+        },
+      ]);
+
+      expect(
+        checkIfOperationIsConfirmedByRandomIndexerSpy,
+      ).toHaveBeenCalledWith(
+        tezosService,
+        {
+          operationHash,
+          nbOfConfirmation,
+        },
+        nbOfRetry,
+      );
+      expect(
+        checkIfOperationIsConfirmedByRandomIndexerSpy,
+      ).toHaveBeenCalledTimes(1);
+      expect(loggerErrorSpy.mock.calls).toEqual([
+        [
+          { err: Error('Unexpected error') },
+          '[lib/checkOperationStatus] Unexpected error happen',
+        ],
+      ]);
+    });
+  });
+});

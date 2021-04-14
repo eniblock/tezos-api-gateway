@@ -1,0 +1,14 @@
+{
+  "extends": ["tslint:latest", "tslint-config-prettier"],
+  "rules": {
+    "no-implicit-dependencies": [true, "dev"],
+    "object-literal-sort-keys": false,
+    "no-submodule-imports": false,
+    "interface-name": [false, "never-prefix"],
+    "max-classes-per-file": false,
+    "variable-name": [true, "allow-leading-underscore", "allow-pascal-case"]
+  },
+  "linterOptions": {
+    "exclude": ["package.json", "test/__fixtures__/**"]
+  }
+}

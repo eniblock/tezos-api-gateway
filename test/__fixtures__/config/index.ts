@@ -1,0 +1,33 @@
+import { PostgreConfig } from '../../../src/const/interfaces/postgre-config';
+import { AmqpConfig } from '../../../src/services/amqp';
+import { VaultClientConfig } from '../../../src/services/clients/vault-client';
+
+export const postgreConfig: PostgreConfig = {
+  user: process.env.DB_USERNAME_TEST || 'tezos-service',
+  host: process.env.DB_HOST_TEST || 'localhost',
+  database: process.env.DB_NAME_TEST || 'tezos_api_gateway_test',
+  password: process.env.DB_PWD_TEST || 'randompwd',
+  port: parseInt(process.env.DB_PORT_TEST as string, 10) || 5432,
+};
+
+export const serverConfig = {
+  port: 5555,
+};
+
+export const tezosNodeEdonetUrl =
+  process.env.TEZOS_NODE_EDONET_TEST || 'https://api.tez.ie/rpc/edonet';
+
+export const tezosNodeEdonetUrls = (
+  process.env.TEZOS_NODE_EDONET_TEST_URLS ||
+  'https://api.tez.ie/rpc/edonet,https://edonet.smartpy.io/'
+).split(',');
+
+export const amqpConfig: AmqpConfig = {
+  url: process.env.AMQP_URL || 'amqp://localhost',
+  queueName: 'test',
+};
+
+export const vaultClientConfig: VaultClientConfig = {
+  apiUrl: 'http://localhost:8200',
+  token: 'fake_token',
+};
