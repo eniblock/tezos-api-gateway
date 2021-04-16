@@ -109,6 +109,59 @@
 			"name": "Get contract storage",
 			"item": [
 				{
+					"name": "Get contract storage (partial storage)",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \"dataFields\": [\"totalIncomes\", \"investors\", \"nav\"] }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3333/api/tezos_node/storage/KT1BxLgrhC9mL44PE51wTL5Gx55fR5RU8w82",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"api",
+								"tezos_node",
+								"storage",
+								"KT1BxLgrhC9mL44PE51wTL5Gx55fR5RU8w82"
+							],
+							"query": [
+								{
+									"key": "data_fields[1][nav][1][key]",
+									"value": "1614812400000",
+									"disabled": true
+								},
+								{
+									"key": "data_fields[1][nav][0][key]",
+									"value": "1614898800000",
+									"disabled": true
+								},
+								{
+									"key": "data_fields[0]",
+									"value": "investors",
+									"disabled": true
+								},
+								{
+									"key": "data_fields[2]",
+									"value": "lastDivYear",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Get contract storage by tezos  node (whole storage)",
 					"request": {
 						"method": "POST",
@@ -122,6 +175,80 @@
 						"body": {
 							"mode": "raw",
 							"raw": ""
+						},
+						"url": {
+							"raw": "http://localhost:3333/api/tezos_node/storage/KT1TVGnujXh7VhaSP7K1aEji5HvAKRyn6cXf",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3333",
+							"path": [
+								"api",
+								"tezos_node",
+								"storage",
+								"KT1TVGnujXh7VhaSP7K1aEji5HvAKRyn6cXf"
+							],
+							"query": [
+								{
+									"key": "data_fields[0][organizations][0][key][address]",
+									"value": "tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw",
+									"disabled": true
+								},
+								{
+									"key": "data_fields[0][organizations][0][key][jwtToken]",
+									"value": "jwt",
+									"disabled": true
+								},
+								{
+									"key": "data_fields[0][organizations][0][dataFields][0]",
+									"value": "publicKey",
+									"disabled": true
+								},
+								{
+									"key": "data_fields[0][organizations][1][key][address]",
+									"value": "tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK",
+									"disabled": true
+								},
+								{
+									"key": "data_fields[0][organizations][1][key][jwtToken]",
+									"value": "jwt",
+									"disabled": true
+								},
+								{
+									"key": "data_fields[0][organizations][1][dataFields][0]",
+									"value": "name",
+									"disabled": true
+								},
+								{
+									"key": "data_fields[0][organizations][1][dataFields][1]",
+									"value": "publicKeyHashsss",
+									"disabled": true
+								},
+								{
+									"key": "data_fields[0]",
+									"value": "accessRequests",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get contract storage by tezos  node (access big map)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"dataFields\": [\n        {\n            \"accessRequests\": [\n                {\n                    \"key\": {\n                        \"scopeId\": \"scope1\",\n                        \"status\": \"status1\"\n                    },\n                    \"dataFields\": [ \"address.providerAddress\" ]\n                }\n            ]\n        }\n    ]\n}"
 						},
 						"url": {
 							"raw": "http://localhost:3333/api/tezos_node/storage/KT1TVGnujXh7VhaSP7K1aEji5HvAKRyn6cXf",
@@ -234,59 +361,6 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "Get contract storage (partial storage)",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{ \"dataFields\": [\"totalIncomes\", \"investors\", \"nav\"] }",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:3333/api/tezos_node/storage/KT1BxLgrhC9mL44PE51wTL5Gx55fR5RU8w82",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "3333",
-							"path": [
-								"api",
-								"tezos_node",
-								"storage",
-								"KT1BxLgrhC9mL44PE51wTL5Gx55fR5RU8w82"
-							],
-							"query": [
-								{
-									"key": "data_fields[1][nav][1][key]",
-									"value": "1614812400000",
-									"disabled": true
-								},
-								{
-									"key": "data_fields[1][nav][0][key]",
-									"value": "1614898800000",
-									"disabled": true
-								},
-								{
-									"key": "data_fields[0]",
-									"value": "investors",
-									"disabled": true
-								},
-								{
-									"key": "data_fields[2]",
-									"value": "lastDivYear",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		},
@@ -297,7 +371,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"jobId\": 53,\n    \"signedTransaction\": \"d4ffc254b1d6234812dd6f8c74b1ab316d562110ad79c04b11fa6560d4e02c6c6c00fb9626b622aa106138f4664ab806d951ba7d2145cc13c3a707b0a401430001849fba68030a599010d33bb851053c7e77d372ee00ffff087472616e7366657200000066020000006107070100000024747a3169614a41785841613553436b6450424c413766354c6a344c585335764e61333345020000003107070100000024747a315a51594d4445546f644e42416332585662685a46476d65384b6e697550717253770707000100013fd51b74a423a56c4ba5f57fd7789c793567e63975bc4158d2509322473dbb87741e314d69955e87bb698443e8c81f58e1d89dec6d1927f765288b6a35dc3f04\",\n    \"signature\": \"edsigtgA8HWzFyzGsB69XWyAYTvs51yjvpVmfjZJUTfGzcUKRXbGKfYNvnK3i3SAUFjCVSRGfmxnjVLCd8GMbZbboEPFLNXgzVd\"\n}",
+					"raw": "{\n    \"jobId\": 53,\n    \"signedTransaction\": \"33fd6ba7685c297102462d17ccde8e1746d76e3c57440b072fa9c01654f676826c00fb9626b622aa106138f4664ab806d951ba7d21458410caa707b386010000019b55fe02e69dbda426775a4089958a4446dc5e8a00ffff087472616e736665720000002d07070100000024747a315a51594d4445546f644e42416332585662685a46476d65384b6e6975507172537700016c00fb9626b622aa106138f4664ab806d951ba7d21458410cba707b386010000019b55fe02e69dbda426775a4089958a4446dc5e8a00ffff087472616e736665720000002d07070100000024747a315a51594d4445546f644e42416332585662685a46476d65384b6e697550717253770001aa27787cf003ea8a66990646c9a325b9439b42f22d6d1f6948727cbf4f124083b28e01d867d30d2ac7ac4410f4d3222a179e7018fc26d91766bd51833bf2b702\",\n    \"signature\": \"edsigtv4uDpd3HM84fSoYavxT5kQPaTUaAvDb1fCVa9qZhNw6MNHq1HUjstJiGuqKL1Z8edWnLBUwgPVPpsBFMb6YcVSzV5pRVo\"\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -315,6 +389,34 @@
 						"api",
 						"inject",
 						"jobs"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get entrypoints",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3333/api/entrypoints/KT1Nk7KLuuWJz8muPN1hFZhFtneepKNAsJSU",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3333",
+					"path": [
+						"api",
+						"entrypoints",
+						"KT1Nk7KLuuWJz8muPN1hFZhFtneepKNAsJSU"
+					],
+					"query": [
+						{
+							"key": "entryPoints",
+							"value": "unlock",
+							"disabled": true
+						}
 					]
 				}
 			},
