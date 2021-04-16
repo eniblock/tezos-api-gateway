@@ -47,6 +47,9 @@ Check the project workflow [here][6].
 
 **2. [Sign a forged operation using Inmemory Signer][12]**
 
+### How to use storage API
+Check the guideline to use the API to retrieve contract storage [here][13].
+
 ### Install all dependencies
 
 ```
@@ -153,3 +156,4 @@ npm run prettier:write
 [10]: docs/tezos-grant.md
 [11]: src/scripts/activate-tezos-account/README.md
 [12]: src/scripts/sign-transaction-with-InMemorySigner/README.md
+[13]: docs/retrieve-contract-storage.md
