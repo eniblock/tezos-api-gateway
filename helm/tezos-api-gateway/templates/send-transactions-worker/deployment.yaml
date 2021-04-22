@@ -27,7 +27,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: tezos-api-gateway-send-transactions-worker
+      serviceAccountName: {{ include "tezos-api-gateway.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.sendTransactionsWorker.podSecurityContext | nindent 8 }}
       containers:

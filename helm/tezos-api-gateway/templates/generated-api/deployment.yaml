@@ -27,7 +27,7 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "tezos-api-gateway.fullname" . }}-generated-api
+      serviceAccountName: {{ include "tezos-api-gateway.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.generatedApi.podSecurityContext | nindent 8 }}
       containers:
