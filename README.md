@@ -157,6 +157,12 @@ Create gitlab registry secret
 kubectl create secret docker-registry gitlab-registry --docker-server=registry.gitlab.com --docker-username=DOCKER_USER --docker-password=DOCKER_PASSWORD --docker-email=DOCKER_EMAIL
 ```
 
+Register helm to gitlab
+```shell script
+helm registry login registry.gitlab.com
+```
+
+
 ### Tezos API Gateway
 ```shell
 helm install tezos-api-gateway ./helm/tezos-api-gateway --values ./helm/tezos-api-gateway/values-dev.yaml
