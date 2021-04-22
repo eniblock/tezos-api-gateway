@@ -1,0 +1,28 @@
+{{- if .Values.injectionWorker.autoscaling.enabled }}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "tezos-api-gateway.fullname" . }}-injection-worker
+  labels:
+    {{- include "tezos-api-gateway.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "tezos-api-gateway.fullname" . }}-injection-worker
+  minReplicas: {{ .Values.injectionWorker.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.injectionWorker.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.injectionWorker.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.injectionWorker.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.injectionWorker.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.injectionWorker.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}

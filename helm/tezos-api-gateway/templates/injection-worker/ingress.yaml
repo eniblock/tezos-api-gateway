@@ -1,0 +1,41 @@
+{{- if .Values.injectionWorker.ingress.enabled -}}
+{{- $fullName := include "tezos-api-gateway.fullname" . -}}
+{{- $svcPort := .Values.injectionWorker.service.port -}}
+{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1beta1
+{{- else -}}
+apiVersion: extensions/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ $fullName }}-injection-worker
+  labels:
+    {{- include "tezos-api-gateway.labels" . | nindent 4 }}
+  {{- with .Values.injectionWorker.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.injectionWorker.ingress.tls }}
+  tls:
+    {{- range .Values.injectionWorker.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- range .Values.injectionWorker.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            backend:
+              serviceName: {{ $fullName }}-injection-worker
+              servicePort: {{ $svcPort }}
+          {{- end }}
+    {{- end }}
+  {{- end }}

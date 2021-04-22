@@ -5,4 +5,4 @@ k8s_yaml(
         name="tag",
     )
 )
-docker_build('registry.gitlab.com/the-blockchain-xdev/xdev-product/enterprise-business-network/tezos-api-gateway', '.')
+docker_build('registry.gitlab.com/xdev-tech/xdev-enterprise-business-network/tezos-api-gateway', '.')
