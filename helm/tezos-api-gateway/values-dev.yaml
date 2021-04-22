@@ -1,3 +1,4 @@
+nameOverride: tag
 db:
   postgresqlPassword: randompwd
 
