@@ -27,7 +27,7 @@ export function createVaultKeys(vaultClient: VaultClient, vaultKeys: string[]) {
  * Step 2: Reveal account by using the account just created and send back to a given tezos account some tz
  *
  * @param {object} tezosService      - the service to interact with tezos
- * @param {object} inMemorySigner    - the signer corresponding to the given tezos account
+ * @param {object} signer    - the signer corresponding to the given tezos account
  * @param {string[]} vaultKeys       - the list of vault keys that need to have a tezos account
  * @param {object} logger            - logger
  *
@@ -35,14 +35,14 @@ export function createVaultKeys(vaultClient: VaultClient, vaultKeys: string[]) {
  */
 export async function createTezosAccountsByVaultKeys(
   tezosService: TezosService,
-  inMemorySigner: InMemorySigner,
+  signer: InMemorySigner | VaultSigner,
   vaultKeys: string[],
   logger: Logger,
 ) {
-  const faucetAccountPKH = await inMemorySigner.publicKeyHash();
+  const faucetAccountPKH = await signer.publicKeyHash();
 
   for (const vaultKey of vaultKeys) {
-    tezosService.setSigner(inMemorySigner);
+    tezosService.setSigner(signer);
     const vaultSigner = new VaultSigner(vaultClientConfig, vaultKey, logger);
 
     const pkh = await vaultSigner.publicKeyHash();

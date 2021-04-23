@@ -1,20 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
-import createHttpError from 'http-errors';
 import { StatusCodes } from 'http-status-codes';
-import { vaultClientConfig } from '../../../../config';
-import {
-  InvalidEntryPointParams,
-  InvalidMapStructureParams,
-} from '../../../../const/errors/invalid-entry-point-params';
-import { VaultClient } from '../../../../services/clients/vault-client';
-import { GatewayPool } from '../../../../services/gateway-pool';
 import { logger } from '../../../../services/logger';
+import { getUserAccounts } from '../../../../lib/user/get-user-account';
 
-function getUser(gatewayPool: GatewayPool) {
+function getUser() {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       // Declaration of request parameters
-      const { userIdList: users } = req.params;
+      const { userIdList: users } = req.query;
       logger.info(
         {
           users,
@@ -22,36 +15,10 @@ function getUser(gatewayPool: GatewayPool) {
         '[user/get-user-controller] User creation with the following data',
       );
 
-      const tezosService = await gatewayPool.getTezosService();
+      const accounts = await getUserAccounts(users as string[]);
 
-      logger.info(
-        {
-          tezosNode: tezosService.tezos.rpc.getRpcUrl(),
-        },
-        '[user/get-user-controller] Using this tezos node',
-      );
-
-      const vaultClient = new VaultClient(vaultClientConfig, logger);
-      const accounts = await (users as any).map(async (user: string) => {
-        return {
-          userId: user,
-          account: await vaultClient.getPublicKey(user),
-        };
-      });
-
-      return res.status(StatusCodes.CREATED).json(accounts);
+      return res.status(StatusCodes.OK).json(accounts);
     } catch (err) {
-      /* if (err instanceof AddressNotFoundError) {
-        return next(createHttpError(StatusCodes., err.message));
-      } */
-
-      if (
-        err instanceof InvalidEntryPointParams ||
-        err instanceof InvalidMapStructureParams
-      ) {
-        return next(createHttpError(StatusCodes.BAD_REQUEST, err.message));
-      }
-
       return next(err);
     }
   };

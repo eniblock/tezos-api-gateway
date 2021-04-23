@@ -7,7 +7,7 @@ export const paths = {
   ...jobs,
   ...storage,
   ...entrypoints,
-  ...users
+  ...users,
 };
 
 export default paths;

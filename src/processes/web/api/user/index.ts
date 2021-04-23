@@ -15,17 +15,11 @@ export default function registerUserRoutes(
   router: Router,
   gatewayPool: GatewayPool,
 ): Router {
-  router.get(
-    '/user',
-    getUserController.getUser(
-      gatewayPool,
-    ) as Application,
-  );
+  router.get('/user', getUserController.getUser() as Application);
+
   router.post(
     '/user/create',
-    createUserController.createUser(
-      gatewayPool,
-    ) as Application,
+    createUserController.createUser(gatewayPool) as Application,
   );
 
   return router;

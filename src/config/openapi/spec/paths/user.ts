@@ -14,11 +14,11 @@ export default {
             schema: {
               type: 'object',
               properties: {
-                userIdList:{
+                userIdList: {
                   type: 'array',
-                  items:{
+                  items: {
                     type: 'string',
-                    description: 'user accounts identifier'
+                    description: 'user accounts identifier',
                   },
                 },
                 secureKeyName: {
@@ -44,11 +44,11 @@ export default {
                   properties: {
                     userId: {
                       type: 'string',
-                      description: 'account identifier'
+                      description: 'account identifier',
                     },
                     account: {
                       type: 'string',
-                      description: 'public key hash of the created account'
+                      description: 'public key hash of the created account',
                     },
                   },
                 },
@@ -75,7 +75,7 @@ export default {
             type: 'array',
             items: {
               type: 'string',
-              description: "account identifiers",
+              description: 'account identifiers',
             },
           },
         },
@@ -93,11 +93,11 @@ export default {
                   properties: {
                     userId: {
                       type: 'string',
-                      description: 'account identifier'
+                      description: 'account identifier',
                     },
                     account: {
                       type: 'string',
-                      description: 'public key hash of the created account'
+                      description: 'public key hash of the created account',
                     },
                   },
                 },
