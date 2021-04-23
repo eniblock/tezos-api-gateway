@@ -1,3 +1,4 @@
+{{- if .Values.generatedApi.enabled }}
 {{- if .Values.generatedApi.ingress.enabled -}}
 {{- $fullName := include "tezos-api-gateway.fullname" . -}}
 {{- $svcPort := .Values.generatedApi.service.port -}}
@@ -39,3 +40,4 @@ spec:
           {{- end }}
     {{- end }}
   {{- end }}
+{{- end }}

@@ -1,3 +1,4 @@
+{{- if .Values.generatedApi.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -15,3 +16,4 @@ spec:
   selector:
     {{- include "tezos-api-gateway.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: generated-api
+{{- end }}

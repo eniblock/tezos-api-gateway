@@ -19,6 +19,8 @@ serviceAccount:
   name: ""
 
 api:
+  enabled: true
+
   replicaCount: 1
 
   podAnnotations: {}
@@ -84,6 +86,11 @@ api:
     port: 8200
 
 generatedApi:
+  enabled: false
+
+  # the contract served by the generated api (mandatory when generatedApi.enabled is true)
+  contract:
+
   replicaCount: 1
 
   podAnnotations: {}
