@@ -27,13 +27,7 @@ function createUser(gatewayPool: GatewayPool) {
         '[user/create-user-controller] Using this tezos node',
       );
 
-      const result = await createAccounts(
-        {
-          userIdList,
-          secureKeyName,
-        },
-        tezosService,
-      );
+      const result = await createAccounts(userIdList, secureKeyName,tezosService);
 
       return res.status(StatusCodes.CREATED).json(result);
     } catch (err) {
