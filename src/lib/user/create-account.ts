@@ -4,6 +4,7 @@ import { VaultSigner } from '../../services/signers/vault';
 import { vaultClientConfig } from '../../config';
 import { VaultClient } from '../../services/clients/vault-client';
 import {
+  createTezosAccountsByVaultKeys,
   // createTezosAccountsByVaultKeys,
   createVaultKeys,
 } from '../../scripts/activateTezosAccount/lib';
@@ -25,10 +26,7 @@ export async function createAccounts(
 ): Promise<CreateUserResult[]> {
   try {
     logger.info(
-      {
-        userIdList,
-        secureKeyName,
-      },
+      { userIdList },
       '[lib/user/createAccounts] Going to accounts for this following users',
     );
 
@@ -39,22 +37,24 @@ export async function createAccounts(
       '[lib/user/createAccounts] Created vault keys for ',
     );
 
-    // reveal account
     const vaultSigner = new VaultSigner(
       vaultClientConfig,
       secureKeyName,
       logger,
     );
 
-    logger.info({ vaultSigner, tezosService }, '[lib/user/createAccounts] '); // TODO remove
+    await createTezosAccountsByVaultKeys(
+      tezosService,
+      vaultSigner,
+      userIdList,
+      logger,
+    );
 
-    // await createTezosAccountsByVaultKeys(
-    //   tezosService,
-    //   vaultSigner,
-    //   users,
-    //   logger,
-    // );
-    // return userId and its address
+    logger.info(
+      { secureKeyName },
+      '[lib/user/createAccounts] Revealed accounts by transferring some XTZ from the account ',
+    );
+
     const result = await Promise.all(
       userIdList.map(async (user) => {
         return {
@@ -67,6 +67,7 @@ export async function createAccounts(
         };
       }),
     );
+
     logger.info(
       result,
       '[lib/user/createAccounts] Revealed accounts for the following users ',
@@ -76,7 +77,7 @@ export async function createAccounts(
   } catch (err) {
     logger.error(
       { error: err },
-      '[lib/jobs/forgeOperation] Unexpected error happened',
+      '[lib/user/createAccounts] Unexpected error happened',
     );
 
     throw err;
