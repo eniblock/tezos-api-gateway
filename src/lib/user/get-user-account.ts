@@ -4,6 +4,7 @@ import { VaultClient } from '../../services/clients/vault-client';
 import { vaultClientConfig } from '../../config';
 import sodium from 'libsodium-wrappers';
 import { b58cencode, prefix } from '@taquito/utils';
+import { ClientError } from '../../const/errors/client-error';
 import { UndefinedPublicKeyError } from '../../const/errors/undefined-public-key-error';
 
 /**
@@ -26,7 +27,17 @@ export async function getUserAccounts(
     const vaultClient = new VaultClient(vaultClientConfig, logger);
     return await Promise.all(
       (users as string[]).map(async (user) => {
-        const publicKey = await vaultClient.getPublicKey(user);
+        let publicKey;
+        try {
+          publicKey = await vaultClient.getPublicKey(user);
+        } catch (err) {
+          if (err instanceof ClientError) {
+            return {
+              userId: user,
+              account: null,
+            };
+          }
+        }
         if (!publicKey) {
           throw new UndefinedPublicKeyError(user);
         }

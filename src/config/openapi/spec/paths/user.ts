@@ -97,6 +97,7 @@ export default {
                     },
                     account: {
                       type: 'string',
+                      nullable: true,
                       description: 'public key hash of the created account',
                     },
                   },
