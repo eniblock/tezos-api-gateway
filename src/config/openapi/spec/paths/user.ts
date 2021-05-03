@@ -8,11 +8,13 @@ export default {
       requestBody: {
         description:
           'Addition information to get partial of the contract storage',
-        required: false,
+        required: true,
         content: {
           'application/json': {
             schema: {
               type: 'object',
+              additionalProperties: false,
+              required: ['userIdList', 'secureKeyName'],
               properties: {
                 userIdList: {
                   type: 'array',
