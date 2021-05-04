@@ -104,7 +104,7 @@ export async function createTezosAccountsByVaultKeys(
   tezosService: TezosService,
   signer: VaultSigner,
   vaultKeys: string[],
-) {
+): Promise<void> {
   const activatorAccountPKH = await signer.publicKeyHash();
 
   for (const vaultKey of vaultKeys) {
