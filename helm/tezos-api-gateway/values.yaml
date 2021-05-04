@@ -351,6 +351,13 @@ rabbitmq:
   persistence:
     enabled: true
     size: 1Gi
+  loadBalancer:
+    host: localhost
+    secretName: tezos-api-gateway-rabbitmq-tls-secret
+  auth:
+    tls:
+      existingSecret: tezos-api-gateway-rabbitmq-tls-secret
+      sslOptionsVerify: verify_none
 
 vault:
   server:
