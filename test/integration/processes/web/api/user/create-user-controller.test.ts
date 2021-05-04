@@ -18,10 +18,6 @@ import { VaultClient } from '../../../../../../src/services/clients/vault-client
 import { vaultClientConfig } from '../../../../../../src/config';
 import { TezosService } from '../../../../../../src/services/tezos';
 import { VaultSigner } from '../../../../../../src/services/signers/vault';
-import { CreateUserParams } from '../../../../../../src/const/interfaces/user/create/create-user-params';
-// import {
-//     flexibleTokenContract,
-// } from '../../../../../__fixtures__/smart-contract';
 
 describe('[processes/web/api/user] Create user controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -110,7 +106,6 @@ describe('[processes/web/api/user] Create user controller', () => {
             ) => {
               logger.info(
                 { tezosService, signer, vaultKeys },
-                '----------------------------------------------------------------------', // TODO to be removed
                 '[test/lib/user/createTezosAccountsByVaultKeys] mocking the createTezosAccountsByVaultKeys function',
               );
             },
@@ -135,30 +130,6 @@ describe('[processes/web/api/user] Create user controller', () => {
       });
 
       it('should return 201 and the list of user account addresses when the request is valid', async () => {
-        jest // TODO to be removed
-          .spyOn(userLib, 'createAccounts')
-          .mockImplementation(
-            async (
-              parameters: CreateUserParams,
-              tezosService: TezosService,
-            ) => {
-              logger.info(
-                { tezosService, parameters },
-                '[test/lib/user/createAccounts] mocking the createAccounts function',
-              );
-              return [
-                {
-                  userId: 'user1',
-                  account: 'tz1ernQcEU7qqR1t9R4mPFUCSkp9DLQqA7hW',
-                },
-                {
-                  userId: 'user2',
-                  account: 'tz1ergtponQEUqq1tR4mPFUCSkp9DLlP65lo',
-                },
-              ];
-            },
-          );
-
         const { body, status } = await request.post('/api/user/create').send({
           secureKeyName: 'toto',
           userIdList: ['user1', 'user2'],

@@ -14,7 +14,6 @@ import { GatewayPool } from '../../../../src/services/gateway-pool';
 import * as userLib from '../../../../src/lib/user/create-account';
 import { VaultSigner } from '../../../../src/services/signers/vault';
 import { VaultClient } from '../../../../src/services/clients/vault-client';
-import { CreateUserParams } from '../../../../src/const/interfaces/user/create/create-user-params';
 
 describe('[lib/user-create-account] create Tezos accounts', () => {
   const postgreService = new PostgreService(postgreConfig);
@@ -43,22 +42,6 @@ describe('[lib/user-create-account] create Tezos accounts', () => {
       jest
         .spyOn(gatewayPool, 'getTezosService')
         .mockResolvedValue(tezosService);
-
-      jest
-        .spyOn(userLib, 'createTezosAccountsByVaultKeys')
-        .mockImplementation(
-          async (
-            tezService: TezosService,
-            signer: VaultSigner,
-            vaultKeys: string[],
-          ) => {
-            logger.info(
-              { tezService, signer, vaultKeys },
-              '----------------------------------------------------------------------', // TODO to be removed
-              '[test/lib/user/createTezosAccountsByVaultKeys] mocking the createTezosAccountsByVaultKeys function',
-            );
-          },
-        );
     });
 
     beforeAll(async () => {
@@ -83,24 +66,18 @@ describe('[lib/user-create-account] create Tezos accounts', () => {
     });
 
     it('should correctly create accounts and return the corresponding addresses', async () => {
-      jest // TODO to be removed
-        .spyOn(userLib, 'createAccounts')
+      jest
+        .spyOn(userLib, 'createTezosAccountsByVaultKeys')
         .mockImplementation(
-          async (parameters: CreateUserParams, tezService: TezosService) => {
+          async (
+            tezService: TezosService,
+            signer: VaultSigner,
+            vaultKeys: string[],
+          ) => {
             logger.info(
-              { tezService, parameters },
-              '[test/lib/user/createAccounts] mocking the createAccounts function',
+              { tezService, signer, vaultKeys },
+              '[test/lib/user/createTezosAccountsByVaultKeys] mocking the createTezosAccountsByVaultKeys function',
             );
-            return [
-              {
-                userId: 'user1',
-                account: 'tz1ernQcEU7qqR1t9R4mPFUCSkp9DLQqA7hW',
-              },
-              {
-                userId: 'user2',
-                account: 'tz1ergtponQEUqq1tR4mPFUCSkp9DLlP65lo',
-              },
-            ];
           },
         );
 

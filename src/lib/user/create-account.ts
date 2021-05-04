@@ -96,15 +96,18 @@ export function createVaultKeys(vaultClient: VaultClient, vaultKeys: string[]) {
  * @param {object} tezosService      - the service to interact with tezos
  * @param {object} signer    - the signer corresponding to the given tezos account
  * @param {string[]} vaultKeys       - the list of vault keys that need to have a tezos account
- * @param {object} logger            - logger
  *
  * @return {Promise<void>}
+ *
+ * The reason why the function is declared as an expression is to be able to mock it in unit tests
+ * otherwise it is not possible to skip the blockchain call.
+ * reference: https://github.com/facebook/jest/issues/936#issuecomment-545080082
  */
-export async function createTezosAccountsByVaultKeys(
+export const createTezosAccountsByVaultKeys = async (
   tezosService: TezosService,
   signer: VaultSigner,
   vaultKeys: string[],
-): Promise<void> {
+) => {
   const activatorAccountPKH = await signer.publicKeyHash();
 
   for (const vaultKey of vaultKeys) {
@@ -135,4 +138,4 @@ export async function createTezosAccountsByVaultKeys(
     });
     logger.info({ operationHash }, 'REVEAL ACCOUNT');
   }
-}
+};
