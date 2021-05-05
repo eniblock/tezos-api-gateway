@@ -5,6 +5,7 @@ import { transferAmount, vaultClientConfig } from '../../config';
 import { VaultClient } from '../../services/clients/vault-client';
 import { CreateUserResult } from '../../const/interfaces/user/create/create-user-result';
 import { CreateUserParams } from '../../const/interfaces/user/create/create-user-params';
+import { Signer } from '@taquito/taquito';
 
 /**
  * create, save and reveal a user Account
@@ -81,12 +82,18 @@ export async function createAccounts(
  * @param {string[]} vaultKeys - the list of vault keys going to be created
  *
  * @return {Promise<void>}
+ *
+ * The reason why the function is declared as an expression is to be able to mock it in unit tests
+ * reference: https://github.com/facebook/jest/issues/936#issuecomment-545080082
  */
-export function createVaultKeys(vaultClient: VaultClient, vaultKeys: string[]) {
+export const createVaultKeys = (
+  vaultClient: VaultClient,
+  vaultKeys: string[],
+) => {
   return Promise.all(
     vaultKeys.map((vaultKey) => vaultClient.createKey(vaultKey)),
   );
-}
+};
 
 /**
  * Create tezos account corresponding to the vault key and reveal the account
@@ -105,7 +112,7 @@ export function createVaultKeys(vaultClient: VaultClient, vaultKeys: string[]) {
  */
 export const createTezosAccountsByVaultKeys = async (
   tezosService: TezosService,
-  signer: VaultSigner,
+  signer: Signer,
   vaultKeys: string[],
 ) => {
   const activatorAccountPKH = await signer.publicKeyHash();
