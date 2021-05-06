@@ -11,9 +11,6 @@ import { WebProcess } from '../../../../../../src/processes/web/web-process';
 import { PostgreTables } from '../../../../../../src/const/postgre/postgre-tables';
 import { PostgreService } from '../../../../../../src/services/postgre';
 import * as userLib from '../../../../../../src/lib/user/create-account';
-import { logger } from '../../../../../__fixtures__/services/logger';
-import { VaultClient } from '../../../../../../src/services/clients/vault-client';
-import { vaultClientConfig } from '../../../../../../src/config';
 
 describe('[processes/web/api/user] Create user controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -94,11 +91,6 @@ describe('[processes/web/api/user] Create user controller', () => {
     });
 
     describe('the secure key is in vault list', () => {
-      beforeAll(async () => {
-        const vaultClient = new VaultClient(vaultClientConfig, logger);
-        await vaultClient.createKey('toto');
-      });
-
       it('should return 500 when unexpected error happen', async () => {
         jest
           .spyOn(userLib, 'createAccounts')
