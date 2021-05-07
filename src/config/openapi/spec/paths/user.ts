@@ -4,10 +4,11 @@ export default {
   '/user/create': {
     post: {
       summary: 'Create user accounts',
-      description: 'Create user accounts',
+      description:
+        'Create vault keys for by user Id, activate the accounts on the blockchain network, and return the Tezos address',
       requestBody: {
         description:
-          'Addition information to get partial of the contract storage',
+          'list of the identifiers of the users to be created, and the master key id to activate them',
         required: true,
         content: {
           'application/json': {
@@ -42,7 +43,7 @@ export default {
                 type: 'array',
                 items: {
                   type: 'object',
-                  description: 'created accounts',
+                  description: 'user account by id',
                   properties: {
                     userId: {
                       type: 'string',
@@ -66,8 +67,9 @@ export default {
   },
   '/user': {
     get: {
-      summary: 'Get entrypoints schema of a contract',
-      description: 'Get entrypoints schema of a contract',
+      summary: 'Get account addresses of a bunch of users',
+      description:
+        'Return a list of Tezos account addresses of a bunch of users and null if the user is unknown',
       parameters: [
         {
           name: 'userIdList',
@@ -84,14 +86,14 @@ export default {
       ],
       responses: {
         200: {
-          description: 'the contract entrypoint(s) schema',
+          description: 'list of the user account addresses',
           content: {
             'application/json': {
               schema: {
                 type: 'array',
                 items: {
                   type: 'object',
-                  description: 'created accounts',
+                  description: 'user account by id',
                   properties: {
                     userId: {
                       type: 'string',

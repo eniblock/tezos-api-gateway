@@ -126,6 +126,7 @@ export const createTezosAccountsByVaultKeys = async (
     logger.info({ pkh }, 'Going to activate this account');
 
     // This step is to activate the account
+    // The operation is included by Taquito automatically to the transaction when the transfer recipient account is not yet activated
     const transactionOperation = await tezosService.tezos.contract.transfer({
       to: pkh,
       amount: transferAmount,
@@ -139,6 +140,7 @@ export const createTezosAccountsByVaultKeys = async (
     tezosService.setSigner(vaultSigner);
 
     // This step is to reveal the account
+    // The operation is included by Taquito automatically to the transaction when the sender account is not yet revealed
     const { hash: operationHash } = await tezosService.tezos.contract.transfer({
       to: activatorAccountPKH,
       amount: 1,
