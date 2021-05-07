@@ -39,7 +39,7 @@ publish_docker:
       --frontend dockerfile.v0
       --local context=.
       --local dockerfile=.
-      --export-cache type=registry,ref=$CI_REGISTRY_IMAGE:build-cache,push=true
+      --export-cache mode=max,type=registry,ref=$CI_REGISTRY_IMAGE:build-cache,push=true
       --import-cache type=registry,ref=$CI_REGISTRY_IMAGE:build-cache
       --output type=image,name=$CONTAINER_TEST_IMAGE,push=true
 
