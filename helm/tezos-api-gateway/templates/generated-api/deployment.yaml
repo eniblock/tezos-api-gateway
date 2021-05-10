@@ -62,7 +62,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: "{{ .Release.Name }}-{{ .Values.generatedApi.vault.name }}"
-                  key: vault-app-token
+                  key: VAULT_ROOT_TOKEN
             - name: CONTRACT_ADDRESS
               value: {{ .Values.generatedApi.contract}}
           ports:

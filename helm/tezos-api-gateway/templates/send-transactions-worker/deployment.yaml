@@ -62,7 +62,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: "{{ .Release.Name }}-{{ .Values.sendTransactionsWorker.vault.name }}"
-                  key: vault-app-token
+                  key: VAULT_ROOT_TOKEN
           ports:
             - name: prometheus
               containerPort: 9466
