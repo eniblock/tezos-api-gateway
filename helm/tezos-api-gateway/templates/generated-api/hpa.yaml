@@ -1,0 +1,30 @@
+{{- if .Values.generatedApi.enabled }}
+{{- if .Values.generatedApi.autoscaling.enabled }}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "tezos-api-gateway.fullname" . }}-generated-api
+  labels:
+    {{- include "tezos-api-gateway.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "tezos-api-gateway.fullname" . }}-generated-api
+  minReplicas: {{ .Values.generatedApi.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.generatedApi.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.generatedApi.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.generatedApi.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.generatedApi.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.generatedApi.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}
+{{- end }}

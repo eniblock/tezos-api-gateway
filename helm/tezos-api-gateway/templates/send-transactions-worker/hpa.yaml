@@ -1,0 +1,28 @@
+{{- if .Values.sendTransactionsWorker.autoscaling.enabled }}
+apiVersion: autoscaling/v2beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "tezos-api-gateway.fullname" . }}-send-transactions-worker
+  labels:
+    {{- include "tezos-api-gateway.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "tezos-api-gateway.fullname" . }}-send-transactions-worker
+  minReplicas: {{ .Values.sendTransactionsWorker.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.sendTransactionsWorker.autoscaling.maxReplicas }}
+  metrics:
+    {{- if .Values.sendTransactionsWorker.autoscaling.targetCPUUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: {{ .Values.sendTransactionsWorker.autoscaling.targetCPUUtilizationPercentage }}
+    {{- end }}
+    {{- if .Values.sendTransactionsWorker.autoscaling.targetMemoryUtilizationPercentage }}
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageUtilization: {{ .Values.sendTransactionsWorker.autoscaling.targetMemoryUtilizationPercentage }}
+    {{- end }}
+{{- end }}

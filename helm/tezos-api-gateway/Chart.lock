@@ -1,0 +1,12 @@
+dependencies:
+- name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 10.2.5
+- name: rabbitmq
+  repository: https://charts.bitnami.com/bitnami
+  version: 8.8.0
+- name: vault
+  repository: oci://registry.gitlab.com/xdev-tech/xdev-enterprise-business-network/vault/helm
+  version: 1.0.2-helm.5
+digest: sha256:234b9534842576b8e2af0e27d9c8973b5c4eb8b202553f6865962ed4f8a185ac
+generated: "2021-05-10T17:20:48.22197963+02:00"
