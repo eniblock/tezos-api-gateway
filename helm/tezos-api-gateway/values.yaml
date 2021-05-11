@@ -2,7 +2,7 @@ image:
   repository: "registry.gitlab.com/xdev-tech/xdev-enterprise-business-network/tezos-api-gateway"
   pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "gle-k8s"
+  # tag: "sometag"
 
 imagePullSecrets:
   - name: gitlab-registry
