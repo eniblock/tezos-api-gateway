@@ -19,7 +19,7 @@ vault:
 
     dev:
       enabled: true
-      devRootToken: "myroot"
+      rootToken: "myroot"
 
     standalone:
       enabled: false
