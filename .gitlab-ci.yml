@@ -36,30 +36,7 @@ publish_docker:
 publish_helm:
   stage: publish
   image: tbxdev/build-helm
-  variables:
-    HELM_IMAGE: $CI_REGISTRY_IMAGE/helm/tezos-api-gateway
-  before_script:
-    - set -x
-    - VERSION=`yq eval .version ./helm/tezos-api-gateway/Chart.yaml`
-    - |
-      if [ -z "$CI_COMMIT_TAG" ]; then
-        VERSION=$VERSION-$CI_COMMIT_REF_SLUG
-        IMAGES=$CI_REGISTRY_IMAGE:$VERSION,$CI_REGISTRY_IMAGE:$VERSION.$CI_PIPELINE_IID
-      else
-        [ "$VERSION" != "$CI_COMMIT_TAG" ] && exit 1
-        IMAGES=$CI_REGISTRY_IMAGE:$VERSION
-      fi
-    - helm registry login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
+    - helm registry login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - helm dependency update ./helm/tezos-api-gateway
-    - yq e -i ".appVersion = \"$VERSION\"" helm/tezos-api-gateway/Chart.yaml
-    - helm chart save ./helm/tezos-api-gateway $HELM_IMAGE:$VERSION
-    - helm chart push $HELM_IMAGE:$VERSION
-    # same with the pipeline id, so we can use a specific version (not sure we need to keep this one)
-    - |
-      if [ -z "$CI_COMMIT_TAG" ]; then
-        VERSION=$VERSION.$CI_PIPELINE_IID
-        yq e -i ".appVersion = \"$VERSION\"" helm/tezos-api-gateway/Chart.yaml
-        helm chart save ./helm/tezos-api-gateway $HELM_IMAGE:$VERSION
-        helm chart push $HELM_IMAGE:$VERSION
-      fi
+    - build $CI_REGISTRY_IMAGE/helm/tezos-api-gateway ./helm/tezos-api-gateway
