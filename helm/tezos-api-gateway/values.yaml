@@ -1,0 +1,377 @@
+image:
+  repository: "registry.gitlab.com/xdev-tech/xdev-enterprise-business-network/tezos-api-gateway"
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  # tag: "sometag"
+
+imagePullSecrets:
+  - name: gitlab-registry
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+api:
+  enabled: true
+
+  replicaCount: 1
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+  # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+  # runAsUser: 1000
+
+  service:
+    type: ClusterIP
+    port: 3333
+
+  ingress:
+    enabled: false
+    certManager: true
+    annotations:
+      kubernetes.io/tls-acme: "true"
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+  #   memory: 128Mi
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  numberOfOperationConfirmation: 1
+
+  postgresql:
+    name: db
+    postgresqlDatabase: tezos_api_gateway
+    postgresqlUsername: tezos-service
+
+  rabbitmq:
+    name: rabbitmq
+
+  vault:
+    name: vault
+    port: 8200
+
+generatedApi:
+  enabled: false
+
+  # the contract served by the generated api (mandatory when generatedApi.enabled is true)
+  contract:
+
+  replicaCount: 1
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+  # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+  # runAsUser: 1000
+
+  service:
+    type: ClusterIP
+    port: 3333
+
+  ingress:
+    enabled: false
+    certManager: true
+    annotations:
+      kubernetes.io/tls-acme: "true"
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+  #   memory: 128Mi
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  numberOfOperationConfirmation: 1
+
+  postgresql:
+    name: db
+    postgresqlDatabase: tezos_api_gateway
+    postgresqlUsername: tezos-service
+
+  rabbitmq:
+    name: rabbitmq
+
+  vault:
+    name: vault
+    port: 8200
+
+operationStatusWorker:
+  replicaCount: 1
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+  # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+  service:
+    type: ClusterIP
+    port: 9465
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  numberOfOperationConfirmation: 1
+
+  postgresql:
+    name: db
+    postgresqlDatabase: tezos_api_gateway
+    postgresqlUsername: tezos-service
+
+  rabbitmq:
+    name: rabbitmq
+
+  vault:
+    name: vault
+    port: 8200
+
+sendTransactionsWorker:
+  replicaCount: 1
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+  # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+  service:
+    type: ClusterIP
+    port: 9466
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  numberOfOperationConfirmation: 1
+
+  postgresql:
+    name: db
+    postgresqlDatabase: tezos_api_gateway
+    postgresqlUsername: tezos-service
+
+  rabbitmq:
+    name: rabbitmq
+
+  vault:
+    name: vault
+    port: 8200
+
+injectionWorker:
+  replicaCount: 1
+
+  podAnnotations: {}
+
+  podSecurityContext: {}
+  # fsGroup: 2000
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+  service:
+    type: ClusterIP
+    port: 9467
+
+  resources: {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+  autoscaling:
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 100
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  nodeSelector: {}
+
+  tolerations: []
+
+  affinity: {}
+
+  numberOfOperationConfirmation: 1
+
+  postgresql:
+    name: db
+    postgresqlDatabase: tezos_api_gateway
+    postgresqlUsername: tezos-service
+
+  rabbitmq:
+    name: rabbitmq
+
+  vault:
+    name: vault
+    port: 8200
+
+db:
+  postgresqlDatabase: tezos_api_gateway
+  postgresqlUsername: tezos-service
+  persistence:
+    enabled: true
+    size: 1Gi
+  image:
+    tag: 12.6.0-debian-10-r14
+
+rabbitmq:
+  name: rabbitmq
+  auth:
+    tls:
+      enabled: true
+      existingSecretFullChain: true
+    erlangCookie: 94155874a93041aca19378c9a4ee28ac
+  persistence:
+    enabled: true
+    size: 1Gi
+  loadBalancer:
+    host: localhost
+    secretName: tezos-api-gateway-rabbitmq-tls-secret
+  auth:
+    tls:
+      existingSecret: tezos-api-gateway-rabbitmq-tls-secret
+      sslOptionsVerify: verify_none
+
+vault:
+  server:
+    debug: false
+
+    dev:
+      enabled: false
+
+    standalone:
+      enabled: true
+      sealType:
+      googleProject:
+      googleRegion:
+      gcpckmsSealKeyRing:
+      gcpckmsSealCryptoKey:
+      initPath:
+      initToken:

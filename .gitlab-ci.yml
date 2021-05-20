@@ -2,11 +2,14 @@ stages:
   - test
   - publish
 
+<<<<<<< HEAD
 variables:
   CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
   GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
 
+=======
+>>>>>>> develop
 test:
   stage: test
   image: node:14.15.4-alpine3.12
@@ -23,6 +26,12 @@ test:
     - npm i
   script:
     - npm test
+  only:
+    changes:
+      - src/**/*
+      - test/*
+      - "*.json"
+      - "*.js"
 
 sonarcloud-check:
   image:
@@ -39,13 +48,37 @@ sonarcloud-check:
     - master
     - develop
 
-publish:
+publish_docker:
   stage: publish
-  image: docker:stable
-  services:
-    - docker:dind
+  image:
+    name: tbxdev/build-docker
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
-    - docker build --pull -t $CONTAINER_TEST_IMAGE .
-    - docker push $CONTAINER_TEST_IMAGE
+    - IMAGE=$CI_REGISTRY_IMAGE:`yq eval .version ./helm/tezos-api-gateway/Chart.yaml`-$CI_COMMIT_REF_SLUG
+    - PIPELINE_IID_IMAGE=$IMAGE.$CI_PIPELINE_IID
+    - buildctl-daemonless.sh build
+      --frontend dockerfile.v0
+      --local context=.
+      --local dockerfile=.
+      --export-cache mode=max,type=registry,ref=$CI_REGISTRY_IMAGE:build-cache,push=true
+      --import-cache type=registry,ref=$CI_REGISTRY_IMAGE:build-cache
+      --output type=image,\"name=$IMAGE,$PIPELINE_IID_IMAGE\",push=true
+
+publish_helm:
+  stage: publish
+  image: tbxdev/build-helm
+  variables:
+    HELM_IMAGE: $CI_REGISTRY_IMAGE/helm/tezos-api-gateway
+  script:
+    - helm registry login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - helm dependency update ./helm/tezos-api-gateway
+    - VERSION=`yq eval .version ./helm/tezos-api-gateway/Chart.yaml`-$CI_COMMIT_REF_SLUG
+    - yq e -i ".appVersion = \"$VERSION\"" helm/tezos-api-gateway/Chart.yaml
+    - helm chart save ./helm/tezos-api-gateway $HELM_IMAGE:$VERSION
+    - helm chart push $HELM_IMAGE:$VERSION
+    # same with the pipeline id, so we can use a specific version (not sure we need to keep this one)
+    - VERSION=$VERSION.$CI_PIPELINE_IID
+    - yq e -i ".appVersion = \"$VERSION\"" helm/tezos-api-gateway/Chart.yaml
+    - helm chart save ./helm/tezos-api-gateway $HELM_IMAGE:$VERSION
+    - helm chart push $HELM_IMAGE:$VERSION

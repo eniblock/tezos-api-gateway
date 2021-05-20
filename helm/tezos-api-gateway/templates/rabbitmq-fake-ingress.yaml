@@ -1,0 +1,26 @@
+{{- $fullName := include "tezos-api-gateway.fullname" . -}}
+{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1beta1
+{{- else -}}
+apiVersion: extensions/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ $fullName }}-rabbitmq-fake
+  labels:
+    {{- include "tezos-api-gateway.labels" . | nindent 4 }}
+  annotations:
+    kubernetes.io/tls-acme: "true"
+spec:
+  tls:
+    - hosts:
+      - {{ .Values.rabbitmq.loadBalancer.host | quote }}
+      secretName: {{ .Values.rabbitmq.loadBalancer.secretName}}
+  rules:
+    - host: {{ .Values.rabbitmq.loadBalancer.host | quote }}
+      http:
+        paths:
+          - path: /fake
+            backend:
+              serviceName: {{ $fullName }}-rabbitmq
+              servicePort: 5672

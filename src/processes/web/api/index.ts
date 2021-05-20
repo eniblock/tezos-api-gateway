@@ -6,6 +6,7 @@ import { PostgreService } from '../../../services/postgre';
 import { AmqpService } from '../../../services/amqp';
 import { GatewayPool } from '../../../services/gateway-pool';
 import registerEntryPointsRoutes from './entrypoints';
+import registerUserRoutes from './user';
 
 export default function setupRoutes(
   app: ExpressApp,
@@ -18,6 +19,7 @@ export default function setupRoutes(
   registerJobsRoutes(router, gatewayPool, postgreService, amqpService);
   registerStorageRoutes(router, gatewayPool);
   registerEntryPointsRoutes(router, gatewayPool);
+  registerUserRoutes(router, gatewayPool);
 
 app.use('/api', router);
 

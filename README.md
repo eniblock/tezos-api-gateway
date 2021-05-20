@@ -144,6 +144,24 @@ npm run prettier:write
 | TEZOS_NODE_EDONET_TEST      | https://api.tez.ie/rpc/edonet                            | A Tezos Node URL                                |
 | TEZOS_NODE_EDONET_TEST_URLS | https://api.tez.ie/rpc/edonet,https://edonet.smartpy.io/ | List of Tezos Node Urls, separated by comma `,` |
 
+## Kubernetes Installation
+It is assumed that you have a cert-manager installed on your system.
+
+Then simply run helm to deploy it as you always do.
+
+```shell
+helm dependency update ./helm/tezos-api-gateway
+helm install tezos-api-gateway ./helm/tezos-api-gateway --values ./helm/tezos-api-gateway/values-dev.yaml
+```
+
+Also, to develop using a local kubernetes cluster, simply install tilt and run.
+
+```shell
+helm dependency update ./helm/tezos-api-gateway
+tilt up
+```
+
+
 [1]: src/processes/web/README.md
 [2]: src/processes/generated-api-web/README.md
 [3]: src/processes/workers/injection/README.md

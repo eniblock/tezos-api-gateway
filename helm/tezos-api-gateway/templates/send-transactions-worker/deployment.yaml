@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "tezos-api-gateway.fullname" . }}-send-transactions-worker
+  labels:
+    {{- include "tezos-api-gateway.labels" . | nindent 4 }}
+    app.kubernetes.io/component: send-transactions-worker
+spec:
+  {{- if not .Values.sendTransactionsWorker.autoscaling.enabled }}
+  replicas: {{ .Values.sendTransactionsWorker.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "tezos-api-gateway.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: send-transactions-worker
+  template:
+    metadata:
+      {{- with .Values.sendTransactionsWorker.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "tezos-api-gateway.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: send-transactions-worker
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "tezos-api-gateway.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.sendTransactionsWorker.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.sendTransactionsWorker.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["node", "build/src/processes/workers/send-transactions/index.js"]
+          env:
+            - name: DB_USERNAME
+              value: {{ .Values.sendTransactionsWorker.postgresql.postgresqlUsername | quote }}
+            - name: DB_NAME
+              value: {{ .Values.sendTransactionsWorker.postgresql.postgresqlDatabase | quote }}
+            - name: DB_PWD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-{{ .Values.sendTransactionsWorker.postgresql.name }}"
+                  key: postgresql-password
+            - name: DB_HOST
+              value: "{{ .Release.Name }}-{{ .Values.sendTransactionsWorker.postgresql.name }}"
+            - name: AMQP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-{{ .Values.sendTransactionsWorker.rabbitmq.name }}"
+                  key: rabbitmq-password
+            - name: AMQP_URL
+              value: "amqp://user:$(AMQP_PASSWORD)@{{ .Release.Name }}-{{ .Values.sendTransactionsWorker.rabbitmq.name }}"
+            - name: VAULT_URL
+              value: "http://{{ .Release.Name }}-{{ .Values.sendTransactionsWorker.vault.name }}:{{ .Values.sendTransactionsWorker.vault.port }}/v1/"
+            - name: VAULT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-{{ .Values.sendTransactionsWorker.vault.name }}"
+                  key: VAULT_ROOT_TOKEN
+          ports:
+            - name: prometheus
+              containerPort: 9466
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: prometheus
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: prometheus
+          resources:
+            {{- toYaml .Values.sendTransactionsWorker.resources | nindent 12 }}
+      {{- with .Values.sendTransactionsWorker.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.sendTransactionsWorker.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.sendTransactionsWorker.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "tezos-api-gateway.fullname" . }}-injection-worker
+  labels:
+    {{- include "tezos-api-gateway.labels" . | nindent 4 }}
+    app.kubernetes.io/component: injection-worker
+spec:
+  type: {{ .Values.injectionWorker.service.type }}
+  ports:
+    - port: {{ .Values.injectionWorker.service.port }}
+      targetPort: 9466
+      protocol: TCP
+      name: prometheus
+  selector:
+    {{- include "tezos-api-gateway.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: injection-worker

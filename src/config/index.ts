@@ -87,6 +87,7 @@ export const nbOfConfirmation = parseInt(
   3,
   process.env.NUMBER_OF_OPERATION_CONFIRMATION,
 );
+
 export const nbOfRetry = parseInt(3, process.env.NUMBER_OF_INDEXERS_RETRY);
 
 export const vaultClientConfig = {
@@ -96,3 +97,5 @@ export const vaultClientConfig = {
 
 export const contractAddress =
   process.env.CONTRACT_ADDRESS || 'KT1Nk7KLuuWJz8muPN1hFZhFtneepKNAsJSU';
+
+export const transferAmount = parseInt(2, process.env.TRANSFER_AMOUNT);

@@ -1,0 +1,97 @@
+{{- if .Values.generatedApi.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "tezos-api-gateway.fullname" . }}-generated-api
+  labels:
+    {{- include "tezos-api-gateway.labels" . | nindent 4 }}
+    app.kubernetes.io/component: generated-api
+spec:
+  {{- if not .Values.generatedApi.autoscaling.enabled }}
+  replicas: {{ .Values.generatedApi.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "tezos-api-gateway.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: generated-api
+  template:
+    metadata:
+      {{- with .Values.generatedApi.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "tezos-api-gateway.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: generated-api
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "tezos-api-gateway.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.generatedApi.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.generatedApi.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: DB_USERNAME
+              value: {{ .Values.generatedApi.postgresql.postgresqlUsername | quote }}
+            - name: DB_NAME
+              value: {{ .Values.generatedApi.postgresql.postgresqlDatabase | quote }}
+            - name: DB_PWD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-{{ .Values.generatedApi.postgresql.name }}"
+                  key: postgresql-password
+            - name: DB_HOST
+              value: "{{ .Release.Name }}-{{ .Values.generatedApi.postgresql.name }}"
+            - name: AMQP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-{{ .Values.generatedApi.rabbitmq.name }}"
+                  key: rabbitmq-password
+            - name: AMQP_URL
+              value: "amqp://user:$(AMQP_PASSWORD)@{{ .Release.Name }}-{{ .Values.generatedApi.rabbitmq.name }}"
+            - name: VAULT_URL
+              value: "http://{{ .Release.Name }}-{{ .Values.generatedApi.vault.name }}:{{ .Values.generatedApi.vault.port }}/v1/"
+            - name: VAULT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-{{ .Values.generatedApi.vault.name }}"
+                  key: VAULT_ROOT_TOKEN
+            - name: CONTRACT_ADDRESS
+              value: {{ .Values.generatedApi.contract}}
+          ports:
+            - name: http
+              containerPort: 3333
+              protocol: TCP
+            - name: prometheus
+              containerPort: 9464
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /metrics
+              port: prometheus
+          readinessProbe:
+            httpGet:
+              path: /metrics
+              port: prometheus
+          resources:
+            {{- toYaml .Values.generatedApi.resources | nindent 12 }}
+      {{- with .Values.generatedApi.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.generatedApi.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.generatedApi.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}
