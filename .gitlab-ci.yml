@@ -2,9 +2,6 @@ stages:
   - test
   - publish
 
-variables:
-  CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
-
 test:
   stage: test
   image: node:14.15.4-alpine3.12
@@ -35,23 +32,30 @@ publish_docker:
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   script:
+    - IMAGE=$CI_REGISTRY_IMAGE:`yq eval .version ./helm/tezos-api-gateway/Chart.yaml`-$CI_COMMIT_REF_SLUG
+    - PIPELINE_IID_IMAGE=$IMAGE.$CI_PIPELINE_IID
     - buildctl-daemonless.sh build
       --frontend dockerfile.v0
       --local context=.
       --local dockerfile=.
       --export-cache mode=max,type=registry,ref=$CI_REGISTRY_IMAGE:build-cache,push=true
       --import-cache type=registry,ref=$CI_REGISTRY_IMAGE:build-cache
-      --output type=image,name=$CONTAINER_TEST_IMAGE,push=true
+      --output type=image,\"name=$IMAGE,$PIPELINE_IID_IMAGE\",push=true
 
 publish_helm:
   stage: publish
   image: tbxdev/build-helm
+  variables:
+    HELM_IMAGE: $CI_REGISTRY_IMAGE/helm/tezos-api-gateway
   script:
     - helm registry login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - helm dependency update ./helm/tezos-api-gateway
-    - HELM_IMAGE=$CI_REGISTRY_IMAGE/helm/tezos-api-gateway:`yq eval .version ./helm/tezos-api-gateway/Chart.yaml`-$CI_COMMIT_REF_SLUG.$CI_PIPELINE_IID
-    - helm chart save ./helm/tezos-api-gateway $HELM_IMAGE
-    - helm chart push $HELM_IMAGE
-  only:
-    changes:
-      - helm/**/*
+    - VERSION=`yq eval .version ./helm/tezos-api-gateway/Chart.yaml`-$CI_COMMIT_REF_SLUG
+    - yq e -i ".appVersion = \"$VERSION\"" helm/tezos-api-gateway/Chart.yaml
+    - helm chart save ./helm/tezos-api-gateway $HELM_IMAGE:$VERSION
+    - helm chart push $HELM_IMAGE:$VERSION
+    # same with the pipeline id, so we can use a specific version (not sure we need to keep this one)
+    - VERSION=$VERSION.$CI_PIPELINE_IID
+    - yq e -i ".appVersion = \"$VERSION\"" helm/tezos-api-gateway/Chart.yaml
+    - helm chart save ./helm/tezos-api-gateway $HELM_IMAGE:$VERSION
+    - helm chart push $HELM_IMAGE:$VERSION
