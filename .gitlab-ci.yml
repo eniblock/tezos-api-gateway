@@ -2,14 +2,11 @@ stages:
   - test
   - publish
 
-<<<<<<< HEAD
 variables:
   CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
   GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
 
-=======
->>>>>>> develop
 test:
   stage: test
   image: node:14.15.4-alpine3.12
