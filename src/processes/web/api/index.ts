@@ -21,7 +21,8 @@ export default function setupRoutes(
   registerEntryPointsRoutes(router, gatewayPool);
   registerUserRoutes(router, gatewayPool);
 
-  app.use('/api', router);
+app.use('/api', router);
+
 
   return app;
 }
