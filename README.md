@@ -1,4 +1,5 @@
 # TEZOS API GATEWAY
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=xdev-tech_tezos-api-gateway&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=xdev-tech_tezos-api-gateway)
 
 ## Introduction
 
