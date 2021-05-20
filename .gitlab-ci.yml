@@ -38,6 +38,7 @@ sonarcloud-check:
     - merge_requests
     - master
     - develop
+    - sonarcloud-integration
 
 publish:
   stage: publish
