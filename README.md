@@ -1,5 +1,7 @@
 # TEZOS API GATEWAY
 
+![snyk logo](https://res.cloudinary.com/snyk/image/upload/v1468845142/favicon/favicon.ico)[To see snyk reports click here](https://app.snyk.io/org/glehmann/projects)
+
 ## Introduction
 
 This is a project to build APIs to easily interact with Tezos blockchain. This project currently contains the following APIs:
