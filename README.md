@@ -1,4 +1,5 @@
 # TEZOS API GATEWAY
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=xdev-tech_tezos-api-gateway&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=xdev-tech_tezos-api-gateway)
 
 ![snyk logo](https://res.cloudinary.com/snyk/image/upload/v1468845142/favicon/favicon.ico)[To see snyk reports click here](https://app.snyk.io/org/glehmann/projects)
 
