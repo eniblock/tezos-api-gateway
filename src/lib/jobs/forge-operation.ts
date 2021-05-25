@@ -88,7 +88,13 @@ export async function forgeOperation(
       '[lib/jobs/forgeOperation] Successfully create a job after forging operation',
     );
 
-    await insertTransactions(postgreService.pool, params, branch, jobId);
+    await insertTransactions(
+      postgreService.pool,
+      params,
+      branch,
+      jobId,
+      forgeOperationParams.callerId ? forgeOperationParams.callerId : '',
+    );
 
     logger.info(
       {

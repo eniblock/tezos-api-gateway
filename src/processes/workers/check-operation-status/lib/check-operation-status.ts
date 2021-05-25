@@ -87,6 +87,7 @@ export async function checkOperationStatus(
                 {
                   entrypoint: parameters.entrypoint,
                   contractAddress: transaction.destination,
+                  callerId: transaction.caller_id,
                 },
               );
               logger.info(

@@ -102,6 +102,7 @@ describe('[models/transaction]', () => {
         ],
         'branch_address',
         insertedJob.id,
+        'myCaller',
       );
 
       await expect(
@@ -183,6 +184,7 @@ describe('[models/transaction]', () => {
           ],
           'branch_address',
           fakeId,
+          'myCaller',
         ),
       ).rejects.toThrowError(
         Error(
@@ -209,6 +211,7 @@ describe('[models/transaction]', () => {
           },
         },
         jobId: insertedJob.id,
+        callerId: 'myCaller',
       });
 
       await expect(
@@ -251,6 +254,7 @@ describe('[models/transaction]', () => {
             },
           },
           jobId: fakeId,
+          callerId: 'myCaller',
         }),
       ).rejects.toThrowError(
         Error(
@@ -306,9 +310,9 @@ describe('[models/transaction]', () => {
             },
           },
         ],
-
         'branch_address',
         insertedJob.id,
+        'myCaller',
       );
 
       await insertTransactions(
@@ -344,9 +348,9 @@ describe('[models/transaction]', () => {
             },
           },
         ],
-
         'branch_address_2',
         anotherJob.id,
+        'myCaller',
       );
     });
 

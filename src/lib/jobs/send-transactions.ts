@@ -55,6 +55,7 @@ export async function sendTransactionsToQueue(
     });
 
     const jobId = insertedJob.id;
+    const callerId = sendTransactionsParams.callerId;
 
     logger.info(
       { insertedJob },
@@ -64,6 +65,7 @@ export async function sendTransactionsToQueue(
     await publishForSendTransactions(amqpService, {
       ...sendTransactionsParams,
       jobId,
+      callerId,
     });
 
     logger.info(
@@ -96,7 +98,12 @@ export async function sendTransactionsToQueue(
  * @return {object} the job corresponding the action
  */
 export async function sendTransactions(
-  { transactions, secureKeyName, jobId }: SendTransactionsToQueueParams,
+  {
+    transactions,
+    secureKeyName,
+    jobId,
+    callerId,
+  }: SendTransactionsToQueueParams,
   gatewayPool: GatewayPool,
   postgreService: PostgreService,
   logger: Logger,
@@ -141,7 +148,13 @@ export async function sendTransactions(
       throw new Error('Public key hash or operation hash is undefined');
     }
 
-    await insertTransactions(postgreService, transactions, jobId, pkh);
+    await insertTransactions(
+      postgreService,
+      transactions,
+      jobId,
+      pkh,
+      callerId ? callerId : '',
+    );
 
     logger.info(
       { transactions, jobId, accountAddress: pkh },
@@ -256,6 +269,7 @@ async function insertTransactions(
   transactions: TransactionDetails[],
   jobId: number,
   pkh: string,
+  callerId: string,
 ) {
   await Promise.all(
     transactions.map(
@@ -270,6 +284,7 @@ async function insertTransactions(
             },
           },
           jobId,
+          callerId,
         });
       },
     ),

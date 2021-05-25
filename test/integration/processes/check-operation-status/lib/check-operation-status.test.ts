@@ -116,6 +116,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
           entrypoint: 'entrypoint',
           value: { entrypoint: { name: 'toto' } },
         },
+        callerId: 'myCaller',
         jobId: publishedJob.id,
       });
       await insertTransactionWithParametersJson(postgreService.pool, {
@@ -125,6 +126,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
           entrypoint: 'entrypoint2',
           value: { entrypoint2: { name: 'tata' } },
         },
+        callerId: 'myCaller',
         jobId: publishedJob.id,
       });
 

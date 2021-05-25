@@ -67,6 +67,7 @@ describe('[lib/jobs/inject-operation]', () => {
           entryPoint: 'lock',
         },
       ],
+      callerId: 'myCaller',
       sourceAddress: testAccount,
     };
 
