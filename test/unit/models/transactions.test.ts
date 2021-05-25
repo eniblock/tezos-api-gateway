@@ -126,6 +126,7 @@ describe('[models/transaction]', () => {
             '{"entrypoint":"transfer","value":{"transfer":{"destination":"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw","tokens":"5"}}}',
           job_id: insertedJob.id,
           branch: 'branch_address',
+          caller_id: 'myCaller',
         },
         {
           id: insertedResult[1].id,
@@ -142,6 +143,7 @@ describe('[models/transaction]', () => {
             '{"entrypoint":"transfer","value":{"transfer":{"destination":"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw","tokens":"10"}}}',
           job_id: insertedJob.id,
           branch: 'branch_address',
+          caller_id: 'myCaller',
         },
       ]);
     });
@@ -234,6 +236,7 @@ describe('[models/transaction]', () => {
             '{"entrypoint":"transfer","value":{"transfer":{"destination":"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw","tokens":"5"}}}',
           job_id: insertedJob.id,
           branch: null,
+          caller_id: 'myCaller',
         },
       ]);
     });
@@ -372,6 +375,7 @@ describe('[models/transaction]', () => {
             '{"entrypoint":"transfer","value":{"transfer":{"destination":"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw","tokens":"5"}}}',
           job_id: insertedJob.id,
           branch: 'branch_address',
+          caller_id: 'myCaller',
         },
         {
           id: result[1].id,
@@ -388,6 +392,7 @@ describe('[models/transaction]', () => {
             '{"entrypoint":"transfer","value":{"transfer":{"destination":"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw","tokens":"5"}}}',
           job_id: anotherJob.id,
           branch: 'branch_address_2',
+          caller_id: 'myCaller',
         },
       ]);
     });

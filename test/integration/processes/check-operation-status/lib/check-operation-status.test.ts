@@ -151,6 +151,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
           headers: {
             entrypoint: 'entrypoint',
             contractAddress: 'destination',
+            callerId: 'myCaller',
           },
         },
       );
@@ -169,6 +170,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
           headers: {
             entrypoint: 'entrypoint2',
             contractAddress: 'destination2',
+            callerId: 'myCaller',
           },
         },
       );
