@@ -146,6 +146,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
             entrypoint: 'entrypoint',
             value: { entrypoint: { name: 'toto' } },
           },
+          jobId: publishedJob.id,
         },
         {
           headers: {
@@ -165,6 +166,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
             entrypoint: 'entrypoint2',
             value: { entrypoint2: { name: 'tata' } },
           },
+          jobId: publishedJob.id,
         },
         {
           headers: {
