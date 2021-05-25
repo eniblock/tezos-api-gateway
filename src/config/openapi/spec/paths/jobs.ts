@@ -43,7 +43,7 @@ export default {
                 callerId: {
                   type: 'string',
                   nullable: true,
-                  description: 'The identifier of the calling application'
+                  description: 'The identifier of the calling application',
                 },
                 sourceAddress: {
                   $ref: '#/components/schemas/tezos_address',
@@ -204,7 +204,7 @@ export default {
                 callerId: {
                   type: 'string',
                   nullable: true,
-                  description: 'The identifier of the calling application'
+                  description: 'The identifier of the calling application',
                 },
                 secureKeyName: {
                   type: 'string',

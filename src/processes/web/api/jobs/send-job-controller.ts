@@ -10,7 +10,6 @@ import { logger } from '../../../../services/logger';
 import { PostgreService } from '../../../../services/postgre';
 import { VaultSigner } from '../../../../services/signers/vault';
 
-
 function sendTransactionsAndCreateJob(
   amqpService: AmqpService,
   postgreClient: PostgreService,

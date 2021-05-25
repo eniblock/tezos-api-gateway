@@ -4,13 +4,12 @@ import { StatusCodes } from 'http-status-codes';
 import { AddressNotFoundError } from '../../../../const/errors/address-not-found-error';
 import {
   InvalidEntryPointParams,
-  InvalidMapStructureParams
+  InvalidMapStructureParams,
 } from '../../../../const/errors/invalid-entry-point-params';
 import { forgeOperation } from '../../../../lib/jobs/forge-operation';
 import { GatewayPool } from '../../../../services/gateway-pool';
 import { logger } from '../../../../services/logger';
 import { PostgreService } from '../../../../services/postgre';
-
 
 function forgeOperationAndCreateJob(
   gatewayPool: GatewayPool,
@@ -52,7 +51,10 @@ function forgeOperationAndCreateJob(
     } catch (err) {
       if (err instanceof AddressNotFoundError) {
         return next(createHttpError(StatusCodes.NOT_FOUND, err.message));
-      } else if (err instanceof InvalidEntryPointParams || err instanceof InvalidMapStructureParams) {
+      } else if (
+        err instanceof InvalidEntryPointParams ||
+        err instanceof InvalidMapStructureParams
+      ) {
         return next(createHttpError(StatusCodes.BAD_REQUEST, err.message));
       }
 
