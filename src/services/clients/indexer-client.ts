@@ -1,13 +1,13 @@
-import url from 'url';
-import superagent from 'superagent';
 import Logger from 'bunyan';
-import { NOT_FOUND } from 'http-status-codes';
-
-import { AbstractClient } from './abstract-client';
+import createHttpError from 'http-errors';
+import { StatusCodes } from 'http-status-codes';
+import superagent from 'superagent';
+import url from 'url';
+import { OperationNotFoundError } from '../../const/errors/indexer-error';
 import { IndexerConfig } from '../../const/interfaces/indexer-config';
 import { TezosService } from '../tezos';
-import { OperationNotFoundError } from '../../const/errors/indexer-error';
-import createHttpError from 'http-errors';
+import { AbstractClient } from './abstract-client';
+
 
 export class IndexerClient extends AbstractClient {
   private _config: IndexerConfig;
@@ -57,7 +57,7 @@ export class IndexerClient extends AbstractClient {
       const operation = result[keyToOperation];
 
       if (!operation) {
-        throw createHttpError(NOT_FOUND);
+        throw createHttpError(StatusCodes.NOT_FOUND);
       }
 
       this.logger.info(
@@ -67,7 +67,7 @@ export class IndexerClient extends AbstractClient {
 
       return operation[keyToBlockLevel];
     } catch (err) {
-      if (err.status === NOT_FOUND) {
+      if (err.status === StatusCodes.NOT_FOUND) {
         throw new OperationNotFoundError(operationHash);
       }
 

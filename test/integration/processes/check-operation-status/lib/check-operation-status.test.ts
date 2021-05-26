@@ -172,7 +172,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
           headers: {
             entrypoint: 'entrypoint2',
             contractAddress: 'destination2',
-            callerId: 'myCaller',
+            callerId: 'myCaller2',
           },
         },
       );
