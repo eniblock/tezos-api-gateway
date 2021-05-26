@@ -63,7 +63,7 @@ export class PostgreService {
       )`);
 
     await this._pool.query(`
-        ALTER TABLE ${PostgreTables.TRANSACTION} ADD COLUMN IF NOT EXISTS caller_id VARCHAR(100);
+        ALTER TABLE ${PostgreTables.TRANSACTION} ADD COLUMN IF NOT EXISTS caller_id TEXT;
       `);
   }
 
