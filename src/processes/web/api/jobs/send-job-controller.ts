@@ -1,15 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
 import createHttpError from 'http-errors';
-import { CREATED } from 'http-status-codes';
-
-import { logger } from '../../../../services/logger';
-import { PostgreService } from '../../../../services/postgre';
+import { StatusCodes } from 'http-status-codes';
+import { vaultClientConfig } from '../../../../config';
+import { ClientError } from '../../../../const/errors/client-error';
 import { SendTransactionsParams } from '../../../../const/interfaces/send-transactions-params';
 import * as libSendTransaction from '../../../../lib/jobs/send-transactions';
-import { vaultClientConfig } from '../../../../config';
-import { VaultSigner } from '../../../../services/signers/vault';
-import { ClientError } from '../../../../const/errors/client-error';
 import { AmqpService } from '../../../../services/amqp';
+import { logger } from '../../../../services/logger';
+import { PostgreService } from '../../../../services/postgre';
+import { VaultSigner } from '../../../../services/signers/vault';
 
 function sendTransactionsAndCreateJob(
   amqpService: AmqpService,
@@ -17,7 +16,11 @@ function sendTransactionsAndCreateJob(
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { transactions, secureKeyName }: SendTransactionsParams = req.body;
+      const {
+        transactions,
+        secureKeyName,
+        callerId,
+      }: SendTransactionsParams = req.body;
 
       logger.info(
         { transactions, secureKeyName },
@@ -38,13 +41,13 @@ function sendTransactionsAndCreateJob(
       );
 
       const job = await libSendTransaction.sendTransactionsToQueue(
-        { transactions, secureKeyName },
+        { transactions, secureKeyName, callerId },
         postgreClient,
         amqpService,
         logger,
       );
 
-      return res.status(CREATED).json(job);
+      return res.status(StatusCodes.CREATED).json(job);
     } catch (err) {
       if (err instanceof ClientError) {
         return next(createHttpError(err.status, err.message));

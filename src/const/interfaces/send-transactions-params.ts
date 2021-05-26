@@ -11,10 +11,12 @@ export interface TransactionDetails {
 export interface SendTransactionsParams {
   transactions: TransactionDetails[];
   secureKeyName: string;
+  callerId?: string;
 }
 
 export type SendTransactionsToQueueParams = SendTransactionsParams & {
   jobId: number;
+  callerId?: string;
 };
 
 export type OperationContentsTransactionWithParametersJson = OperationContentsTransaction & {

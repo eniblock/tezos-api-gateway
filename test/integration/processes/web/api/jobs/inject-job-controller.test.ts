@@ -139,6 +139,7 @@ describe('[processes/web/api/jobs] Inject job controller', () => {
               },
             },
           ],
+          callerId: 'myCaller',
           sourceAddress: testAccount,
         },
         tezosService,

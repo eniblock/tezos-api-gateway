@@ -1,15 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
 import createHttpError from 'http-errors';
-import { CREATED } from 'http-status-codes';
-
+import { StatusCodes } from 'http-status-codes';
+import { vaultClientConfig } from '../../../../config';
+import { ClientError } from '../../../../const/errors/client-error';
+import { generateTransactionDetails } from '../../../../helpers/generate-transactions';
+import * as libSendTransaction from '../../../../lib/jobs/send-transactions';
+import { AmqpService } from '../../../../services/amqp';
 import { logger } from '../../../../services/logger';
 import { PostgreService } from '../../../../services/postgre';
-import * as libSendTransaction from '../../../../lib/jobs/send-transactions';
-import { vaultClientConfig } from '../../../../config';
 import { VaultSigner } from '../../../../services/signers/vault';
-import { ClientError } from '../../../../const/errors/client-error';
-import { AmqpService } from '../../../../services/amqp';
-import { generateTransactionDetails } from '../../../../helpers/generate-transactions';
 
 function sendTransactionsAndCreateJob(
   amqpService: AmqpService,
@@ -17,7 +16,7 @@ function sendTransactionsAndCreateJob(
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { parameters, secureKeyName } = req.body;
+      const { parameters, secureKeyName, callerId } = req.body;
 
       logger.info(
         { parameters, secureKeyName },
@@ -47,13 +46,13 @@ function sendTransactionsAndCreateJob(
       );
 
       const job = await libSendTransaction.sendTransactionsToQueue(
-        { transactions, secureKeyName },
+        { transactions, secureKeyName, callerId },
         postgreClient,
         amqpService,
         logger,
       );
 
-      return res.status(CREATED).json(job);
+      return res.status(StatusCodes.CREATED).json(job);
     } catch (err) {
       if (err instanceof ClientError) {
         return next(createHttpError(err.status, err.message));

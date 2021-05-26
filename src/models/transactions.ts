@@ -20,6 +20,7 @@ export function insertTransactions(
   operationContents: OperationContentsTransactionWithParametersJson[],
   branch: string,
   jobId: number,
+  callerId: string,
 ) {
   const valuesString = operationContents.map(
     ({
@@ -41,11 +42,11 @@ export function insertTransactions(
       )},  '${source}', ${parseInt(storage_limit, 10)},  ${parseInt(
         gas_limit,
         10,
-      )}, ${parseInt(counter, 10)}, '${branch}', ${jobId})`,
+      )}, ${parseInt(counter, 10)}, '${branch}', ${jobId}, '${callerId}')`,
   );
 
   return pool.query(
-    `INSERT INTO ${TABLE_NAME} (destination, parameters, parameters_json, amount, fee, source, storage_limit, gas_limit, counter, branch, job_id) 
+    `INSERT INTO ${TABLE_NAME} (destination, parameters, parameters_json, amount, fee, source, storage_limit, gas_limit, counter, branch, job_id, caller_id) 
     VALUES ${valuesString.join(',')} RETURNING *`,
   );
 }
@@ -68,18 +69,20 @@ export async function insertTransactionWithParametersJson(
     source,
     parameters_json,
     jobId,
+    callerId,
   }: {
     jobId: number;
     parameters_json: TransactionParametersJson;
     destination: string;
     source: string;
+    callerId: string;
   },
 ) {
   return pool.query(
-    `INSERT INTO ${TABLE_NAME} (destination, source, parameters_json, job_id)
+    `INSERT INTO ${TABLE_NAME} (destination, source, parameters_json, job_id, caller_id)
         VALUES('${destination}', '${source}','${JSON.stringify(
       parameters_json,
-    )}', ${jobId}) RETURNING *`,
+    )}', ${jobId}, '${callerId}') RETURNING *`,
   );
 }
 
