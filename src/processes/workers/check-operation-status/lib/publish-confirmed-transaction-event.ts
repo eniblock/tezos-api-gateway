@@ -8,8 +8,8 @@ const { exchange } = amqpConfig;
 export interface EventMessage {
   contractAddress: string;
   entrypoint: string;
-  parameters: TransactionParametersJson;
   jobId: number;
+  parameters: TransactionParametersJson;
 }
 
 /**

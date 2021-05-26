@@ -142,11 +142,11 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
         {
           contractAddress: 'destination',
           entrypoint: 'entrypoint',
+          jobId: publishedJob.id,
           parameters: {
             entrypoint: 'entrypoint',
             value: { entrypoint: { name: 'toto' } },
           },
-          jobId: publishedJob.id,
         },
         {
           headers: {
@@ -162,17 +162,17 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
         {
           contractAddress: 'destination2',
           entrypoint: 'entrypoint2',
+          jobId: publishedJob.id,
           parameters: {
             entrypoint: 'entrypoint2',
             value: { entrypoint2: { name: 'tata' } },
           },
-          jobId: publishedJob.id,
         },
         {
           headers: {
             entrypoint: 'entrypoint2',
             contractAddress: 'destination2',
-            callerId: 'myCaller2',
+            callerId: 'myCaller',
           },
         },
       );

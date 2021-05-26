@@ -82,8 +82,8 @@ export async function checkOperationStatus(
                 {
                   contractAddress: transaction.destination,
                   entrypoint: parameters.entrypoint,
-                  parameters,
                   jobId: job.id,
+                  parameters,
                 },
                 {
                   entrypoint: parameters.entrypoint,
