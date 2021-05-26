@@ -8,7 +8,6 @@ import { IndexerConfig } from '../../const/interfaces/indexer-config';
 import { TezosService } from '../tezos';
 import { AbstractClient } from './abstract-client';
 
-
 export class IndexerClient extends AbstractClient {
   private _config: IndexerConfig;
 
