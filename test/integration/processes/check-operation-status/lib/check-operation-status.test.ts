@@ -126,7 +126,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
           entrypoint: 'entrypoint2',
           value: { entrypoint2: { name: 'tata' } },
         },
-        callerId: 'myCaller',
+        callerId: 'myCaller2',
         jobId: publishedJob.id,
       });
 
@@ -172,7 +172,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
           headers: {
             entrypoint: 'entrypoint2',
             contractAddress: 'destination2',
-            callerId: 'myCaller',
+            callerId: 'myCaller2',
           },
         },
       );
