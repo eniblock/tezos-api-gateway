@@ -62,7 +62,7 @@ export async function checkOperationStatus(
 
           const transactions = await selectTransaction(
             postgreService.pool,
-            'destination,parameters_json',
+            'destination,parameters_json,caller_id',
             `job_id=${job.id}`,
           );
 
