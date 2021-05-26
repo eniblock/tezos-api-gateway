@@ -1,16 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
 import createHttpError from 'http-errors';
-import { BAD_REQUEST, CREATED, NOT_FOUND } from 'http-status-codes';
-
-import { logger } from '../../../../services/logger';
-import { forgeOperation } from '../../../../lib/jobs/forge-operation';
-import { PostgreService } from '../../../../services/postgre';
+import { StatusCodes } from 'http-status-codes';
 import { AddressNotFoundError } from '../../../../const/errors/address-not-found-error';
 import {
   InvalidEntryPointParams,
   InvalidMapStructureParams,
 } from '../../../../const/errors/invalid-entry-point-params';
+import { forgeOperation } from '../../../../lib/jobs/forge-operation';
 import { GatewayPool } from '../../../../services/gateway-pool';
+import { logger } from '../../../../services/logger';
+import { PostgreService } from '../../../../services/postgre';
 
 function forgeOperationAndCreateJob(
   gatewayPool: GatewayPool,
@@ -18,12 +17,13 @@ function forgeOperationAndCreateJob(
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { transactions, sourceAddress } = req.body;
+      const { transactions, sourceAddress, callerId } = req.body;
 
       logger.info(
         {
           transactions,
           sourceAddress,
+          callerId,
         },
         '[jobs/forge-job-controller] Forge operation with the following data',
       );
@@ -41,22 +41,21 @@ function forgeOperationAndCreateJob(
         {
           transactions,
           sourceAddress,
+          callerId,
         },
         tezosService,
         postgreClient,
       );
 
-      return res.status(CREATED).json(job);
+      return res.status(StatusCodes.CREATED).json(job);
     } catch (err) {
       if (err instanceof AddressNotFoundError) {
-        return next(createHttpError(NOT_FOUND, err.message));
-      }
-
-      if (
+        return next(createHttpError(StatusCodes.NOT_FOUND, err.message));
+      } else if (
         err instanceof InvalidEntryPointParams ||
         err instanceof InvalidMapStructureParams
       ) {
-        return next(createHttpError(BAD_REQUEST, err.message));
+        return next(createHttpError(StatusCodes.BAD_REQUEST, err.message));
       }
 
       return next(err);

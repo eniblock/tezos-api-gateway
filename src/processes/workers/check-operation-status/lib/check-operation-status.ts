@@ -82,11 +82,13 @@ export async function checkOperationStatus(
                 {
                   contractAddress: transaction.destination,
                   entrypoint: parameters.entrypoint,
+                  jobId: job.id,
                   parameters,
                 },
                 {
                   entrypoint: parameters.entrypoint,
                   contractAddress: transaction.destination,
+                  callerId: transaction.caller_id,
                 },
               );
               logger.info(

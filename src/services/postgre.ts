@@ -61,6 +61,10 @@ export class PostgreService {
             FOREIGN KEY(job_id) 
             REFERENCES jobs(id)
       )`);
+
+    await this._pool.query(`
+        ALTER TABLE ${PostgreTables.TRANSACTION} ADD COLUMN IF NOT EXISTS caller_id VARCHAR(100);
+      `);
   }
 
   private async checkIfTypeExist(typeName: string) {

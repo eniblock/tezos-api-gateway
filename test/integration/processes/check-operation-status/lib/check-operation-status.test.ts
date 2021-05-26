@@ -116,6 +116,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
           entrypoint: 'entrypoint',
           value: { entrypoint: { name: 'toto' } },
         },
+        callerId: 'myCaller',
         jobId: publishedJob.id,
       });
       await insertTransactionWithParametersJson(postgreService.pool, {
@@ -125,6 +126,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
           entrypoint: 'entrypoint2',
           value: { entrypoint2: { name: 'tata' } },
         },
+        callerId: 'myCaller2',
         jobId: publishedJob.id,
       });
 
@@ -140,6 +142,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
         {
           contractAddress: 'destination',
           entrypoint: 'entrypoint',
+          jobId: publishedJob.id,
           parameters: {
             entrypoint: 'entrypoint',
             value: { entrypoint: { name: 'toto' } },
@@ -149,6 +152,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
           headers: {
             entrypoint: 'entrypoint',
             contractAddress: 'destination',
+            callerId: 'myCaller',
           },
         },
       );
@@ -158,6 +162,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
         {
           contractAddress: 'destination2',
           entrypoint: 'entrypoint2',
+          jobId: publishedJob.id,
           parameters: {
             entrypoint: 'entrypoint2',
             value: { entrypoint2: { name: 'tata' } },
@@ -167,6 +172,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
           headers: {
             entrypoint: 'entrypoint2',
             contractAddress: 'destination2',
+            callerId: 'myCaller2',
           },
         },
       );

@@ -11,4 +11,5 @@ export interface Transaction {
   gas_limit?: number;
   counter?: number;
   branch?: string;
+  caller_id: string;
 }
