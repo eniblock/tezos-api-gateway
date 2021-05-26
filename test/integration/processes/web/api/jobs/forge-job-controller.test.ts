@@ -66,6 +66,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
           entryPoint: 'lock',
         },
       ],
+      callerId: 'myCaller',
       sourceAddress: testAccount,
     };
 
@@ -234,7 +235,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
       const insertedForgeParameters = await selectData(postgreService.pool, {
         tableName: PostgreTables.TRANSACTION,
         selectFields:
-          'destination, parameters, parameters_json, amount, fee, source, storage_limit, gas_limit, counter, branch, job_id',
+          'destination, parameters, parameters_json, amount, fee, source, storage_limit, gas_limit, counter, branch, job_id, caller_id',
       });
 
       expect(insertedForgeParameters).toEqual([
@@ -252,6 +253,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
           branch: insertedForgeParameters[0].branch,
           counter: insertedForgeParameters[0].counter,
           job_id: body.id,
+          caller_id: 'myCaller',
         },
         {
           destination: flexibleTokenContract,
@@ -265,6 +267,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
           branch: insertedForgeParameters[1].branch,
           counter: insertedForgeParameters[1].counter,
           job_id: body.id,
+          caller_id: 'myCaller',
         },
       ]);
 
