@@ -61,7 +61,14 @@ export async function createAccounts(
 
     logger.info(
       result,
-      '[lib/user/createAccounts] Revealed accounts for the following users ',
+      '[lib/user/createAccounts] Created and activated accounts for the following users ',
+    );
+
+    await saveUserIdByAddresses(vaultClient, result);
+
+    logger.info(
+      result,
+      '[lib/user/createAccounts] Created @/user mapping in database for the following users ',
     );
 
     return result;
@@ -92,6 +99,28 @@ export const createVaultKeys = (
 ) => {
   return Promise.all(
     vaultKeys.map((vaultKey) => vaultClient.createKey(vaultKey)),
+  );
+};
+
+/**
+ * save account identifiers by address in vault
+ *
+ * @param {object} vaultClient - the vault client to create keys
+ * @param accounts             - list of account objects {userId, address}
+ *
+ * @return {Promise<void>}
+ *
+ * The reason why the function is declared as an expression is to be able to mock it in unit tests
+ * reference: https://github.com/facebook/jest/issues/936#issuecomment-545080082
+ */
+export const saveUserIdByAddresses = (
+  vaultClient: VaultClient,
+  accounts: CreateUserResult[],
+) => {
+  return Promise.all(
+    accounts.map((account) =>
+      vaultClient.saveSecret('accounts', account.account, account.userId),
+    ),
   );
 };
 

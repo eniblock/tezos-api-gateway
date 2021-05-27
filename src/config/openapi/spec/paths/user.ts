@@ -116,4 +116,55 @@ export default {
       },
     },
   },
+  '/user/address': {
+    get: {
+      summary: 'Get users  of a bunch of account addresses',
+      description:
+        'Return a list of user id of a bunch of account addresses and null if the address is unknown',
+      parameters: [
+        {
+          name: 'userAddressList',
+          in: 'query',
+          required: true,
+          schema: {
+            type: 'array',
+            items: {
+              type: 'string',
+              description: 'account addresses',
+            },
+          },
+        },
+      ],
+      responses: {
+        200: {
+          description: 'list of the users',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  description: 'user id by address',
+                  properties: {
+                    account: {
+                      type: 'string',
+                      description: 'public key hash of the user account',
+                    },
+                    userId: {
+                      type: 'string',
+                      nullable: true,
+                      description: 'account identifier',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        400: error[400],
+        404: error[404],
+        500: error.default,
+      },
+    },
+  },
 };
