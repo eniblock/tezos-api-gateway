@@ -71,12 +71,18 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
         selectData(postgreService.pool, {
           tableName: PostgreTables.JOBS,
           selectFields: 'status, operation_hash, raw_transaction',
+          orderBy: 'raw_transaction ASC',
         }),
       ).resolves.toEqual([
         {
           status: 'created',
           raw_transaction: 'raw_transaction',
           operation_hash: null,
+        },
+        {
+          status: 'done',
+          raw_transaction: 'raw_transaction_2',
+          operation_hash: operationHash,
         },
         {
           status: 'created',
@@ -87,11 +93,6 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
           status: 'published',
           raw_transaction: 'raw_transaction_4',
           operation_hash: notFoundOperationHash,
-        },
-        {
-          status: 'done',
-          raw_transaction: 'raw_transaction_2',
-          operation_hash: operationHash,
         },
       ]);
 

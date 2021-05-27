@@ -1,13 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
-import { BAD_REQUEST, OK } from 'http-status-codes';
 import createHttpError from 'http-errors';
-
-import { logger } from '../../../../services/logger';
-import * as getContractStorageLib from '../../../../lib/storage/get-contract-storage';
-import { ContractStorageRequestDataField } from '../../../../const/interfaces/contract-storage-request-datafield';
+import { StatusCodes } from 'http-status-codes';
 import { dataFieldsSchema } from '../../../../const/ajv_schemas/data-fields';
+import { ContractStorageRequestDataField } from '../../../../const/interfaces/contract-storage-request-datafield';
 import { validateSchema, ValidationError } from '../../../../lib/ajv';
+import * as getContractStorageLib from '../../../../lib/storage/get-contract-storage';
 import { GatewayPool } from '../../../../services/gateway-pool';
+import { logger } from '../../../../services/logger';
 
 function retrieveContractStorageFromTezosNode(gatewayPool: GatewayPool) {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -43,10 +42,12 @@ function retrieveContractStorageFromTezosNode(gatewayPool: GatewayPool) {
         (dataFields as unknown) as ContractStorageRequestDataField[],
       );
 
-      return res.status(OK).json(result);
+      return res.status(StatusCodes.OK).json(result);
     } catch (err) {
       if (err instanceof ValidationError) {
-        return next(createHttpError(BAD_REQUEST, JSON.stringify(err.errors)));
+        return next(
+          createHttpError(StatusCodes.BAD_REQUEST, JSON.stringify(err.errors)),
+        );
       }
 
       return next(err);

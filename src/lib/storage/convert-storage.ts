@@ -1,18 +1,17 @@
+import { MichelsonMapKey } from '@taquito/michelson-encoder/dist/types/michelson-map';
+import { BigMapAbstraction, MichelsonMap } from '@taquito/taquito';
+import BigNumber from 'bignumber.js';
 import Logger from 'bunyan';
 import _ from 'lodash';
-import { MichelsonMapKey } from '@taquito/michelson-encoder/dist/types/michelson-map';
-
 import {
   ContractStorageRequestDataField,
   DeepLayerDataField,
 } from '../../const/interfaces/contract-storage-request-datafield';
 import { GenericObject } from '../../const/interfaces/forge-operation-params';
-import { BigMapAbstraction, MichelsonMap } from '@taquito/taquito';
 import {
   convertStorageValueToStorageResponseValue,
   generateStorageResponse,
 } from './generate-storage-response';
-import BigNumber from 'bignumber.js';
 
 /**
  * Given a smart contract map (MichelsonMap or BigMap),
@@ -191,7 +190,8 @@ export async function convertStorage(
             return handleObjectDataField(logger, dataField, storage);
           }
 
-          if (!_.get(storage, dataField)) {
+          if (_.get(storage, dataField) == null) {
+            // If dataField is null or undefined
             return [
               `${dataField}`,
               {
