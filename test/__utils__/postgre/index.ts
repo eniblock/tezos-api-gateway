@@ -59,11 +59,20 @@ export async function selectData(
     tableName,
     selectFields,
     conditionFields,
-  }: { tableName: string; selectFields: string; conditionFields?: string },
+    orderBy,
+  }: {
+    tableName: string;
+    selectFields: string;
+    conditionFields?: string;
+    orderBy?: string;
+  },
 ) {
   const condition = conditionFields ? `WHERE ${conditionFields}` : '';
+  const order = orderBy ? `ORDER BY ${orderBy}` : '';
 
   return (
-    await pool.query(`SELECT ${selectFields} FROM ${tableName} ${condition}`)
+    await pool.query(
+      `SELECT ${selectFields} FROM ${tableName} ${condition} ${order}`,
+    )
   ).rows;
 }
