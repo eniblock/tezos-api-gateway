@@ -2,6 +2,7 @@ import { MichelsonMapKey } from '@taquito/michelson-encoder/dist/types/michelson
 import { BigMapAbstraction, MichelsonMap } from '@taquito/taquito';
 import BigNumber from 'bignumber.js';
 import Logger from 'bunyan';
+import { StatusCodes } from 'http-status-codes';
 import _ from 'lodash';
 import {
   ContractStorageRequestDataField,
@@ -82,8 +83,20 @@ function convertDeepLayerDataFieldToStorageResponseValue(
 
   return Promise.all(
     rootDataFields.map(async ({ key, dataFields }) => {
-      const mapValue =
-        map instanceof MichelsonMap ? map.get(key) : await map.get(key as any);
+      let mapValue = null;
+      if (map instanceof MichelsonMap) {
+        mapValue = map.get(key);
+      } else {
+        try {
+          mapValue = await map.get(key as any);
+        } catch (err) {
+          err.status = StatusCodes.NOT_FOUND;
+          logger.error('Key Not Found in Map - errorStatus : ' + err.status);
+          throw err;
+        }
+      }
+
+      map instanceof MichelsonMap ? map.get(key) : await map.get(key as any);
 
       if (!mapValue) {
         return { key, error: 'The current map does not contain this key' };
