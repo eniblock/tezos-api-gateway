@@ -37,6 +37,7 @@ node_modules/
 
 #.idea config
 .idea
+*.iml
 
 *.js
 !jest.config.js
