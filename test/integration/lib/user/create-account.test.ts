@@ -123,6 +123,10 @@ describe('[lib/user-create-account] create Tezos accounts', () => {
         .spyOn(userLib, 'createVaultKeys')
         .mockImplementation();
 
+      const saveIdByAddressSpy = jest
+        .spyOn(userLib, 'saveUserIdByAddresses')
+        .mockImplementation();
+
       const accounts = await userLib.createAccounts(
         {
           userIdList: ['key1', 'key2'],
@@ -139,6 +143,7 @@ describe('[lib/user-create-account] create Tezos accounts', () => {
       expect(accounts[1].userId).toEqual('key2');
       expect(accounts[1].account).toMatch(/tz[0-9a-zA-Z]{34}/);
       expect(createKeysSpy).toHaveBeenCalledTimes(1);
+      expect(saveIdByAddressSpy).toHaveBeenCalledTimes(1);
     });
   });
 
