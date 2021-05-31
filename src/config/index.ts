@@ -24,7 +24,7 @@ export const serverConfig = {
 
 export const tezosNodeUrls = (
   process.env.TEZOS_NODE_URLS ||
-  'https://api.tez.ie/rpc/edonet,https://edonet.smartpy.io/'
+  'https://florence-tezos.giganode.io,https://florencenet.smartpy.io,https://api.tez.ie/rpc/florencenet'
 ).split(',');
 
 export const amqpConfig: AmqpConfig = {
@@ -47,21 +47,23 @@ export const webProcessConfig: ProcessConfig = {
 
 const tzstatsIndexerConfig: IndexerConfig = {
   name: 'tzstats',
-  apiUrl: process.env.TZSTATS_URL || 'https://api.edo.tzstats.com/explorer/op/',
+  apiUrl:
+    process.env.TZSTATS_URL || 'https://api.florence.tzstats.com/explorer/op/',
   keyToOperation: parseInt(0, process.env.TZSTATS_KEY_TO_OPERATION),
   keyToBlockLevel: process.env.TZSTATS_KEY_TO_BLOCK_LEVEL || 'height',
 };
 
 const tzktIndexerConfig: IndexerConfig = {
   name: 'tzkt',
-  apiUrl: process.env.TZKT_URL || 'https://api.edo2net.tzkt.io/v1/operations/',
+  apiUrl:
+    process.env.TZKT_URL || 'https://api.florencenet.tzkt.io/v1/operations/',
   keyToOperation: parseInt(0, process.env.TZKT_KEY_TO_OPERATION),
   keyToBlockLevel: process.env.TZKT_KEY_TO_BLOCK_LEVEL || 'level',
 };
 
 const betterCallIndexerConfig: IndexerConfig = {
   name: 'better-call',
-  apiUrl: process.env.BETTER_CALL_URL || 'https://better-call.dev/v1/opg/',
+  apiUrl: process.env.BETTER_CALL_URL || 'https://api.better-call.dev/v1/opg/',
   keyToOperation: parseInt(0, process.env.BETTER_CALL_KEY_TO_OPERATION),
   keyToBlockLevel: process.env.BETTER_CALL_KEY_TO_BLOCK_LEVEL || 'level',
 };

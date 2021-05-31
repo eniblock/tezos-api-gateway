@@ -33,7 +33,6 @@ function injectOperationAndUpdateJob(
           `Could not find any jobs with this id ${jobId}`,
         );
       }
-
       publishToInjectionQueue(amqpService, {
         jobId,
         signature,

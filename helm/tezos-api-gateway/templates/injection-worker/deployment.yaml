@@ -36,7 +36,7 @@ spec:
             {{- toYaml .Values.injectionWorker.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["node", "build/src/processes/workers/send-transactions/index.js"]
+          command: ["node", "build/src/processes/workers/injection/index.js"]
           env:
             - name: DB_USERNAME
               value: {{ .Values.injectionWorker.postgresql.postgresqlUsername | quote }}
