@@ -51,6 +51,46 @@ export class VaultClient extends AbstractClient {
   }
 
   /**
+   * Call the the vault service to save a secret
+   *
+   * @param {string} path                 - data location path
+   * @param {string} key                  - the secret data key
+   * @param {string} value                - the secret data value
+   *
+   * @return {Promise<void>}
+   */
+  public async saveSecret(
+    path: string,
+    key: string,
+    value: string,
+  ): Promise<void> {
+    const saveSecretUrl = url.resolve(
+      this.baseUrl,
+      `secret/data/${path}/${key}`,
+    );
+
+    try {
+      await superagent
+        .post(saveSecretUrl)
+        .set({ 'X-Vault-Token': this._token })
+        .send({
+          data: {
+            userId: value,
+          },
+        });
+    } catch (err) {
+      this.handleError(err, { keyName: key });
+
+      if (err.status >= 400 && err.status < 500) {
+        throw new ClientError({
+          status: err.status,
+          message: JSON.stringify(err.response?.body),
+        });
+      }
+    }
+  }
+
+  /**
    * Call the the vault service to sign the forged operation has
    *
    * @param {string} forgedOperationHash  - the forged operation hash
@@ -79,6 +119,48 @@ export class VaultClient extends AbstractClient {
       return (signature as string).substring(9);
     } catch (err) {
       this.handleError(err, { keyName: key, forgedOperationHash });
+    }
+
+    return;
+  }
+
+  /**
+   * Get the stored secret the vault service
+   *
+   * @param {string} path                 - data location path
+   * @param {string} key                  - the secret data key
+   *
+   * @return {string} return the stored secret
+   */
+  public async getSecret(
+    path: string,
+    key: string,
+  ): Promise<string | undefined> {
+    const getSecretUrl = url.resolve(
+      this.baseUrl,
+      `secret/data/${path}/${key}`,
+    );
+
+    try {
+      const { body: result } = await superagent
+        .get(getSecretUrl)
+        .set({ 'X-Vault-Token': this._token });
+
+      this.logger.info(
+        { result, key },
+        '[VaultClient] Retrieve secret from vault',
+      );
+
+      return result.data!.data!.userId;
+    } catch (err) {
+      this.handleError(err, { keyName: key });
+
+      if (err.status >= 400 && err.status < 500) {
+        throw new ClientError({
+          status: err.status,
+          message: JSON.stringify(err.response?.body),
+        });
+      }
     }
 
     return;

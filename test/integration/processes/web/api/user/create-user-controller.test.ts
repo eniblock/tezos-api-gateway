@@ -180,6 +180,8 @@ describe('[processes/web/api/user] Create user controller', () => {
 
         jest.spyOn(userLib, 'createVaultKeys').mockImplementation();
 
+        jest.spyOn(userLib, 'saveUserIdByAddresses').mockImplementation();
+
         const { body, status } = await request.post('/api/user/create').send({
           secureKeyName: 'toto',
           userIdList: ['key1', 'key2'],
