@@ -96,8 +96,6 @@ function convertDeepLayerDataFieldToStorageResponseValue(
         }
       }
 
-      map instanceof MichelsonMap ? map.get(key) : await map.get(key as any);
-
       if (!mapValue) {
         return { key, error: 'The current map does not contain this key' };
       }
