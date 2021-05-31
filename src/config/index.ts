@@ -47,14 +47,16 @@ export const webProcessConfig: ProcessConfig = {
 
 const tzstatsIndexerConfig: IndexerConfig = {
   name: 'tzstats',
-  apiUrl: process.env.TZSTATS_URL || 'https://api.florence.tzstats.com/explorer/op/',
+  apiUrl:
+    process.env.TZSTATS_URL || 'https://api.florence.tzstats.com/explorer/op/',
   keyToOperation: parseInt(0, process.env.TZSTATS_KEY_TO_OPERATION),
   keyToBlockLevel: process.env.TZSTATS_KEY_TO_BLOCK_LEVEL || 'height',
 };
 
 const tzktIndexerConfig: IndexerConfig = {
   name: 'tzkt',
-  apiUrl: process.env.TZKT_URL || 'https://api.florencenet.tzkt.io/v1/operations/',
+  apiUrl:
+    process.env.TZKT_URL || 'https://api.florencenet.tzkt.io/v1/operations/',
   keyToOperation: parseInt(0, process.env.TZKT_KEY_TO_OPERATION),
   keyToBlockLevel: process.env.TZKT_KEY_TO_BLOCK_LEVEL || 'level',
 };
