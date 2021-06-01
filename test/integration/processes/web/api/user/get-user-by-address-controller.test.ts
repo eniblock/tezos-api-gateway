@@ -38,7 +38,8 @@ describe('[processes/web/api/user/address] Get User By Address Controller', () =
 
       expect(status).toEqual(400);
       expect(body).toEqual({
-        message: "request.query should have required property 'userAddressList'",
+        message:
+          "request.query should have required property 'userAddressList'",
         status: 400,
       });
     });
@@ -61,49 +62,49 @@ describe('[processes/web/api/user/address] Get User By Address Controller', () =
 
     it('should return 200 and the account addresses of the specified user ids', async () => {
       const vaultNock1 = nock('http://localhost:8300')
-          .get(`/v1/secret/data/accounts/address1`)
-          .reply(200, {
-            request_id: '649060e4-f75c-d752-1b6d-7a8f09511770',
-            lease_id: '',
-            renewable: false,
-            lease_duration: 0,
+        .get(`/v1/secret/data/accounts/address1`)
+        .reply(200, {
+          request_id: '649060e4-f75c-d752-1b6d-7a8f09511770',
+          lease_id: '',
+          renewable: false,
+          lease_duration: 0,
+          data: {
             data: {
-              data: {
-                userId: 'key1',
-              },
-              metadata: {
-                created_time: '2021-05-27T15:47:10.39315826Z',
-                deletion_time: '',
-                destroyed: false,
-                version: 1,
-              },
+              userId: 'key1',
             },
-            wrap_info: null,
-            warnings: null,
-            auth: null,
-          });
+            metadata: {
+              created_time: '2021-05-27T15:47:10.39315826Z',
+              deletion_time: '',
+              destroyed: false,
+              version: 1,
+            },
+          },
+          wrap_info: null,
+          warnings: null,
+          auth: null,
+        });
       const vaultNock2 = nock('http://localhost:8300')
-          .get(`/v1/secret/data/accounts/address2`)
-          .reply(200, {
-            request_id: '649060e4-f75c-d752-1b6d-7a8f09511770',
-            lease_id: '',
-            renewable: false,
-            lease_duration: 0,
+        .get(`/v1/secret/data/accounts/address2`)
+        .reply(200, {
+          request_id: '649060e4-f75c-d752-1b6d-7a8f09511770',
+          lease_id: '',
+          renewable: false,
+          lease_duration: 0,
+          data: {
             data: {
-              data: {
-                userId: 'key2',
-              },
-              metadata: {
-                created_time: '2021-05-27T15:47:10.39315826Z',
-                deletion_time: '',
-                destroyed: false,
-                version: 1,
-              },
+              userId: 'key2',
             },
-            wrap_info: null,
-            warnings: null,
-            auth: null,
-          });
+            metadata: {
+              created_time: '2021-05-27T15:47:10.39315826Z',
+              deletion_time: '',
+              destroyed: false,
+              version: 1,
+            },
+          },
+          wrap_info: null,
+          warnings: null,
+          auth: null,
+        });
 
       const { body, status } = await request.get('/api/user/address').query({
         userAddressList: ['address1', 'address2'],
@@ -113,38 +114,38 @@ describe('[processes/web/api/user/address] Get User By Address Controller', () =
       vaultNock2.done();
 
       expect(status).toEqual(200);
-        expect(body[0].userId).toEqual('key1');
-        expect(body[0].account).toMatch('address1');
-        expect(body[1].userId).toEqual('key2');
-        expect(body[1].account).toMatch('address2');
+      expect(body[0].userId).toEqual('key1');
+      expect(body[0].account).toMatch('address1');
+      expect(body[1].userId).toEqual('key2');
+      expect(body[1].account).toMatch('address2');
     });
 
     it('should return 200 and a null userId for an unknown address', async () => {
       const vaultNock1 = nock('http://localhost:8300')
-          .get(`/v1/secret/data/accounts/address1`)
-          .reply(200, {
-            request_id: '649060e4-f75c-d752-1b6d-7a8f09511770',
-            lease_id: '',
-            renewable: false,
-            lease_duration: 0,
+        .get(`/v1/secret/data/accounts/address1`)
+        .reply(200, {
+          request_id: '649060e4-f75c-d752-1b6d-7a8f09511770',
+          lease_id: '',
+          renewable: false,
+          lease_duration: 0,
+          data: {
             data: {
-              data: {
-                userId: 'key1',
-              },
-              metadata: {
-                created_time: '2021-05-27T15:47:10.39315826Z',
-                deletion_time: '',
-                destroyed: false,
-                version: 1,
-              },
+              userId: 'key1',
             },
-            wrap_info: null,
-            warnings: null,
-            auth: null,
-          });
+            metadata: {
+              created_time: '2021-05-27T15:47:10.39315826Z',
+              deletion_time: '',
+              destroyed: false,
+              version: 1,
+            },
+          },
+          wrap_info: null,
+          warnings: null,
+          auth: null,
+        });
       const vaultNock3 = nock('http://localhost:8300')
-          .get(`/v1/secret/data/accounts/address3`)
-          .reply(404);
+        .get(`/v1/secret/data/accounts/address3`)
+        .reply(404);
 
       const { body, status } = await request.get('/api/user/address').query({
         userAddressList: ['address1', 'address3'],
@@ -154,10 +155,10 @@ describe('[processes/web/api/user/address] Get User By Address Controller', () =
       vaultNock3.done();
 
       expect(status).toEqual(200);
-        expect(body[0].userId).toEqual('key1');
-        expect(body[0].account).toMatch('address1');
-        expect(body[1].userId).toEqual(null);
-        expect(body[1].account).toMatch('address3');
+      expect(body[0].userId).toEqual('key1');
+      expect(body[0].account).toMatch('address1');
+      expect(body[1].userId).toEqual(null);
+      expect(body[1].account).toMatch('address3');
     });
   });
 });
