@@ -51,9 +51,8 @@ describe('[services/clients] Indexer Client', () => {
             indexerConfig: {
               name: 'tzstats',
               apiUrl: 'https://api.florence.tzstats.com/explorer/op/',
-              keyToOperation: '0',
+              keyToOperation: 0,
               keyToBlockLevel: 'height',
-              apiKey: '503801e8-a8a0-4e7c-8c24-7bd310805843',
             },
             operationHash:
               'oneW5x7bCPCdkoJqC9HXWx42GdjDS6Z7nHeQt4mfYaPnw8xdM9E',
