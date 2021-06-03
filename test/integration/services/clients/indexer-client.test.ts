@@ -49,11 +49,10 @@ describe('[services/clients] Indexer Client', () => {
           err: Error('Internal Server Error'),
           requestDetails: {
             indexerConfig: {
-              name: 'conseil',
-              apiUrl:
-                'https://conseil-edo.cryptonomic-infra.tech:443/v2/data/tezos/edonet/operation_groups/',
-              keyToOperation: 'operation_group',
-              keyToBlockLevel: 'blockLevel',
+              name: 'tzstats',
+              apiUrl: 'https://api.florence.tzstats.com/explorer/op/',
+              keyToOperation: '0',
+              keyToBlockLevel: 'height',
               apiKey: '503801e8-a8a0-4e7c-8c24-7bd310805843',
             },
             operationHash:
