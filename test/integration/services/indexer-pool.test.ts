@@ -8,7 +8,7 @@ import { TezosService } from '../../../src/services/tezos';
 import { tezosNodeEdonetUrl } from '../../__fixtures__/config';
 import {
   notFoundOperationHash,
-  operationHash
+  operationHash,
 } from '../../__fixtures__/operation';
 import { logger } from '../../__fixtures__/services/logger';
 
@@ -256,7 +256,7 @@ describe('[services/indexer-pool]', () => {
       ).resolves.toEqual(true);
     }, 8000); */
 
-     /* it('should properly return false if the operation is not confirmed', async () => {
+    /* it('should properly return false if the operation is not confirmed', async () => {
       const blockHeader: BlockResponse = ({
         header: { level: 109646 },
       } as unknown) as BlockResponse;
@@ -277,5 +277,5 @@ describe('[services/indexer-pool]', () => {
 
       expect(getLatestBlockSpy).toHaveBeenCalledTimes(1);
     }, 8000);  */
-  }); 
+  });
 });
