@@ -15,11 +15,11 @@ export const serverConfig = {
 };
 
 export const tezosNodeEdonetUrl =
-  process.env.TEZOS_NODE_EDONET_TEST || 'https://api.tez.ie/rpc/edonet';
+  process.env.TEZOS_NODE_EDONET_TEST || 'https://api.tez.ie/rpc/florencenet';
 
 export const tezosNodeEdonetUrls = (
   process.env.TEZOS_NODE_EDONET_TEST_URLS ||
-  'https://api.tez.ie/rpc/edonet,https://edonet.smartpy.io/'
+  'https://api.tez.ie/rpc/florencenet,https://florencenet.smartpy.io/'
 ).split(',');
 
 export const amqpConfig: AmqpConfig = {
