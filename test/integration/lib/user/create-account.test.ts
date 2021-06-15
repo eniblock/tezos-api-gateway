@@ -10,6 +10,7 @@ import * as userLib from '../../../../src/lib/user/create-account';
 import { VaultClient } from '../../../../src/services/clients/vault-client';
 import { InMemorySigner } from '@taquito/signer';
 import { TezosToolkit } from '@taquito/taquito';
+import { testAccount10, testAccount9 } from '../../../__fixtures__/smart-contract';
 
 describe('[lib/user-create-account] create Tezos accounts', () => {
   const tezosService = new TezosService(tezosNodeEdonetUrl);
@@ -266,7 +267,7 @@ describe('[lib/user-create-account] create Tezos accounts', () => {
       expect(transferFn.mock.calls).toEqual([
         [
           {
-            to: 'tz1UCubRycjt5kqkdBPDvmSSxHG1oZ8AX2Cu',
+            to: testAccount9,
             amount: 2,
           },
         ],
@@ -278,7 +279,7 @@ describe('[lib/user-create-account] create Tezos accounts', () => {
         ],
         [
           {
-            to: 'tz1YCmopN9D4WgkTvnqkGExwAHSHokvApXJG',
+            to: testAccount10,
             amount: 2,
           },
         ],

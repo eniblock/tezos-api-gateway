@@ -4,6 +4,7 @@ import { TezosService } from '../../../../src/services/tezos';
 
 import { tezosNodeEdonetUrl } from '../../../__fixtures__/config';
 import { logger } from '../../../__fixtures__/services/logger';
+import { FA2Contract2 } from '../../../__fixtures__/smart-contract';
 
 describe('[lib/entrypoints/get-entrypoint-schema]', () => {
   const tezosService = new TezosService(tezosNodeEdonetUrl);
@@ -17,7 +18,7 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
       const schema = await getEntryPointSchemaFromTezosNode(
         logger,
         tezosService,
-        'KT1NjK4eGjLbWHB1M75tGbAsPatPCLudTKp1',
+        FA2Contract2,
       );
 
       expect(schema).toBeDefined();
@@ -208,7 +209,7 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
         getEntryPointSchemaFromTezosNode(
           logger,
           tezosService,
-          'KT1NjK4eGjLbWHB1M75tGbAsPatPCLudTKp1',
+          FA2Contract2,
           ['nonexistentEntryPoint', 'mint'],
         ),
       ).rejects.toThrow(
@@ -230,12 +231,12 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
         getEntryPointSchemaFromTezosNode(
           logger,
           tezosService,
-          'KT1NjK4eGjLbWHB1M75tGbAsPatPCLudTKp1',
+          FA2Contract2,
         ),
       ).rejects.toThrow(Error('Unexpected error'));
 
       expect(getEntryPointsSpy.mock.calls).toEqual([
-        ['KT1NjK4eGjLbWHB1M75tGbAsPatPCLudTKp1'],
+        [FA2Contract2],
       ]);
     });
 
@@ -243,7 +244,7 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
       const schema = await getEntryPointSchemaFromTezosNode(
         logger,
         tezosService,
-        'KT1NjK4eGjLbWHB1M75tGbAsPatPCLudTKp1',
+        FA2Contract2,
         ['mint'],
       );
 
@@ -298,7 +299,7 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
       const schema = await getEntryPointSchemaFromTezosNode(
         logger,
         tezosService,
-        'KT1NjK4eGjLbWHB1M75tGbAsPatPCLudTKp1',
+        FA2Contract2,
         ['mint', 'update_operators'],
       );
 

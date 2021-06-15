@@ -6,7 +6,7 @@ import { ClientError } from '../../../../src/const/errors/client-error';
 import { TezosService } from '../../../../src/services/tezos';
 
 import { tezosNodeEdonetUrl } from '../../../__fixtures__/config';
-import { flexibleTokenContract } from '../../../__fixtures__/smart-contract';
+import { FA2Contract5, flexibleTokenContract, testAccount } from '../../../__fixtures__/smart-contract';
 import { logger } from '../../../__fixtures__/services/logger';
 
 describe('[lib/storage/get-contract-storage]', () => {
@@ -32,8 +32,8 @@ describe('[lib/storage/get-contract-storage]', () => {
           '"decimals":"10",' +
           '"locked":false,' +
           '"name":"name",' +
-          '"newOwner":"tz1iaJAxXAa5SCkdPBLA7f5Lj4LXS5vNa33E",' +
-          '"owner":"tz1iaJAxXAa5SCkdPBLA7f5Lj4LXS5vNa33E",' +
+          '"newOwner":"' + testAccount + '",' +
+          '"owner":"'+ testAccount + '",' +
           '"symbol":"symbol",' +
           '"totalSupply":"100000000000000000"' +
           '}',
@@ -47,7 +47,7 @@ describe('[lib/storage/get-contract-storage]', () => {
         getContractStorageFromTezosNode(
           logger,
           tezosService,
-          'KT1938ykzsYS1FR3WAyTa2BUTuTadtV1M9v8',
+          FA2Contract5,
         ),
       ).rejects.toThrow(
         new ClientError({
@@ -59,7 +59,7 @@ describe('[lib/storage/get-contract-storage]', () => {
       expect(loggerInfoSpy.mock.calls).toEqual([
         [
           {
-            contractAddress: 'KT1938ykzsYS1FR3WAyTa2BUTuTadtV1M9v8',
+            contractAddress: FA2Contract5,
             message: 'Http error response: (404) ',
           },
           '[lib/storage/get-contract-storage/#getContractStorageFromTezosNode] A client error happened while retrieving contract storage from tezos node',
@@ -142,8 +142,8 @@ describe('[lib/storage/get-contract-storage]', () => {
         decimals: 10,
         locked: false,
         name: 'name',
-        newOwner: 'tz1iaJAxXAa5SCkdPBLA7f5Lj4LXS5vNa33E',
-        owner: 'tz1iaJAxXAa5SCkdPBLA7f5Lj4LXS5vNa33E',
+        newOwner: testAccount,
+        owner: testAccount,
         symbol: 'symbol',
         totalSupply: 100000000000000000,
       });

@@ -12,6 +12,7 @@ import {
 import { PostgreTables } from '../../../src/const/postgre/postgre-tables';
 import { Jobs } from '../../../src/const/interfaces/jobs';
 import { JobStatus } from '../../../src/const/job-status';
+import { testAccount2 } from '../../__fixtures__/smart-contract';
 
 describe('[models/transaction]', () => {
   const postgreService = new PostgreService(postgreConfig);
@@ -55,7 +56,7 @@ describe('[models/transaction]', () => {
               value: {
                 prim: 'Pair',
                 args: [
-                  { string: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw' },
+                  { string: testAccount2 },
                   { int: '5' },
                 ],
               },
@@ -64,7 +65,7 @@ describe('[models/transaction]', () => {
               entrypoint: 'transfer',
               value: {
                 transfer: {
-                  destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+                  destination: testAccount2,
                   tokens: '5',
                 },
               },
@@ -84,7 +85,7 @@ describe('[models/transaction]', () => {
               value: {
                 prim: 'Pair',
                 args: [
-                  { string: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw' },
+                  { string: testAccount2 },
                   { int: '10' },
                 ],
               },
@@ -93,7 +94,7 @@ describe('[models/transaction]', () => {
               entrypoint: 'transfer',
               value: {
                 transfer: {
-                  destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+                  destination: testAccount2,
                   tokens: '10',
                 },
               },
@@ -121,9 +122,9 @@ describe('[models/transaction]', () => {
           counter: 1234567,
           source: 'source',
           parameters:
-            '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw"},{"int":"5"}]}}',
+            '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"' + testAccount2 + '"},{"int":"5"}]}}',
           parameters_json:
-            '{"entrypoint":"transfer","value":{"transfer":{"destination":"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw","tokens":"5"}}}',
+            '{"entrypoint":"transfer","value":{"transfer":{"destination":"' + testAccount2 + '","tokens":"5"}}}',
           job_id: insertedJob.id,
           branch: 'branch_address',
           caller_id: 'myCaller',
@@ -138,9 +139,9 @@ describe('[models/transaction]', () => {
           counter: 1234567,
           source: 'source',
           parameters:
-            '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw"},{"int":"10"}]}}',
+            '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"' + testAccount2 + '"},{"int":"10"}]}}',
           parameters_json:
-            '{"entrypoint":"transfer","value":{"transfer":{"destination":"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw","tokens":"10"}}}',
+            '{"entrypoint":"transfer","value":{"transfer":{"destination":"' + testAccount2 + '","tokens":"10"}}}',
           job_id: insertedJob.id,
           branch: 'branch_address',
           caller_id: 'myCaller',
@@ -168,7 +169,7 @@ describe('[models/transaction]', () => {
                 value: {
                   prim: 'Pair',
                   args: [
-                    { string: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw' },
+                    { string: testAccount2 },
                     { int: '5' },
                   ],
                 },
@@ -177,7 +178,7 @@ describe('[models/transaction]', () => {
                 entrypoint: 'transfer',
                 value: {
                   transfer: {
-                    destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+                    destination: testAccount2,
                     tokens: '5',
                   },
                 },
@@ -207,7 +208,7 @@ describe('[models/transaction]', () => {
           entrypoint: 'transfer',
           value: {
             transfer: {
-              destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+              destination: testAccount2,
               tokens: '5',
             },
           },
@@ -233,7 +234,7 @@ describe('[models/transaction]', () => {
           source: 'source',
           parameters: null,
           parameters_json:
-            '{"entrypoint":"transfer","value":{"transfer":{"destination":"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw","tokens":"5"}}}',
+            '{"entrypoint":"transfer","value":{"transfer":{"destination":"' + testAccount2 + '","tokens":"5"}}}',
           job_id: insertedJob.id,
           branch: null,
           caller_id: 'myCaller',
@@ -251,7 +252,7 @@ describe('[models/transaction]', () => {
             entrypoint: 'transfer',
             value: {
               transfer: {
-                destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+                destination: testAccount2,
                 tokens: '5',
               },
             },
@@ -297,7 +298,7 @@ describe('[models/transaction]', () => {
               value: {
                 prim: 'Pair',
                 args: [
-                  { string: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw' },
+                  { string: testAccount2 },
                   { int: '5' },
                 ],
               },
@@ -306,7 +307,7 @@ describe('[models/transaction]', () => {
               entrypoint: 'transfer',
               value: {
                 transfer: {
-                  destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+                  destination: testAccount2,
                   tokens: '5',
                 },
               },
@@ -335,7 +336,7 @@ describe('[models/transaction]', () => {
               value: {
                 prim: 'Pair',
                 args: [
-                  { string: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw' },
+                  { string: testAccount2 },
                   { int: '10' },
                 ],
               },
@@ -344,7 +345,7 @@ describe('[models/transaction]', () => {
               entrypoint: 'transfer',
               value: {
                 transfer: {
-                  destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+                  destination: testAccount2,
                   tokens: '5',
                 },
               },
@@ -370,9 +371,9 @@ describe('[models/transaction]', () => {
           counter: 1234567,
           source: 'source',
           parameters:
-            '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw"},{"int":"5"}]}}',
+            '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"' + testAccount2 + '"},{"int":"5"}]}}',
           parameters_json:
-            '{"entrypoint":"transfer","value":{"transfer":{"destination":"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw","tokens":"5"}}}',
+            '{"entrypoint":"transfer","value":{"transfer":{"destination":"' + testAccount2 + '","tokens":"5"}}}',
           job_id: insertedJob.id,
           branch: 'branch_address',
           caller_id: 'myCaller',
@@ -387,9 +388,9 @@ describe('[models/transaction]', () => {
           counter: 1234567,
           source: 'source',
           parameters:
-            '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw"},{"int":"10"}]}}',
+            '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"' + testAccount2 + '"},{"int":"10"}]}}',
           parameters_json:
-            '{"entrypoint":"transfer","value":{"transfer":{"destination":"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw","tokens":"5"}}}',
+            '{"entrypoint":"transfer","value":{"transfer":{"destination":"' + testAccount2 + '","tokens":"5"}}}',
           job_id: anotherJob.id,
           branch: 'branch_address_2',
           caller_id: 'myCaller',

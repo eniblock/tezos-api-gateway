@@ -11,6 +11,7 @@ import {
   tezosNodeEdonetUrl,
 } from '../../../../../__fixtures__/config';
 import { PostgreService } from '../../../../../../src/services/postgre';
+import { FA2Contract3, FA2Contract5, FA2Contract8, testAccount4, testAccount5 } from '../../../../../__fixtures__/smart-contract';
 
 describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -58,7 +59,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
 
     it('should return 400 when the dataFields parameter has unexpected format', async () => {
       const { body, status } = await request
-        .post('/api/tezos_node/storage/KT1TVGnujXh7VhaSP7K1aEji5HvAKRyn6cXf')
+        .post('/api/tezos_node/storage/' + FA2Contract3)
         .set('Content-Type', 'application/json')
         .send({
           dataFields: [
@@ -80,7 +81,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
 
     it('should return 404 when the contract address does not exist', async () => {
       const { body, status } = await request
-        .post('/api/tezos_node/storage/KT1938ykzsYS1FR3WAyTa2BUTuTadtV1M9v8')
+        .post('/api/tezos_node/storage/' + FA2Contract5)
         .set('Content-Type', 'application/json')
         .send();
 
@@ -97,7 +98,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
         .mockRejectedValue(new Error());
 
       const { body, status } = await request
-        .post('/api/tezos_node/storage/KT1TVGnujXh7VhaSP7K1aEji5HvAKRyn6cXf')
+        .post('/api/tezos_node/storage/' + FA2Contract3)
         .set('Content-Type', 'application/json')
         .send();
 
@@ -111,7 +112,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
         [
           logger,
           tezosService,
-          'KT1TVGnujXh7VhaSP7K1aEji5HvAKRyn6cXf',
+          FA2Contract3,
           undefined,
         ],
       ]);
@@ -119,7 +120,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
 
     it('should return 200 and all storage if dataFields is not defined', async () => {
       const { body, status } = await request
-        .post('/api/tezos_node/storage/KT1TVGnujXh7VhaSP7K1aEji5HvAKRyn6cXf')
+        .post('/api/tezos_node/storage/' + FA2Contract3)
         .set('Content-Type', 'application/json')
         .send();
 
@@ -136,13 +137,13 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
             value: [
               {
                 key: {
-                  address: 'tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw',
+                  address: testAccount4,
                   jwtToken: 'jwt',
                 },
                 value: {
                   name: 'tata',
                   publicKey: 'tata public key',
-                  publicKeyHash: 'tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw',
+                  publicKeyHash: testAccount4,
                   datasources: {
                     type: 'map',
                     size: 3,
@@ -165,13 +166,13 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
               },
               {
                 key: {
-                  address: 'tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK',
+                  address: testAccount5,
                   jwtToken: 'jwt',
                 },
                 value: {
                   name: 'toto',
                   publicKey: 'toto public key',
-                  publicKeyHash: 'tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK',
+                  publicKeyHash: testAccount5,
                   datasources: {
                     type: 'map',
                     size: 3,
@@ -200,7 +201,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
 
     it('should return 200 but with proper error message in storage object if a field does not exist', async () => {
       const { body, status } = await request
-        .post('/api/tezos_node/storage/KT1TVGnujXh7VhaSP7K1aEji5HvAKRyn6cXf')
+        .post('/api/tezos_node/storage/' + FA2Contract3)
         .set('Content-Type', 'application/json')
         .send({
           dataFields: ['accessRequests', 'name'],
@@ -222,7 +223,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
 
     it('should return 200 and correctly access a map', async () => {
       const { body, status } = await request
-        .post('/api/tezos_node/storage/KT1TVGnujXh7VhaSP7K1aEji5HvAKRyn6cXf')
+        .post('/api/tezos_node/storage/' + FA2Contract3)
         .set('Content-Type', 'application/json')
         .send({
           dataFields: [
@@ -230,7 +231,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
               organizations: [
                 {
                   key: {
-                    address: 'tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw',
+                    address: testAccount4,
                     jwtToken: 'jwt',
                   },
                 },
@@ -245,13 +246,13 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
           organizations: [
             {
               key: {
-                address: 'tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw',
+                address: testAccount4,
                 jwtToken: 'jwt',
               },
               value: {
                 name: 'tata',
                 publicKey: 'tata public key',
-                publicKeyHash: 'tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw',
+                publicKeyHash: testAccount4,
                 datasources: {
                   type: 'map',
                   size: 3,
@@ -279,7 +280,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
 
     it('should return 200 and correctly access a map and only return required fields', async () => {
       const { body, status } = await request
-        .post('/api/tezos_node/storage/KT1TVGnujXh7VhaSP7K1aEji5HvAKRyn6cXf')
+        .post('/api/tezos_node/storage/' + FA2Contract3)
         .set('Content-Type', 'application/json')
         .send({
           dataFields: [
@@ -287,7 +288,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
               organizations: [
                 {
                   key: {
-                    address: 'tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw',
+                    address: testAccount4,
                     jwtToken: 'jwt',
                   },
                   dataFields: ['name'],
@@ -303,7 +304,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
           organizations: [
             {
               key: {
-                address: 'tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw',
+                address: testAccount4,
                 jwtToken: 'jwt',
               },
               value: {
@@ -317,7 +318,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
 
     it('should return 200 but with a proper error message when trying to access a NOT MAP data field with MAP ACCESS structure', async () => {
       const { body, status } = await request
-        .post('/api/tezos_node/storage/KT1BxLgrhC9mL44PE51wTL5Gx55fR5RU8w82')
+        .post('/api/tezos_node/storage/' + FA2Contract8)
         .set('Content-Type', 'application/json')
         .send({
           dataFields: [
@@ -325,7 +326,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
               lastDivYear: [
                 {
                   key: {
-                    address: 'tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw',
+                    address: testAccount4,
                   },
                 },
               ],
@@ -346,7 +347,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
 
     it('should return 200 and correctly access big map', async () => {
       const { body, status } = await request
-        .post('/api/tezos_node/storage/KT1BxLgrhC9mL44PE51wTL5Gx55fR5RU8w82')
+        .post('/api/tezos_node/storage/' + FA2Contract8)
         .set('Content-Type', 'application/json')
         .send({
           dataFields: [

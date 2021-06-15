@@ -8,8 +8,11 @@ import {
 import { resetTable, selectData } from '../../../../../__utils__/postgre';
 import {
   FA2Contract,
+  FA2Contract7,
   flexibleTokenContract,
   testAccount,
+  testAccount2,
+  testAccount7,
 } from '../../../../../__fixtures__/smart-contract';
 
 import { WebProcess } from '../../../../../../src/processes/web/web-process';
@@ -58,7 +61,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
           entryPoint: 'transfer',
           entryPointParams: {
             tokens: 1,
-            destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+            destination: testAccount2,
           },
         },
         {
@@ -72,7 +75,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
 
     it('should return 400 when a required parameter is missing', async () => {
       const { body, status } = await request.post('/api/forge/jobs').send({
-        sourceAddress: 'tz1hXdta423VkiVrxDzX8VXe2sGwCiiZfPo7',
+        sourceAddress: testAccount7,
       });
 
       expect(status).toEqual(400);
@@ -100,11 +103,11 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
         ...requestParam,
         transactions: [
           {
-            contractAddress: 'KT1938ykzsYS1FR3WAyTa2BUTuTadtV1M9v',
+            contractAddress: FA2Contract7,
             entryPoint: 'transfer',
             entryPointParams: {
               tokens: 1,
-              destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+              destination: testAccount2,
             },
           },
         ],
@@ -127,7 +130,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
             entryPoint: 'transfer',
             entryPointParams: {
               fakeParam: 5,
-              destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+              destination: testAccount2,
             },
           },
         ],
@@ -136,7 +139,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
       expect(status).toEqual(400);
       expect(body).toEqual({
         message:
-          'The given entry point params {"fakeParam":5,"destination":"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw"} does not match the schema: {"destination":"address","tokens":"nat"}',
+          'The given entry point params {"fakeParam":5,"destination":"' + testAccount2 + '"} does not match the schema: {"destination":"address","tokens":"nat"}',
         status: 400,
       });
     });
@@ -150,7 +153,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
             entryPoint: 'mint',
             entryPointParams: {
               amount: 100,
-              address: 'tz1iaJAxXAa5SCkdPBLA7f5Lj4LXS5vNa33E',
+              address: testAccount,
               token_id: 1,
               metadata: [
                 {
@@ -196,7 +199,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
             entryPoint: 'transfer',
             entryPointParams: {
               tokens: 'this is a token',
-              destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+              destination: testAccount2,
             },
           },
         ],
@@ -242,9 +245,9 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
         {
           destination: flexibleTokenContract,
           parameters:
-            '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw"},{"int":"1"}]}}',
+            '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"' + testAccount2 + '"},{"int":"1"}]}}',
           parameters_json:
-            '{"entrypoint":"transfer","value":{"transfer":{"tokens":1,"destination":"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw"}}}',
+            '{"entrypoint":"transfer","value":{"transfer":{"tokens":1,"destination":"' + testAccount2 + '"}}}',
           amount: 0,
           fee: 2028,
           source: testAccount,

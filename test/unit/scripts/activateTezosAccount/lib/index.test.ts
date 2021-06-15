@@ -16,6 +16,7 @@ import {
 import { tezosPrivateKey } from '../../../../../src/scripts/activate-tezos-account/config';
 import { TezosService } from '../../../../../src/services/tezos';
 import { VaultSigner } from '../../../../../src/services/signers/vault';
+import { testAccount10, testAccount9 } from '../../../../__fixtures__/smart-contract';
 
 describe('[scripts/activate-tezos-account/lib/index.ts]', () => {
   afterEach(() => {
@@ -155,7 +156,7 @@ describe('[scripts/activate-tezos-account/lib/index.ts]', () => {
       expect(transferFn.mock.calls).toEqual([
         [
           {
-            to: 'tz1UCubRycjt5kqkdBPDvmSSxHG1oZ8AX2Cu',
+            to: testAccount9,
             amount: 100,
           },
         ],
@@ -167,7 +168,7 @@ describe('[scripts/activate-tezos-account/lib/index.ts]', () => {
         ],
         [
           {
-            to: 'tz1YCmopN9D4WgkTvnqkGExwAHSHokvApXJG',
+            to: testAccount10,
             amount: 100,
           },
         ],

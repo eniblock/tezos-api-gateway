@@ -7,7 +7,7 @@ import * as generateStorageResponseLib from '../../../../src/lib/storage/generat
 
 import { tezosNodeEdonetUrl } from '../../../__fixtures__/config';
 import { logger } from '../../../__fixtures__/services/logger';
-import { flexibleTokenContract } from '../../../__fixtures__/smart-contract';
+import { FA2Contract3, flexibleTokenContract, testAccount4, testAccount5, testAccount6 } from '../../../__fixtures__/smart-contract';
 
 describe('[lib/storage/convert-storage]', () => {
   const tezosService = new TezosService(tezosNodeEdonetUrl);
@@ -17,13 +17,12 @@ describe('[lib/storage/convert-storage]', () => {
   });
 
   describe('#convertStorage', () => {
-    const contractAddress = 'KT1TVGnujXh7VhaSP7K1aEji5HvAKRyn6cXf';
 
     it('should correctly return the big map value corresponding to the key', async () => {
       const storage = await getContractStorageFromTezosNode(
         logger,
         tezosService,
-        contractAddress,
+        FA2Contract3,
       );
 
       await expect(
@@ -44,8 +43,8 @@ describe('[lib/storage/convert-storage]', () => {
             key: { scopeId: 'scope1', status: 'status1' },
             value: {
               address: {
-                providerAddress: 'tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw',
-                requesterAddress: 'tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK',
+                providerAddress: testAccount4,
+                requesterAddress: testAccount5,
               },
               createdAt: '2019-10-22T16:27:54.000Z',
               jwtToken: 'jwtToken',
@@ -59,7 +58,7 @@ describe('[lib/storage/convert-storage]', () => {
       const storage = await getContractStorageFromTezosNode(
         logger,
         tezosService,
-        contractAddress,
+        FA2Contract3,
       );
 
       await expect(
@@ -82,8 +81,8 @@ describe('[lib/storage/convert-storage]', () => {
             key: { scopeId: 'scope1', status: 'status1' },
             value: {
               address: {
-                providerAddress: 'tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw',
-                requesterAddress: 'tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK',
+                providerAddress: testAccount4,
+                requesterAddress: testAccount5,
               },
               createdAt: '2019-10-22T16:27:54.000Z',
               jwtToken: 'jwtToken',
@@ -97,8 +96,8 @@ describe('[lib/storage/convert-storage]', () => {
             key: { scopeId: 'scope2', status: 'status2' },
             value: {
               address: {
-                providerAddress: 'tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK',
-                requesterAddress: 'tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw',
+                providerAddress: testAccount5,
+                requesterAddress: testAccount4,
               },
               createdAt: '2019-10-22T16:28:10.000Z',
               jwtToken: null,
@@ -112,7 +111,7 @@ describe('[lib/storage/convert-storage]', () => {
       const storage = await getContractStorageFromTezosNode(
         logger,
         tezosService,
-        contractAddress,
+        FA2Contract3,
       );
 
       await expect(
@@ -137,13 +136,13 @@ describe('[lib/storage/convert-storage]', () => {
               organizations: [
                 {
                   key: {
-                    address: 'tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK',
+                    address: testAccount5,
                     jwtToken: 'jwt',
                   },
                 },
                 {
                   key: {
-                    address: 'tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjq',
+                    address: testAccount6,
                     jwtToken: 'jwt',
                   },
                 },
@@ -162,8 +161,7 @@ describe('[lib/storage/convert-storage]', () => {
           {
             key: { scopeId: 'scope1', status: 'status1' },
             value: {
-              'address.requesterAddress':
-                'tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK',
+              'address.requesterAddress': testAccount5,
               'address.provider': {
                 error: 'This data field does not exist in the contract storage',
               },
@@ -180,7 +178,7 @@ describe('[lib/storage/convert-storage]', () => {
         organizations: [
           {
             key: {
-              address: 'tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK',
+              address: testAccount5,
               jwtToken: 'jwt',
             },
             value: {
@@ -204,12 +202,12 @@ describe('[lib/storage/convert-storage]', () => {
               },
               name: 'toto',
               publicKey: 'toto public key',
-              publicKeyHash: 'tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK',
+              publicKeyHash: testAccount5,
             },
           },
           {
             key: {
-              address: 'tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjq',
+              address: testAccount6,
               jwtToken: 'jwt',
             },
             error: 'The current map does not contain this key',
@@ -225,7 +223,7 @@ describe('[lib/storage/convert-storage]', () => {
       const storage = await getContractStorageFromTezosNode(
         logger,
         tezosService,
-        contractAddress,
+        FA2Contract3,
       );
 
       await expect(
@@ -236,7 +234,7 @@ describe('[lib/storage/convert-storage]', () => {
               organizations: [
                 {
                   key: {
-                    address: 'tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK',
+                    address: testAccount5,
                     jwtToken: 'jwt',
                   },
                   dataFields: [
@@ -251,7 +249,7 @@ describe('[lib/storage/convert-storage]', () => {
                 },
                 {
                   key: {
-                    address: 'tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw',
+                    address: testAccount4,
                     jwtToken: 'jwt',
                   },
                   dataFields: [
@@ -273,7 +271,7 @@ describe('[lib/storage/convert-storage]', () => {
         organizations: [
           {
             key: {
-              address: 'tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK',
+              address: testAccount5,
               jwtToken: 'jwt',
             },
             value: {
@@ -292,7 +290,7 @@ describe('[lib/storage/convert-storage]', () => {
           },
           {
             key: {
-              address: 'tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw',
+              address: testAccount4,
               jwtToken: 'jwt',
             },
             value: {
@@ -328,7 +326,7 @@ describe('[lib/storage/convert-storage]', () => {
               decimals: [
                 {
                   key: {
-                    address: 'tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK',
+                    address: testAccount5,
                     jwtToken: 'jwt',
                   },
                 },
@@ -349,7 +347,7 @@ describe('[lib/storage/convert-storage]', () => {
       const storage = await getContractStorageFromTezosNode(
         logger,
         tezosService,
-        contractAddress,
+        FA2Contract3,
       );
 
       await expect(
@@ -360,7 +358,7 @@ describe('[lib/storage/convert-storage]', () => {
               organizations: [
                 {
                   key: {
-                    address: 'tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK',
+                    address: testAccount5,
                     jwtToken: 'jwt',
                   },
                   dataFields: [
@@ -384,7 +382,7 @@ describe('[lib/storage/convert-storage]', () => {
         organizations: [
           {
             key: {
-              address: 'tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK',
+              address: testAccount5,
               jwtToken: 'jwt',
             },
             value: {

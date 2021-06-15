@@ -8,7 +8,7 @@ import { getContractStorageFromTezosNode } from '../../../../src/lib/storage/get
 import { TezosService } from '../../../../src/services/tezos';
 
 import { tezosNodeEdonetUrl } from '../../../__fixtures__/config';
-import { flexibleTokenContract } from '../../../__fixtures__/smart-contract';
+import { FA2Contract3, FA2Contract4, flexibleTokenContract, testAccount, testAccount4, testAccount5 } from '../../../__fixtures__/smart-contract';
 import { logger } from '../../../__fixtures__/services/logger';
 
 describe('[lib/storage/generateStorageResponse]', () => {
@@ -38,8 +38,8 @@ describe('[lib/storage/generateStorageResponse]', () => {
         decimals: 10,
         locked: false,
         name: 'name',
-        newOwner: 'tz1iaJAxXAa5SCkdPBLA7f5Lj4LXS5vNa33E',
-        owner: 'tz1iaJAxXAa5SCkdPBLA7f5Lj4LXS5vNa33E',
+        newOwner: testAccount,
+        owner: testAccount,
         symbol: 'symbol',
         totalSupply: 100000000000000000,
       });
@@ -49,7 +49,7 @@ describe('[lib/storage/generateStorageResponse]', () => {
       const storage = await getContractStorageFromTezosNode(
         logger,
         tezosService,
-        'KT1NxDQoWRj1TLrbpCtkSX6eVyrkxwZEdGfR',
+        FA2Contract4,
       );
 
       expect(generateStorageResponse(storage!)).toEqual({
@@ -62,19 +62,19 @@ describe('[lib/storage/generateStorageResponse]', () => {
           size: 2,
           value: [
             {
-              key: 'tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw',
+              key: testAccount4,
               value: {
                 name: 'tata',
                 publicKey: '',
-                publicKeyHash: 'tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw',
+                publicKeyHash: testAccount4,
               },
             },
             {
-              key: 'tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK',
+              key: testAccount5,
               value: {
                 name: 'toto',
                 publicKey: '',
-                publicKeyHash: 'tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK',
+                publicKeyHash: testAccount5,
               },
             },
           ],
@@ -86,7 +86,7 @@ describe('[lib/storage/generateStorageResponse]', () => {
       const storage = await getContractStorageFromTezosNode(
         logger,
         tezosService,
-        'KT1TVGnujXh7VhaSP7K1aEji5HvAKRyn6cXf',
+        FA2Contract3,
       );
 
       expect(generateStorageResponse(storage!)).toEqual({
@@ -100,13 +100,13 @@ describe('[lib/storage/generateStorageResponse]', () => {
           value: [
             {
               key: {
-                address: 'tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw',
+                address: testAccount4,
                 jwtToken: 'jwt',
               },
               value: {
                 name: 'tata',
                 publicKey: 'tata public key',
-                publicKeyHash: 'tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw',
+                publicKeyHash: testAccount4,
                 datasources: {
                   type: 'map',
                   size: 3,
@@ -129,13 +129,13 @@ describe('[lib/storage/generateStorageResponse]', () => {
             },
             {
               key: {
-                address: 'tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK',
+                address: testAccount5,
                 jwtToken: 'jwt',
               },
               value: {
                 name: 'toto',
                 publicKey: 'toto public key',
-                publicKeyHash: 'tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK',
+                publicKeyHash: testAccount5,
                 datasources: {
                   type: 'map',
                   size: 3,

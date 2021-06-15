@@ -20,6 +20,7 @@ import {
   FA2Contract,
   flexibleTokenContract,
   testAccount,
+  testAccount2,
 } from '../../../__fixtures__/smart-contract';
 
 describe('[lib/jobs/forge-operation]', () => {
@@ -51,7 +52,7 @@ describe('[lib/jobs/forge-operation]', () => {
           entryPoint: 'transfer',
           entryPointParams: {
             tokens: 1,
-            destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+            destination: testAccount2,
           },
         },
         {
@@ -59,7 +60,7 @@ describe('[lib/jobs/forge-operation]', () => {
           entryPoint: 'transfer',
           entryPointParams: {
             tokens: 5,
-            destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+            destination: testAccount2,
           },
         },
       ],
@@ -101,7 +102,7 @@ describe('[lib/jobs/forge-operation]', () => {
                 entryPoint: 'transfer',
                 entryPointParams: {
                   fakeParam: 5,
-                  destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+                  destination: testAccount2,
                 },
               },
             ],
@@ -137,7 +138,7 @@ describe('[lib/jobs/forge-operation]', () => {
                 entryPoint: 'mint',
                 entryPointParams: {
                   amount: 100,
-                  address: 'tz1iaJAxXAa5SCkdPBLA7f5Lj4LXS5vNa33E',
+                  address: testAccount,
                   token_id: 1,
                   metadata: {
                     key: 'name',
@@ -178,7 +179,7 @@ describe('[lib/jobs/forge-operation]', () => {
                 entryPoint: 'transfer',
                 entryPointParams: {
                   tokens: 'this is a token',
-                  destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+                  destination: testAccount2,
                 },
               },
             ],
@@ -227,9 +228,9 @@ describe('[lib/jobs/forge-operation]', () => {
         {
           destination: flexibleTokenContract,
           parameters:
-            '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw"},{"int":"1"}]}}',
+            '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"' + testAccount2 + '"},{"int":"1"}]}}',
           parameters_json:
-            '{"entrypoint":"transfer","value":{"transfer":{"tokens":1,"destination":"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw"}}}',
+            '{"entrypoint":"transfer","value":{"transfer":{"tokens":1,"destination":"' + testAccount2 + '"}}}',
           amount: 0,
           fee: 2052,
           source: testAccount,
@@ -242,9 +243,9 @@ describe('[lib/jobs/forge-operation]', () => {
         {
           destination: flexibleTokenContract,
           parameters:
-            '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw"},{"int":"5"}]}}',
+            '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"' + testAccount2 + '"},{"int":"5"}]}}',
           parameters_json:
-            '{"entrypoint":"transfer","value":{"transfer":{"tokens":5,"destination":"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw"}}}',
+            '{"entrypoint":"transfer","value":{"transfer":{"tokens":5,"destination":"' + testAccount2 + '"}}}',
           amount: 0,
           fee: 2052,
           source: testAccount,
