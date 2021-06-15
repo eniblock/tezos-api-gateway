@@ -11,7 +11,13 @@ import {
   tezosNodeEdonetUrl,
 } from '../../../../../__fixtures__/config';
 import { PostgreService } from '../../../../../../src/services/postgre';
-import { FA2Contract3, FA2Contract5, FA2Contract8, testAccount4, testAccount5 } from '../../../../../__fixtures__/smart-contract';
+import {
+  FA2Contract3,
+  FA2Contract5,
+  FA2Contract8,
+  testAccount4,
+  testAccount5,
+} from '../../../../../__fixtures__/smart-contract';
 
 describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -109,12 +115,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
       });
 
       expect(getContractStorageSpy.mock.calls).toEqual([
-        [
-          logger,
-          tezosService,
-          FA2Contract3,
-          undefined,
-        ],
+        [logger, tezosService, FA2Contract3, undefined],
       ]);
     });
 

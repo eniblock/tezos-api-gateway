@@ -139,7 +139,9 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
       expect(status).toEqual(400);
       expect(body).toEqual({
         message:
-          'The given entry point params {"fakeParam":5,"destination":"' + testAccount2 + '"} does not match the schema: {"destination":"address","tokens":"nat"}',
+          'The given entry point params {"fakeParam":5,"destination":"' +
+          testAccount2 +
+          '"} does not match the schema: {"destination":"address","tokens":"nat"}',
         status: 400,
       });
     });
@@ -245,9 +247,13 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
         {
           destination: flexibleTokenContract,
           parameters:
-            '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"' + testAccount2 + '"},{"int":"1"}]}}',
+            '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"' +
+            testAccount2 +
+            '"},{"int":"1"}]}}',
           parameters_json:
-            '{"entrypoint":"transfer","value":{"transfer":{"tokens":1,"destination":"' + testAccount2 + '"}}}',
+            '{"entrypoint":"transfer","value":{"transfer":{"tokens":1,"destination":"' +
+            testAccount2 +
+            '"}}}',
           amount: 0,
           fee: 2028,
           source: testAccount,

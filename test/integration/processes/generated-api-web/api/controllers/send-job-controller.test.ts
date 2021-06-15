@@ -14,7 +14,12 @@ import { PostgreService } from '../../../../../../src/services/postgre';
 import * as jobsLib from '../../../../../../src/lib/jobs/send-transactions';
 import { AmqpService } from '../../../../../../src/services/amqp';
 import { WebProcess } from '../../../../../../src/processes/generated-api-web/web-process';
-import { flexibleTokenContract, testAccount2, testAccount7, testAccount8 } from '../../../../../__fixtures__/smart-contract';
+import {
+  flexibleTokenContract,
+  testAccount2,
+  testAccount7,
+  testAccount8,
+} from '../../../../../__fixtures__/smart-contract';
 
 describe('[processes/generated-api-web/api/controllers] Send job controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });

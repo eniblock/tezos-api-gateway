@@ -10,7 +10,10 @@ import * as userLib from '../../../../src/lib/user/create-account';
 import { VaultClient } from '../../../../src/services/clients/vault-client';
 import { InMemorySigner } from '@taquito/signer';
 import { TezosToolkit } from '@taquito/taquito';
-import { testAccount10, testAccount9 } from '../../../__fixtures__/smart-contract';
+import {
+  testAccount10,
+  testAccount9,
+} from '../../../__fixtures__/smart-contract';
 
 describe('[lib/user-create-account] create Tezos accounts', () => {
   const tezosService = new TezosService(tezosNodeEdonetUrl);

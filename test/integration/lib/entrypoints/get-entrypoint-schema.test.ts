@@ -206,12 +206,10 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
 
     it('should throw error when one of the query entry points is not in the contract', async () => {
       await expect(
-        getEntryPointSchemaFromTezosNode(
-          logger,
-          tezosService,
-          FA2Contract2,
-          ['nonexistentEntryPoint', 'mint'],
-        ),
+        getEntryPointSchemaFromTezosNode(logger, tezosService, FA2Contract2, [
+          'nonexistentEntryPoint',
+          'mint',
+        ]),
       ).rejects.toThrow(
         new ClientError({
           message:
@@ -228,16 +226,10 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
         .mockRejectedValue(new Error('Unexpected error'));
 
       await expect(
-        getEntryPointSchemaFromTezosNode(
-          logger,
-          tezosService,
-          FA2Contract2,
-        ),
+        getEntryPointSchemaFromTezosNode(logger, tezosService, FA2Contract2),
       ).rejects.toThrow(Error('Unexpected error'));
 
-      expect(getEntryPointsSpy.mock.calls).toEqual([
-        [FA2Contract2],
-      ]);
+      expect(getEntryPointsSpy.mock.calls).toEqual([[FA2Contract2]]);
     });
 
     it('should correctly return the parameter schema object with only the mentioned entrypoint', async () => {

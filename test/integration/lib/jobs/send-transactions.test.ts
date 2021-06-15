@@ -487,7 +487,9 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
           operation_hash: null,
           status: 'error',
           error_message:
-            'The given entry point params {"fake_tokens":1,"destination":"' + testAccount2 + '"} does not match the schema: {"destination":"address","tokens":"nat"}',
+            'The given entry point params {"fake_tokens":1,"destination":"' +
+            testAccount2 +
+            '"} does not match the schema: {"destination":"address","tokens":"nat"}',
         },
       ]);
     });

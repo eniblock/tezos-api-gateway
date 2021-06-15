@@ -16,7 +16,10 @@ import {
 import { tezosPrivateKey } from '../../../../../src/scripts/activate-tezos-account/config';
 import { TezosService } from '../../../../../src/services/tezos';
 import { VaultSigner } from '../../../../../src/services/signers/vault';
-import { testAccount10, testAccount9 } from '../../../../__fixtures__/smart-contract';
+import {
+  testAccount10,
+  testAccount9,
+} from '../../../../__fixtures__/smart-contract';
 
 describe('[scripts/activate-tezos-account/lib/index.ts]', () => {
   afterEach(() => {

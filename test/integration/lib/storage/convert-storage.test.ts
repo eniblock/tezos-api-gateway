@@ -7,7 +7,13 @@ import * as generateStorageResponseLib from '../../../../src/lib/storage/generat
 
 import { tezosNodeEdonetUrl } from '../../../__fixtures__/config';
 import { logger } from '../../../__fixtures__/services/logger';
-import { FA2Contract3, flexibleTokenContract, testAccount4, testAccount5, testAccount6 } from '../../../__fixtures__/smart-contract';
+import {
+  FA2Contract3,
+  flexibleTokenContract,
+  testAccount4,
+  testAccount5,
+  testAccount6,
+} from '../../../__fixtures__/smart-contract';
 
 describe('[lib/storage/convert-storage]', () => {
   const tezosService = new TezosService(tezosNodeEdonetUrl);
@@ -17,7 +23,6 @@ describe('[lib/storage/convert-storage]', () => {
   });
 
   describe('#convertStorage', () => {
-
     it('should correctly return the big map value corresponding to the key', async () => {
       const storage = await getContractStorageFromTezosNode(
         logger,

@@ -11,7 +11,11 @@ import {
   tezosNodeEdonetUrl,
 } from '../../../../../__fixtures__/config';
 import { PostgreService } from '../../../../../../src/services/postgre';
-import { FA2Contract2, FA2Contract5, FA2Contract6 } from '../../../../../__fixtures__/smart-contract';
+import {
+  FA2Contract2,
+  FA2Contract5,
+  FA2Contract6,
+} from '../../../../../__fixtures__/smart-contract';
 
 describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -98,12 +102,7 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
       });
 
       expect(getEntrypointSchemaSpy.mock.calls).toEqual([
-        [
-          logger,
-          tezosService,
-          FA2Contract6,
-          undefined,
-        ],
+        [logger, tezosService, FA2Contract6, undefined],
       ]);
     });
 

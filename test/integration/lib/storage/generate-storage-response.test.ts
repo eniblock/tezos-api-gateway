@@ -8,7 +8,14 @@ import { getContractStorageFromTezosNode } from '../../../../src/lib/storage/get
 import { TezosService } from '../../../../src/services/tezos';
 
 import { tezosNodeEdonetUrl } from '../../../__fixtures__/config';
-import { FA2Contract3, FA2Contract4, flexibleTokenContract, testAccount, testAccount4, testAccount5 } from '../../../__fixtures__/smart-contract';
+import {
+  FA2Contract3,
+  FA2Contract4,
+  flexibleTokenContract,
+  testAccount,
+  testAccount4,
+  testAccount5,
+} from '../../../__fixtures__/smart-contract';
 import { logger } from '../../../__fixtures__/services/logger';
 
 describe('[lib/storage/generateStorageResponse]', () => {

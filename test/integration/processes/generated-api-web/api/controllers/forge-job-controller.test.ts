@@ -189,9 +189,13 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
         {
           destination: flexibleTokenContract,
           parameters:
-            '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"' + testAccount2 + '"},{"int":"1"}]}}',
+            '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"' +
+            testAccount2 +
+            '"},{"int":"1"}]}}',
           parameters_json:
-            '{"entrypoint":"transfer","value":{"transfer":{"tokens":1,"destination":"' + testAccount2 + '"}}}',
+            '{"entrypoint":"transfer","value":{"transfer":{"tokens":1,"destination":"' +
+            testAccount2 +
+            '"}}}',
           amount: 0,
           fee: 2068,
           source: testAccount,

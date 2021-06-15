@@ -117,9 +117,7 @@ describe('[services/signers] Vault', () => {
           warnings: null,
         });
 
-      await expect(vaultSigner.publicKeyHash()).resolves.toEqual(
-        testAccount9,
-      );
+      await expect(vaultSigner.publicKeyHash()).resolves.toEqual(testAccount9);
 
       vaultNock.done();
     });
