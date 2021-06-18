@@ -1,13 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import createHttpError from 'http-errors';
-import { OK, NOT_FOUND } from 'http-status-codes';
-
-import { logger } from '../../../../services/logger';
+import { StatusCodes } from 'http-status-codes';
 import { JobIdNotFoundError } from '../../../../const/errors/job-id-not-found-error';
-import { AmqpService } from '../../../../services/amqp';
 import { publishToInjectionQueue } from '../../../../lib/amqp/publish-to-injection-queue';
-import { PostgreService } from '../../../../services/postgre';
 import { selectJobs } from '../../../../models/jobs';
+import { AmqpService } from '../../../../services/amqp';
+import { logger } from '../../../../services/logger';
+import { PostgreService } from '../../../../services/postgre';
 
 function injectOperationAndUpdateJob(
   postgreService: PostgreService,
@@ -40,10 +39,10 @@ function injectOperationAndUpdateJob(
         signedTransaction,
       });
 
-      return res.status(OK).json(job);
+      return res.status(StatusCodes.OK).json(job);
     } catch (err) {
       if (err instanceof JobIdNotFoundError) {
-        return next(createHttpError(NOT_FOUND, err.message));
+        return next(createHttpError(StatusCodes.NOT_FOUND, err.message));
       }
 
       return next(err);

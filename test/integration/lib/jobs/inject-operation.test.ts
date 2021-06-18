@@ -7,6 +7,7 @@ import {
   testAccount,
 } from '../../../__fixtures__/smart-contract';
 import {
+  amqpConfig,
   postgreConfig,
   tezosNodeEdonetUrl,
   tezosNodeEdonetUrls,
@@ -26,10 +27,12 @@ import { JobIdNotFoundError } from '../../../../src/const/errors/job-id-not-foun
 import { Transaction } from '../../../../src/const/interfaces/transaction';
 import { forgeOperation } from '../../../../src/lib/jobs/forge-operation';
 import { GatewayPool } from '../../../../src/services/gateway-pool';
+import { AmqpService } from '../../../../src/services/amqp';
 
 describe('[lib/jobs/inject-operation]', () => {
   const postgreService = new PostgreService(postgreConfig);
   const tezosService = new TezosService(tezosNodeEdonetUrl);
+  const amqpService = new AmqpService(amqpConfig, logger);
   const gatewayPool = new GatewayPool(tezosNodeEdonetUrls, logger);
 
   beforeAll(async () => {
@@ -111,7 +114,7 @@ describe('[lib/jobs/inject-operation]', () => {
       await resetTable(postgreService.pool, PostgreTables.TRANSACTION);
       await expect(
         injectOperation(
-          { gatewayPool, postgreService },
+          { gatewayPool, postgreService, amqpService },
           { jobId: insertedJob.id, signature, signedTransaction },
         ),
       ).rejects.toThrow(
@@ -141,7 +144,7 @@ describe('[lib/jobs/inject-operation]', () => {
 
       await expect(
         injectOperation(
-          { gatewayPool, postgreService },
+          { gatewayPool, postgreService, amqpService },
           { jobId: insertedJob.id, signature, signedTransaction },
         ),
       ).rejects.toThrow(
@@ -209,7 +212,7 @@ describe('[lib/jobs/inject-operation]', () => {
       );
       await expect(
         injectOperation(
-          { gatewayPool, postgreService },
+          { gatewayPool, postgreService, amqpService },
           { jobId: insertedJob.id, signature, signedTransaction },
         ),
       ).resolves.toBeUndefined();

@@ -1,19 +1,20 @@
-import _ from 'lodash';
 import { OperationContentsTransaction, OpKind } from '@taquito/rpc';
-
-import { PostgreService } from '../../services/postgre';
-import { PatchJobParams } from '../../const/interfaces/patch-job-params';
-import { logger } from '../../services/logger';
+import _ from 'lodash';
 import { JobIdNotFoundError } from '../../const/errors/job-id-not-found-error';
 import { Jobs } from '../../const/interfaces/jobs';
-import {
-  updateJobStatusAndErrorMessage,
-  updateOperationHash,
-} from '../../models/jobs';
-import { selectTransaction } from '../../models/transactions';
+import { PatchJobParams } from '../../const/interfaces/patch-job-params';
 import { Transaction } from '../../const/interfaces/transaction';
 import { JobStatus } from '../../const/job-status';
+import {
+  updateJobStatusAndErrorMessage,
+  updateOperationHash
+} from '../../models/jobs';
+import { selectTransaction } from '../../models/transactions';
+import { AmqpService } from '../../services/amqp';
 import { GatewayPool } from '../../services/gateway-pool';
+import { logger } from '../../services/logger';
+import { PostgreService } from '../../services/postgre';
+import { publishErrorToInjectionQueue } from '../amqp/publish-error-to-injection-queue';
 
 const INJECT_OPERATION_KNOWN_ERRORS = ['JobIdNotFoundError'];
 
@@ -34,9 +35,11 @@ export async function injectOperation(
   {
     gatewayPool,
     postgreService,
+    amqpService,
   }: {
     gatewayPool: GatewayPool;
     postgreService: PostgreService;
+    amqpService: AmqpService;
   },
   { jobId, signature, signedTransaction }: PatchJobParams,
 ): Promise<void> {
@@ -112,11 +115,14 @@ export async function injectOperation(
       throw new JobIdNotFoundError(`Could not find job with this id: ${jobId}`);
     }
   } catch (err) {
+    
+    const errorMessage = err.message;
+
     if (!(err instanceof JobIdNotFoundError)) {
       await updateJobStatusAndErrorMessage(
         postgreService.pool,
         JobStatus.ERROR,
-        err.message,
+        errorMessage,
         jobId,
       );
     }
@@ -133,6 +139,12 @@ export async function injectOperation(
       { error: err },
       '[lib/jobs/inject-operation/#injectOperation] Unexpected error happened',
     );
+
+    // Publishing error on Injection Queue
+    publishErrorToInjectionQueue(amqpService, {
+      jobId,
+      errorMessage,
+    });
 
     throw err;
   }

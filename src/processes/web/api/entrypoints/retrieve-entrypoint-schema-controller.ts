@@ -1,11 +1,10 @@
 import { NextFunction, Request, Response } from 'express';
-import { BAD_REQUEST, OK } from 'http-status-codes';
 import createHttpError from 'http-errors';
-
-import { logger } from '../../../../services/logger';
-import { GatewayPool } from '../../../../services/gateway-pool';
+import { StatusCodes } from 'http-status-codes';
 import { InvalidEntryPoint } from '../../../../const/errors/invalid-entry-point';
 import { getEntryPointSchemaFromTezosNode } from '../../../../lib/entrypoints/get-entrypoint-schema';
+import { GatewayPool } from '../../../../services/gateway-pool';
+import { logger } from '../../../../services/logger';
 
 function retrieveEntryPointsSchemaFromTezosNode(gatewayPool: GatewayPool) {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -19,7 +18,7 @@ function retrieveEntryPointsSchemaFromTezosNode(gatewayPool: GatewayPool) {
           entryPoints,
         },
         '[entrypoints/retrieve-entrypoint-schema-controller] Going to retrieve the entry ' +
-          'points schema of this contract',
+        'points schema of this contract',
       );
 
       const tezosService = await gatewayPool.getTezosService();
@@ -31,10 +30,10 @@ function retrieveEntryPointsSchemaFromTezosNode(gatewayPool: GatewayPool) {
         entryPoints as string[] | undefined,
       );
 
-      return res.status(OK).json(result);
+      return res.status(StatusCodes.OK).json(result);
     } catch (err) {
       if (err instanceof InvalidEntryPoint) {
-        return next(createHttpError(BAD_REQUEST, err.message));
+        return next(createHttpError(StatusCodes.BAD_REQUEST, err.message));
       }
 
       return next(err);
