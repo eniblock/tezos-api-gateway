@@ -7,7 +7,7 @@ import { Transaction } from '../../const/interfaces/transaction';
 import { JobStatus } from '../../const/job-status';
 import {
   updateJobStatusAndErrorMessage,
-  updateOperationHash
+  updateOperationHash,
 } from '../../models/jobs';
 import { selectTransaction } from '../../models/transactions';
 import { AmqpService } from '../../services/amqp';
@@ -115,7 +115,6 @@ export async function injectOperation(
       throw new JobIdNotFoundError(`Could not find job with this id: ${jobId}`);
     }
   } catch (err) {
-    
     const errorMessage = err.message;
 
     if (!(err instanceof JobIdNotFoundError)) {

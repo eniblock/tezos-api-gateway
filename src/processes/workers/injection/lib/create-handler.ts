@@ -10,6 +10,9 @@ export function createHandler(
   amqpService: AmqpService,
 ) {
   return async (parameter: PatchJobParams) => {
-    await injectOperation({ gatewayPool, postgreService, amqpService }, parameter);
+    await injectOperation(
+      { gatewayPool, postgreService, amqpService },
+      parameter,
+    );
   };
 }

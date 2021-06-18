@@ -77,7 +77,11 @@ export class InjectionConsumerProcess extends AbstractProcess {
       },
     };
 
-    const handler = createHandler(this.gatewayPool, this.postgreService, this.amqpService);
+    const handler = createHandler(
+      this.gatewayPool,
+      this.postgreService,
+      this.amqpService,
+    );
     this.amqpService.consume<PatchJobParams>(handler);
 
     this._isRunning = true;

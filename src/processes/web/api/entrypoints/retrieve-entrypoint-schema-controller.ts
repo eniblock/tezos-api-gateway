@@ -18,7 +18,7 @@ function retrieveEntryPointsSchemaFromTezosNode(gatewayPool: GatewayPool) {
           entryPoints,
         },
         '[entrypoints/retrieve-entrypoint-schema-controller] Going to retrieve the entry ' +
-        'points schema of this contract',
+          'points schema of this contract',
       );
 
       const tezosService = await gatewayPool.getTezosService();
