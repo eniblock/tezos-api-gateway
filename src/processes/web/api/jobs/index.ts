@@ -45,10 +45,8 @@ export default function registerJobsRoutes(
   );
 
   router.get(
-    '/jobs/:id',
-    getJobController.getJobById(
-      postgreService,
-    ) as Application,
+    '/job/:id',
+    getJobController.getJobById(postgreService) as Application,
   );
 
   return router;

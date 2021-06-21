@@ -258,7 +258,8 @@ export default {
   '/job/{id}': {
     get: {
       summary: 'Get the Job by its ID',
-      description: 'Retrieving job information whose ID is passed as a parameter',
+      description:
+        'Retrieving job information whose ID is passed as a parameter',
       parameters: [
         {
           name: 'id',
@@ -272,8 +273,7 @@ export default {
       ],
       responses: {
         200: {
-          description:
-            'successful getting the job informations by its ID',
+          description: 'successful getting the job informations by its ID',
           content: {
             'application/json': {
               schema: {
