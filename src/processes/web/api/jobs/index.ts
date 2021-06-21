@@ -6,6 +6,7 @@ import sendJobController from './send-job-controller';
 import { PostgreService } from '../../../../services/postgre';
 import { AmqpService } from '../../../../services/amqp';
 import { GatewayPool } from '../../../../services/gateway-pool';
+import getJobController from './get-job-controller';
 
 /**
  * Setup jobs namespace route.
@@ -39,6 +40,13 @@ export default function registerJobsRoutes(
     '/send/jobs',
     sendJobController.sendTransactionsAndCreateJob(
       amqpService,
+      postgreService,
+    ) as Application,
+  );
+
+  router.get(
+    '/jobs/:id',
+    getJobController.getJobById(
       postgreService,
     ) as Application,
   );

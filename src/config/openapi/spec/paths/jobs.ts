@@ -255,4 +255,59 @@ export default {
       },
     },
   },
+  '/job/{id}': {
+    get: {
+      summary: 'Get the Job by its ID',
+      description: 'Retrieving job information whose ID is passed as a parameter',
+      parameters: [
+        {
+          name: 'id',
+          in: 'path',
+          required: true,
+          schema: {
+            type: 'integer',
+            minimum: 1,
+          },
+        },
+      ],
+      responses: {
+        200: {
+          description:
+            'successful getting the job informations by its ID',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  id: {
+                    type: 'number',
+                    description: 'The id of the new job',
+                  },
+                  status: {
+                    type: 'string',
+                    description:
+                      'the status of the operation corresponding to the job',
+                    example: 'forged',
+                  },
+                  raw_transaction: {
+                    type: 'string',
+                    nullable: true,
+                    description: 'the raw transaction corresponding to the job',
+                  },
+                  operation_hash: {
+                    type: 'string',
+                    nullable: true,
+                    description: 'the operation hash corresponding to the job',
+                  },
+                },
+              },
+            },
+          },
+        },
+        400: error[400],
+        404: error[404],
+        500: error.default,
+      },
+    },
+  },
 };
