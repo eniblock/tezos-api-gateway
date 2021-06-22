@@ -12,21 +12,29 @@ function getJobById(postgreService: PostgreService) {
     try {
       logger.info('[job/getJobById] Get job informations by ID');
 
-      if (req.params && req.params.id && typeof req.params.id === "string") {
+      if (req.params && req.params.id && typeof req.params.id === 'string') {
         // Save the ID passed in request param
         const JOB_ID = Number(req.params.id);
 
         // Get the corresponding job in DB
-        const [job] = await selectJobs(postgreService.pool, '*', `id=${JOB_ID}`);
+        const [job] = await selectJobs(
+          postgreService.pool,
+          '*',
+          `id=${JOB_ID}`,
+        );
 
         if (!job) {
           // If job id couldn't be found
-          throw new JobIdNotFoundError(`Could not find job with this id: ${JOB_ID}`);
+          throw new JobIdNotFoundError(
+            `Could not find job with this id: ${JOB_ID}`,
+          );
         }
 
         return res.status(StatusCodes.OK).json(job);
       } else {
-        return next(createHttpError(StatusCodes.BAD_REQUEST, 'Bad query params'));
+        return next(
+          createHttpError(StatusCodes.BAD_REQUEST, 'Bad query params'),
+        );
       }
     } catch (err) {
       if (err instanceof JobIdNotFoundError) {
