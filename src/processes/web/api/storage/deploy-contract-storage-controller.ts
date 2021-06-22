@@ -10,6 +10,13 @@ import { compilationSmartpyConf, vaultClientConfig } from '../../../../config';
 import createHttpError from 'http-errors';
 import { ClientError } from '../../../../const/errors/client-error';
 
+/**
+ * Makes contract deployment endpoint
+ *
+ * @param   {object} gatewayPool  - the service to generate tezosService
+ *
+ * @returns {function} - The endpoint for express
+ */
 function compileAndDeployContract(gatewayPool: GatewayPool) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
