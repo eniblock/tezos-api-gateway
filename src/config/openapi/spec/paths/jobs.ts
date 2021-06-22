@@ -256,7 +256,7 @@ export default {
     },
   },
 
-  '/deploy/jobs': {
+  '/tezos_node/contract/deploy': {
     post: {
       summary: 'Request to deploy a smart contract to Tezos',
       description: 'Request to send the code to Tezos',

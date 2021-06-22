@@ -71,6 +71,17 @@ export class TezosService {
     return this._tezos.rpc.injectOperation(signedOpBytes);
   }
 
+  /**
+   *
+   * @description Originate a new contract according to codeJson and storageJson in parameters.
+   * Will sign and inject an operation using the _tezos (TezosToolkit) context.
+   *
+   * @returns An operation hash and contract address from the rpc node
+   *
+   * @param {string} codeJson - The compiled contract code in JSON.
+   *
+   * @param {string} storageJson - The compiled contract storage in JSON.
+   */
   public async deployContract(codeJson: string, storageJson: string) {
     const operation: OriginationOperation =
       await this._tezos.contract.originate({

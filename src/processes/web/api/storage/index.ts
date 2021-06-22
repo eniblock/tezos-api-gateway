@@ -2,6 +2,7 @@ import { Application, Router } from 'express';
 
 import retrieveContractStorage from './retrieve-contract-storage-controller';
 import { GatewayPool } from '../../../../services/gateway-pool';
+import deployContractStorage from './deploy-contract-storage-controller';
 
 /**
  * Setup storage namespace route.
@@ -19,6 +20,11 @@ export default function registerStorageRoutes(
     retrieveContractStorage.retrieveContractStorageFromTezosNode(
       gatewayPool,
     ) as Application,
+  );
+
+  router.post(
+    '/tezos_node/contract/deploy',
+    deployContractStorage.compileAndDeployContract(gatewayPool) as Application,
   );
 
   return router;
