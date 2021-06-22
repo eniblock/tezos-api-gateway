@@ -75,7 +75,7 @@ describe('[processes/web/api/jobs] Get job controller', () => {
     });
 
     it('should return 200 when everithing is fine', async () => {
-      const { body, status } = await request.get('/api/job/1');
+      const { body, status } = await request.get('/api/job/'+job.id);
 
       expect(status).toEqual(StatusCodes.OK);
       expect(body).toEqual({ job });
