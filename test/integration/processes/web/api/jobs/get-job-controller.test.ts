@@ -53,7 +53,7 @@ describe('[processes/web/api/jobs] Get job controller', () => {
     await webProcess.stop();
   });
 
-  describe('#forgeOperationAndCreateJob', () => {
+  describe('#getJobById', () => {
     it('should return 400 when id is not a number', async () => {
       const { body, status } = await request.get('/api/job/a1b');
 
