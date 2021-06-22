@@ -78,7 +78,7 @@ describe('[processes/web/api/jobs] Get job controller', () => {
       const { body, status } = await request.get('/api/job/' + job.id);
 
       expect(status).toEqual(StatusCodes.OK);
-      expect(body).toEqual({ job });
+      expect(body).toEqual(job);
     });
   });
 });
