@@ -3,6 +3,7 @@ import { Application, Router } from 'express';
 import forgeJobController from './forge-job-controller';
 import injectJobController from './inject-job-controller';
 import sendJobController from './send-job-controller';
+import deployJobController from './deploy-job-controller';
 import { PostgreService } from '../../../../services/postgre';
 import { AmqpService } from '../../../../services/amqp';
 import { GatewayPool } from '../../../../services/gateway-pool';
@@ -41,6 +42,11 @@ export default function registerJobsRoutes(
       amqpService,
       postgreService,
     ) as Application,
+  );
+
+  router.post(
+    '/deploy/jobs',
+    deployJobController.compileAndDeployContract(gatewayPool) as Application,
   );
 
   return router;
