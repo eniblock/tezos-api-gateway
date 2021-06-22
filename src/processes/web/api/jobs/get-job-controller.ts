@@ -13,7 +13,12 @@ function getJobById(postgreService: PostgreService) {
       logger.info('[job/getJobById] Get job informations by ID');
 
       // Checking if params is not null and is a number
-      if (req.params && req.params.id && typeof req.params.id === 'string' && !isNaN(Number(req.params.id))) {
+      if (
+        req.params &&
+        req.params.id &&
+        typeof req.params.id === 'string' &&
+        !isNaN(Number(req.params.id))
+      ) {
         // Save the ID passed in request param
         const JOB_ID = Number(req.params.id);
 

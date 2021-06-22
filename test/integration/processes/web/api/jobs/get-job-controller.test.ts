@@ -10,11 +10,9 @@ import { TezosService } from '../../../../../../src/services/tezos';
 import {
   postgreConfig,
   serverConfig,
-  tezosNodeEdonetUrl
+  tezosNodeEdonetUrl,
 } from '../../../../../__fixtures__/config';
 import { resetTable } from '../../../../../__utils__/postgre';
-
-
 
 describe('[processes/web/api/jobs] Get job controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -55,23 +53,18 @@ describe('[processes/web/api/jobs] Get job controller', () => {
   });
 
   describe('#forgeOperationAndCreateJob', () => {
-
     it('should return 400 when id is not a number', async () => {
-      const { body, status } = await request.get(
-        '/api/job/a1b',
-      );
+      const { body, status } = await request.get('/api/job/a1b');
 
       expect(status).toEqual(400);
       expect(body).toEqual({
-        message: "request.params.id should be integer",
+        message: 'request.params.id should be integer',
         status: 400,
       });
     });
 
     it('should return 404 when job ID doesn`t exist', async () => {
-      const { body, status } = await request.get(
-        '/api/job/13',
-      );
+      const { body, status } = await request.get('/api/job/13');
 
       expect(status).toEqual(404);
       expect(body).toEqual({
@@ -81,12 +74,10 @@ describe('[processes/web/api/jobs] Get job controller', () => {
     });
 
     it('should return 200 when everithing is fine', async () => {
-      let { body, status } = await request.get(
-        '/api/job/1',
-      );
+      let { body, status } = await request.get('/api/job/1');
 
       expect(status).toEqual(StatusCodes.OK);
-      expect(body).toEqual({job});
+      expect(body).toEqual({ job });
     });
   });
 });
