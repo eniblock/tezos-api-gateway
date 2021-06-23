@@ -35,13 +35,12 @@ function retrieveContractStorageFromTezosNode(gatewayPool: GatewayPool) {
         '[storage/retrieve-contract-storage-controller] Using this tezos node',
       );
 
-      const result =
-        await getContractStorageLib.getContractStorageObjectFromTezosNode(
-          logger,
-          tezosService,
-          contractAddress,
-          dataFields as unknown as ContractStorageRequestDataField[],
-        );
+      const result = await getContractStorageLib.getContractStorageObjectFromTezosNode(
+        logger,
+        tezosService,
+        contractAddress,
+        (dataFields as unknown) as ContractStorageRequestDataField[],
+      );
 
       return res.status(StatusCodes.OK).json(result);
     } catch (err) {

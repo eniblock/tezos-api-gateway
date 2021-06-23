@@ -185,7 +185,7 @@ describe('[lib/user-create-account] create Tezos accounts', () => {
         .mockResolvedValue('publicKeyHash');
       const tezosSpy = jest
         .spyOn(tezosService, 'tezos', 'get')
-        .mockReturnValue(fakeTezos as unknown as TezosToolkit);
+        .mockReturnValue((fakeTezos as unknown) as TezosToolkit);
 
       const vaultNock1 = nock('http://localhost:8300')
         .get(`/v1/transit/keys/key1`)
