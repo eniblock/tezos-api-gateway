@@ -70,7 +70,7 @@ describe('[lib/jobs/forge-operation]', () => {
     it('should throw AddressNotFoundError when source address is not correct (no counter in the response)', async () => {
       jest
         .spyOn(tezosService, 'getContractResponse')
-        .mockResolvedValue(({} as unknown) as ContractResponse);
+        .mockResolvedValue({} as unknown as ContractResponse);
       await expect(
         forgeOperation(testForgeOperation, tezosService, postgreService),
       ).rejects.toThrowError(AddressNotFoundError);

@@ -16,11 +16,8 @@ function sendTransactionsAndCreateJob(
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const {
-        transactions,
-        secureKeyName,
-        callerId,
-      }: SendTransactionsParams = req.body;
+      const { transactions, secureKeyName, callerId }: SendTransactionsParams =
+        req.body;
 
       logger.info(
         { transactions, secureKeyName },

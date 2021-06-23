@@ -61,7 +61,7 @@ describe('[scripts/activate-tezos-account/lib/index.ts]', () => {
         .mockResolvedValue('publicKeyHash');
       const tezosSpy = jest
         .spyOn(tezosService, 'tezos', 'get')
-        .mockReturnValue((fakeTezos as unknown) as TezosToolkit);
+        .mockReturnValue(fakeTezos as unknown as TezosToolkit);
       const setSignerSpy = jest
         .spyOn(tezosService, 'setSigner')
         .mockImplementation();

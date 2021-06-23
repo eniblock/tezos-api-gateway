@@ -290,9 +290,9 @@ describe('[services/amqp] Amqp Service', () => {
 
       it('should return null when the message does not match the schema', () => {
         expect(
-          amqpService.validateMessage<message>(({
+          amqpService.validateMessage<message>({
             message: 12,
-          } as unknown) as message),
+          } as unknown as message),
         ).toBeNull();
       });
 

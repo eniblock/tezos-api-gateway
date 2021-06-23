@@ -58,10 +58,11 @@ export async function forgeOperation(
       '[lib/jobs/forgeOperation] Going to forge operation with this following parameters',
     );
 
-    const params: OperationContentsTransactionWithParametersJson[] = await getOperationContentsTransactionWithParametersJson(
-      tezosService,
-      forgeOperationParams,
-    );
+    const params: OperationContentsTransactionWithParametersJson[] =
+      await getOperationContentsTransactionWithParametersJson(
+        tezosService,
+        forgeOperationParams,
+      );
 
     logger.info(
       { params },
@@ -199,15 +200,16 @@ async function getOperationContentsTransactionWithParametersJson(
     '[lib/jobs/forge-operation/#getOperationContentsTransactionWithParametersJson] Find counter',
   );
 
-  const parametersList: TransactionsDetailsWithMichelsonParameters[] = await Promise.all(
-    transactions.map(async (transaction) => {
-      const { parameter } = await getATransactionParameters(
-        tezosService,
-        transaction,
-      );
-      return { ...transaction, parameter };
-    }),
-  );
+  const parametersList: TransactionsDetailsWithMichelsonParameters[] =
+    await Promise.all(
+      transactions.map(async (transaction) => {
+        const { parameter } = await getATransactionParameters(
+          tezosService,
+          transaction,
+        );
+        return { ...transaction, parameter };
+      }),
+    );
 
   logger.info(
     { parametersList },

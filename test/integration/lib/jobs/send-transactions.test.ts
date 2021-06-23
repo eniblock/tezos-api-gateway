@@ -184,7 +184,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
       getContractMethodSpy = jest
         .spyOn(libSmartContracts, 'getContractMethod')
         .mockReturnValue(
-          (testContractMethod as unknown) as ContractMethod<ContractProvider>,
+          testContractMethod as unknown as ContractMethod<ContractProvider>,
         );
       setSignerSpy = jest.spyOn(tezosService, 'setSigner');
 
@@ -353,7 +353,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
 
       const createBatchSpy = jest
         .spyOn(tezosService, 'createBatch')
-        .mockResolvedValue((batch as unknown) as never);
+        .mockResolvedValue(batch as unknown as never);
       const withContractCallSpy = jest.spyOn(batch, 'withContractCall');
       await sendTransactions(
         {
