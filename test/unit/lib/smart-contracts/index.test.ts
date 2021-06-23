@@ -26,11 +26,11 @@ describe('[lib/smartContracts]', () => {
     beforeEach(() => {
       method = jest.fn().mockImplementation(() => testContractMethod);
 
-      contract = {
+      contract = ({
         methods: {
           transfer: method,
         },
-      } as unknown as ContractAbstraction<ContractProvider>;
+      } as unknown) as ContractAbstraction<ContractProvider>;
 
       jest.spyOn(testContractMethod, 'schema', 'get').mockReturnValue({
         tokens: 'nat',
@@ -102,7 +102,7 @@ describe('[lib/smartContracts]', () => {
       expect(() =>
         getContractMethod(
           logger,
-          contract as unknown as ContractAbstraction<ContractProvider>,
+          (contract as unknown) as ContractAbstraction<ContractProvider>,
           'transfer',
           {
             destination: 'fake_destination',
@@ -156,11 +156,11 @@ describe('[lib/smartContracts]', () => {
     beforeEach(() => {
       method = jest.fn().mockImplementation(() => testContractMethod);
 
-      contract = {
+      contract = ({
         methods: {
           transfer: method,
         },
-      } as unknown as ContractAbstraction<ContractProvider>;
+      } as unknown) as ContractAbstraction<ContractProvider>;
 
       jest.spyOn(testContractMethod, 'schema', 'get').mockReturnValue({
         tokens: 'nat',
@@ -187,7 +187,7 @@ describe('[lib/smartContracts]', () => {
       expect(() =>
         getTransferToParams(
           logger,
-          contract as unknown as ContractAbstraction<ContractProvider>,
+          (contract as unknown) as ContractAbstraction<ContractProvider>,
           'transfer',
           {
             destination: 'fake_destination',

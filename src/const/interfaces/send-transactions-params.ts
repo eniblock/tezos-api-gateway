@@ -19,7 +19,6 @@ export type SendTransactionsToQueueParams = SendTransactionsParams & {
   callerId?: string;
 };
 
-export type OperationContentsTransactionWithParametersJson =
-  OperationContentsTransaction & {
-    parametersJson: TransactionParametersJson;
-  };
+export type OperationContentsTransactionWithParametersJson = OperationContentsTransaction & {
+  parametersJson: TransactionParametersJson;
+};

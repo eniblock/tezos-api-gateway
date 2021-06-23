@@ -41,10 +41,8 @@ export function getContractMethod(
 
   const paramsValues = Object.values(params);
 
-  const schema = contract.methods[`${entryPoint}`].apply(
-    null,
-    paramsValues,
-  ).schema;
+  const schema = contract.methods[`${entryPoint}`].apply(null, paramsValues)
+    .schema;
 
   logger.info(
     { schema },

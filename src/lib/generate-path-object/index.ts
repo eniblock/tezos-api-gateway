@@ -220,7 +220,7 @@ export function generateSchemaObject(
  */
 function handleObjectCase(object: GenericObject): OpenAPIV3.SchemaObject {
   if (TezosDataType.MAP in object) {
-    return handleMapCase(object as unknown as TezosMapSchema);
+    return handleMapCase((object as unknown) as TezosMapSchema);
   }
 
   const properties = _.fromPairs(
