@@ -103,7 +103,6 @@ export const contractAddress =
 export const transferAmount = parseInt(2, process.env.TRANSFER_AMOUNT);
 
 export const compilationSmartpyConf = {
-  targetFormat: /^([a-z]|[A-Z]|[0-9]|[-_])+$/,
   commandPath: '/usr/local/smartpy/SmartPy.sh',
   contractDirectory: '/tmp',
   contractName: 'smartcontract.py',

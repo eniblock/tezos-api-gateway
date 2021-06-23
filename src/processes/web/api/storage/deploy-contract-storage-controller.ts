@@ -2,6 +2,7 @@ import { StatusCodes } from 'http-status-codes';
 import { NextFunction, Request, Response } from 'express';
 import fs from 'fs';
 import { spawn } from 'child_process';
+import glob from 'glob';
 import { DeployContractParams } from '../../../../const/interfaces/deploy-contract-params';
 import { logger } from '../../../../services/logger';
 import { GatewayPool } from '../../../../services/gateway-pool';
@@ -22,19 +23,15 @@ function compileAndDeployContract(gatewayPool: GatewayPool) {
     try {
       const {
         secureKeyName,
-        compilationTarget,
         smartContractCode,
       }: DeployContractParams = req.body;
 
       logger.info(
-        { secureKeyName, compilationTarget, smartContractCode },
+        { secureKeyName, smartContractCode },
         '[api/jobs/deploy-job-controller] properties received',
       );
 
-      const [codeJson, storageJson] = await compileSmartpy(
-        compilationTarget,
-        smartContractCode,
-      );
+      const [codeJson, storageJson] = await compileSmartpy(smartContractCode);
 
       const tezosService = await gatewayPool.getTezosService();
 
@@ -76,15 +73,18 @@ function compileAndDeployContract(gatewayPool: GatewayPool) {
   };
 }
 
-async function compileSmartpy(
-  compilationTarget: string,
-  smartContractCode: string,
-): Promise<string[]> {
+/**
+ * Will compile the code received.
+ *
+ * @param   {string} smartContractCode        - The smart contract code in Base64
+ * @returns {string[]}                        - The code compiled in json and storage in json within a array of 2 entries
+ */
+async function compileSmartpy(smartContractCode: string): Promise<string[]> {
   const compilationSmartpyConfModified = {
     ...compilationSmartpyConf,
     contractPath: `${compilationSmartpyConf.contractDirectory}/${compilationSmartpyConf.contractName}`,
-    codeJsonLocalPath: `${compilationSmartpyConf.contractDirectory}/${compilationTarget}/step_000_cont_1_contract.json`,
-    storageJsonLocalPath: `${compilationSmartpyConf.contractDirectory}/${compilationTarget}/step_000_cont_1_storage.json`,
+    codeJsonLocalPath: `${compilationSmartpyConf.contractDirectory}/*/step_000_cont_1_contract.json`,
+    storageJsonLocalPath: `${compilationSmartpyConf.contractDirectory}/*/step_000_cont_1_storage.json`,
   };
 
   await fs.writeFileSync(
@@ -95,35 +95,62 @@ async function compileSmartpy(
     },
   );
 
-  if (compilationSmartpyConfModified.targetFormat.test(compilationTarget)) {
-    const smartpysh = spawn(compilationSmartpyConfModified.commandPath, [
-      'compile',
-      compilationSmartpyConfModified.contractPath,
-      compilationSmartpyConfModified.contractDirectory,
-    ]);
+  const smartpysh = spawn(compilationSmartpyConfModified.commandPath, [
+    'compile',
+    compilationSmartpyConfModified.contractPath,
+    compilationSmartpyConfModified.contractDirectory,
+  ]);
 
-    return new Promise((resolve, reject) => {
-      smartpysh
-        .on('close', async (code) => {
-          if (code !== 0) reject('smartpysh failed to compile');
-          else {
-            const codeJson = await fs.readFileSync(
-              compilationSmartpyConfModified.codeJsonLocalPath,
-              'utf8',
-            );
-            const storageJson = await fs.readFileSync(
-              compilationSmartpyConfModified.storageJsonLocalPath,
-              'utf8',
+  return new Promise((resolve, reject) => {
+    smartpysh
+      .on('close', async (code) => {
+        if (code !== 0)
+          reject(
+            'smartpysh failed to compile, check the description of the prop smartContractCode in const/openapi or try to compile with SmartPy cli',
+          );
+        else {
+          const codeJson = await getFileContents(
+            compilationSmartpyConfModified.codeJsonLocalPath,
+          );
+          const storageJson = await getFileContents(
+            compilationSmartpyConfModified.storageJsonLocalPath,
+          );
+
+          if (!codeJson || !storageJson)
+            reject(
+              `Can not find file ${compilationSmartpyConfModified.codeJsonLocalPath}`,
             );
 
-            resolve([codeJson, storageJson]);
-          }
-        })
-        .on('error', (err: Error) => {
-          reject(`binary not found: ${err.message}`);
+          resolve([codeJson as string, storageJson as string]);
+        }
+      })
+      .on('error', (err: Error) => {
+        reject(`An error has occurred while compiling: ${err.message}`);
+      });
+  });
+}
+
+/**
+ * Will fetch contents in a file with the {path} variable. Wild card syntax accepted
+ *
+ * @param   {string} path        - The path of a file
+ * @returns {string | void}      - The content of the file if success
+ */
+async function getFileContents(path: string) {
+  try {
+    const [fileName] = await new Promise<string[]>(
+      (resolvePromise, rejectPromise) => {
+        glob(path, (err, matches) => {
+          if (err) rejectPromise(err);
+          return resolvePromise(matches);
         });
-    });
-  } else throw new Error('Compilation failed target format does not match');
+      },
+    );
+
+    return fs.readFileSync(fileName, 'utf8');
+  } catch (e) {
+    return;
+  }
 }
 
 export default { compileAndDeployContract };
