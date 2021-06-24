@@ -33,7 +33,7 @@ test:
   only:
     changes:
       - src/**/*
-      - test/*
+      - test/**/*
       - "*.json"
       - "*.js"
 
