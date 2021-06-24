@@ -101,6 +101,7 @@ export default {
           },
         },
         400: error[400],
+        404: error[404],
         500: error.default,
       },
     },

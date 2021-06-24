@@ -28,7 +28,7 @@ function compileAndDeployContract(gatewayPool: GatewayPool) {
 
       logger.info(
         { secureKeyName, smartContractCode },
-        '[api/jobs/deploy-job-controller] properties received',
+        '[api/storage/deploy-job-controller] properties received',
       );
 
       const [codeJson, storageJson] = await compileSmartpy(smartContractCode);
@@ -39,7 +39,7 @@ function compileAndDeployContract(gatewayPool: GatewayPool) {
         {
           tezosNode: tezosService.tezos.rpc.getRpcUrl(),
         },
-        '[api/jobs/deploy-job-controller] Using this tezos node',
+        '[api/storage/deploy-job-controller] Using this tezos node',
       );
 
       const vaultSigner = new VaultSigner(
@@ -50,12 +50,20 @@ function compileAndDeployContract(gatewayPool: GatewayPool) {
 
       tezosService.setSigner(vaultSigner);
 
-      const pkh = await vaultSigner.publicKeyHash();
+      try {
+          const pkh = await vaultSigner.publicKeyHash();
 
-      logger.info(
-        { publicKeyHash: pkh, secureKeyName },
-        '[api/jobs/deploy-job-controller] This account requested to deploy a contract to Tezos',
-      );
+          logger.info(
+              { publicKeyHash: pkh, secureKeyName },
+              '[api/storage/deploy-job-controller] This account requested to deploy a contract to Tezos',
+          );
+      } catch (e) {
+        if (e instanceof ClientError)
+          throw new ClientError({
+            status: e.status,
+            message: `Error while fetching publique key with the key name: ${secureKeyName}`
+          })
+      }
 
       const contractData = await tezosService.deployContract(
         codeJson,
@@ -106,7 +114,11 @@ async function compileSmartpy(smartContractCode: string): Promise<string[]> {
       .on('close', async (code) => {
         if (code !== 0)
           reject(
-            'smartpysh failed to compile, check the description of the prop smartContractCode in const/openapi or try to compile with SmartPy cli',
+            new ClientError({
+              status: 400,
+              message:
+                'smartpysh failed to compile, check the description of the prop smartContractCode in const/openapi or try to compile with SmartPy cli',
+            }),
           );
         else {
           const codeJson = await getFileContents(
@@ -125,7 +137,12 @@ async function compileSmartpy(smartContractCode: string): Promise<string[]> {
         }
       })
       .on('error', (err: Error) => {
-        reject(`An error has occurred while compiling: ${err.message}`);
+        reject(
+          new ClientError({
+            status: 400,
+            message: `An error has occurred while compiling: ${err.message}`,
+          }),
+        );
       });
   });
 }
