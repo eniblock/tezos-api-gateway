@@ -3,13 +3,14 @@ import { NextFunction, Request, Response } from 'express';
 import fs from 'fs';
 import { spawn } from 'child_process';
 import glob from 'glob';
+import createHttpError from 'http-errors';
 import { DeployContractParams } from '../../../../const/interfaces/deploy-contract-params';
 import { logger } from '../../../../services/logger';
 import { GatewayPool } from '../../../../services/gateway-pool';
-import { VaultSigner } from '../../../../services/signers/vault';
+import { SignerFactory } from '../../../../services/signer-factory';
 import { compilationSmartpyConf, vaultClientConfig } from '../../../../config';
-import createHttpError from 'http-errors';
 import { ClientError } from '../../../../const/errors/client-error';
+import { VaultSigner } from '../../../../services/signers/vault';
 
 /**
  * Makes contract deployment endpoint
@@ -18,7 +19,10 @@ import { ClientError } from '../../../../const/errors/client-error';
  *
  * @returns {function} - The endpoint for express
  */
-function compileAndDeployContract(gatewayPool: GatewayPool) {
+function compileAndDeployContract(
+  gatewayPool: GatewayPool,
+  signerFactory: SignerFactory,
+) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const {
@@ -42,7 +46,8 @@ function compileAndDeployContract(gatewayPool: GatewayPool) {
         '[api/storage/deploy-job-controller] Using this tezos node',
       );
 
-      const vaultSigner = new VaultSigner(
+      const vaultSigner = signerFactory.generateSigner(
+        VaultSigner,
         vaultClientConfig,
         secureKeyName,
         logger,
@@ -51,18 +56,17 @@ function compileAndDeployContract(gatewayPool: GatewayPool) {
       tezosService.setSigner(vaultSigner);
 
       try {
-          const pkh = await vaultSigner.publicKeyHash();
+        const pkh = await vaultSigner.publicKeyHash();
 
-          logger.info(
-              { publicKeyHash: pkh, secureKeyName },
-              '[api/storage/deploy-job-controller] This account requested to deploy a contract to Tezos',
-          );
+        logger.info(
+          { publicKeyHash: pkh, secureKeyName },
+          '[api/storage/deploy-job-controller] This account requested to deploy a contract to Tezos',
+        );
       } catch (e) {
-        if (e instanceof ClientError)
-          throw new ClientError({
-            status: e.status,
-            message: `Error while fetching publique key with the key name: ${secureKeyName}`
-          })
+        throw new ClientError({
+          status: 404,
+          message: `Error while fetching publique key with the key name: ${secureKeyName}`,
+        });
       }
 
       const contractData = await tezosService.deployContract(

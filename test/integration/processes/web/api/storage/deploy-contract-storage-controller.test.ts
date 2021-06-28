@@ -1,25 +1,25 @@
 import supertest from 'supertest';
 import { WebProcess } from '../../../../../../src/processes/web/web-process';
 import {
-  postgreConfig,
   serverConfig,
   tezosNodeEdonetUrl,
 } from '../../../../../__fixtures__/config';
 import { TezosService } from '../../../../../../src/services/tezos';
-import { PostgreService } from '../../../../../../src/services/postgre';
+import { SignerFactory } from '../../../../../../src/services/signer-factory';
+import { FakeSigner } from '../../../../../../src/services/signers/fake-signer';
 
 describe('[processes/web/api/storage] Deploy Contract Controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
   const tezosService = new TezosService(tezosNodeEdonetUrl);
-  const postgreService = new PostgreService(postgreConfig);
-
-  webProcess.postgreService = postgreService;
+  const fakeSigner = new FakeSigner('pkh');
+  const signerFactory = new SignerFactory();
 
   const request: supertest.SuperTest<supertest.Test> = supertest(
     webProcess.app,
   );
 
   beforeAll(async () => {
+    webProcess.signerFactory = signerFactory;
     await webProcess.start();
   });
 
@@ -77,6 +77,7 @@ describe('[processes/web/api/storage] Deploy Contract Controller', () => {
         operation_hash: 'operation_hash',
         contract_address: 'contract_address',
       });
+      jest.spyOn(signerFactory, 'generateSigner').mockReturnValue(fakeSigner);
 
       const { body, status } = await request
         .post('/api/tezos_node/contract/deploy')

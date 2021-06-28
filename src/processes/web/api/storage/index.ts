@@ -3,6 +3,7 @@ import { Application, Router } from 'express';
 import retrieveContractStorage from './retrieve-contract-storage-controller';
 import { GatewayPool } from '../../../../services/gateway-pool';
 import deployContractStorage from './deploy-contract-storage-controller';
+import { SignerFactory } from '../../../../services/signer-factory';
 
 /**
  * Setup storage namespace route.
@@ -14,6 +15,7 @@ import deployContractStorage from './deploy-contract-storage-controller';
 export default function registerStorageRoutes(
   router: Router,
   gatewayPool: GatewayPool,
+  signerFactory: SignerFactory,
 ): Router {
   router.post(
     '/tezos_node/storage/:contract_address',
@@ -24,7 +26,10 @@ export default function registerStorageRoutes(
 
   router.post(
     '/tezos_node/contract/deploy',
-    deployContractStorage.compileAndDeployContract(gatewayPool) as Application,
+    deployContractStorage.compileAndDeployContract(
+      gatewayPool,
+      signerFactory,
+    ) as Application,
   );
 
   return router;
