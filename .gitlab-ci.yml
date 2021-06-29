@@ -60,5 +60,5 @@ publish_helm:
   image: tbxdev/build-helm
   script:
     - helm registry login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    - helm dependency update ./helm/tezos-api-gateway
+    - helm dependency build ./helm/tezos-api-gateway
     - build $CI_REGISTRY_IMAGE/helm/tezos-api-gateway ./helm/tezos-api-gateway
