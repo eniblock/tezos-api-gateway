@@ -1,5 +1,6 @@
 import { Signer, TezosToolkit } from '@taquito/taquito';
 import { BlockResponse, OperationContentsTransaction } from '@taquito/rpc';
+import { OriginationOperation } from '@taquito/taquito/dist/types/operations/origination-operation';
 
 import { ForgeOperationResult } from '../const/interfaces/forge-operation-result';
 
@@ -68,5 +69,32 @@ export class TezosService {
 
   public async injectedOperations(signedOpBytes: string) {
     return this._tezos.rpc.injectOperation(signedOpBytes);
+  }
+
+  /**
+   *
+   * @description Originate a new contract according to codeJson and storageJson in parameters.
+   * Will sign and inject an operation using the _tezos (TezosToolkit) context.
+   *
+   * @returns An operation hash and contract address from the rpc node
+   *
+   * @param {string} codeJson - The compiled contract code in JSON.
+   *
+   * @param {string} storageJson - The compiled contract storage in JSON.
+   */
+  public async deployContract(codeJson: string, storageJson: string) {
+    const operation: OriginationOperation = await this._tezos.contract.originate(
+      {
+        code: JSON.parse(codeJson),
+        init: JSON.parse(storageJson),
+      },
+    );
+    const operationHash = operation.hash;
+    const contract = await operation.contract();
+
+    return {
+      operation_hash: operationHash,
+      contract_address: contract.address,
+    };
   }
 }
