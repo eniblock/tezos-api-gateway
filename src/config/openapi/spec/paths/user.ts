@@ -167,4 +167,62 @@ export default {
       },
     },
   },
+  '/user/key': {
+    post: {
+      summary: 'Associate user with public key',
+      description:
+        'Associate user id and Tezos public key passed in parameters',
+      requestBody: {
+        description:
+          'The user id and the Tezos public key to associate',
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['userId', 'publicKey'],
+              properties: {
+                userIdList: {
+                  type: 'string',
+                  description: 'User accounts identifier',
+                },
+                publicKey: {
+                  type: 'string',
+                  description:
+                    'The Tezos public key to associate with the user id',
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description:
+            'successful association of user id / public key',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  userId: {
+                    type: 'string',
+                    description: 'account identifier',
+                  },
+                  account: {
+                    type: 'string',
+                    description: 'public key hash of the created account',
+                  },
+                },
+              },
+            },
+          },
+        },
+        400: error[400],
+        404: error[404],
+        500: error.default,
+      },
+    },
+  },
 };
