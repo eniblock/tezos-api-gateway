@@ -347,6 +347,8 @@ rabbitmq:
     tls:
       enabled: true
       existingSecretFullChain: true
+      existingSecret: tezos-api-gateway-rabbitmq-tls-secret
+      sslOptionsVerify: verify_none
     erlangCookie: 94155874a93041aca19378c9a4ee28ac
   persistence:
     enabled: true
@@ -354,10 +356,9 @@ rabbitmq:
   loadBalancer:
     host: localhost
     secretName: tezos-api-gateway-rabbitmq-tls-secret
-  auth:
-    tls:
-      existingSecret: tezos-api-gateway-rabbitmq-tls-secret
-      sslOptionsVerify: verify_none
+    issuerRef:
+      kind: ClusterIssuer
+      name: local
 
 vault:
   server:
