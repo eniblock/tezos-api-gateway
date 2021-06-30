@@ -173,8 +173,7 @@ export default {
       description:
         'Associate user id and Tezos public key passed in parameters',
       requestBody: {
-        description:
-          'The user id and the Tezos public key to associate',
+        description: 'The user id and the Tezos public key to associate',
         required: true,
         content: {
           'application/json': {
@@ -199,8 +198,7 @@ export default {
       },
       responses: {
         201: {
-          description:
-            'successful association of user id / public key',
+          description: 'successful association of user id / public key',
           content: {
             'application/json': {
               schema: {
