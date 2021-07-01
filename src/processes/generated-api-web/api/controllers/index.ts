@@ -8,6 +8,7 @@ import { AmqpService } from '../../../../services/amqp';
 import { GatewayPool } from '../../../../services/gateway-pool';
 import { OpenAPIV3 } from 'express-openapi-validator/dist/framework/types';
 import { extractForgeAndSendTransactionsPaths } from '../../../../helpers/extract-arrays';
+import { MetricPrometheusService } from '../../../../services/metric-prometheus';
 
 /**
  * Setup namespace route.
@@ -20,6 +21,7 @@ export default function registerRoutes(
   gatewayPool: GatewayPool,
   postgreService: PostgreService,
   amqpService: AmqpService,
+  metricPrometheusService: MetricPrometheusService,
   forgeAndSendPathObject: OpenAPIV3.PathsObject,
 ): Router {
   const { forgePaths, sendPaths } = extractForgeAndSendTransactionsPaths(
@@ -42,6 +44,7 @@ export default function registerRoutes(
       sendJobController.sendTransactionsAndCreateJob(
         amqpService,
         postgreService,
+        metricPrometheusService,
       ) as Application,
     );
   });
