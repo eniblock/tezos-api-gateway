@@ -64,7 +64,8 @@ npm i -g bunyan nodemon
 
 ### Run unit tests and integration tests
 
-<u>**_NOTES_**</u>: Please make sure that in the postgres databases server, there is a test database (by default it is **tezos_api_gateway_test**)
+The tests need postgresql and rabbitmq servers running and configured. Use the
+provided docker-compose file to set up a test stack easily.
 
 **Run all the check (ts-lint and prettier)**
 

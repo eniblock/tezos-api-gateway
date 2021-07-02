@@ -9,17 +9,7 @@ Then it updates the corresponding **_job status_** to **_PUBLISHED_** and update
 
 ### Before running
 
-Check if **postgres database**, **rabbitMq** and **vault server** are running. If not, you could start the services by using `docker-compose`.
-
-```
-docker-compose up -d postgres rabbitmq vault
-```
-
-### Run with docker
-
-```
-docker-compose up send-transactions-worker
-```
+Make sure the support services are running by using the docker-compose file at the root of this project.
 
 ### Run locally
 
