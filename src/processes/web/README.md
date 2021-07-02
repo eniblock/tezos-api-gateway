@@ -12,17 +12,7 @@ This is web server that helps to interact with Tezos Block Chain. This server su
 
 ### Before running
 
-Check if **postgres database**, **rabbitMq** and **vault server** are running. If not, you could start the services by using `docker-compose`.
-
-```
-docker-compose up -d postgres rabbitmq vault
-```
-
-### Run with docker
-
-```
-docker-compose up api
-```
+Make sure the support services are running by using the docker-compose file at the root of this project.
 
 ### Run locally
 
