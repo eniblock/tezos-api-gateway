@@ -359,6 +359,10 @@ rabbitmq:
     issuerRef:
       kind: ClusterIssuer
       name: local
+  resources:
+    requests:
+      cpu: 500m
+      memory: 300Mi
 
 vault:
   server:
