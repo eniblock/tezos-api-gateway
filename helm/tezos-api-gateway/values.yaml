@@ -46,17 +46,10 @@ api:
     annotations:
       kubernetes.io/tls-acme: "true"
 
-  resources: {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-  #   memory: 128Mi
+  resources:
+    requests:
+      cpu: 50m
+      memory: 75Mi
 
   autoscaling:
     enabled: false
@@ -175,17 +168,10 @@ operationStatusWorker:
     type: ClusterIP
     port: 9465
 
-  resources: {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+  resources:
+    requests:
+      cpu: 50m
+      memory: 100Mi
 
   autoscaling:
     enabled: false
@@ -234,17 +220,10 @@ sendTransactionsWorker:
     type: ClusterIP
     port: 9466
 
-  resources: {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+  resources:
+    requests:
+      cpu: 50m
+      memory: 75Mi
 
   autoscaling:
     enabled: false
@@ -293,17 +272,10 @@ injectionWorker:
     type: ClusterIP
     port: 9467
 
-  resources: {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+  resources:
+    requests:
+      cpu: 50m
+      memory: 75Mi
 
   autoscaling:
     enabled: false
@@ -359,6 +331,10 @@ rabbitmq:
     issuerRef:
       kind: ClusterIssuer
       name: local
+  resources:
+    requests:
+      cpu: 500m
+      memory: 300Mi
 
 vault:
   server:

@@ -15,6 +15,10 @@ rabbitmq:
     tls:
       existingSecret: rabbitmq.tezos-api-gateway.localhost-tls
       sslOptionsVerify: verify_none
+  resources:
+    requests:
+      cpu: 500m
+      memory: 300Mi
 
 vault:
   server:
