@@ -59,29 +59,7 @@ const tzktIndexerConfig: IndexerConfig = {
   keyToBlockLevel: process.env.TZKT_KEY_TO_BLOCK_LEVEL || 'level',
 };
 
-const betterCallIndexerConfig: IndexerConfig = {
-  name: 'better-call',
-  apiUrl: process.env.BETTER_CALL_URL || 'https://better-call.dev/v1/opg/',
-  keyToOperation: parseInt(0, process.env.BETTER_CALL_KEY_TO_OPERATION),
-  keyToBlockLevel: process.env.BETTER_CALL_KEY_TO_BLOCK_LEVEL || 'level',
-};
-
-const conseilIndexerConfig: IndexerConfig = {
-  name: 'conseil',
-  apiUrl:
-    process.env.CONSEIL_URL ||
-    'https://conseil-edo.cryptonomic-infra.tech:443/v2/data/tezos/edonet/operation_groups/',
-  keyToOperation: process.env.CONSEIL_KEY_TO_OPERATION || 'operation_group',
-  keyToBlockLevel: process.env.CONSEIL_KEY_TO_BLOCK_LEVEL || 'blockLevel',
-  apiKey: process.env.CONSEIL_API_KEY || '503801e8-a8a0-4e7c-8c24-7bd310805843',
-};
-
-export const indexerConfigs = [
-  tzstatsIndexerConfig,
-  tzktIndexerConfig,
-  betterCallIndexerConfig,
-  conseilIndexerConfig,
-];
+export const indexerConfigs = [tzstatsIndexerConfig, tzktIndexerConfig];
 
 export const nbOfConfirmation = parseInt(
   3,

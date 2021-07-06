@@ -22,7 +22,7 @@ describe('[services/clients] Indexer Client', () => {
   });
 
   describe('#getOperationBlockLevel', () => {
-    const conseilIndexerClient = new IndexerClient(indexerConfigs[3], logger);
+    const tzktIndexerClient = new IndexerClient(indexerConfigs[1], logger);
 
     it('should return undefined when the indexer throw any errors that is not NOT_FOUND', async () => {
       const loggerInfoSpy = jest.spyOn(indexerClient.logger, 'info');
@@ -30,7 +30,7 @@ describe('[services/clients] Indexer Client', () => {
         .get(`/${operationHash}`)
         .reply(500);
 
-      const conseilIndexerNock = nock(conseilIndexerClient.config.apiUrl)
+      const tzktIndexerNock = nock(tzktIndexerClient.config.apiUrl)
         .get(`/${operationHash}`)
         .reply(500);
 
@@ -38,23 +38,21 @@ describe('[services/clients] Indexer Client', () => {
         indexerClient.getOperationBlockLevel(operationHash),
       ).resolves.toBeUndefined();
       await expect(
-        conseilIndexerClient.getOperationBlockLevel(operationHash),
+        tzktIndexerClient.getOperationBlockLevel(operationHash),
       ).resolves.toBeUndefined();
 
       indexerNock.done();
-      conseilIndexerNock.done();
+      tzktIndexerNock.done();
 
       expect(loggerInfoSpy).toHaveBeenCalledWith(
         {
           err: Error('Internal Server Error'),
           requestDetails: {
             indexerConfig: {
-              name: 'conseil',
-              apiUrl:
-                'https://conseil-edo.cryptonomic-infra.tech:443/v2/data/tezos/edonet/operation_groups/',
-              keyToOperation: 'operation_group',
-              keyToBlockLevel: 'blockLevel',
-              apiKey: '503801e8-a8a0-4e7c-8c24-7bd310805843',
+              apiUrl: 'https://api.edo.tzstats.com/explorer/op/',
+              keyToBlockLevel: 'height',
+              keyToOperation: 0,
+              name: 'tzstats',
             },
             operationHash:
               'oneW5x7bCPCdkoJqC9HXWx42GdjDS6Z7nHeQt4mfYaPnw8xdM9E',
@@ -69,7 +67,7 @@ describe('[services/clients] Indexer Client', () => {
         indexerClient.getOperationBlockLevel(notFoundOperationHash),
       ).rejects.toThrowError(OperationNotFoundError);
       await expect(
-        conseilIndexerClient.getOperationBlockLevel(notFoundOperationHash),
+        tzktIndexerClient.getOperationBlockLevel(notFoundOperationHash),
       ).rejects.toThrowError(OperationNotFoundError);
     }, 8000);
 
@@ -78,7 +76,7 @@ describe('[services/clients] Indexer Client', () => {
         indexerClient.getOperationBlockLevel(operationHash),
       ).resolves.toEqual(109636);
       await expect(
-        conseilIndexerClient.getOperationBlockLevel(operationHash),
+        tzktIndexerClient.getOperationBlockLevel(operationHash),
       ).resolves.toEqual(109636);
     }, 8000);
   });
