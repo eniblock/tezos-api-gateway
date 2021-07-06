@@ -3,6 +3,7 @@ import { CheckOperationStatusProcess } from '../../../../../src/processes/worker
 import * as checkOperationStatusLib from '../../../../../src/processes/workers/check-operation-status/lib/check-operation-status';
 import { TezosService } from '../../../../../src/services/tezos';
 import { tezosNodeEdonetUrl } from '../../../../__fixtures__/config';
+import { indexerConfigs } from '../../../../../src/config';
 
 describe('[processes/workers/check-operation-status] Check Operation Status Process', () => {
   const checkOperationStatusProcess = new CheckOperationStatusProcess(logger);
@@ -33,7 +34,7 @@ describe('[processes/workers/check-operation-status] Check Operation Status Proc
       await expect(checkOperationStatusProcess.start()).resolves.toEqual(true);
 
       expect(checkOperationStatusProcess.indexerPool.indexers.length).toEqual(
-        4,
+        indexerConfigs.length,
       );
       expect(checkOperationStatusSpy.mock.calls).toEqual([
         [
