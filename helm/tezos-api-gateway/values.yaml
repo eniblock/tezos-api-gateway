@@ -312,6 +312,10 @@ db:
     size: 1Gi
   image:
     tag: 12.6.0-debian-10-r14
+  resources:
+    requests:
+      memory: 256Mi
+      cpu: 100m
 
 rabbitmq:
   name: rabbitmq
