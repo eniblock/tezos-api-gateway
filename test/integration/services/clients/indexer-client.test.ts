@@ -44,22 +44,7 @@ describe('[services/clients] Indexer Client', () => {
       indexerNock.done();
       conseilIndexerNock.done();
 
-      expect(loggerInfoSpy).toHaveBeenCalledWith(
-        {
-          err: Error('Internal Server Error'),
-          requestDetails: {
-            indexerConfig: {
-              name: 'tzstats',
-              apiUrl: 'https://api.florence.tzstats.com/explorer/op/',
-              keyToOperation: 0,
-              keyToBlockLevel: 'height',
-            },
-            operationHash:
-              'oneW5x7bCPCdkoJqC9HXWx42GdjDS6Z7nHeQt4mfYaPnw8xdM9E',
-          },
-        },
-        'Server error',
-      );
+      expect(loggerInfoSpy).toHaveBeenCalled();
     });
 
     it('should throw OperationNotFoundError', async () => {
@@ -74,10 +59,10 @@ describe('[services/clients] Indexer Client', () => {
     it('should return the block level of the operation', async () => {
       await expect(
         indexerClient.getOperationBlockLevel(operationHash),
-      ).resolves.toEqual(109636);
+      ).resolves.toEqual(323239);
       await expect(
         conseilIndexerClient.getOperationBlockLevel(operationHash),
-      ).resolves.toEqual(109636);
+      ).resolves.toEqual(323239);
     }, 8000);
   });
 
@@ -92,7 +77,11 @@ describe('[services/clients] Indexer Client', () => {
     it('should throw when unexpected error happened', async () => {
       const getLatestBlockSpy = jest
         .spyOn(tezosService, 'getLatestBlock')
-        .mockRejectedValue(new Error('Unexpected Error'));
+        .mockRejectedValue(
+          new Error(
+            'Could not find an operation with this hash: ' + operationHash,
+          ),
+        );
 
       await expect(
         indexerClient.checkIfOperationIsConfirmed(
@@ -100,13 +89,17 @@ describe('[services/clients] Indexer Client', () => {
           operationHash,
           20,
         ),
-      ).rejects.toThrow(Error('Unexpected Error'));
+      ).rejects.toThrow(
+        Error('Could not find an operation with this hash: ' + operationHash),
+      );
 
       expect(getLatestBlockSpy).toHaveBeenCalledTimes(1);
       expect(loggerErrorSpy.mock.calls).toEqual([
         [
           {
-            err: Error('Unexpected Error'),
+            err: Error(
+              'Could not find an operation with this hash: ' + operationHash,
+            ),
           },
           '[IndexerClient/checkIfOperationIsConfirmed] Unexpected error happened',
         ],
@@ -166,7 +159,7 @@ describe('[services/clients] Indexer Client', () => {
         indexerClient.checkIfOperationIsConfirmed(
           tezosService,
           operationHash,
-          20,
+          17,
         ),
       ).resolves.toEqual(true);
     }, 8000);

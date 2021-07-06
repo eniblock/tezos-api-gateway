@@ -100,7 +100,7 @@ npm run prettier:write
 | ------------------------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------ |
 | AMQP_URL                                   | amqp://localhost                                                   | The url to link to rabbiMq server                            |
 | AMQP_QUEUE_NAME                            | injection                                                          | The name of the queue to send injection message              |
-| CONTRACT_ADDRESS                           | KT1Nk7KLuuWJz8muPN1hFZhFtneepKNAsJSU                               | The smart contract address used for Generated API Web server |
+| CONTRACT_ADDRESS                           | KT1LnJEtZttLAJeP45EzYvChAksRS1xE4hJ1                               | The smart contract address used for Generated API Web server |
 | DB_HOST                                    | localhost-service                                                  | The database host                                            |
 | DB_NAME                                    | tezos_api_gateway                                                  | The database name                                            |
 | DB_PORT                                    | 5432                                                               | The port to connect to database                              |

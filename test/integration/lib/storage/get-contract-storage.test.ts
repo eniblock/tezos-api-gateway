@@ -31,8 +31,8 @@ describe('[lib/storage/get-contract-storage]', () => {
       expect(storage).toBeDefined();
       expect(JSON.stringify(storage)).toEqual(
         '{' +
-          '"allowed":"37398",' +
-          '"balances":"37399",' +
+          '"allowed":"88052",' +
+          '"balances":"88053",' +
           '"decimals":"10",' +
           '"locked":false,' +
           '"name":"name",' +
@@ -43,7 +43,7 @@ describe('[lib/storage/get-contract-storage]', () => {
           testAccount +
           '",' +
           '"symbol":"symbol",' +
-          '"totalSupply":"100000000000000000"' +
+          '"totalSupply":"40"' +
           '}',
       );
     });
@@ -137,11 +137,11 @@ describe('[lib/storage/get-contract-storage]', () => {
       expect(storage).toEqual({
         allowed: {
           type: 'big_map',
-          value: '37398',
+          value: '88052',
         },
         balances: {
           type: 'big_map',
-          value: '37399',
+          value: '88053',
         },
         decimals: 10,
         locked: false,
@@ -149,7 +149,7 @@ describe('[lib/storage/get-contract-storage]', () => {
         newOwner: testAccount,
         owner: testAccount,
         symbol: 'symbol',
-        totalSupply: 100000000000000000,
+        totalSupply: 40,
       });
     });
 
@@ -164,7 +164,7 @@ describe('[lib/storage/get-contract-storage]', () => {
       expect(storage).toEqual({
         allowed: {
           type: 'big_map',
-          value: '37398',
+          value: '88052',
         },
         age: {
           error: 'This data field does not exist in the contract storage',
@@ -185,7 +185,7 @@ describe('[lib/storage/get-contract-storage]', () => {
       expect(storage).toEqual({
         allowed: {
           type: 'big_map',
-          value: '37398',
+          value: '88052',
         },
         age: {
           error: 'This data field does not exist in the contract storage',

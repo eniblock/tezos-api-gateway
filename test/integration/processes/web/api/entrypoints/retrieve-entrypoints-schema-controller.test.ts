@@ -12,6 +12,7 @@ import {
 } from '../../../../../__fixtures__/config';
 import { PostgreService } from '../../../../../../src/services/postgre';
 import {
+  FA2Contract,
   FA2Contract2,
   FA2Contract5,
   FA2Contract6,
@@ -69,7 +70,7 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
       expect(body).toEqual({
         message:
           'The given entryPoint nonexistentEntryPoint does not exist in the contract entryPoint ' +
-          'list: balance_of,mint,set_administrator,set_metdata,set_pause,transfer,update_operators',
+          'list: balance_of,mint,set_administrator,set_metadata,set_pause,transfer,update_operators',
         status: 400,
       });
     });
@@ -203,7 +204,7 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
               michelson: { prim: 'address' },
             },
             {
-              entryPoint: 'set_metdata',
+              entryPoint: 'set_metadata',
               schema: {
                 k: 'string',
                 v: 'bytes',
@@ -287,7 +288,7 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
             'balance_of',
             'mint',
             'set_administrator',
-            'set_metdata',
+            'set_metadata',
             'set_pause',
             'transfer',
             'update_operators',
@@ -344,7 +345,7 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
             'balance_of',
             'mint',
             'set_administrator',
-            'set_metdata',
+            'set_metadata',
             'set_pause',
             'transfer',
             'update_operators',
@@ -355,7 +356,7 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
 
     it('should return 200 and the entrypoint schema when two valid entryPoints are specified', async () => {
       const { body, status } = await request
-        .get('/api/entrypoints/' + FA2Contract2)
+        .get('/api/entrypoints/' + FA2Contract)
         .query({
           entryPoints: ['mint', 'set_pause'],
         });
@@ -406,7 +407,7 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
             'balance_of',
             'mint',
             'set_administrator',
-            'set_metdata',
+            'set_metadata',
             'set_pause',
             'transfer',
             'update_operators',

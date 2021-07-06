@@ -15,7 +15,7 @@ export const serverConfig = {
 };
 
 export const tezosNodeEdonetUrl =
-  process.env.TEZOS_NODE_EDONET_TEST || 'https://api.tez.ie/rpc/florencenet';
+  process.env.TEZOS_NODE_EDONET_TEST || 'https://testnet-tezos.giganode.io';
 
 export const tezosNodeEdonetUrls = (
   process.env.TEZOS_NODE_EDONET_TEST_URLS ||

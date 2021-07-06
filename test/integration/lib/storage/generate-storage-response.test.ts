@@ -36,11 +36,11 @@ describe('[lib/storage/generateStorageResponse]', () => {
       expect(generateStorageResponse(storage!)).toEqual({
         allowed: {
           type: 'big_map',
-          value: '37398',
+          value: '88052',
         },
         balances: {
           type: 'big_map',
-          value: '37399',
+          value: '88053',
         },
         decimals: 10,
         locked: false,
@@ -48,7 +48,7 @@ describe('[lib/storage/generateStorageResponse]', () => {
         newOwner: testAccount,
         owner: testAccount,
         symbol: 'symbol',
-        totalSupply: 100000000000000000,
+        totalSupply: 40,
       });
     });
 
@@ -62,7 +62,7 @@ describe('[lib/storage/generateStorageResponse]', () => {
       expect(generateStorageResponse(storage!)).toEqual({
         accessRequests: {
           type: 'big_map',
-          value: '59941',
+          value: '88054',
         },
         organizations: {
           type: 'map',
@@ -99,7 +99,7 @@ describe('[lib/storage/generateStorageResponse]', () => {
       expect(generateStorageResponse(storage!)).toEqual({
         accessRequests: {
           type: 'big_map',
-          value: '59822',
+          value: '88055',
         },
         organizations: {
           type: 'map',
