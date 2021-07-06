@@ -15,6 +15,7 @@ import { errorHandler } from './middleware/error-handler';
 import { AmqpService } from '../../services/amqp';
 import { AbstractProcess } from '../abstract-process';
 import { GatewayPool } from '../../services/gateway-pool';
+import { SignerFactory } from '../../services/signer-factory';
 
 export interface WebConfig {
   server: {
@@ -31,6 +32,7 @@ export class WebProcess extends AbstractProcess {
   protected _postgreService: PostgreService;
   private _gatewayPool: GatewayPool;
   protected _amqpService: AmqpService;
+  private _signerFactory: SignerFactory;
 
   constructor(config: WebConfig) {
     super(webProcessConfig, logger);
@@ -41,6 +43,7 @@ export class WebProcess extends AbstractProcess {
     this._postgreService = new PostgreService();
     this._gatewayPool = new GatewayPool(tezosNodeUrls, logger);
     this._amqpService = new AmqpService(amqpConfig, this.logger);
+    this._signerFactory = new SignerFactory();
 
     this.expressSetup();
   }
@@ -73,6 +76,14 @@ export class WebProcess extends AbstractProcess {
     return this._gatewayPool;
   }
 
+  public get signerFactory(): SignerFactory {
+    return this._signerFactory;
+  }
+
+  public set signerFactory(signerFactory: SignerFactory) {
+    this._signerFactory = signerFactory;
+  }
+
   /**
    * Start steps:
    *  - Check if the web process is already running
@@ -93,6 +104,7 @@ export class WebProcess extends AbstractProcess {
       this._gatewayPool,
       this._postgreService,
       this._amqpService,
+      this._signerFactory,
     );
 
     this.appPostConfig();

@@ -7,6 +7,6 @@ dependencies:
   version: 8.8.0
 - name: vault
   repository: oci://registry.gitlab.com/xdev-tech/xdev-enterprise-business-network/vault/helm
-  version: 1.0.2-develop.10
-digest: sha256:e22f9f9004b303064f7ac494be7fed0b030187cd677f88c1260369be18b4904a
-generated: "2021-06-01T10:45:24.405796635+02:00"
+  version: 1.0.2-develop.21
+digest: sha256:8dfdac31436f8d40d01a8ac9947677c5e13327e64d3c6bd305397b94df48a028
+generated: "2021-07-06T14:14:11.161865+02:00"

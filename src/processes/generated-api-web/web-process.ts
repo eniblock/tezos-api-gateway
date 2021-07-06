@@ -21,6 +21,7 @@ import { AbstractProcess } from '../abstract-process';
 import { GatewayPool } from '../../services/gateway-pool';
 import { generatePathObject } from '../../lib/generate-path-object';
 import swaggerUI from 'swagger-ui-express';
+import { SignerFactory } from '../../services/signer-factory';
 
 export interface WebConfig {
   server: {
@@ -37,6 +38,7 @@ export class WebProcess extends AbstractProcess {
   protected _postgreService: PostgreService;
   private _gatewayPool: GatewayPool;
   protected _amqpService: AmqpService;
+  private _signerFactory: SignerFactory;
 
   constructor(config: WebConfig) {
     super(webProcessConfig, logger);
@@ -47,6 +49,7 @@ export class WebProcess extends AbstractProcess {
     this._postgreService = new PostgreService();
     this._gatewayPool = new GatewayPool(tezosNodeUrls, logger);
     this._amqpService = new AmqpService(amqpConfig, this.logger);
+    this._signerFactory = new SignerFactory();
   }
 
   public get isRunning(): boolean {
@@ -75,6 +78,14 @@ export class WebProcess extends AbstractProcess {
 
   get gatewayPool(): GatewayPool {
     return this._gatewayPool;
+  }
+
+  public get signerFactory(): SignerFactory {
+    return this._signerFactory;
+  }
+
+  public set signerFactory(signerFactory: SignerFactory) {
+    this._signerFactory = signerFactory;
   }
 
   /**
@@ -114,6 +125,7 @@ export class WebProcess extends AbstractProcess {
       this._gatewayPool,
       this._postgreService,
       this._amqpService,
+      this._signerFactory,
       forgeAndSendPaths,
     );
 

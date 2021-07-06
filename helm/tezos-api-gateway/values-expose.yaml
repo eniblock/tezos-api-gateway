@@ -20,3 +20,7 @@ rabbitmq:
     enabled: true
     certManager: true
     tls: true
+  resources:
+    requests:
+      cpu: 500m
+      memory: 300Mi
