@@ -352,3 +352,11 @@ vault:
       gcpckmsSealCryptoKey:
       initPath:
       initToken:
+
+  deploymentStrategy:
+    type: Recreate # To avoid volume mount issue with multiple nodes (aka Multi-Attach error for volume)
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 125Mi
