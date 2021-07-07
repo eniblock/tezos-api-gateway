@@ -13,7 +13,6 @@ import {
 import { PostgreService } from '../../../../../../src/services/postgre';
 import {
   FA2Contract,
-  FA2Contract2,
   FA2Contract5,
   FA2Contract6,
 } from '../../../../../__fixtures__/smart-contract';
@@ -61,7 +60,7 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
 
     it('should return 400 when one of the query entry points is not in the contract', async () => {
       const { body, status } = await request
-        .get('/api/entrypoints/' + FA2Contract2)
+        .get('/api/entrypoints/' + FA2Contract)
         .query({
           entryPoints: ['nonexistentEntryPoint', 'mint'],
         });
@@ -109,7 +108,7 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
 
     it('should return 200 and the schema of all the contract entrypoints if "entryPoint" is not defined', async () => {
       const { body, status } = await request.get(
-        '/api/entrypoints/' + FA2Contract2,
+        '/api/entrypoints/' + FA2Contract,
       );
 
       expect({ status, body }).toEqual({
@@ -299,7 +298,7 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
 
     it('should return 200 and the entrypoint schema when the entryPoint specified is valid', async () => {
       const { body, status } = await request
-        .get('/api/entrypoints/' + FA2Contract2)
+        .get('/api/entrypoints/' + FA2Contract)
         .query({
           entryPoints: ['mint'],
         });
