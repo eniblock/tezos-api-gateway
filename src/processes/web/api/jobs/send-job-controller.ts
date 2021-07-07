@@ -3,16 +3,21 @@ import createHttpError from 'http-errors';
 import { StatusCodes } from 'http-status-codes';
 import { vaultClientConfig } from '../../../../config';
 import { ClientError } from '../../../../const/errors/client-error';
-import { SendTransactionsParams } from '../../../../const/interfaces/send-transactions-params';
+import {
+  SendTransactionsParams,
+  TransactionDetails,
+} from '../../../../const/interfaces/send-transactions-params';
 import * as libSendTransaction from '../../../../lib/jobs/send-transactions';
 import { AmqpService } from '../../../../services/amqp';
 import { logger } from '../../../../services/logger';
 import { PostgreService } from '../../../../services/postgre';
 import { VaultSigner } from '../../../../services/signers/vault';
+import { MetricPrometheusService } from '../../../../services/metric-prometheus';
 
 function sendTransactionsAndCreateJob(
   amqpService: AmqpService,
   postgreClient: PostgreService,
+  metricPrometheusService: MetricPrometheusService,
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -45,6 +50,14 @@ function sendTransactionsAndCreateJob(
         postgreClient,
         amqpService,
         logger,
+      );
+
+      transactions.forEach(
+        ({ contractAddress, entryPoint }: TransactionDetails) => {
+          metricPrometheusService.entryPointCounter.add(1, {
+            [contractAddress]: entryPoint,
+          });
+        },
       );
 
       return res.status(StatusCodes.CREATED).json(job);

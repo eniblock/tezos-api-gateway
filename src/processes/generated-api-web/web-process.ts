@@ -22,6 +22,7 @@ import { GatewayPool } from '../../services/gateway-pool';
 import { generatePathObject } from '../../lib/generate-path-object';
 import swaggerUI from 'swagger-ui-express';
 import { SignerFactory } from '../../services/signer-factory';
+import { MetricPrometheusService } from '../../services/metric-prometheus';
 
 export interface WebConfig {
   server: {
@@ -39,6 +40,7 @@ export class WebProcess extends AbstractProcess {
   private _gatewayPool: GatewayPool;
   protected _amqpService: AmqpService;
   private _signerFactory: SignerFactory;
+  private _metricPrometheusService: MetricPrometheusService;
 
   constructor(config: WebConfig) {
     super(webProcessConfig, logger);
@@ -50,6 +52,7 @@ export class WebProcess extends AbstractProcess {
     this._gatewayPool = new GatewayPool(tezosNodeUrls, logger);
     this._amqpService = new AmqpService(amqpConfig, this.logger);
     this._signerFactory = new SignerFactory();
+    this._metricPrometheusService = new MetricPrometheusService();
   }
 
   public get isRunning(): boolean {
@@ -86,6 +89,16 @@ export class WebProcess extends AbstractProcess {
 
   public set signerFactory(signerFactory: SignerFactory) {
     this._signerFactory = signerFactory;
+  }
+
+  public get metricPrometheusService(): MetricPrometheusService {
+    return this._metricPrometheusService;
+  }
+
+  public set metricPrometheusService(
+    metricPrometheus: MetricPrometheusService,
+  ) {
+    this._metricPrometheusService = metricPrometheus;
   }
 
   /**
@@ -126,6 +139,7 @@ export class WebProcess extends AbstractProcess {
       this._postgreService,
       this._amqpService,
       this._signerFactory,
+      this._metricPrometheusService,
       forgeAndSendPaths,
     );
 
