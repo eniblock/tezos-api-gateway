@@ -255,7 +255,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
             testAccount2 +
             '"}}}',
           amount: 0,
-          fee: 1997,
+          fee: 1998,
           source: testAccount,
           storage_limit: 67,
           gas_limit: 16898,
@@ -269,7 +269,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
           parameters: '{"entrypoint":"lock","value":{"prim":"Unit"}}',
           parameters_json: '{"entrypoint":"lock","value":{"lock":0}}',
           amount: 0,
-          fee: 1798,
+          fee: 1799,
           source: testAccount,
           storage_limit: 0,
           gas_limit: 14906,

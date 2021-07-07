@@ -197,7 +197,7 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
             testAccount2 +
             '"}}}',
           amount: 0,
-          fee: 2036,
+          fee: 2037,
           source: testAccount,
           storage_limit: 67,
           gas_limit: 16898,

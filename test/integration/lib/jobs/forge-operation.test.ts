@@ -236,7 +236,7 @@ describe('[lib/jobs/forge-operation]', () => {
             testAccount2 +
             '"}}}',
           amount: 0,
-          fee: 2020,
+          fee: 2021,
           source: testAccount,
           storage_limit: 67,
           gas_limit: 16898,
@@ -255,7 +255,7 @@ describe('[lib/jobs/forge-operation]', () => {
             testAccount2 +
             '"}}}',
           amount: 0,
-          fee: 2065,
+          fee: 2066,
           source: testAccount,
           storage_limit: 0,
           gas_limit: 17343,
