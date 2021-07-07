@@ -9,10 +9,13 @@ import { AmqpService } from '../../../../services/amqp';
 import { logger } from '../../../../services/logger';
 import { PostgreService } from '../../../../services/postgre';
 import { VaultSigner } from '../../../../services/signers/vault';
+import { TransactionDetails } from '../../../../const/interfaces/send-transactions-params';
+import { MetricPrometheusService } from '../../../../services/metric-prometheus';
 
 function sendTransactionsAndCreateJob(
   amqpService: AmqpService,
   postgreClient: PostgreService,
+  metricPrometheusService: MetricPrometheusService,
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -50,6 +53,14 @@ function sendTransactionsAndCreateJob(
         postgreClient,
         amqpService,
         logger,
+      );
+
+      transactions.forEach(
+        ({ contractAddress, entryPoint }: TransactionDetails) => {
+          metricPrometheusService.entryPointCounter.add(1, {
+            [contractAddress]: entryPoint,
+          });
+        },
       );
 
       return res.status(StatusCodes.CREATED).json(job);

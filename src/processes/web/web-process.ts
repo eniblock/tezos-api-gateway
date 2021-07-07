@@ -16,6 +16,7 @@ import { AmqpService } from '../../services/amqp';
 import { AbstractProcess } from '../abstract-process';
 import { GatewayPool } from '../../services/gateway-pool';
 import { SignerFactory } from '../../services/signer-factory';
+import { MetricPrometheusService } from '../../services/metric-prometheus';
 
 export interface WebConfig {
   server: {
@@ -33,6 +34,7 @@ export class WebProcess extends AbstractProcess {
   private _gatewayPool: GatewayPool;
   protected _amqpService: AmqpService;
   private _signerFactory: SignerFactory;
+  private _metricPrometheusService: MetricPrometheusService;
 
   constructor(config: WebConfig) {
     super(webProcessConfig, logger);
@@ -44,6 +46,7 @@ export class WebProcess extends AbstractProcess {
     this._gatewayPool = new GatewayPool(tezosNodeUrls, logger);
     this._amqpService = new AmqpService(amqpConfig, this.logger);
     this._signerFactory = new SignerFactory();
+    this._metricPrometheusService = new MetricPrometheusService();
 
     this.expressSetup();
   }
@@ -84,6 +87,16 @@ export class WebProcess extends AbstractProcess {
     this._signerFactory = signerFactory;
   }
 
+  public get metricPrometheusService(): MetricPrometheusService {
+    return this._metricPrometheusService;
+  }
+
+  public set metricPrometheusService(
+    metricPrometheus: MetricPrometheusService,
+  ) {
+    this._metricPrometheusService = metricPrometheus;
+  }
+
   /**
    * Start steps:
    *  - Check if the web process is already running
@@ -105,6 +118,7 @@ export class WebProcess extends AbstractProcess {
       this._postgreService,
       this._amqpService,
       this._signerFactory,
+      this._metricPrometheusService,
     );
 
     this.appPostConfig();
