@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import createHttpError from 'http-errors';
-import { OK, NOT_FOUND } from 'http-status-codes';
+import { OK, StatusCodes } from 'http-status-codes';
 
 import { logger } from '../../../../services/logger';
 import { JobIdNotFoundError } from '../../../../const/errors/job-id-not-found-error';
@@ -42,7 +42,7 @@ function injectOperationAndUpdateJob(
       return res.status(OK).json(job);
     } catch (err) {
       if (err instanceof JobIdNotFoundError) {
-        return next(createHttpError(NOT_FOUND, err.message));
+        return next(createHttpError(StatusCodes.NOT_FOUND, err.message));
       }
 
       return next(err);

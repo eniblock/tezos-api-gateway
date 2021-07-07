@@ -54,6 +54,7 @@ export function errorHandler(): expressMiddleware {
     }
 
     /* istanbul ignore next */
+    res.status(err.status).json(errorBody);
     return res.status(err.status).json(errorBody);
   };
 }
