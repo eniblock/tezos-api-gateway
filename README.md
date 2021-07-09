@@ -171,7 +171,15 @@ setting up the stack. This tool is not ready for production yet, so we provide a
 more detailed setup in the next chapter. In case you want to give a shot to
 click-project, here are the instructions.
 
-First, install click-project, along with the k8s extension.
+First, make sure you have a recent enough version of python (at least 3.8).
+
+On Ubuntu 18.04 for instance, it would look like this.
+
+```
+sudo apt install python3.8
+```
+
+Then, install click-project, along with the k8s extension.
 
 ```
 curl -sSL https://raw.githubusercontent.com/click-project/click-project/master/install.sh | env CLK_RECIPES=https://github.com/click-project/clk_recipe_k8s/tarball/3e62739 bash
@@ -324,6 +332,20 @@ In case your cluster is local, you can use the provided development values.
 ```shell
 helm install tezos-api-gateway ./helm/tezos-api-gateway --values ./helm/tezos-api-gateway/values-dev.yaml
 ```
+
+### Discussing with the services
+
+You can forward the following ports to communicate with the services of your
+cluster.
+
+- api : 3333
+- vault : 8200
+- db : 5432
+- rabbitmq : 5672
+
+
+Also, if you are using tilt, you can simply uncomment the corresponding lines in
+the Tiltfile. tilt will automatically react and forward the ports.
 
 [1]: src/processes/web/README.md
 [2]: src/processes/generated-api-web/README.md
