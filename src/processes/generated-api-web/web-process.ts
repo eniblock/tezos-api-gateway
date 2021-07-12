@@ -211,10 +211,10 @@ export class WebProcess extends AbstractProcess {
   protected expressSetup(forgeAndSendPaths: OpenAPIV3.PathsObject) {
     this.appPreConfig();
 
-    const apiSpec = {
+    const apiSpec = ({
       ...spec,
       paths: this.setUpPathObjects(forgeAndSendPaths),
-    } as unknown as OpenAPIV3.Document;
+    } as unknown) as OpenAPIV3.Document;
 
     this._app.use(
       '/api',

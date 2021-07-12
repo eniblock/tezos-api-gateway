@@ -15,4 +15,3 @@ export const FA2Contract8 = 'KT1Nqq1uTuXEq46FCYsSRgUiKR9se2jjeSNV'; // Logical P
 
 export const testAccount = 'tz1hdQscorfqMzFqYxnrApuS5i6QSTuoAp3w';
 export const testAccount2 = 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw'; // Receiver account
-

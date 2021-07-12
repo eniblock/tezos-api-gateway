@@ -116,7 +116,9 @@ describe('[services/signers] Vault', () => {
           warnings: null,
         });
 
-      await expect(vaultSigner.publicKeyHash()).resolves.toEqual('tz1UCubRycjt5kqkdBPDvmSSxHG1oZ8AX2Cu');
+      await expect(vaultSigner.publicKeyHash()).resolves.toEqual(
+        'tz1UCubRycjt5kqkdBPDvmSSxHG1oZ8AX2Cu',
+      );
 
       vaultNock.done();
     });
