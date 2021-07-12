@@ -7,7 +7,7 @@
     "build": "tsc",
     "coverage": "LOGGER_LEVEL=fatal jest --coverage --runInBand",
     "lint": "npm run prettier && npm run tslint",
-    "test": "npm run lint && npm run build && npm run coverage",
+    "test": "npm run lint && npm run build && npm run jest",
     "jest": "LOGGER_LEVEL=fatal jest --runInBand",
     "prettier": "prettier -l '{src,test,docs}/**/*.{ts,yml,yaml,json,md}'",
     "prettier:write": "prettier --write '{src,test,docs}/**/*.{ts,yml,yaml,json,md}'",
