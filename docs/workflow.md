@@ -45,8 +45,8 @@ If user want to perform the signing inside the Tezos Api Gateway using **Vault**
 For any reasons that user does not want to use **Vault Signer**, or want to perform the signing process outside the system,
 he/she can choose **forge and injection option**. This process break the interaction into 2 steps:
 
-- Forge: forge the operation to get the raw transaction to sign
-- Inject: Pre-apply the transactions and inject the operation using the signed transaction and signature.
+- Forge: Using the parameters of the forge operation, a new raw transaction is created. The raw transaction requires the signature and can be sent to the blockchain at a later stage.
+- Inject: Pre-apply the transactions and inject the operation using the signed raw transaction and signature.
 
 <u>_DIAGRAM_</u>
 ![forge_and_injection.png](forge_and_injection.png)

@@ -4,6 +4,7 @@ import { ProcessConfig } from '../processes/abstract-process';
 import { parseInt } from '../utils/parse-int';
 import { IndexerConfig } from '../const/interfaces/indexer-config';
 import { ExchangeType } from '../const/exchange-type';
+import { MetricConfig } from '../const/interfaces/metric-config';
 
 export const loggerConfig = {
   name: process.env.LOGGER_NAME || 'TezosApiGateway',
@@ -106,4 +107,11 @@ export const compilationSmartpyConf = {
   commandPath: '/usr/local/smartpy/SmartPy.sh',
   contractDirectory: '/tmp',
   contractName: 'smartcontract.py',
+};
+
+export const metricConfig: MetricConfig = {
+  port: 9464,
+  preventServerStart: false,
+  interval: 1000,
+  meterName: 'prometheus-metrics',
 };

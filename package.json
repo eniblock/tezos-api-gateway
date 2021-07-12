@@ -27,6 +27,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@opentelemetry/api-metrics": "^0.16.0",
     "@opentelemetry/exporter-prometheus": "^0.16.0",
     "@opentelemetry/metrics": "^0.16.0",
     "@opentelemetry/node": "^0.16.0",

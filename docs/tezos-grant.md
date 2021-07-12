@@ -247,13 +247,13 @@ Each time a request fails for a randomly chosen public service, the gateway pool
 
 Supported node gateway public services:
 
-- GigaNode
+- GigaNode (Ukraine)
 
-- Smartpy’s node
+- Smartpy’s node (USA)
 
-- Conseil’s node (cryptonomic)
+- Conseil’s node (cryptonomic) (USA)
 
-- Your own node
+- Your own node 
 
 The Gateway Pool is built in typescript and uses Taquito to forge and submit transactions to Tezos.
 
@@ -263,11 +263,11 @@ A service used to retrieve blockchain data (e.g. operation status) using a pool 
 
 Supported public indexers:
 
-- TzStats
+- TzStats (Canada)
 
-- TZKT
+- TZKT (Estonia)
 
-- Conseil API (cryptonomic)
+- Conseil API (cryptonomic) (USA)
 
 - Your own indexer
 
