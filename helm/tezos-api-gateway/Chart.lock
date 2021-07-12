@@ -4,9 +4,9 @@ dependencies:
   version: 10.2.5
 - name: rabbitmq
   repository: https://charts.bitnami.com/bitnami
-  version: 8.8.0
+  version: 8.16.3
 - name: vault
   repository: oci://registry.gitlab.com/xdev-tech/xdev-enterprise-business-network/vault/helm
   version: 1.0.2-develop.21
-digest: sha256:8dfdac31436f8d40d01a8ac9947677c5e13327e64d3c6bd305397b94df48a028
-generated: "2021-07-06T14:14:11.161865+02:00"
+digest: sha256:380bd98da3ed13cf3ba882bf5c71b9ee6eabff44214bdbe974db2c5b1a60e9d2
+generated: "2021-07-12T16:37:20.150591+02:00"
