@@ -83,7 +83,7 @@ import _ from 'lodash';
  *         'balance_of',
  *         'mint',
  *         'set_administrator',
- *         'set_metdata',
+ *         'set_metadata',
  *         'set_pause',
  *         'transfer',
  *         'update_operators',

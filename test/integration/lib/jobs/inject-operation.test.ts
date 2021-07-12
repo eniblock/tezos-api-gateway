@@ -5,6 +5,7 @@ import {
   signature,
   signedTransaction,
   testAccount,
+  testAccount2,
 } from '../../../__fixtures__/smart-contract';
 import {
   postgreConfig,
@@ -59,7 +60,7 @@ describe('[lib/jobs/inject-operation]', () => {
           entryPoint: 'transfer',
           entryPointParams: {
             tokens: 1,
-            destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+            destination: testAccount2,
           },
         },
         {
@@ -163,7 +164,7 @@ describe('[lib/jobs/inject-operation]', () => {
                 value: {
                   args: [
                     {
-                      string: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+                      string: testAccount2,
                     },
                     {
                       int: '1',
@@ -240,7 +241,7 @@ describe('[lib/jobs/inject-operation]', () => {
                 value: {
                   args: [
                     {
-                      string: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+                      string: testAccount2,
                     },
                     {
                       int: '1',

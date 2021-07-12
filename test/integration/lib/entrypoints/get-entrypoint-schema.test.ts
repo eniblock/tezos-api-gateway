@@ -4,6 +4,7 @@ import { TezosService } from '../../../../src/services/tezos';
 
 import { tezosNodeEdonetUrl } from '../../../__fixtures__/config';
 import { logger } from '../../../__fixtures__/services/logger';
+import { FA2Contract } from '../../../__fixtures__/smart-contract';
 
 describe('[lib/entrypoints/get-entrypoint-schema]', () => {
   const tezosService = new TezosService(tezosNodeEdonetUrl);
@@ -17,7 +18,7 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
       const schema = await getEntryPointSchemaFromTezosNode(
         logger,
         tezosService,
-        'KT1NjK4eGjLbWHB1M75tGbAsPatPCLudTKp1',
+        FA2Contract,
       );
 
       expect(schema).toBeDefined();
@@ -111,7 +112,7 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
             michelson: { prim: 'address' },
           },
           {
-            entryPoint: 'set_metdata',
+            entryPoint: 'set_metadata',
             schema: {
               k: 'string',
               v: 'bytes',
@@ -195,7 +196,7 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
           'balance_of',
           'mint',
           'set_administrator',
-          'set_metdata',
+          'set_metadata',
           'set_pause',
           'transfer',
           'update_operators',
@@ -205,17 +206,15 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
 
     it('should throw error when one of the query entry points is not in the contract', async () => {
       await expect(
-        getEntryPointSchemaFromTezosNode(
-          logger,
-          tezosService,
-          'KT1NjK4eGjLbWHB1M75tGbAsPatPCLudTKp1',
-          ['nonexistentEntryPoint', 'mint'],
-        ),
+        getEntryPointSchemaFromTezosNode(logger, tezosService, FA2Contract, [
+          'nonexistentEntryPoint',
+          'mint',
+        ]),
       ).rejects.toThrow(
         new ClientError({
           message:
             'The given entryPoint nonexistentEntryPoint does not exist in the contract entryPoint ' +
-            'list: balance_of,mint,set_administrator,set_metdata,set_pause,transfer,update_operators',
+            'list: balance_of,mint,set_administrator,set_metadata,set_pause,transfer,update_operators',
           status: 400,
         }),
       );
@@ -227,23 +226,17 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
         .mockRejectedValue(new Error('Unexpected error'));
 
       await expect(
-        getEntryPointSchemaFromTezosNode(
-          logger,
-          tezosService,
-          'KT1NjK4eGjLbWHB1M75tGbAsPatPCLudTKp1',
-        ),
+        getEntryPointSchemaFromTezosNode(logger, tezosService, FA2Contract),
       ).rejects.toThrow(Error('Unexpected error'));
 
-      expect(getEntryPointsSpy.mock.calls).toEqual([
-        ['KT1NjK4eGjLbWHB1M75tGbAsPatPCLudTKp1'],
-      ]);
+      expect(getEntryPointsSpy.mock.calls).toEqual([[FA2Contract]]);
     });
 
     it('should correctly return the parameter schema object with only the mentioned entrypoint', async () => {
       const schema = await getEntryPointSchemaFromTezosNode(
         logger,
         tezosService,
-        'KT1NjK4eGjLbWHB1M75tGbAsPatPCLudTKp1',
+        FA2Contract,
         ['mint'],
       );
 
@@ -286,7 +279,7 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
           'balance_of',
           'mint',
           'set_administrator',
-          'set_metdata',
+          'set_metadata',
           'set_pause',
           'transfer',
           'update_operators',
@@ -298,7 +291,7 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
       const schema = await getEntryPointSchemaFromTezosNode(
         logger,
         tezosService,
-        'KT1NjK4eGjLbWHB1M75tGbAsPatPCLudTKp1',
+        FA2Contract,
         ['mint', 'update_operators'],
       );
 
@@ -373,7 +366,7 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
           'balance_of',
           'mint',
           'set_administrator',
-          'set_metdata',
+          'set_metadata',
           'set_pause',
           'transfer',
           'update_operators',

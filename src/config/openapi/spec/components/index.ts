@@ -1,3 +1,4 @@
+import { testAccount } from '../../../../../test/__fixtures__/smart-contract';
 import { error } from './errors';
 
 const components = {
@@ -50,7 +51,7 @@ const components = {
       type: 'string',
       pattern: '^[0-9a-zA-Z]{36}$',
       description: 'An tezos address (contract or account)',
-      example: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+      example: testAccount,
     },
     page: {
       type: 'integer',

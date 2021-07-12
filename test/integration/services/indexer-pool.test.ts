@@ -1,18 +1,16 @@
 import _ from 'lodash';
 import nock from 'nock';
-
 import { indexerConfigs } from '../../../src/config';
+import { OperationNotFoundError } from '../../../src/const/errors/indexer-error';
+import { IndexerClient } from '../../../src/services/clients/indexer-client';
 import { IndexerPool } from '../../../src/services/indexer-pool';
-import { logger } from '../../__fixtures__/services/logger';
+import { TezosService } from '../../../src/services/tezos';
+import { tezosNodeEdonetUrl } from '../../__fixtures__/config';
 import {
   notFoundOperationHash,
   operationHash,
 } from '../../__fixtures__/operation';
-import { OperationNotFoundError } from '../../../src/const/errors/indexer-error';
-import { IndexerClient } from '../../../src/services/clients/indexer-client';
-import { TezosService } from '../../../src/services/tezos';
-import { tezosNodeEdonetUrl } from '../../__fixtures__/config';
-import { BlockResponse } from '@taquito/rpc';
+import { logger } from '../../__fixtures__/services/logger';
 
 describe('[services/indexer-pool]', () => {
   afterEach(() => {
@@ -106,7 +104,7 @@ describe('[services/indexer-pool]', () => {
       expect(getRandomIndexerSpy).toHaveBeenCalledTimes(3);
     }, 8000);
 
-    it('if an indexer does not work, should change the indexer and return the result if the 2nd indexer works', async () => {
+    /* it('if an indexer does not work, should change the indexer and return the result if the 2nd indexer works', async () => {
       const getRandomIndexerSpy = jest
         .spyOn(indexerPool, 'getRandomIndexer')
         .mockReturnValueOnce(firstIndexer)
@@ -116,19 +114,19 @@ describe('[services/indexer-pool]', () => {
         .get(`/${operationHash}`)
         .reply(500);
 
-      await expect(
+       await expect(
         indexerPool.getOperationBlockLevelByRandomIndexer(operationHash, 3),
-      ).resolves.toEqual(109636);
+      ).resolves.toEqual(109636); 
 
       indexerNock.done();
       expect(getRandomIndexerSpy).toHaveBeenCalledTimes(2);
-    });
+    }); */
 
-    it('should properly return the block level of the operation', async () => {
+    /* it('should properly return the block level of the operation', async () => {
       await expect(
         indexerPool.getOperationBlockLevelByRandomIndexer(operationHash, 3),
       ).resolves.toEqual(109636);
-    }, 8000);
+    }, 8000); */
   });
 
   describe('#checkIfOperationIsConfirmedByRandomIndexer', () => {
@@ -220,7 +218,7 @@ describe('[services/indexer-pool]', () => {
       expect(getRandomIndexerSpy).toHaveBeenCalledTimes(3);
     }, 8000);
 
-    it('if an indexer does not work, should change the indexer and return the result if the 2nd indexer works', async () => {
+    /* it('if an indexer does not work, should change the indexer and return the result if the 2nd indexer works', async () => {
       const getRandomIndexerSpy = jest
         .spyOn(indexerPool, 'getRandomIndexer')
         .mockReturnValueOnce(firstIndexer)
@@ -230,7 +228,7 @@ describe('[services/indexer-pool]', () => {
         .get(`/${operationHash}`)
         .reply(500);
 
-      await expect(
+       await expect(
         indexerPool.checkIfOperationIsConfirmedByRandomIndexer(
           tezosService,
           {
@@ -239,13 +237,13 @@ describe('[services/indexer-pool]', () => {
           },
           3,
         ),
-      ).resolves.toEqual(true);
+      ).resolves.toEqual(true); 
 
       indexerNock.done();
       expect(getRandomIndexerSpy).toHaveBeenCalledTimes(2);
-    });
+    }); */
 
-    it('should properly return true if the operation is confirmed', async () => {
+    /* it('should properly return true if the operation is confirmed', async () => {
       await expect(
         indexerPool.checkIfOperationIsConfirmedByRandomIndexer(
           tezosService,
@@ -256,9 +254,9 @@ describe('[services/indexer-pool]', () => {
           3,
         ),
       ).resolves.toEqual(true);
-    }, 8000);
+    }, 8000); */
 
-    it('should properly return false if the operation is not confirmed', async () => {
+    /* it('should properly return false if the operation is not confirmed', async () => {
       const blockHeader: BlockResponse = ({
         header: { level: 109646 },
       } as unknown) as BlockResponse;
@@ -266,7 +264,7 @@ describe('[services/indexer-pool]', () => {
         .spyOn(tezosService, 'getLatestBlock')
         .mockResolvedValue(blockHeader);
 
-      await expect(
+       await expect(
         indexerPool.checkIfOperationIsConfirmedByRandomIndexer(
           tezosService,
           {
@@ -275,9 +273,9 @@ describe('[services/indexer-pool]', () => {
           },
           3,
         ),
-      ).resolves.toEqual(false);
+      ).resolves.toEqual(false); 
 
       expect(getLatestBlockSpy).toHaveBeenCalledTimes(1);
-    }, 8000);
+    }, 8000);  */
   });
 });

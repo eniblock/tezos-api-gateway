@@ -96,57 +96,57 @@ npm run prettier:write
 
 ### Environment variables
 
-| Name                                       | Default Value                                            | Explaination                                                 |
-| ------------------------------------------ | -------------------------------------------------------- | ------------------------------------------------------------ |
-| AMQP_URL                                   | amqp://localhost                                         | The url to link to rabbiMq server                            |
-| AMQP_QUEUE_NAME                            | injection                                                | The name of the queue to send injection message              |
-| CONTRACT_ADDRESS                           | KT1Nk7KLuuWJz8muPN1hFZhFtneepKNAsJSU                     | The smart contract address used for Generated API Web server |
-| DB_HOST                                    | localhost-service                                        | The database host                                            |
-| DB_NAME                                    | tezos_api_gateway                                        | The database name                                            |
-| DB_PORT                                    | 5432                                                     | The port to connect to database                              |
-| DB_PWD                                     | randompwd                                                | The password to connect to database                          |
-| DB_USERNAME                                | tezos-service                                            | The user name to connect to database                         |
-| LOGGER_NAME                                | TezosApiGateway                                          | The name of the logger                                       |
-| LOGGER_LEVEL                               | info                                                     | The level of the logger                                      |
-| WEB_PROCESS_NAME                           | Tezos Api Gateway                                        | The name of the process                                      |
-| WEB_PROCESS_TIMEOUT                        | 3000                                                     | The process timeout in milliseconds                          |
-| SEND_TRANSACTIONS_QUEUE_EXCHANGE           | topic_logs                                               | The exchange name that the queue should be formed by         |
-| SEND_TRANSACTIONS_QUEUE_EXCHANGE_TYPE      | topic                                                    | The exchange type                                            |
-| SEND_TRANSACTIONS_WORKER_QUEUE_ROUTING_KEY | send_transactions.\*                                     | The routing key that the queue will be formed by             |
-| TEZOS_NODE_URLS                            | https://api.tez.ie/rpc/edonet,https://edonet.smartpy.io/ | List of Tezos Node Urls, separated by comma `,`              |
-| VAULT_URL                                  | http://localhost:8300/v1/                                | The vault server URL                                         |
-| VAULT_TOKEN                                | myroot                                                   | The api token to access Vault server                         |
+| Name                                       | Default Value                                                      | Explaination                                                 |
+| ------------------------------------------ | ------------------------------------------------------------------ | ------------------------------------------------------------ |
+| AMQP_URL                                   | amqp://localhost                                                   | The url to link to rabbiMq server                            |
+| AMQP_QUEUE_NAME                            | injection                                                          | The name of the queue to send injection message              |
+| CONTRACT_ADDRESS                           | KT1LnJEtZttLAJeP45EzYvChAksRS1xE4hJ1                               | The smart contract address used for Generated API Web server |
+| DB_HOST                                    | localhost-service                                                  | The database host                                            |
+| DB_NAME                                    | tezos_api_gateway                                                  | The database name                                            |
+| DB_PORT                                    | 5432                                                               | The port to connect to database                              |
+| DB_PWD                                     | randompwd                                                          | The password to connect to database                          |
+| DB_USERNAME                                | tezos-service                                                      | The user name to connect to database                         |
+| LOGGER_NAME                                | TezosApiGateway                                                    | The name of the logger                                       |
+| LOGGER_LEVEL                               | info                                                               | The level of the logger                                      |
+| WEB_PROCESS_NAME                           | Tezos Api Gateway                                                  | The name of the process                                      |
+| WEB_PROCESS_TIMEOUT                        | 3000                                                               | The process timeout in milliseconds                          |
+| SEND_TRANSACTIONS_QUEUE_EXCHANGE           | topic_logs                                                         | The exchange name that the queue should be formed by         |
+| SEND_TRANSACTIONS_QUEUE_EXCHANGE_TYPE      | topic                                                              | The exchange type                                            |
+| SEND_TRANSACTIONS_WORKER_QUEUE_ROUTING_KEY | send_transactions.\*                                               | The routing key that the queue will be formed by             |
+| TEZOS_NODE_URLS                            | https://api.tez.ie/rpc/florencenet,https://florencenet.smartpy.io/ | List of Tezos Node Urls, separated by comma `,`              |
+| VAULT_URL                                  | http://localhost:8300/v1/                                          | The vault server URL                                         |
+| VAULT_TOKEN                                | myroot                                                             | The api token to access Vault server                         |
 
 **Indexer Environment Variables**
 
-| Name                           | Default Value                                                                         | Explaination                                                             |
-| ------------------------------ | ------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| BETTER_CALL_URL                | https://better-call.dev/v1/opg/                                                       | The Better Call API Url to retrieve information about an operation       |
-| BETTER_CALL_KEY_TO_OPERATION   | 0                                                                                     | The object key or array index to get the the information of an operation |
-| BETTER_CALL_KEY_TO_BLOCK_LEVEL | level                                                                                 | The object key representing the block level                              |
-| CONSEIL_URL                    | https://conseil-edo.cryptonomic-infra.tech:443/v2/data/tezos/edonet/operation_groups/ | The Conseil API Url to retrieve information about an operation           |
-| CONSEIL_KEY_TO_OPERATION       | operation_group                                                                       | The object key or array index to get the the information of an operation |
-| CONSEIL_KEY_TO_BLOCK_LEVEL     | blockLevel                                                                            | The object key representing the block level                              |
-| CONSEIL_API_KEY                | 503801e8-a8a0-4e7c-8c24-7bd310805843                                                  | The api key to access the Conseil Indexer                                |
-| TZSTATS_URL                    | https://api.edo.tzstats.com/explorer/op/                                              | The Tzstat API Url to retrieve information about an operation            |
-| TZSTATS_KEY_TO_OPERATION       | 0                                                                                     | The object key or array index to get the the information of an operation |
-| TZSTATS_KEY_TO_BLOCK_LEVEL     | height                                                                                | The object key representing the block level                              |
-| TZKT_URL                       | https://api.edo2net.tzkt.io/v1/operations/                                            | The Tzkt API Url to retrieve information about an operation              |
-| TZKT_KEY_TO_OPERATION          | 0                                                                                     | The object key or array index to get the the information of an operation |
-| TZKT_KEY_TO_BLOCK_LEVEL        | level                                                                                 | The object key representing the block level                              |
+| Name                           | Default Value                                                                                        | Explaination                                                             |
+| ------------------------------ | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
+| BETTER_CALL_URL                | https://api.better-call.dev/v1/opg/                                                                  | The Better Call API Url to retrieve information about an operation       |
+| BETTER_CALL_KEY_TO_OPERATION   | 0                                                                                                    | The object key or array index to get the the information of an operation |
+| BETTER_CALL_KEY_TO_BLOCK_LEVEL | level                                                                                                | The object key representing the block level                              |
+| CONSEIL_URL                    | https://conseil-florence.cryptonomic-infra.tech:443/v2/data/tezos/florencenet/operation_groups/      | The Conseil API Url to retrieve information about an operation           |
+| CONSEIL_KEY_TO_OPERATION       | operation_group                                                                                      | The object key or array index to get the the information of an operation |
+| CONSEIL_KEY_TO_BLOCK_LEVEL     | blockLevel                                                                                           | The object key representing the block level                              |
+| CONSEIL_API_KEY                | 503801e8-a8a0-4e7c-8c24-7bd310805843                                                                 | The api key to access the Conseil Indexer                                |
+| TZSTATS_URL                    | https://api.florence.tzstats.com/explorer/op/                                                        | The Tzstat API Url to retrieve information about an operation            |
+| TZSTATS_KEY_TO_OPERATION       | 0                                                                                                    | The object key or array index to get the the information of an operation |
+| TZSTATS_KEY_TO_BLOCK_LEVEL     | height                                                                                               | The object key representing the block level                              |
+| TZKT_URL                       | https://api.florencenet.tzkt.io/v1/operations/                                                       | The Tzkt API Url to retrieve information about an operation              |
+| TZKT_KEY_TO_OPERATION          | 0                                                                                                    | The object key or array index to get the the information of an operation |
+| TZKT_KEY_TO_BLOCK_LEVEL        | level                                                                                                | The object key representing the block level                              |
 
 **Test Environment Variables**
 
-| Name                        | Default Value                                            | Explaination                                    |
-| --------------------------- | -------------------------------------------------------- | ----------------------------------------------- |
-| AMQP_URL                    | amqp://localhost                                         | The url to link to rabbiMq server               |
-| DB_HOST_TEST                | localhost-service                                        | The database host                               |
-| DB_NAME_TEST                | tezos_api_gateway                                        | The database name                               |
-| DB_PORT_TEST                | 5432                                                     | The port to connect to database                 |
-| DB_PWD_TEST                 | randompwd                                                | The password to connect to database             |
-| DB_USERNAME_TEST            | tezos-service                                            | The user name to connect to database            |
-| TEZOS_NODE_EDONET_TEST      | https://api.tez.ie/rpc/edonet                            | A Tezos Node URL                                |
-| TEZOS_NODE_EDONET_TEST_URLS | https://api.tez.ie/rpc/edonet,https://edonet.smartpy.io/ | List of Tezos Node Urls, separated by comma `,` |
+| Name                        | Default Value                                                      | Explaination                                    |
+| --------------------------- | ------------------------------------------------------------------ | ----------------------------------------------- |
+| AMQP_URL                    | amqp://localhost                                                   | The url to link to rabbiMq server               |
+| DB_HOST_TEST                | localhost-service                                                  | The database host                               |
+| DB_NAME_TEST                | tezos_api_gateway                                                  | The database name                               |
+| DB_PORT_TEST                | 5432                                                               | The port to connect to database                 |
+| DB_PWD_TEST                 | randompwd                                                          | The password to connect to database             |
+| DB_USERNAME_TEST            | tezos-service                                                      | The user name to connect to database            |
+| TEZOS_NODE_EDONET_TEST      | https://api.tez.ie/rpc/florencenet                                 | A Tezos Node URL                                |
+| TEZOS_NODE_EDONET_TEST_URLS | https://api.tez.ie/rpc/florencenet,https://florencenet.smartpy.io/ | List of Tezos Node Urls, separated by comma `,` |
 
 ## Kubernetes Installation
 It is assumed that you have a cert-manager installed on your system.

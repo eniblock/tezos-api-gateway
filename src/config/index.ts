@@ -99,7 +99,7 @@ export const vaultClientConfig = {
 };
 
 export const contractAddress =
-  process.env.CONTRACT_ADDRESS || 'KT1Nk7KLuuWJz8muPN1hFZhFtneepKNAsJSU';
+  process.env.CONTRACT_ADDRESS || 'KT1LnJEtZttLAJeP45EzYvChAksRS1xE4hJ1';
 
 export const transferAmount = parseInt(2, process.env.TRANSFER_AMOUNT);
 

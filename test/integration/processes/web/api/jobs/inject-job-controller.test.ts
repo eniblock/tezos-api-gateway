@@ -12,6 +12,7 @@ import {
   signature,
   signedTransaction,
   testAccount,
+  testAccount2,
 } from '../../../../../__fixtures__/smart-contract';
 
 import { resetTable } from '../../../../../__utils__/postgre';
@@ -135,7 +136,7 @@ describe('[processes/web/api/jobs] Inject job controller', () => {
               entryPoint: 'transfer',
               entryPointParams: {
                 tokens: 1,
-                destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+                destination: testAccount2,
               },
             },
           ],

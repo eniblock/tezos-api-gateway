@@ -5,19 +5,28 @@ import { Meter, MeterProvider } from '@opentelemetry/metrics';
 import { Counter } from '@opentelemetry/api-metrics';
 
 export class MetricPrometheusService {
-  private _exporter: PrometheusExporter;
-  private _meter: Meter;
-  private _entryPointCounter: Counter;
+  private _config: MetricConfig;
+  private _exporter: PrometheusExporter | undefined;
+  private _meter: Meter | undefined;
+  private _entryPointCounter: Counter | undefined;
 
   constructor(config: MetricConfig = metricConfig) {
+    this._config = config;
+  }
+
+  public get entryPointCounter(): Counter {
+    return this._entryPointCounter as Counter;
+  }
+
+  public start() {
     this._exporter = new PrometheusExporter({
-      port: config.port,
-      preventServerStart: config.preventServerStart,
+      port: this._config.port,
+      preventServerStart: this._config.preventServerStart,
     });
     this._meter = new MeterProvider({
       exporter: this._exporter,
-      interval: config.interval,
-    }).getMeter(config.meterName);
+      interval: this._config.interval,
+    }).getMeter(this._config.meterName);
 
     this._entryPointCounter = this._meter.createCounter('entry_point_call', {
       description:
@@ -26,7 +35,9 @@ export class MetricPrometheusService {
     this._entryPointCounter.bind({ pid: process.pid.toString() });
   }
 
-  public get entryPointCounter(): Counter {
-    return this._entryPointCounter;
+  public async stop() {
+    await this._meter?.shutdown();
+    await this._exporter?.shutdown();
+    await this._exporter?.stopServer();
   }
 }
