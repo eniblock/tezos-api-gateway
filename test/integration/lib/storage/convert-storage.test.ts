@@ -10,9 +10,8 @@ import { logger } from '../../../__fixtures__/services/logger';
 import {
   FA2Contract3,
   flexibleTokenContract,
-  testAccount4,
-  testAccount5,
-  testAccount6,
+  testAccount,
+  testAccount2,
 } from '../../../__fixtures__/smart-contract';
 
 describe('[lib/storage/convert-storage]', () => {
@@ -48,8 +47,8 @@ describe('[lib/storage/convert-storage]', () => {
             key: { scopeId: 'scope1', status: 'status1' },
             value: {
               address: {
-                providerAddress: testAccount4,
-                requesterAddress: testAccount5,
+                providerAddress: testAccount,
+                requesterAddress: testAccount2,
               },
               createdAt: '2019-10-22T16:27:54.000Z',
               jwtToken: 'jwtToken',
@@ -86,8 +85,8 @@ describe('[lib/storage/convert-storage]', () => {
             key: { scopeId: 'scope1', status: 'status1' },
             value: {
               address: {
-                providerAddress: testAccount4,
-                requesterAddress: testAccount5,
+                providerAddress: testAccount,
+                requesterAddress: testAccount2,
               },
               createdAt: '2019-10-22T16:27:54.000Z',
               jwtToken: 'jwtToken',
@@ -101,8 +100,8 @@ describe('[lib/storage/convert-storage]', () => {
             key: { scopeId: 'scope2', status: 'status2' },
             value: {
               address: {
-                providerAddress: testAccount5,
-                requesterAddress: testAccount4,
+                providerAddress: testAccount2,
+                requesterAddress: testAccount,
               },
               createdAt: '2019-10-22T16:28:10.000Z',
               jwtToken: null,
@@ -141,13 +140,13 @@ describe('[lib/storage/convert-storage]', () => {
               organizations: [
                 {
                   key: {
-                    address: testAccount5,
+                    address: testAccount2,
                     jwtToken: 'jwt',
                   },
                 },
                 {
                   key: {
-                    address: testAccount6,
+                    address: 'Fake address',
                     jwtToken: 'jwt',
                   },
                 },
@@ -166,7 +165,7 @@ describe('[lib/storage/convert-storage]', () => {
           {
             key: { scopeId: 'scope1', status: 'status1' },
             value: {
-              'address.requesterAddress': testAccount5,
+              'address.requesterAddress': testAccount2,
               'address.provider': {
                 error: 'This data field does not exist in the contract storage',
               },
@@ -183,7 +182,7 @@ describe('[lib/storage/convert-storage]', () => {
         organizations: [
           {
             key: {
-              address: testAccount5,
+              address: testAccount2,
               jwtToken: 'jwt',
             },
             value: {
@@ -207,12 +206,12 @@ describe('[lib/storage/convert-storage]', () => {
               },
               name: 'toto',
               publicKey: 'toto public key',
-              publicKeyHash: testAccount5,
+              publicKeyHash: testAccount2,
             },
           },
           {
             key: {
-              address: testAccount6,
+              address: 'Fake address',
               jwtToken: 'jwt',
             },
             error: 'The current map does not contain this key',
@@ -239,7 +238,7 @@ describe('[lib/storage/convert-storage]', () => {
               organizations: [
                 {
                   key: {
-                    address: testAccount5,
+                    address: testAccount2,
                     jwtToken: 'jwt',
                   },
                   dataFields: [
@@ -254,7 +253,7 @@ describe('[lib/storage/convert-storage]', () => {
                 },
                 {
                   key: {
-                    address: testAccount4,
+                    address: testAccount,
                     jwtToken: 'jwt',
                   },
                   dataFields: [
@@ -276,7 +275,7 @@ describe('[lib/storage/convert-storage]', () => {
         organizations: [
           {
             key: {
-              address: testAccount5,
+              address: testAccount2,
               jwtToken: 'jwt',
             },
             value: {
@@ -295,7 +294,7 @@ describe('[lib/storage/convert-storage]', () => {
           },
           {
             key: {
-              address: testAccount4,
+              address: testAccount,
               jwtToken: 'jwt',
             },
             value: {
@@ -331,7 +330,7 @@ describe('[lib/storage/convert-storage]', () => {
               decimals: [
                 {
                   key: {
-                    address: testAccount5,
+                    address: testAccount2,
                     jwtToken: 'jwt',
                   },
                 },
@@ -363,7 +362,7 @@ describe('[lib/storage/convert-storage]', () => {
               organizations: [
                 {
                   key: {
-                    address: testAccount5,
+                    address: testAccount2,
                     jwtToken: 'jwt',
                   },
                   dataFields: [
@@ -387,7 +386,7 @@ describe('[lib/storage/convert-storage]', () => {
         organizations: [
           {
             key: {
-              address: testAccount5,
+              address: testAccount2,
               jwtToken: 'jwt',
             },
             value: {

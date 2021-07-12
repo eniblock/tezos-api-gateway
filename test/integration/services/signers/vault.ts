@@ -7,7 +7,6 @@ import { VaultSigner } from '../../../../src/services/signers/vault';
 import { UndefinedPublicKeyError } from '../../../../src/const/errors/undefined-public-key-error';
 import { UndefinedSignatureError } from '../../../../src/const/errors/undefined-signature-error';
 import { ClientError } from '../../../../src/const/errors/client-error';
-import { testAccount9 } from '../../../__fixtures__/smart-contract';
 
 describe('[services/signers] Vault', () => {
   const vaultSigner = new VaultSigner(vaultClientConfig, 'keyName', logger);
@@ -117,7 +116,7 @@ describe('[services/signers] Vault', () => {
           warnings: null,
         });
 
-      await expect(vaultSigner.publicKeyHash()).resolves.toEqual(testAccount9);
+      await expect(vaultSigner.publicKeyHash()).resolves.toEqual('tz1UCubRycjt5kqkdBPDvmSSxHG1oZ8AX2Cu');
 
       vaultNock.done();
     });

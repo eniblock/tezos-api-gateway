@@ -18,7 +18,6 @@ import {
   flexibleTokenContract,
   testAccount,
   testAccount2,
-  testAccount3,
 } from '../../../__fixtures__/smart-contract';
 
 import { PostgreService } from '../../../../src/services/postgre';
@@ -187,7 +186,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
       getContractMethodSpy = jest
         .spyOn(libSmartContracts, 'getContractMethod')
         .mockReturnValue(
-          (testContractMethod as unknown) as ContractMethod<ContractProvider>,
+          testContractMethod as unknown as ContractMethod<ContractProvider>,
         );
       setSignerSpy = jest.spyOn(tezosService, 'setSigner');
 
@@ -298,7 +297,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
       ).resolves.toEqual([
         {
           destination: 'contractAddress',
-          source: testAccount3,
+          source: 'tz1bPE9QnvCbK2b2RkR5nQNr7RB9oQGS7ydz',
           parameters: null,
           parameters_json:
             '{"entrypoint":"entrypoint","value":{"entrypoint":0}}',
@@ -356,7 +355,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
 
       const createBatchSpy = jest
         .spyOn(tezosService, 'createBatch')
-        .mockResolvedValue((batch as unknown) as never);
+        .mockResolvedValue(batch as unknown as never);
       const withContractCallSpy = jest.spyOn(batch, 'withContractCall');
       await sendTransactions(
         {
@@ -418,7 +417,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
       ).resolves.toEqual([
         {
           destination: 'contractAddress',
-          source: testAccount3,
+          source: 'tz1bPE9QnvCbK2b2RkR5nQNr7RB9oQGS7ydz',
           parameters: null,
           parameters_json:
             '{"entrypoint":"entrypoint","value":{"entrypoint":0}}',
@@ -432,7 +431,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
         },
         {
           destination: 'contractAddress2',
-          source: testAccount3,
+          source: 'tz1bPE9QnvCbK2b2RkR5nQNr7RB9oQGS7ydz',
           parameters: null,
           parameters_json:
             '{"entrypoint":"entrypoint","value":{"entrypoint":"entryPointParams"}}',

@@ -12,7 +12,6 @@ import {
   flexibleTokenContract,
   testAccount,
   testAccount2,
-  testAccount7,
 } from '../../../../../__fixtures__/smart-contract';
 
 import { WebProcess } from '../../../../../../src/processes/web/web-process';
@@ -75,7 +74,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
 
     it('should return 400 when a required parameter is missing', async () => {
       const { body, status } = await request.post('/api/forge/jobs').send({
-        sourceAddress: testAccount7,
+        sourceAddress: testAccount,
       });
 
       expect(status).toEqual(400);

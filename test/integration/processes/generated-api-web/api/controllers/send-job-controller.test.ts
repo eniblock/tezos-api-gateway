@@ -16,9 +16,8 @@ import { AmqpService } from '../../../../../../src/services/amqp';
 import { WebProcess } from '../../../../../../src/processes/generated-api-web/web-process';
 import {
   flexibleTokenContract,
+  testAccount,
   testAccount2,
-  testAccount7,
-  testAccount8,
 } from '../../../../../__fixtures__/smart-contract';
 
 describe('[processes/generated-api-web/api/controllers] Send job controller', () => {
@@ -56,7 +55,7 @@ describe('[processes/generated-api-web/api/controllers] Send job controller', ()
       const { body, status } = await request
         .post('/api/send/transferMany')
         .send({
-          sourceAddress: testAccount7,
+          sourceAddress: testAccount,
         });
 
       expect(status).toEqual(404);
@@ -98,9 +97,9 @@ describe('[processes/generated-api-web/api/controllers] Send job controller', ()
       const { body, status } = await request.post('/api/send/transfer').send({
         parameters: {
           tokens: 1,
-          destination: testAccount8,
+          destination: testAccount.substring(0, 35),
         },
-        secureKeyName: testAccount7,
+        secureKeyName: testAccount,
       });
 
       expect(status).toEqual(400);
@@ -118,7 +117,7 @@ describe('[processes/generated-api-web/api/controllers] Send job controller', ()
           destination: testAccount2,
           from: testAccount2,
         },
-        secureKeyName: testAccount7,
+        secureKeyName: testAccount,
       });
 
       expect(status).toEqual(400);

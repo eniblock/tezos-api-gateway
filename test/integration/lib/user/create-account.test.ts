@@ -10,10 +10,6 @@ import * as userLib from '../../../../src/lib/user/create-account';
 import { VaultClient } from '../../../../src/services/clients/vault-client';
 import { InMemorySigner } from '@taquito/signer';
 import { TezosToolkit } from '@taquito/taquito';
-import {
-  testAccount10,
-  testAccount9,
-} from '../../../__fixtures__/smart-contract';
 
 describe('[lib/user-create-account] create Tezos accounts', () => {
   const tezosService = new TezosService(tezosNodeEdonetUrl);
@@ -189,7 +185,7 @@ describe('[lib/user-create-account] create Tezos accounts', () => {
         .mockResolvedValue('publicKeyHash');
       const tezosSpy = jest
         .spyOn(tezosService, 'tezos', 'get')
-        .mockReturnValue((fakeTezos as unknown) as TezosToolkit);
+        .mockReturnValue(fakeTezos as unknown as TezosToolkit);
 
       const vaultNock1 = nock('http://localhost:8300')
         .get(`/v1/transit/keys/key1`)
@@ -270,7 +266,7 @@ describe('[lib/user-create-account] create Tezos accounts', () => {
       expect(transferFn.mock.calls).toEqual([
         [
           {
-            to: testAccount9,
+            to: 'tz1UCubRycjt5kqkdBPDvmSSxHG1oZ8AX2Cu',
             amount: 2,
           },
         ],
@@ -282,7 +278,7 @@ describe('[lib/user-create-account] create Tezos accounts', () => {
         ],
         [
           {
-            to: testAccount10,
+            to: 'tz1YCmopN9D4WgkTvnqkGExwAHSHokvApXJG',
             amount: 2,
           },
         ],

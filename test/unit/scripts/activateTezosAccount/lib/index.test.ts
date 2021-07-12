@@ -16,10 +16,6 @@ import {
 import { tezosPrivateKey } from '../../../../../src/scripts/activate-tezos-account/config';
 import { TezosService } from '../../../../../src/services/tezos';
 import { VaultSigner } from '../../../../../src/services/signers/vault';
-import {
-  testAccount10,
-  testAccount9,
-} from '../../../../__fixtures__/smart-contract';
 
 describe('[scripts/activate-tezos-account/lib/index.ts]', () => {
   afterEach(() => {
@@ -65,7 +61,7 @@ describe('[scripts/activate-tezos-account/lib/index.ts]', () => {
         .mockResolvedValue('publicKeyHash');
       const tezosSpy = jest
         .spyOn(tezosService, 'tezos', 'get')
-        .mockReturnValue((fakeTezos as unknown) as TezosToolkit);
+        .mockReturnValue(fakeTezos as unknown as TezosToolkit);
       const setSignerSpy = jest
         .spyOn(tezosService, 'setSigner')
         .mockImplementation();
@@ -159,7 +155,7 @@ describe('[scripts/activate-tezos-account/lib/index.ts]', () => {
       expect(transferFn.mock.calls).toEqual([
         [
           {
-            to: testAccount9,
+            to: 'tz1UCubRycjt5kqkdBPDvmSSxHG1oZ8AX2Cu',
             amount: 100,
           },
         ],
@@ -171,7 +167,7 @@ describe('[scripts/activate-tezos-account/lib/index.ts]', () => {
         ],
         [
           {
-            to: testAccount10,
+            to: 'tz1YCmopN9D4WgkTvnqkGExwAHSHokvApXJG',
             amount: 100,
           },
         ],

@@ -15,8 +15,8 @@ import {
   FA2Contract3,
   FA2Contract5,
   FA2Contract8,
-  testAccount4,
-  testAccount5,
+  testAccount,
+  testAccount2,
 } from '../../../../../__fixtures__/smart-contract';
 
 describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () => {
@@ -130,7 +130,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
         body: {
           accessRequests: {
             type: 'big_map',
-            value: '88055',
+            value: '90632',
           },
           organizations: {
             type: 'map',
@@ -138,42 +138,13 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
             value: [
               {
                 key: {
-                  address: testAccount4,
-                  jwtToken: 'jwt',
-                },
-                value: {
-                  name: 'tata',
-                  publicKey: 'tata public key',
-                  publicKeyHash: testAccount4,
-                  datasources: {
-                    type: 'map',
-                    size: 3,
-                    value: [
-                      {
-                        key: 'datasource4',
-                        value: 'value4',
-                      },
-                      {
-                        key: 'datasource5',
-                        value: 'value5',
-                      },
-                      {
-                        key: 'datasource6',
-                        value: 'value6',
-                      },
-                    ],
-                  },
-                },
-              },
-              {
-                key: {
-                  address: testAccount5,
+                  address: testAccount2,
                   jwtToken: 'jwt',
                 },
                 value: {
                   name: 'toto',
                   publicKey: 'toto public key',
-                  publicKeyHash: testAccount5,
+                  publicKeyHash: testAccount2,
                   datasources: {
                     type: 'map',
                     size: 3,
@@ -189,6 +160,35 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
                       {
                         key: 'datasource3',
                         value: 'value3',
+                      },
+                    ],
+                  },
+                },
+              },
+              {
+                key: {
+                  address: testAccount,
+                  jwtToken: 'jwt',
+                },
+                value: {
+                  name: 'tata',
+                  publicKey: 'tata public key',
+                  publicKeyHash: testAccount,
+                  datasources: {
+                    type: 'map',
+                    size: 3,
+                    value: [
+                      {
+                        key: 'datasource4',
+                        value: 'value4',
+                      },
+                      {
+                        key: 'datasource5',
+                        value: 'value5',
+                      },
+                      {
+                        key: 'datasource6',
+                        value: 'value6',
                       },
                     ],
                   },
@@ -213,7 +213,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
         body: {
           accessRequests: {
             type: 'big_map',
-            value: '88055',
+            value: '90632',
           },
           name: {
             error: 'This data field does not exist in the contract storage',
@@ -232,7 +232,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
               organizations: [
                 {
                   key: {
-                    address: testAccount4,
+                    address: testAccount,
                     jwtToken: 'jwt',
                   },
                 },
@@ -247,13 +247,13 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
           organizations: [
             {
               key: {
-                address: testAccount4,
+                address: testAccount,
                 jwtToken: 'jwt',
               },
               value: {
                 name: 'tata',
                 publicKey: 'tata public key',
-                publicKeyHash: testAccount4,
+                publicKeyHash: testAccount,
                 datasources: {
                   type: 'map',
                   size: 3,
@@ -289,7 +289,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
               organizations: [
                 {
                   key: {
-                    address: testAccount4,
+                    address: testAccount,
                     jwtToken: 'jwt',
                   },
                   dataFields: ['name'],
@@ -305,7 +305,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
           organizations: [
             {
               key: {
-                address: testAccount4,
+                address: testAccount,
                 jwtToken: 'jwt',
               },
               value: {
@@ -327,7 +327,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
               lastDivYear: [
                 {
                   key: {
-                    address: testAccount4,
+                    address: testAccount,
                   },
                 },
               ],

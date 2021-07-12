@@ -13,8 +13,7 @@ import {
   FA2Contract4,
   flexibleTokenContract,
   testAccount,
-  testAccount4,
-  testAccount5,
+  testAccount2,
 } from '../../../__fixtures__/smart-contract';
 import { logger } from '../../../__fixtures__/services/logger';
 
@@ -62,26 +61,26 @@ describe('[lib/storage/generateStorageResponse]', () => {
       expect(generateStorageResponse(storage!)).toEqual({
         accessRequests: {
           type: 'big_map',
-          value: '88054',
+          value: '90693',
         },
         organizations: {
           type: 'map',
           size: 2,
           value: [
             {
-              key: testAccount4,
-              value: {
-                name: 'tata',
-                publicKey: '',
-                publicKeyHash: testAccount4,
-              },
-            },
-            {
-              key: testAccount5,
+              key: testAccount2,
               value: {
                 name: 'toto',
                 publicKey: '',
-                publicKeyHash: testAccount5,
+                publicKeyHash: testAccount2,
+              },
+            },
+            {
+              key: testAccount,
+              value: {
+                name: 'tata',
+                publicKey: '',
+                publicKeyHash: testAccount,
               },
             },
           ],
@@ -99,7 +98,7 @@ describe('[lib/storage/generateStorageResponse]', () => {
       expect(generateStorageResponse(storage!)).toEqual({
         accessRequests: {
           type: 'big_map',
-          value: '88055',
+          value: '90632',
         },
         organizations: {
           type: 'map',
@@ -107,42 +106,13 @@ describe('[lib/storage/generateStorageResponse]', () => {
           value: [
             {
               key: {
-                address: testAccount4,
-                jwtToken: 'jwt',
-              },
-              value: {
-                name: 'tata',
-                publicKey: 'tata public key',
-                publicKeyHash: testAccount4,
-                datasources: {
-                  type: 'map',
-                  size: 3,
-                  value: [
-                    {
-                      key: 'datasource4',
-                      value: 'value4',
-                    },
-                    {
-                      key: 'datasource5',
-                      value: 'value5',
-                    },
-                    {
-                      key: 'datasource6',
-                      value: 'value6',
-                    },
-                  ],
-                },
-              },
-            },
-            {
-              key: {
-                address: testAccount5,
+                address: testAccount2,
                 jwtToken: 'jwt',
               },
               value: {
                 name: 'toto',
                 publicKey: 'toto public key',
-                publicKeyHash: testAccount5,
+                publicKeyHash: testAccount2,
                 datasources: {
                   type: 'map',
                   size: 3,
@@ -158,6 +128,35 @@ describe('[lib/storage/generateStorageResponse]', () => {
                     {
                       key: 'datasource3',
                       value: 'value3',
+                    },
+                  ],
+                },
+              },
+            },
+            {
+              key: {
+                address: testAccount,
+                jwtToken: 'jwt',
+              },
+              value: {
+                name: 'tata',
+                publicKey: 'tata public key',
+                publicKeyHash: testAccount,
+                datasources: {
+                  type: 'map',
+                  size: 3,
+                  value: [
+                    {
+                      key: 'datasource4',
+                      value: 'value4',
+                    },
+                    {
+                      key: 'datasource5',
+                      value: 'value5',
+                    },
+                    {
+                      key: 'datasource6',
+                      value: 'value6',
                     },
                   ],
                 },

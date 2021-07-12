@@ -16,8 +16,6 @@ import {
   flexibleTokenContract,
   testAccount,
   testAccount2,
-  testAccount7,
-  testAccount8,
 } from '../../../../../__fixtures__/smart-contract';
 
 describe('[processes/generated-api-web/api/controllers] Forge job controller', () => {
@@ -57,7 +55,7 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
       const { body, status } = await request
         .post('/api/forge/transferMany')
         .send({
-          sourceAddress: testAccount7,
+          sourceAddress: testAccount,
         });
 
       expect(status).toEqual(404);
@@ -69,7 +67,7 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
 
     it('should return 400 when a required parameter is missing', async () => {
       const { body, status } = await request.post('/api/forge/transfer').send({
-        sourceAddress: testAccount7,
+        sourceAddress: testAccount,
       });
 
       expect(status).toEqual(400);
@@ -85,7 +83,7 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
           tokens: 1,
           destination: testAccount2,
         },
-        sourceAddress: testAccount7,
+        sourceAddress: testAccount,
       });
 
       expect(status).toEqual(400);
@@ -99,9 +97,9 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
       const { body, status } = await request.post('/api/forge/transfer').send({
         parameters: {
           tokens: 1,
-          destination: testAccount8,
+          destination: testAccount.substring(0, 35),
         },
-        sourceAddress: testAccount7,
+        sourceAddress: testAccount,
       });
 
       expect(status).toEqual(400);
@@ -119,7 +117,7 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
           destination: testAccount2,
           from: testAccount2,
         },
-        sourceAddress: testAccount7,
+        sourceAddress: testAccount,
       });
 
       expect(status).toEqual(400);
@@ -142,7 +140,7 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
           tokens: 1,
           destination: testAccount2,
         },
-        sourceAddress: testAccount7,
+        sourceAddress: testAccount,
       });
 
       expect(status).toEqual(500);

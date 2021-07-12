@@ -14,7 +14,6 @@ import { PostgreService } from '../../../../../../src/services/postgre';
 import {
   FA2Contract,
   FA2Contract5,
-  FA2Contract6,
 } from '../../../../../__fixtures__/smart-contract';
 
 describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller', () => {
@@ -92,7 +91,7 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
         .mockRejectedValue(new Error());
 
       const { body, status } = await request.get(
-        '/api/entrypoints/' + FA2Contract6,
+        '/api/entrypoints/' + FA2Contract,
       );
 
       expect(status).toEqual(500);
@@ -102,7 +101,7 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
       });
 
       expect(getEntrypointSchemaSpy.mock.calls).toEqual([
-        [logger, tezosService, FA2Contract6, undefined],
+        [logger, tezosService, FA2Contract, undefined],
       ]);
     });
 
