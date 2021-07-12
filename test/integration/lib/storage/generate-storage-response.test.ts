@@ -8,7 +8,13 @@ import { getContractStorageFromTezosNode } from '../../../../src/lib/storage/get
 import { TezosService } from '../../../../src/services/tezos';
 
 import { tezosNodeEdonetUrl } from '../../../__fixtures__/config';
-import { flexibleTokenContract } from '../../../__fixtures__/smart-contract';
+import {
+  FA2Contract3,
+  FA2Contract4,
+  flexibleTokenContract,
+  testAccount,
+  testAccount2,
+} from '../../../__fixtures__/smart-contract';
 import { logger } from '../../../__fixtures__/services/logger';
 
 describe('[lib/storage/generateStorageResponse]', () => {
@@ -29,19 +35,19 @@ describe('[lib/storage/generateStorageResponse]', () => {
       expect(generateStorageResponse(storage!)).toEqual({
         allowed: {
           type: 'big_map',
-          value: '37398',
+          value: '88052',
         },
         balances: {
           type: 'big_map',
-          value: '37399',
+          value: '88053',
         },
         decimals: 10,
         locked: false,
         name: 'name',
-        newOwner: 'tz1iaJAxXAa5SCkdPBLA7f5Lj4LXS5vNa33E',
-        owner: 'tz1iaJAxXAa5SCkdPBLA7f5Lj4LXS5vNa33E',
+        newOwner: testAccount,
+        owner: testAccount,
         symbol: 'symbol',
-        totalSupply: 100000000000000000,
+        totalSupply: 40,
       });
     });
 
@@ -49,32 +55,32 @@ describe('[lib/storage/generateStorageResponse]', () => {
       const storage = await getContractStorageFromTezosNode(
         logger,
         tezosService,
-        'KT1NxDQoWRj1TLrbpCtkSX6eVyrkxwZEdGfR',
+        FA2Contract4,
       );
 
       expect(generateStorageResponse(storage!)).toEqual({
         accessRequests: {
           type: 'big_map',
-          value: '59941',
+          value: '90693',
         },
         organizations: {
           type: 'map',
           size: 2,
           value: [
             {
-              key: 'tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw',
-              value: {
-                name: 'tata',
-                publicKey: '',
-                publicKeyHash: 'tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw',
-              },
-            },
-            {
-              key: 'tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK',
+              key: testAccount2,
               value: {
                 name: 'toto',
                 publicKey: '',
-                publicKeyHash: 'tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK',
+                publicKeyHash: testAccount2,
+              },
+            },
+            {
+              key: testAccount,
+              value: {
+                name: 'tata',
+                publicKey: '',
+                publicKeyHash: testAccount,
               },
             },
           ],
@@ -86,13 +92,13 @@ describe('[lib/storage/generateStorageResponse]', () => {
       const storage = await getContractStorageFromTezosNode(
         logger,
         tezosService,
-        'KT1TVGnujXh7VhaSP7K1aEji5HvAKRyn6cXf',
+        FA2Contract3,
       );
 
       expect(generateStorageResponse(storage!)).toEqual({
         accessRequests: {
           type: 'big_map',
-          value: '59822',
+          value: '90632',
         },
         organizations: {
           type: 'map',
@@ -100,42 +106,13 @@ describe('[lib/storage/generateStorageResponse]', () => {
           value: [
             {
               key: {
-                address: 'tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw',
-                jwtToken: 'jwt',
-              },
-              value: {
-                name: 'tata',
-                publicKey: 'tata public key',
-                publicKeyHash: 'tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw',
-                datasources: {
-                  type: 'map',
-                  size: 3,
-                  value: [
-                    {
-                      key: 'datasource4',
-                      value: 'value4',
-                    },
-                    {
-                      key: 'datasource5',
-                      value: 'value5',
-                    },
-                    {
-                      key: 'datasource6',
-                      value: 'value6',
-                    },
-                  ],
-                },
-              },
-            },
-            {
-              key: {
-                address: 'tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK',
+                address: testAccount2,
                 jwtToken: 'jwt',
               },
               value: {
                 name: 'toto',
                 publicKey: 'toto public key',
-                publicKeyHash: 'tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK',
+                publicKeyHash: testAccount2,
                 datasources: {
                   type: 'map',
                   size: 3,
@@ -151,6 +128,35 @@ describe('[lib/storage/generateStorageResponse]', () => {
                     {
                       key: 'datasource3',
                       value: 'value3',
+                    },
+                  ],
+                },
+              },
+            },
+            {
+              key: {
+                address: testAccount,
+                jwtToken: 'jwt',
+              },
+              value: {
+                name: 'tata',
+                publicKey: 'tata public key',
+                publicKeyHash: testAccount,
+                datasources: {
+                  type: 'map',
+                  size: 3,
+                  value: [
+                    {
+                      key: 'datasource4',
+                      value: 'value4',
+                    },
+                    {
+                      key: 'datasource5',
+                      value: 'value5',
+                    },
+                    {
+                      key: 'datasource6',
+                      value: 'value6',
                     },
                   ],
                 },

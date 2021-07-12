@@ -253,7 +253,7 @@ Supported node gateway public services:
 
 - Conseil’s node (cryptonomic) (USA)
 
-- Your own node 
+- Your own node
 
 The Gateway Pool is built in typescript and uses Taquito to forge and submit transactions to Tezos.
 

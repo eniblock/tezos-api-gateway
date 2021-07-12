@@ -1,18 +1,23 @@
 import supertest from 'supertest';
 import { WebProcess } from '../../../../../../src/processes/web/web-process';
 import {
+  postgreConfig,
   serverConfig,
   tezosNodeEdonetUrl,
 } from '../../../../../__fixtures__/config';
 import { TezosService } from '../../../../../../src/services/tezos';
 import { SignerFactory } from '../../../../../../src/services/signer-factory';
 import { FakeSigner } from '../../../../../../src/services/signers/fake-signer';
+import { PostgreService } from '../../../../../../src/services/postgre';
 
 describe('[processes/web/api/storage] Deploy Contract Controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
   const tezosService = new TezosService(tezosNodeEdonetUrl);
+  const postgreService = new PostgreService(postgreConfig);
   const fakeSigner = new FakeSigner('pkh');
   const signerFactory = new SignerFactory();
+
+  webProcess.postgreService = postgreService;
 
   const request: supertest.SuperTest<supertest.Test> = supertest(
     webProcess.app,

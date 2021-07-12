@@ -140,7 +140,7 @@ describe('[lib/generate-path-object] Index', () => {
             responses: FORGE_RESPONSE_SCHEMA,
           },
         },
-        '/forge/set_metdata': {
+        '/forge/set_metadata': {
           post: {
             requestBody: {
               description: 'Necessary information to forge a transaction',
@@ -380,7 +380,7 @@ describe('[lib/generate-path-object] Index', () => {
             responses: FORGE_RESPONSE_SCHEMA,
           },
         },
-        '/send/set_metdata': {
+        '/send/set_metadata': {
           post: {
             requestBody: {
               description: 'Necessary information to send a transaction',

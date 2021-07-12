@@ -14,6 +14,11 @@ import { PostgreService } from '../../../../../../src/services/postgre';
 import * as jobsLib from '../../../../../../src/lib/jobs/send-transactions';
 import { AmqpService } from '../../../../../../src/services/amqp';
 import { WebProcess } from '../../../../../../src/processes/generated-api-web/web-process';
+import {
+  flexibleTokenContract,
+  testAccount,
+  testAccount2,
+} from '../../../../../__fixtures__/smart-contract';
 
 describe('[processes/generated-api-web/api/controllers] Send job controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -50,7 +55,7 @@ describe('[processes/generated-api-web/api/controllers] Send job controller', ()
       const { body, status } = await request
         .post('/api/send/transferMany')
         .send({
-          sourceAddress: 'tz1hXdta423VkiVrxDzX8VXe2sGwCiiZfPo7',
+          sourceAddress: testAccount,
         });
 
       expect(status).toEqual(404);
@@ -64,9 +69,9 @@ describe('[processes/generated-api-web/api/controllers] Send job controller', ()
       const { body, status } = await request.post('/api/send/lock').send({
         parameters: {
           tokens: 1,
-          destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+          destination: testAccount2,
         },
-        secureKeyName: 'tz1hXdta423VkiVrxDzX8VXe2sGwCiiZfPo7',
+        secureKeyName: testAccount2,
       });
 
       expect(status).toEqual(400);
@@ -92,9 +97,9 @@ describe('[processes/generated-api-web/api/controllers] Send job controller', ()
       const { body, status } = await request.post('/api/send/transfer').send({
         parameters: {
           tokens: 1,
-          destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqr',
+          destination: testAccount.substring(0, 35),
         },
-        secureKeyName: 'tz1hXdta423VkiVrxDzX8VXe2sGwCiiZfPo7',
+        secureKeyName: testAccount,
       });
 
       expect(status).toEqual(400);
@@ -109,10 +114,10 @@ describe('[processes/generated-api-web/api/controllers] Send job controller', ()
       const { body, status } = await request.post('/api/send/transfer').send({
         parameters: {
           tokens: 1,
-          destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
-          from: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+          destination: testAccount2,
+          from: testAccount2,
         },
-        secureKeyName: 'tz1hXdta423VkiVrxDzX8VXe2sGwCiiZfPo7',
+        secureKeyName: testAccount,
       });
 
       expect(status).toEqual(400);
@@ -134,7 +139,7 @@ describe('[processes/generated-api-web/api/controllers] Send job controller', ()
         secureKeyName: 'toto',
         parameters: {
           tokens: 1,
-          destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+          destination: testAccount2,
         },
       });
 
@@ -199,7 +204,7 @@ describe('[processes/generated-api-web/api/controllers] Send job controller', ()
           secureKeyName: 'toto',
           parameters: {
             tokens: 1,
-            destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+            destination: testAccount2,
           },
         });
 
@@ -221,7 +226,7 @@ describe('[processes/generated-api-web/api/controllers] Send job controller', ()
           secureKeyName: 'toto',
           parameters: {
             tokens: 1,
-            destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+            destination: testAccount2,
           },
         });
 
@@ -243,11 +248,11 @@ describe('[processes/generated-api-web/api/controllers] Send job controller', ()
             {
               transactions: [
                 {
-                  contractAddress: 'KT1Nk7KLuuWJz8muPN1hFZhFtneepKNAsJSU',
+                  contractAddress: flexibleTokenContract,
                   entryPoint: 'transfer',
                   entryPointParams: {
                     tokens: 1,
-                    destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+                    destination: testAccount2,
                   },
                 },
               ],

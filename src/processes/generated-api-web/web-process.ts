@@ -115,6 +115,7 @@ export class WebProcess extends AbstractProcess {
 
     await this._postgreService.initializeDatabase();
     await this._amqpService.start();
+    await this._metricPrometheusService.start();
 
     const tezosService = await this.gatewayPool.getTezosService();
 
@@ -168,6 +169,7 @@ export class WebProcess extends AbstractProcess {
 
     await this._postgreService.disconnect();
     await this._amqpService.stop();
+    await this._metricPrometheusService.stop();
 
     await new Promise((resolve) => this._server.close(resolve));
     this._isRunning = false;

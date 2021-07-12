@@ -68,14 +68,14 @@ def test():
 
     organizations = sp.map(
             {
-                'tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK': sp.record(
+                'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw': sp.record(
                                 name = 'toto',
-                                publicKeyHash = sp.address('tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK'),
+                                publicKeyHash = sp.address('tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw'),
                                 publicKey = '',
                             ),
-                'tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw': sp.record(
+                'tz1hdQscorfqMzFqYxnrApuS5i6QSTuoAp3w': sp.record(
                                 name = 'tata',
-                                publicKeyHash = sp.address('tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw'),
+                                publicKeyHash = sp.address('tz1hdQscorfqMzFqYxnrApuS5i6QSTuoAp3w'),
                                 publicKey = '',
                             )
             }
@@ -89,8 +89,8 @@ def test():
             ): sp.record(
                     
                     address = sp.record (
-                        requesterAddress = sp.address('tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK'),
-                        providerAddress = sp.address('tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw')
+                        requesterAddress = sp.address('tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw'),
+                        providerAddress = sp.address('tz1hdQscorfqMzFqYxnrApuS5i6QSTuoAp3w')
                     ),
                     createdAt = sp.timestamp(1571761674),
                     jwtToken = sp.some('jwtToken')
@@ -102,8 +102,8 @@ def test():
             ): sp.record(
                     
                     address = sp.record (
-                        requesterAddress = sp.address('tz1SCHPVsh2xvNWJSUSqkn3Hf7ri6d3FUjqw'),
-                        providerAddress = sp.address('tz1XByDAXZZVEAb6HPxTBsPPaEbHvtPVXmhK')
+                        requesterAddress = sp.address('tz1hdQscorfqMzFqYxnrApuS5i6QSTuoAp3w'),
+                        providerAddress = sp.address('tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw')
                     ),
                     createdAt = sp.timestamp(1571761690),
                     jwtToken = sp.none
