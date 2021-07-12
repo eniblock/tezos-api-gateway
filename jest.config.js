@@ -13,5 +13,5 @@ module.exports = {
     '<rootDir>/test/__utils__',
     '<rootDir>/test/__fixtures__',
   ],
-  // bail: true
+  testEnvironment: "node"
 };
