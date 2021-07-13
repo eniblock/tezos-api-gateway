@@ -6,6 +6,8 @@ import sendJobController from './send-job-controller';
 import { PostgreService } from '../../../../services/postgre';
 import { AmqpService } from '../../../../services/amqp';
 import { GatewayPool } from '../../../../services/gateway-pool';
+import getJobController from './get-job-controller';
+import { MetricPrometheusService } from '../../../../services/metric-prometheus';
 
 /**
  * Setup jobs namespace route.
@@ -18,6 +20,7 @@ export default function registerJobsRoutes(
   gatewayPool: GatewayPool,
   postgreService: PostgreService,
   amqpService: AmqpService,
+  metricPrometheusService: MetricPrometheusService,
 ): Router {
   router.post(
     '/forge/jobs',
@@ -40,7 +43,13 @@ export default function registerJobsRoutes(
     sendJobController.sendTransactionsAndCreateJob(
       amqpService,
       postgreService,
+      metricPrometheusService,
     ) as Application,
+  );
+
+  router.get(
+    '/job/:id',
+    getJobController.getJobById(postgreService) as Application,
   );
 
   return router;

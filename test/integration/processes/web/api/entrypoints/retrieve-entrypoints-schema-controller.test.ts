@@ -11,6 +11,10 @@ import {
   tezosNodeEdonetUrl,
 } from '../../../../../__fixtures__/config';
 import { PostgreService } from '../../../../../../src/services/postgre';
+import {
+  FA2Contract,
+  FA2Contract5,
+} from '../../../../../__fixtures__/smart-contract';
 
 describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -55,7 +59,7 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
 
     it('should return 400 when one of the query entry points is not in the contract', async () => {
       const { body, status } = await request
-        .get('/api/entrypoints/KT1NjK4eGjLbWHB1M75tGbAsPatPCLudTKp1')
+        .get('/api/entrypoints/' + FA2Contract)
         .query({
           entryPoints: ['nonexistentEntryPoint', 'mint'],
         });
@@ -64,14 +68,14 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
       expect(body).toEqual({
         message:
           'The given entryPoint nonexistentEntryPoint does not exist in the contract entryPoint ' +
-          'list: balance_of,mint,set_administrator,set_metdata,set_pause,transfer,update_operators',
+          'list: balance_of,mint,set_administrator,set_metadata,set_pause,transfer,update_operators',
         status: 400,
       });
     });
 
     it('should return 404 when the contract address does not exist', async () => {
       const { body, status } = await request.get(
-        '/api/entrypoints/KT1938ykzsYS1FR3WAyTa2BUTuTadtV1M9v8',
+        '/api/entrypoints/' + FA2Contract5,
       );
 
       expect(status).toEqual(404);
@@ -87,7 +91,7 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
         .mockRejectedValue(new Error());
 
       const { body, status } = await request.get(
-        '/api/entrypoints/KT1AdFwUkfeqpESsrXuD5aRdycJw7UNhbdTz',
+        '/api/entrypoints/' + FA2Contract,
       );
 
       expect(status).toEqual(500);
@@ -97,18 +101,13 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
       });
 
       expect(getEntrypointSchemaSpy.mock.calls).toEqual([
-        [
-          logger,
-          tezosService,
-          'KT1AdFwUkfeqpESsrXuD5aRdycJw7UNhbdTz',
-          undefined,
-        ],
+        [logger, tezosService, FA2Contract, undefined],
       ]);
     });
 
     it('should return 200 and the schema of all the contract entrypoints if "entryPoint" is not defined', async () => {
       const { body, status } = await request.get(
-        '/api/entrypoints/KT1NjK4eGjLbWHB1M75tGbAsPatPCLudTKp1',
+        '/api/entrypoints/' + FA2Contract,
       );
 
       expect({ status, body }).toEqual({
@@ -203,7 +202,7 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
               michelson: { prim: 'address' },
             },
             {
-              entryPoint: 'set_metdata',
+              entryPoint: 'set_metadata',
               schema: {
                 k: 'string',
                 v: 'bytes',
@@ -287,7 +286,7 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
             'balance_of',
             'mint',
             'set_administrator',
-            'set_metdata',
+            'set_metadata',
             'set_pause',
             'transfer',
             'update_operators',
@@ -298,7 +297,7 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
 
     it('should return 200 and the entrypoint schema when the entryPoint specified is valid', async () => {
       const { body, status } = await request
-        .get('/api/entrypoints/KT1NjK4eGjLbWHB1M75tGbAsPatPCLudTKp1')
+        .get('/api/entrypoints/' + FA2Contract)
         .query({
           entryPoints: ['mint'],
         });
@@ -344,7 +343,7 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
             'balance_of',
             'mint',
             'set_administrator',
-            'set_metdata',
+            'set_metadata',
             'set_pause',
             'transfer',
             'update_operators',
@@ -355,7 +354,7 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
 
     it('should return 200 and the entrypoint schema when two valid entryPoints are specified', async () => {
       const { body, status } = await request
-        .get('/api/entrypoints/KT1NjK4eGjLbWHB1M75tGbAsPatPCLudTKp1')
+        .get('/api/entrypoints/' + FA2Contract)
         .query({
           entryPoints: ['mint', 'set_pause'],
         });
@@ -406,7 +405,7 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
             'balance_of',
             'mint',
             'set_administrator',
-            'set_metdata',
+            'set_metadata',
             'set_pause',
             'transfer',
             'update_operators',

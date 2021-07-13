@@ -8,12 +8,16 @@ import { PostgreService } from '../../../services/postgre';
 import { AmqpService } from '../../../services/amqp';
 import { GatewayPool } from '../../../services/gateway-pool';
 import { OpenAPIV3 } from 'express-openapi-validator/dist/framework/types';
+import { SignerFactory } from '../../../services/signer-factory';
+import { MetricPrometheusService } from '../../../services/metric-prometheus';
 
 export default function setupRoutes(
   app: ExpressApp,
   gatewayPool: GatewayPool,
   postgreService: PostgreService,
   amqpService: AmqpService,
+  signerFactory: SignerFactory,
+  metricPrometheusService: MetricPrometheusService,
   forgeAndSendPathObject: OpenAPIV3.PathsObject,
 ): ExpressApp {
   const router = createRouter();
@@ -23,9 +27,10 @@ export default function setupRoutes(
     gatewayPool,
     postgreService,
     amqpService,
+    metricPrometheusService,
     forgeAndSendPathObject,
   );
-  registerStorageRoutes(router, gatewayPool);
+  registerStorageRoutes(router, gatewayPool, signerFactory);
   registerEntryPointsRoutes(router, gatewayPool);
 
   app.use('/api', router);

@@ -17,6 +17,7 @@ import { logger } from '../../../../../__fixtures__/services/logger';
 import {
   flexibleTokenContract,
   testAccount,
+  testAccount2,
 } from '../../../../../__fixtures__/smart-contract';
 
 describe('[processes/web/api/jobs] Send job controller', () => {
@@ -71,7 +72,7 @@ describe('[processes/web/api/jobs] Send job controller', () => {
             entryPoint: 'transfer',
             entryPointParams: {
               tokens: 1,
-              destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+              destination: testAccount2,
             },
             sourceAddress: testAccount,
           },
@@ -101,7 +102,7 @@ describe('[processes/web/api/jobs] Send job controller', () => {
             entryPoint: 'transfer',
             entryPointParams: {
               tokens: 1,
-              destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+              destination: testAccount2,
             },
           },
         ],
@@ -172,7 +173,7 @@ describe('[processes/web/api/jobs] Send job controller', () => {
               entryPoint: 'transfer',
               entryPointParams: {
                 tokens: 1,
-                destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+                destination: testAccount2,
               },
             },
           ],
@@ -200,7 +201,7 @@ describe('[processes/web/api/jobs] Send job controller', () => {
               entryPoint: 'transfer',
               entryPointParams: {
                 tokens: 1,
-                destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+                destination: testAccount2,
               },
             },
             {
@@ -208,7 +209,7 @@ describe('[processes/web/api/jobs] Send job controller', () => {
               entryPoint: 'transfer',
               entryPointParams: {
                 tokens: 1,
-                destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+                destination: testAccount2,
               },
             },
           ],
@@ -236,7 +237,7 @@ describe('[processes/web/api/jobs] Send job controller', () => {
                   entryPoint: 'transfer',
                   entryPointParams: {
                     tokens: 1,
-                    destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+                    destination: testAccount2,
                   },
                 },
                 {
@@ -244,7 +245,7 @@ describe('[processes/web/api/jobs] Send job controller', () => {
                   entryPoint: 'transfer',
                   entryPointParams: {
                     tokens: 1,
-                    destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+                    destination: testAccount2,
                   },
                 },
               ],

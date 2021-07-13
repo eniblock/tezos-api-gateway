@@ -16,6 +16,8 @@ import { logger } from '../../../__fixtures__/services/logger';
 import {
   FA2Contract,
   flexibleTokenContract,
+  testAccount,
+  testAccount2,
 } from '../../../__fixtures__/smart-contract';
 
 import { PostgreService } from '../../../../src/services/postgre';
@@ -457,7 +459,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
                 entryPoint: 'transfer',
                 entryPointParams: {
                   fake_tokens: 1,
-                  destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+                  destination: testAccount2,
                 },
               },
             ],
@@ -484,7 +486,9 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
           operation_hash: null,
           status: 'error',
           error_message:
-            'The given entry point params {"fake_tokens":1,"destination":"tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw"} does not match the schema: {"destination":"address","tokens":"nat"}',
+            'The given entry point params {"fake_tokens":1,"destination":"' +
+            testAccount2 +
+            '"} does not match the schema: {"destination":"address","tokens":"nat"}',
         },
       ]);
     });
@@ -502,7 +506,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
                 entryPoint: 'mint',
                 entryPointParams: {
                   amount: 100,
-                  address: 'tz1iaJAxXAa5SCkdPBLA7f5Lj4LXS5vNa33E',
+                  address: testAccount,
                   token_id: 1,
                   metadata: [
                     {
@@ -554,7 +558,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
                 entryPoint: 'transfer',
                 entryPointParams: {
                   fake_tokens: 1,
-                  destination: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+                  destination: testAccount2,
                 },
               },
             ],

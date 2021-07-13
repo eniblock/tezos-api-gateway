@@ -6,7 +6,11 @@ import { ClientError } from '../../../../src/const/errors/client-error';
 import { TezosService } from '../../../../src/services/tezos';
 
 import { tezosNodeEdonetUrl } from '../../../__fixtures__/config';
-import { flexibleTokenContract } from '../../../__fixtures__/smart-contract';
+import {
+  FA2Contract5,
+  flexibleTokenContract,
+  testAccount,
+} from '../../../__fixtures__/smart-contract';
 import { logger } from '../../../__fixtures__/services/logger';
 
 describe('[lib/storage/get-contract-storage]', () => {
@@ -27,15 +31,19 @@ describe('[lib/storage/get-contract-storage]', () => {
       expect(storage).toBeDefined();
       expect(JSON.stringify(storage)).toEqual(
         '{' +
-          '"allowed":"37398",' +
-          '"balances":"37399",' +
+          '"allowed":"88052",' +
+          '"balances":"88053",' +
           '"decimals":"10",' +
           '"locked":false,' +
           '"name":"name",' +
-          '"newOwner":"tz1iaJAxXAa5SCkdPBLA7f5Lj4LXS5vNa33E",' +
-          '"owner":"tz1iaJAxXAa5SCkdPBLA7f5Lj4LXS5vNa33E",' +
+          '"newOwner":"' +
+          testAccount +
+          '",' +
+          '"owner":"' +
+          testAccount +
+          '",' +
           '"symbol":"symbol",' +
-          '"totalSupply":"100000000000000000"' +
+          '"totalSupply":"40"' +
           '}',
       );
     });
@@ -44,11 +52,7 @@ describe('[lib/storage/get-contract-storage]', () => {
       const loggerInfoSpy = jest.spyOn(logger, 'info');
 
       await expect(
-        getContractStorageFromTezosNode(
-          logger,
-          tezosService,
-          'KT1938ykzsYS1FR3WAyTa2BUTuTadtV1M9v8',
-        ),
+        getContractStorageFromTezosNode(logger, tezosService, FA2Contract5),
       ).rejects.toThrow(
         new ClientError({
           message: 'Http error response: (404) ',
@@ -59,7 +63,7 @@ describe('[lib/storage/get-contract-storage]', () => {
       expect(loggerInfoSpy.mock.calls).toEqual([
         [
           {
-            contractAddress: 'KT1938ykzsYS1FR3WAyTa2BUTuTadtV1M9v8',
+            contractAddress: FA2Contract5,
             message: 'Http error response: (404) ',
           },
           '[lib/storage/get-contract-storage/#getContractStorageFromTezosNode] A client error happened while retrieving contract storage from tezos node',
@@ -133,19 +137,19 @@ describe('[lib/storage/get-contract-storage]', () => {
       expect(storage).toEqual({
         allowed: {
           type: 'big_map',
-          value: '37398',
+          value: '88052',
         },
         balances: {
           type: 'big_map',
-          value: '37399',
+          value: '88053',
         },
         decimals: 10,
         locked: false,
         name: 'name',
-        newOwner: 'tz1iaJAxXAa5SCkdPBLA7f5Lj4LXS5vNa33E',
-        owner: 'tz1iaJAxXAa5SCkdPBLA7f5Lj4LXS5vNa33E',
+        newOwner: testAccount,
+        owner: testAccount,
         symbol: 'symbol',
-        totalSupply: 100000000000000000,
+        totalSupply: 40,
       });
     });
 
@@ -160,7 +164,7 @@ describe('[lib/storage/get-contract-storage]', () => {
       expect(storage).toEqual({
         allowed: {
           type: 'big_map',
-          value: '37398',
+          value: '88052',
         },
         age: {
           error: 'This data field does not exist in the contract storage',
@@ -181,7 +185,7 @@ describe('[lib/storage/get-contract-storage]', () => {
       expect(storage).toEqual({
         allowed: {
           type: 'big_map',
-          value: '37398',
+          value: '88052',
         },
         age: {
           error: 'This data field does not exist in the contract storage',

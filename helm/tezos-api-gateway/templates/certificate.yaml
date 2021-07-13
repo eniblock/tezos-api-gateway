@@ -1,0 +1,13 @@
+kind: Certificate
+apiVersion: cert-manager.io/v1alpha2
+metadata:
+  name: {{ include "tezos-api-gateway.serviceAccountName" . }}-rabbitmq
+  labels:
+    {{- include "tezos-api-gateway.labels" . | nindent 4 }}
+spec:
+  dnsNames:
+    - {{ .Values.rabbitmq.loadBalancer.host | quote }}
+  issuerRef:
+    kind: {{ .Values.rabbitmq.loadBalancer.issuerRef.kind }}
+    name: {{ .Values.rabbitmq.loadBalancer.issuerRef.name }}
+  secretName: {{ .Values.rabbitmq.loadBalancer.secretName }}

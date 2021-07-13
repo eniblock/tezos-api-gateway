@@ -13,6 +13,10 @@ spec:
       targetPort: 3333
       protocol: TCP
       name: http
+    - port: 9464
+      targetPort: 9464
+      protocol: TCP
+      name: prometheus
   selector:
     {{- include "tezos-api-gateway.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: api

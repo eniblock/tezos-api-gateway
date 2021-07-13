@@ -14,5 +14,10 @@
             "documentation": null
         }
     },
-    "parameters": {}
+    "parameters": {},
+    "recipe": {
+        "k8s": {
+            "enabled": true
+        }
+    }
 }

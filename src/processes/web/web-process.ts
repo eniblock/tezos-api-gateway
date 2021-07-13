@@ -15,6 +15,8 @@ import { errorHandler } from './middleware/error-handler';
 import { AmqpService } from '../../services/amqp';
 import { AbstractProcess } from '../abstract-process';
 import { GatewayPool } from '../../services/gateway-pool';
+import { SignerFactory } from '../../services/signer-factory';
+import { MetricPrometheusService } from '../../services/metric-prometheus';
 
 export interface WebConfig {
   server: {
@@ -31,6 +33,8 @@ export class WebProcess extends AbstractProcess {
   protected _postgreService: PostgreService;
   private _gatewayPool: GatewayPool;
   protected _amqpService: AmqpService;
+  private _signerFactory: SignerFactory;
+  private _metricPrometheusService: MetricPrometheusService;
 
   constructor(config: WebConfig) {
     super(webProcessConfig, logger);
@@ -41,6 +45,8 @@ export class WebProcess extends AbstractProcess {
     this._postgreService = new PostgreService();
     this._gatewayPool = new GatewayPool(tezosNodeUrls, logger);
     this._amqpService = new AmqpService(amqpConfig, this.logger);
+    this._signerFactory = new SignerFactory();
+    this._metricPrometheusService = new MetricPrometheusService();
 
     this.expressSetup();
   }
@@ -73,6 +79,24 @@ export class WebProcess extends AbstractProcess {
     return this._gatewayPool;
   }
 
+  public get signerFactory(): SignerFactory {
+    return this._signerFactory;
+  }
+
+  public set signerFactory(signerFactory: SignerFactory) {
+    this._signerFactory = signerFactory;
+  }
+
+  public get metricPrometheusService(): MetricPrometheusService {
+    return this._metricPrometheusService;
+  }
+
+  public set metricPrometheusService(
+    metricPrometheus: MetricPrometheusService,
+  ) {
+    this._metricPrometheusService = metricPrometheus;
+  }
+
   /**
    * Start steps:
    *  - Check if the web process is already running
@@ -87,12 +111,15 @@ export class WebProcess extends AbstractProcess {
 
     await this._postgreService.initializeDatabase();
     await this._amqpService.start();
+    await this._metricPrometheusService.start();
 
     setupRoutes(
       this._app,
       this._gatewayPool,
       this._postgreService,
       this._amqpService,
+      this._signerFactory,
+      this._metricPrometheusService,
     );
 
     this.appPostConfig();
@@ -120,6 +147,7 @@ export class WebProcess extends AbstractProcess {
 
     await this._postgreService.disconnect();
     await this._amqpService.stop();
+    await this._metricPrometheusService.stop();
 
     await new Promise((resolve) => this._server.close(resolve));
     this._isRunning = false;

@@ -20,13 +20,17 @@ test:
     DB_HOST_TEST: postgres
     AMQP_URL: amqp://rabbitmq
   before_script:
+    - apk add curl bash python3
+    - wget -O - https://smartpy.io/cli/install.sh | sh -s local-install /usr/local/smartpy/
     - npm i
   script:
     - npm test
   only:
+    refs:
+      - merge_requests
     changes:
       - src/**/*
-      - test/*
+      - test/**/*
       - "*.json"
       - "*.js"
 

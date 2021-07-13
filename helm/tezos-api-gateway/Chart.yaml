@@ -29,8 +29,8 @@ dependencies:
     version: "10.2.5"
     repository: "https://charts.bitnami.com/bitnami"
   - name: rabbitmq
-    version: "8.8.0"
+    version: "8.16.3"
     repository: "https://charts.bitnami.com/bitnami"
   - name: vault
-    version: "1.0.2-develop.10"
+    version: "1.0.2-develop.21"
     repository: "oci://registry.gitlab.com/xdev-tech/xdev-enterprise-business-network/vault/helm"
