@@ -5,7 +5,7 @@ export default {
     post: {
       summary: 'Create user accounts',
       description:
-        'Create vault keys for by user Id, activate the accounts on the blockchain network, and return the Tezos address',
+        'Create vault keys for userId, activate the accounts on the blockchain network, and return the Tezos address, these are delegated accounts because Vault will be able to sign operations on your behalf since it genarate public/private keys and store them',
       requestBody: {
         description:
           'list of the identifiers of the users to be created, and the master key id to activate them',
@@ -155,6 +155,61 @@ export default {
                       nullable: true,
                       description: 'account identifier',
                     },
+                  },
+                },
+              },
+            },
+          },
+        },
+        400: error[400],
+        404: error[404],
+        500: error.default,
+      },
+    },
+  },
+  '/user/add': {
+    post: {
+      summary:
+        'Associate an user id with a public key into Vault',
+      description: 'Associate an user id with a public key into Vault, this is a self managed account because Vault will only store your public key',
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['userId', 'publicKey'],
+              properties: {
+                userId: {
+                  type: 'string',
+                  description: 'User account identifier',
+                },
+                publicKey: {
+                  $ref: '#/components/schemas/tezos_address',
+                  description:
+                    'The Tezos public key to associate with the user id',
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: 'successful association of user id / public key',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  userId: {
+                    type: 'string',
+                    description: 'User account identifier',
+                  },
+                  account: {
+                    type: 'string',
+                    description: 'public key hash of the created account',
                   },
                 },
               },
