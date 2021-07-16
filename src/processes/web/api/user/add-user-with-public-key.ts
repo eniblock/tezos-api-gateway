@@ -1,15 +1,15 @@
 import { NextFunction, Request, Response } from 'express';
-import { AddUserByPublicKeyParams } from '../../../../const/interfaces/user/add/add-user-by-public-key';
+import { AddUserWithPublicKeyParams } from '../../../../const/interfaces/user/add/add-user-with-public-key';
 import { logger } from '../../../../services/logger';
 import { GatewayPool } from '../../../../services/gateway-pool';
 import { StatusCodes } from 'http-status-codes';
 import { VaultClient } from '../../../../services/clients/vault-client';
 import { vaultClientConfig } from '../../../../config';
 
-function addUserByPublicKey(gatewayPool: GatewayPool) {
+function addUserWithPublicKey(gatewayPool: GatewayPool) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { userId, publicKey }: AddUserByPublicKeyParams = req.body;
+      const { userId, publicKey }: AddUserWithPublicKeyParams = req.body;
 
       logger.info(
         { userId, publicKey },
@@ -40,4 +40,4 @@ function addUserByPublicKey(gatewayPool: GatewayPool) {
   };
 }
 
-export default { addUserByPublicKey };
+export default { addUserWithPublicKey };

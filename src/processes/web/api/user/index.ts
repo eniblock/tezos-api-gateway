@@ -4,7 +4,7 @@ import { GatewayPool } from '../../../../services/gateway-pool';
 import createUserController from './create-user-controller';
 import getUserController from './get-user-controller';
 import getUserByAddressController from './get-user-by-address-controller';
-import addUserByPublicKeyController from './add-user-by-public-key';
+import addUserWithPublicKeyController from './add-user-with-public-key';
 
 /**
  * Setup entrypoints namespace route.
@@ -31,7 +31,9 @@ export default function registerUserRoutes(
 
   router.post(
     '/user/add',
-    addUserByPublicKeyController.addUserByPublicKey(gatewayPool) as Application,
+    addUserWithPublicKeyController.addUserWithPublicKey(
+      gatewayPool,
+    ) as Application,
   );
 
   return router;
