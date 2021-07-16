@@ -1,13 +1,19 @@
 import supertest from 'supertest';
 import nock from 'nock';
 
-import { serverConfig } from '../../../../../__fixtures__/config';
+import {
+  postgreConfig,
+  serverConfig,
+} from '../../../../../__fixtures__/config';
 import { WebProcess } from '../../../../../../src/processes/web/web-process';
 import { testAccount } from '../../../../../__fixtures__/smart-contract';
-import * as userLib from '../../../../../../src/lib/user/create-account';
+import { PostgreService } from '../../../../../../src/services/postgre';
 
 describe('[processes/web/api/user] Create user controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
+  const postgreService = new PostgreService(postgreConfig);
+
+  webProcess.postgreService = postgreService;
 
   const request: supertest.SuperTest<supertest.Test> = supertest(
     webProcess.app,
@@ -17,10 +23,7 @@ describe('[processes/web/api/user] Create user controller', () => {
     await webProcess.start();
   });
 
-  // beforeEach(async () => {});
-
   afterEach(() => {
-    jest.restoreAllMocks();
     nock.cleanAll();
   });
 
@@ -71,8 +74,6 @@ describe('[processes/web/api/user] Create user controller', () => {
   });
 
   it('should return 201 and give back userId, publicKey | when the secret has been stored', async () => {
-    jest.spyOn(userLib, 'createVaultKeys').mockImplementation();
-
     const vaultNock = nock('http://localhost:8300')
       .post('/v1/secret/data/self-managed/toto')
       .reply(201);
