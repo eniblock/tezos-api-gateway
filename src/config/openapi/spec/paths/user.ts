@@ -169,9 +169,9 @@ export default {
   },
   '/user/add': {
     post: {
-      summary:
-        'Associate an user id with a public key into Vault',
-      description: 'Associate an user id with a public key into Vault, this is a self managed account because Vault will only store your public key',
+      summary: 'Associate an user id with a public key into Vault',
+      description:
+        'Associate an user id with a public key into Vault, this is a self managed account because Vault will only store your public key',
       requestBody: {
         required: true,
         content: {
