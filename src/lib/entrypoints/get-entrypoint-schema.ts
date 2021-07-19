@@ -108,7 +108,7 @@ export async function getEntryPointSchemaFromTezosNode(
       " the schema for the smart contract's entrypoint",
   );
 
-  const contract = await tezosService.getContract(contractAddress);
+  const contract = await tezosService.getContractFromCache(contractAddress);
 
   const schema = contract.parameterSchema.ExtractSchema();
 
