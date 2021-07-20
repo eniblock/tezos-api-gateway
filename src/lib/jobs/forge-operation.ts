@@ -250,7 +250,7 @@ async function getATransactionParameters(
   tezosService: TezosService,
   { contractAddress, entryPoint, entryPointParams }: TransactionDetails,
 ) {
-  const contract = await tezosService.getContract(contractAddress);
+  const contract = await tezosService.getContractFromCache(contractAddress);
 
   return getTransferToParams(logger, contract, entryPoint, entryPointParams);
 }
