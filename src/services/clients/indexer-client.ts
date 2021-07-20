@@ -3,7 +3,10 @@ import createHttpError from 'http-errors';
 import { StatusCodes } from 'http-status-codes';
 import superagent from 'superagent';
 import url from 'url';
-import { OperationNotFoundError } from '../../const/errors/indexer-error';
+import {
+  OperationNotFoundError,
+  UserNotFoundError,
+} from '../../const/errors/indexer-error';
 import { IndexerConfig } from '../../const/interfaces/indexer-config';
 import { TezosService } from '../tezos';
 import { AbstractClient } from './abstract-client';
@@ -34,6 +37,7 @@ export class IndexerClient extends AbstractClient {
       apiKey,
       keyToOperation,
       keyToBlockLevel,
+      pathToOperation,
     } = this.config;
 
     this.logger.info(
@@ -44,7 +48,10 @@ export class IndexerClient extends AbstractClient {
       '[services/indexer] Calling the indexer to get the operation status',
     );
 
-    const getOperationUrl = url.resolve(indexerUrl, operationHash);
+    const getOperationUrl = url.resolve(
+      indexerUrl,
+      pathToOperation + operationHash,
+    );
 
     try {
       const { body: result } = apiKey
@@ -110,6 +117,84 @@ export class IndexerClient extends AbstractClient {
       }
 
       throw err;
+    }
+  }
+
+  public async getUserInfo(userAddress: string) {
+    const {
+      name,
+      apiUrl: indexerUrl,
+      apiKey,
+      keyToBalance,
+      pathToUserInfo,
+      keyToReveal,
+    } = this.config;
+
+    this.logger.info(
+      {
+        indexerName: name,
+      },
+      '[services/indexer] Calling the indexer to get the user info',
+    );
+
+    const getUserInfoUrl = url.resolve(
+      indexerUrl,
+      pathToUserInfo + userAddress,
+    );
+
+    try {
+      let userInfo;
+
+      if (apiKey) {
+        const { body: result } = await superagent
+          .post(getUserInfoUrl)
+          .set({ apiKey })
+          .send({
+            predicates: [
+              {
+                field: 'account_id',
+                operation: 'eq',
+                set: [userAddress],
+              },
+            ],
+            output: 'json',
+            limit: 1,
+          });
+
+        if (Array.isArray(result) && result.length === 0) {
+          throw createHttpError(StatusCodes.BAD_REQUEST);
+        }
+
+        userInfo = result[0];
+      } else {
+        const { body: result } = await superagent.get(getUserInfoUrl);
+
+        if ('type' in result && result.type === 'empty') {
+          throw createHttpError(StatusCodes.BAD_REQUEST);
+        }
+
+        userInfo = result;
+      }
+
+      this.logger.info(
+        { userInfo },
+        '[IndexerClient/getUserInfo] Successfully fetched the user information',
+      );
+
+      return {
+        account: userAddress,
+        balance: keyToBalance
+          ? userInfo[keyToBalance]
+          : userInfo.balance / 1000000,
+        revealed: keyToReveal ? userInfo[keyToReveal] : null,
+      };
+    } catch (err) {
+      if (err.status === StatusCodes.BAD_REQUEST) {
+        throw new UserNotFoundError(userAddress);
+      }
+
+      this.handleError(err, { userAddress, indexerConfig: this.config });
+      return null;
     }
   }
 }

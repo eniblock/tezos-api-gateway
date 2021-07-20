@@ -17,6 +17,7 @@ import { AbstractProcess } from '../abstract-process';
 import { GatewayPool } from '../../services/gateway-pool';
 import { SignerFactory } from '../../services/signer-factory';
 import { MetricPrometheusService } from '../../services/metric-prometheus';
+import { IndexerPool } from '../../services/indexer-pool';
 
 export interface WebConfig {
   server: {
@@ -35,6 +36,7 @@ export class WebProcess extends AbstractProcess {
   protected _amqpService: AmqpService;
   private _signerFactory: SignerFactory;
   private _metricPrometheusService: MetricPrometheusService;
+  private _indexerPool: IndexerPool;
 
   constructor(config: WebConfig) {
     super(webProcessConfig, logger);
@@ -47,6 +49,7 @@ export class WebProcess extends AbstractProcess {
     this._amqpService = new AmqpService(amqpConfig, this.logger);
     this._signerFactory = new SignerFactory();
     this._metricPrometheusService = new MetricPrometheusService();
+    this._indexerPool = new IndexerPool(logger);
 
     this.expressSetup();
   }
@@ -97,6 +100,14 @@ export class WebProcess extends AbstractProcess {
     this._metricPrometheusService = metricPrometheus;
   }
 
+  public get indexerPool(): IndexerPool {
+    return this._indexerPool;
+  }
+
+  public set indexerPool(indexerPool: IndexerPool) {
+    this._indexerPool = indexerPool;
+  }
+
   /**
    * Start steps:
    *  - Check if the web process is already running
@@ -112,6 +123,7 @@ export class WebProcess extends AbstractProcess {
     await this._postgreService.initializeDatabase();
     await this._amqpService.start();
     await this._metricPrometheusService.start();
+    await this._indexerPool.initializeIndexers();
 
     setupRoutes(
       this._app,
@@ -120,6 +132,7 @@ export class WebProcess extends AbstractProcess {
       this._amqpService,
       this._signerFactory,
       this._metricPrometheusService,
+      this._indexerPool,
     );
 
     this.appPostConfig();

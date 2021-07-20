@@ -167,4 +167,53 @@ export default {
       },
     },
   },
+  '/user/info/{address}': {
+    get: {
+      summary: 'Get user information',
+      description:
+        'Return information about user (i.e balance, reveal) as exposed by the indexer',
+      parameters: [
+        {
+          name: 'address',
+          in: 'path',
+          required: true,
+          schema: {
+            $ref: '#/components/schemas/tezos_address',
+          },
+        },
+      ],
+      responses: {
+        200: {
+          description: 'User information fetched from tzstats',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                description: 'User properties',
+                properties: {
+                  account: {
+                    type: 'string',
+                    description: 'public key hash of the user account',
+                  },
+                  balance: {
+                    type: 'number',
+                    description: 'the balance of the user',
+                  },
+                  revealed: {
+                    nullable: true,
+                    type: 'boolean',
+                    description:
+                      "Public key revelation status. Unrevealed account can't send manager operation (transaction, origination etc.)",
+                  },
+                },
+              },
+            },
+          },
+        },
+        400: error[400],
+        404: error[404],
+        500: error.default,
+      },
+    },
+  },
 };

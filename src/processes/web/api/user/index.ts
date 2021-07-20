@@ -4,6 +4,8 @@ import { GatewayPool } from '../../../../services/gateway-pool';
 import createUserController from './create-user-controller';
 import getUserController from './get-user-controller';
 import getUserByAddressController from './get-user-by-address-controller';
+import getUserInfoController from './get-user-info-controller';
+import { IndexerPool } from '../../../../services/indexer-pool';
 
 /**
  * Setup entrypoints namespace route.
@@ -15,6 +17,7 @@ import getUserByAddressController from './get-user-by-address-controller';
 export default function registerUserRoutes(
   router: Router,
   gatewayPool: GatewayPool,
+  indexerPool: IndexerPool,
 ): Router {
   router.get('/user', getUserController.getUser() as Application);
 
@@ -26,6 +29,11 @@ export default function registerUserRoutes(
   router.post(
     '/user/create',
     createUserController.createUser(gatewayPool) as Application,
+  );
+
+  router.get(
+    '/user/info/:address',
+    getUserInfoController.getUserinfo(indexerPool),
   );
 
   return router;

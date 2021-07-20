@@ -3,7 +3,10 @@ import Logger from 'bunyan';
 import { IndexerClient } from './clients/indexer-client';
 import { indexerConfigs } from '../config';
 import { generateRandomInt } from '../utils';
-import { OperationNotFoundError } from '../const/errors/indexer-error';
+import {
+  OperationNotFoundError,
+  UserNotFoundError,
+} from '../const/errors/indexer-error';
 import { TezosService } from './tezos';
 
 export class IndexerPool {
@@ -141,5 +144,46 @@ export class IndexerPool {
       }
     }
     return;
+  }
+
+  public async getUserInfoByRandomIndexer(
+    userAddress: string,
+    nbOfRetry: number,
+  ) {
+    let currentIndexer: IndexerClient;
+
+    while (nbOfRetry > 0) {
+      try {
+        currentIndexer = this.getRandomIndexer();
+
+        this.logger.info(
+          {
+            currentIndexer: currentIndexer.config,
+          },
+          '[IndexerPool/getUserInfoByRandomIndexer] Using this indexer to get the user information',
+        );
+
+        const userInfo = await currentIndexer.getUserInfo(userAddress);
+
+        if (!userInfo) {
+          nbOfRetry--;
+          continue;
+        }
+
+        return userInfo;
+      } catch (err) {
+        if (!(err instanceof UserNotFoundError)) {
+          this.logger.error(
+            err,
+            '[IndexerPool/getUserInfoByRandomIndexer] Unexpect error happened',
+          );
+          nbOfRetry--;
+          continue;
+        }
+
+        throw err;
+      }
+    }
+    return null;
   }
 }
