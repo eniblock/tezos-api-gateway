@@ -59,20 +59,6 @@ describe('[processes/web/api/user] Create user controller', () => {
     });
   });
 
-  it('should return 400 when the publicKey has not a good format', async () => {
-    const { body, status } = await request.post('/api/user/add').send({
-      userId: 'toto',
-      publicKey: 'fake public key',
-    });
-
-    expect(status).toEqual(400);
-    expect(body).toEqual({
-      message:
-        'request.body.publicKey should match pattern "^[0-9a-zA-Z]{36}$"',
-      status: 400,
-    });
-  });
-
   it('should return 201 and give back userId, publicKey | when the secret has been stored', async () => {
     const vaultNock = nock('http://localhost:8300')
       .post('/v1/secret/data/self-managed/toto')

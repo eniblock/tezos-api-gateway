@@ -186,9 +186,8 @@ export default {
                   description: 'User account identifier',
                 },
                 publicKey: {
-                  $ref: '#/components/schemas/tezos_address',
-                  description:
-                    'The Tezos public key to associate with the user id',
+                  type: 'string',
+                  description: 'public key hash of the created account',
                 },
               },
             },
