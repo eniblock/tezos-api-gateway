@@ -191,7 +191,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
       setSignerSpy = jest.spyOn(tezosService, 'setSigner');
 
       getContractSpy = jest
-        .spyOn(tezosService, 'getContract')
+        .spyOn(tezosService, 'getContractFromCache')
         .mockImplementation();
 
       jest
