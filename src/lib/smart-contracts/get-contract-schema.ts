@@ -12,7 +12,7 @@ export async function getContractParameterSchema(
   tezosService: TezosService,
   contractAddress: string,
 ) {
-  const contract = await tezosService.getContract(contractAddress);
+  const contract = await tezosService.getContractFromCache(contractAddress);
 
   return contract.parameterSchema.ExtractSchema();
 }

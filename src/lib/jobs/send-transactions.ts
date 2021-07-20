@@ -251,7 +251,7 @@ async function getContractMethodByTransactionDetails(
   tezosService: TezosService,
   logger: Logger,
 ) {
-  const contract = await tezosService.getContract(contractAddress);
+  const contract = await tezosService.getContractFromCache(contractAddress);
 
   return getContractMethod(logger, contract, entryPoint, entryPointParams);
 }
