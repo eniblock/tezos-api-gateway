@@ -203,7 +203,7 @@ export default {
                     nullable: true,
                     type: 'boolean',
                     description:
-                      "Public key revelation status. Unrevealed account can't send manager operation (transaction, origination etc.)",
+                      "Public key revelation status. Unrevealed account can't send manager operation (transaction, origination etc.). If the returned value is null that means that we were not able to fetch data",
                   },
                 },
               },

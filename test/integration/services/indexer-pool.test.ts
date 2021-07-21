@@ -92,7 +92,7 @@ describe('[services/indexer-pool]', () => {
         .mockReturnValue(firstIndexer);
 
       const indexerNock = nock(firstIndexer.config.apiUrl)
-        .get(`/${operationHash}`)
+        .get(`/${firstIndexer.config.pathToOperation}${operationHash}`)
         .times(3)
         .reply(500);
 
@@ -199,7 +199,7 @@ describe('[services/indexer-pool]', () => {
         .mockReturnValue(firstIndexer);
 
       const indexerNock = nock(firstIndexer.config.apiUrl)
-        .get(`/${operationHash}`)
+        .get(`/${firstIndexer.config.pathToOperation}${operationHash}`)
         .times(3)
         .reply(500);
 

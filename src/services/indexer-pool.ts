@@ -146,6 +146,11 @@ export class IndexerPool {
     return;
   }
 
+  /**
+   * @description         - Get a random indexer then tries to fetch user info via getUserInfo
+   * @param userAddress   - User address
+   * @param nbOfRetry     - If a indexer fails the number of retry
+   */
   public async getUserInfoByRandomIndexer(
     userAddress: string,
     nbOfRetry: number,

@@ -27,11 +27,11 @@ describe('[services/clients] Indexer Client', () => {
     it('should return undefined when the indexer throw any errors that is not NOT_FOUND', async () => {
       const loggerInfoSpy = jest.spyOn(indexerClient.logger, 'info');
       const indexerNock = nock(indexerClient.config.apiUrl)
-        .get(`/${operationHash}`)
+        .get(`/${indexerClient.config.pathToOperation}${operationHash}`)
         .reply(500);
 
       const conseilIndexerNock = nock(conseilIndexerClient.config.apiUrl)
-        .get(`/${operationHash}`)
+        .get(`/${conseilIndexerClient.config.pathToOperation}${operationHash}`)
         .reply(500);
 
       await expect(
@@ -120,7 +120,7 @@ describe('[services/clients] Indexer Client', () => {
 
     it('should return undefined the block level is undefined', async () => {
       const indexerNock = nock(indexerClient.config.apiUrl)
-        .get(`/${operationHash}`)
+        .get(`/${indexerClient.config.pathToOperation}${operationHash}`)
         .reply(500);
 
       await expect(

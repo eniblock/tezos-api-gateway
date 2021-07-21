@@ -120,6 +120,12 @@ export class IndexerClient extends AbstractClient {
     }
   }
 
+  /**
+   * @description       - Call the indexer api to fetch user information
+   * @param userAddress - User address
+   * @return {Object}
+   * @throw {UserNotFoundError}
+   */
   public async getUserInfo(userAddress: string) {
     const {
       name,
