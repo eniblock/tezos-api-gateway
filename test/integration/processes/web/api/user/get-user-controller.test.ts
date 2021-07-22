@@ -208,22 +208,22 @@ describe('[processes/web/api/user] Get User Account Controller', () => {
           },
         });
       const vaultNockSecondUser = nock('http://localhost:8300')
-          .get('/v1/secret/data/self-managed/user2')
-          .reply(200, {
+        .get('/v1/secret/data/self-managed/user2')
+        .reply(200, {
+          data: {
             data: {
-              data: {
-                publicKey: 'zxcvxcvxzcvzxcvzxv',
-              },
+              publicKey: 'zxcvxcvxzcvzxcvzxv',
             },
-          });
+          },
+        });
 
       const { body, status } = await request
         .get('/api/user')
         .query({ userIdList: ['user1', 'user2'], isDelegated: false });
 
       vaultNock.done();
-      vaultNockFirstUser.done()
-      vaultNockSecondUser.done()
+      vaultNockFirstUser.done();
+      vaultNockSecondUser.done();
 
       expect(status).toEqual(200);
       expect(body[0].userId).toEqual('user1');
