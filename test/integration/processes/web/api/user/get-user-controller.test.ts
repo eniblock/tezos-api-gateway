@@ -189,5 +189,47 @@ describe('[processes/web/api/user] Get User Account Controller', () => {
       expect(body[1].userId).toEqual('key3');
       expect(body[1].account).toEqual(null);
     });
+
+    it('should return 200 and account addresses of the specified users of self-managed accounts', async () => {
+      const vaultNock = nock('http://localhost:8300')
+        .intercept(`/v1/secret/metadata/self-managed`, 'LIST')
+        .reply(200, {
+          data: {
+            keys: ['user1', 'user2'],
+          },
+        });
+      const vaultNockFirstUser = nock('http://localhost:8300')
+        .get('/v1/secret/data/self-managed/user1')
+        .reply(200, {
+          data: {
+            data: {
+              publicKey: 'werwqrwqerqwrwe',
+            },
+          },
+        });
+      const vaultNockSecondUser = nock('http://localhost:8300')
+          .get('/v1/secret/data/self-managed/user2')
+          .reply(200, {
+            data: {
+              data: {
+                publicKey: 'zxcvxcvxzcvzxcvzxv',
+              },
+            },
+          });
+
+      const { body, status } = await request
+        .get('/api/user')
+        .query({ userIdList: ['user1', 'user2'], isDelegated: false });
+
+      vaultNock.done();
+      vaultNockFirstUser.done()
+      vaultNockSecondUser.done()
+
+      expect(status).toEqual(200);
+      expect(body[0].userId).toEqual('user1');
+      expect(body[0].account).toMatch(/tz[0-9a-zA-Z]{34}/);
+      expect(body[1].userId).toEqual('user2');
+      expect(body[1].account).toMatch(/tz[0-9a-zA-Z]{34}/);
+    });
   });
 });

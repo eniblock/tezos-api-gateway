@@ -27,7 +27,7 @@ export async function getUserByAddress(
       addresses.map(async (address) => {
         let id;
         try {
-          id = await vaultClient.getSecret('accounts', address);
+          id = await vaultClient.getSecret('accounts', address, 'userId');
         } catch (err) {
           if (err instanceof ClientError) {
             return {

@@ -83,6 +83,15 @@ export default {
             },
           },
         },
+        {
+          name: 'isDelegated',
+          in: 'query',
+          required: false,
+          schema: {
+            type: 'boolean',
+            default: true,
+          },
+        },
       ],
       responses: {
         200: {
