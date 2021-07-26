@@ -21,7 +21,7 @@ export async function getContractStorageFromTezosNode(
   contractAddress: string,
 ): Promise<GenericObject> {
   try {
-    const contract = await tezosService.getContract(contractAddress);
+    const contract = await tezosService.getContractFromCache(contractAddress);
 
     return contract.storage();
   } catch (err) {

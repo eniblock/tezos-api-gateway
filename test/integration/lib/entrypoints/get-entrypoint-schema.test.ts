@@ -222,7 +222,7 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
 
     it('should throw an error and log error if unexpected error happened', async () => {
       const getEntryPointsSpy = jest
-        .spyOn(tezosService, 'getContract')
+        .spyOn(tezosService, 'getContractFromCache')
         .mockRejectedValue(new Error('Unexpected error'));
 
       await expect(
