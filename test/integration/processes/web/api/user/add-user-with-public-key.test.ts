@@ -59,7 +59,7 @@ describe('[processes/web/api/user] Create user controller', () => {
     });
   });
 
-  it('should return 201 and give back userId, publicKey | when the secret has been stored', async () => {
+  it('should return 201 and give back userId, publicKey when the secret has been stored', async () => {
     const vaultNock = nock('http://localhost:8300')
       .post('/v1/secret/data/self-managed/toto')
       .reply(201);

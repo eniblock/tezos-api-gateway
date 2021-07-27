@@ -5,7 +5,7 @@ export default {
     post: {
       summary: 'Create user accounts',
       description:
-        'Create vault keys for userId, activate the accounts on the blockchain network, and return the Tezos address, these are delegated accounts because Vault will be able to sign operations on your behalf since it genarate public/private keys and store them',
+        'Create vault keys for userId, activate the accounts on the blockchain network, and return the Tezos address, these are delegated accounts because Vault will be able to sign operations on your behalf since it generates public/private keys and stores them',
       requestBody: {
         description:
           'list of the identifiers of the users to be created, and the master key id to activate them',
