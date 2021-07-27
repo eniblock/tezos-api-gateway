@@ -147,13 +147,21 @@ export class IndexerClient extends AbstractClient {
       indexerUrl,
       pathToUserInfo + userAddress,
     );
+    let getUserInfoUrlConseil = url.resolve(indexerUrl, pathToUserInfo);
 
     try {
       let userInfo;
 
       if (apiKey) {
+        getUserInfoUrlConseil =
+          getUserInfoUrlConseil[getUserInfoUrlConseil.length - 1] === '/'
+            ? getUserInfoUrlConseil.substring(
+                0,
+                getUserInfoUrlConseil.length - 1,
+              )
+            : getUserInfoUrlConseil;
         const { body: result } = await superagent
-          .post(getUserInfoUrl)
+          .post(getUserInfoUrlConseil)
           .set({ apiKey })
           .send({
             predicates: [
@@ -168,7 +176,7 @@ export class IndexerClient extends AbstractClient {
           });
 
         if (Array.isArray(result) && result.length === 0) {
-          throw createHttpError(StatusCodes.BAD_REQUEST);
+          throw createHttpError(StatusCodes.NOT_FOUND);
         }
 
         userInfo = result[0];
@@ -176,7 +184,7 @@ export class IndexerClient extends AbstractClient {
         const { body: result } = await superagent.get(getUserInfoUrl);
 
         if ('type' in result && result.type === 'empty') {
-          throw createHttpError(StatusCodes.BAD_REQUEST);
+          throw createHttpError(StatusCodes.NOT_FOUND);
         }
 
         userInfo = result;
@@ -195,7 +203,10 @@ export class IndexerClient extends AbstractClient {
         revealed: keyToReveal ? userInfo[keyToReveal] : null,
       };
     } catch (err) {
-      if (err.status === StatusCodes.BAD_REQUEST) {
+      if (
+        err.status === StatusCodes.NOT_FOUND ||
+        err.status === StatusCodes.BAD_REQUEST
+      ) {
         throw new UserNotFoundError(userAddress);
       }
 

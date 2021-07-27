@@ -180,7 +180,7 @@ export class IndexerPool {
         if (!(err instanceof UserNotFoundError)) {
           this.logger.error(
             err,
-            '[IndexerPool/getUserInfoByRandomIndexer] Unexpect error happened',
+            '[IndexerPool/getUserInfoByRandomIndexer] An unexpected error happened',
           );
           nbOfRetry--;
           continue;

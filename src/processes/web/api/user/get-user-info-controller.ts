@@ -10,7 +10,7 @@ import { UserNotFoundError } from '../../../../const/errors/indexer-error';
  * @description       - Handler to fetch user information
  * @param indexerPool - The pool that gives us a indexer like tzstat, conseil, etc..
  */
-function getUserinfo(indexerPool: IndexerPool) {
+function getUserInfo(indexerPool: IndexerPool) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { address } = req.params;
@@ -28,9 +28,9 @@ function getUserinfo(indexerPool: IndexerPool) {
         nbOfRetry,
       );
 
-      if (!userInfo) {
+      if (userInfo == null) {
         throw createHttpError(
-          StatusCodes.BAD_GATEWAY,
+          StatusCodes.NOT_FOUND,
           `Could not perform task number of retry: ${nbOfRetry}`,
         );
       }
@@ -38,7 +38,7 @@ function getUserinfo(indexerPool: IndexerPool) {
       res.status(StatusCodes.OK).json(userInfo);
     } catch (err) {
       if (err instanceof UserNotFoundError) {
-        return next(createHttpError(StatusCodes.BAD_REQUEST, err.message));
+        return next(createHttpError(StatusCodes.NOT_FOUND, err.message));
       }
 
       return next(err);
@@ -46,4 +46,4 @@ function getUserinfo(indexerPool: IndexerPool) {
   };
 }
 
-export default { getUserinfo };
+export default { getUserInfo };

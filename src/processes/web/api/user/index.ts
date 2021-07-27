@@ -33,7 +33,7 @@ export default function registerUserRoutes(
 
   router.get(
     '/user/info/:address',
-    getUserInfoController.getUserinfo(indexerPool),
+    getUserInfoController.getUserInfo(indexerPool),
   );
 
   return router;

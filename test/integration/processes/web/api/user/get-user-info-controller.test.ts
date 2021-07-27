@@ -60,11 +60,11 @@ describe('[processes/web/api/user] Create user controller', () => {
         '/api/user/info/tz1hdQscorfqMzFqYxnrApuS5i6QSTuoAp3a',
       );
 
-      expect(status).toEqual(400);
+      expect(status).toEqual(404);
       expect(body).toEqual({
         message:
           'Could not find an user with this address: tz1hdQscorfqMzFqYxnrApuS5i6QSTuoAp3a',
-        status: 400,
+        status: 404,
       });
     });
 
