@@ -93,7 +93,7 @@ export async function getSelfManagedUserAccounts(users: string[]) {
           user,
           'publicKey',
         );
-        if (!publicKey) throw new UndefinedPublicKeyError(user);
+        if (publicKey === undefined) throw new UndefinedPublicKeyError(user);
 
         const pkh = await publicKeyHashed(publicKey);
 
