@@ -111,7 +111,7 @@ export async function getSelfManagedUserAccounts(users: string[]) {
   } catch (err) {
     logger.error(
       { error: err },
-      '[lib/user/getUserAccounts] Unexpected error happened',
+      '[lib/user/getUserAccounts] An Unexpected error happened',
     );
 
     throw err;
