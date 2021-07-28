@@ -151,8 +151,8 @@ npm run prettier:write
 ## Kubernetes Installation
 ### Summary
 
-1. [Prerequisites](#1.-prerequisites-for-local-environment)
-2. [Setup](#2.-setup)
+1. [Prerequisites](#1-prerequisites-for-local-environment)
+2. [Setup](#2-setup)
 
 ### 1. Prerequisites for local environment
 #### Ubuntu 20.04
