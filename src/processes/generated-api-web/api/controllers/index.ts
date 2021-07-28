@@ -25,9 +25,11 @@ export default function registerRoutes(
   metricPrometheusService: MetricPrometheusService,
   forgeAndSendPathObject: OpenAPIV3.PathsObject,
 ): Router {
-  const { forgePaths, sendPaths } = extractForgeAndSendTransactionsPaths(
-    forgeAndSendPathObject,
-  );
+  const {
+    forgePaths,
+    sendPaths,
+    asyncSendPaths,
+  } = extractForgeAndSendTransactionsPaths(forgeAndSendPathObject);
 
   forgePaths.forEach((path) => {
     router.post(
@@ -52,9 +54,28 @@ export default function registerRoutes(
     );
   });
 
+  asyncSendPaths.forEach((path) => {
+    router.post(
+      path,
+      sendJobController.sendTransactionsAndCreateJob(
+        amqpService,
+        postgreService,
+        metricPrometheusService,
+      ) as Application,
+    );
+  });
+
   router.patch(
     '/inject',
     injectJobController.injectOperationAndUpdateJob(
+      postgreService,
+      gatewayPool,
+    ) as Application,
+  );
+
+  router.patch(
+    '/async/inject',
+    injectJobController.injectOperationAndUpdateJobAsync(
       postgreService,
       amqpService,
     ) as Application,

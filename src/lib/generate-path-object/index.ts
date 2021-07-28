@@ -96,6 +96,10 @@ export async function generatePathObject(
       ACTION.FORGE,
     );
     path[`/${ACTION.SEND}/${key}`] = generatePathItemSchema(value, ACTION.SEND);
+    path[`/async/${ACTION.SEND}/${key}`] = generatePathItemSchema(
+      value,
+      ACTION.SEND,
+    );
   });
 
   return path;

@@ -232,6 +232,7 @@ export class WebProcess extends AbstractProcess {
     return {
       ...forgeAndSendPaths,
       '/inject': spec.paths['/inject/jobs'],
+      '/async/inject': spec.paths['/async/inject/jobs'],
       '/entrypoints/{contract_address}':
         spec.paths['/entrypoints/{contract_address}'],
       '/tezos_node/storage/{contract_address}':
