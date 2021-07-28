@@ -149,20 +149,77 @@ npm run prettier:write
 | TEZOS_NODE_EDONET_TEST_URLS | https://api.tez.ie/rpc/florencenet,https://florencenet.smartpy.io/ | List of Tezos Node Urls, separated by comma `,` |
 
 ## Kubernetes Installation
-It is assumed that you have a cert-manager installed on your system.
+### Summary
 
-Then simply run helm to deploy it as you always do.
+1. [Prerequisites](#1.-prerequisites-for-local-environment)
+2. [Setup](#2.-setup)
 
+### 1. Prerequisites for local environment
+#### Ubuntu 20.04
+We assume that [**docker**](https://docs.docker.com/engine/install/ubuntu/#installation-methods) is already installed on your computer.  
+In order to run tezos-api-gateway environment locally you need to have some dependencies:
+- k3d (v4.4.4)
+- helm
+- kubectl
+- tilt
+- python3
+- pip3
+
+Also you need to have a local registry, a local cluster and a cert-manager.
+
+**Fortunately** we have a script which do everything. To do so you need to install an open source project called [Click](https://github.com/click-project/click-project)  
+Click-project is a framework which help us to create awesome command line interfaces.
 ```shell
-helm dependency update ./helm/tezos-api-gateway
-helm install tezos-api-gateway ./helm/tezos-api-gateway --values ./helm/tezos-api-gateway/values-dev.yaml
+sudo apt install python3-pip
+python3 -m pip install click-project
 ```
 
-Also, to develop using a local kubernetes cluster, simply install tilt and run.
-
+Then you need to fetch a "recipe" called k8s.
 ```shell
-helm dependency update ./helm/tezos-api-gateway
+# Ensure the path ~/.local/bin is in you env PATH
+# eg. export PATH=$PATH:/home/$USER/.local/bin
+clk recipe install k8s
+```
+
+Finally to install everything.
+```shell
+clk k8s install-cert-manager --flow
+```
+:exclamation: :no_entry: **Be careful** if this command never ends do not close the *clk* process and open a new terminal  
+you probably have a restarting container   
+to verify it you can use **'docker ps'**  
+then look at the status of **rancher/k3s** image  
+so if the status is **'Restarting'**  
+then display the logs of rancher/k3s  
+eg. **docker logs <em>\<CONTAINER ID></em>**  
+at the end it should probably display the following:  
+```shell
+conntrack.go:103] Set sysctl 'net/netfilter/nf_conntrack_max' to <A NUMBER>  
+server.go:495] open /proc/sys/net/netfilter/nf_conntrack_max: permission denied  
+```
+the k3s image couldn't set a 'Maximum connection tracking' for the kernel's networking stack  
+so do it manually  
+eg. **sudo sysctl -w net/netfilter/nf_conntrack_max=<em>\<THE NUMBER DISPLAYED IN LOGS></em>**  
+Wait until the rancher/k3s container status is 'UP'  
+now redo the previous **clk command** or in case you closed the *clk* process you need to delete the k3d cluster and registry eg. ***k3d cluster delete && k3d registry delete --all***. Then you can redo the previous **clk command**
+
+### 2. Setup
+Clone the repo
+```shell
+git clone git@gitlab.com:xdev-tech/xdev-enterprise-business-network/tezos-api-gateway.git
+cd tezos-api-gateway
+```
+
+Now you need to add tezos-api-gateway charts and apply them in the cluster with tilt.
+```shell
+export HELM_EXPERIMENTAL_OCI=1; helm dependency update ./helm/tezos-api-gateway
 tilt up
+```
+
+**Or** just simply run helm to deploy it as you always do.
+```shell
+export HELM_EXPERIMENTAL_OCI=1; helm dependency update ./helm/tezos-api-gateway
+helm install tezos-api-gateway ./helm/tezos-api-gateway --values ./helm/tezos-api-gateway/values-dev.yaml
 ```
 
 
