@@ -11,7 +11,7 @@ export const FA2Contract3 = 'KT1F7ou4rE4f5CviKQiiExPYsdYM6TDJpMag'; // smartCont
 export const FA2Contract4 = 'KT1XHkwLKjcxDPXFtiWx6MVm5EraMVJvKjx5'; // simpleMapKeyContract.py
 export const FA2Contract5 = 'KT1938ykzsYS1FR3WAyTa2BUTuTadtV1M9v8'; // Nonexistent contract
 export const FA2Contract7 = 'Bad contract format                '; // Bad contract format
-export const FA2Contract8 = 'KT1Nqq1uTuXEq46FCYsSRgUiKR9se2jjeSNV'; // Logical Pictures
+export const FA2Contract8 = 'KT1Lpf9hv9ndt6feuwbiSqdCoY1bd7YVNd9q'; // Logical Pictures
 
 export const testAccount = 'tz1hdQscorfqMzFqYxnrApuS5i6QSTuoAp3w';
 export const testAccount2 = 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw'; // Receiver account
