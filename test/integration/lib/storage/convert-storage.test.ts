@@ -64,8 +64,6 @@ describe('[lib/storage/convert-storage]', () => {
         tezosService,
         FA2Contract3,
       );
-      // tslint:disable-next-line:no-console
-      console.log('ttesttttt ======', storage)
 
       await expect(
         convertStorage(
