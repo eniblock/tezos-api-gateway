@@ -130,7 +130,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
         body: {
           accessRequests: {
             type: 'big_map',
-            value: '16628',
+            value: '16644',
           },
           organizations: {
             type: 'map',
@@ -213,7 +213,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
         body: {
           accessRequests: {
             type: 'big_map',
-            value: '16628',
+            value: '16644',
           },
           name: {
             error: 'This data field does not exist in the contract storage',

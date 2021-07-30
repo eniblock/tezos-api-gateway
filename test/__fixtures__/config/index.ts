@@ -15,11 +15,12 @@ export const serverConfig = {
 };
 
 export const tezosNodeGranadaUrl =
-  process.env.TEZOS_NODE_EDONET_TEST || 'https://api.tez.ie/rpc/granadanet';
+  process.env.TEZOS_NODE_EDONET_TEST || 'https://granadanet.smartpy.io/';
 
 export const tezosNodeGranadaUrls = (
   process.env.TEZOS_NODE_EDONET_TEST_URLS ||
-  'https://testnet-tezos.giganode.io,https://api.tez.ie/rpc/granadanet,https://granadanet.smartpy.io/'
+  'https://api.tez.ie/rpc/granadanet,https://granadanet.smartpy.io/'
+  //'https://testnet-tezos.giganode.io,https://api.tez.ie/rpc/granadanet,https://granadanet.smartpy.io/'
 ).split(',');
 
 export const amqpConfig: AmqpConfig = {

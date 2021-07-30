@@ -35,11 +35,11 @@ describe('[lib/storage/generateStorageResponse]', () => {
       expect(generateStorageResponse(storage!)).toEqual({
         allowed: {
           type: 'big_map',
-          value: '16626',
+          value: '16641',
         },
         balances: {
           type: 'big_map',
-          value: '16627',
+          value: '16642',
         },
         decimals: 10,
         locked: false,
@@ -61,7 +61,7 @@ describe('[lib/storage/generateStorageResponse]', () => {
       expect(generateStorageResponse(storage!)).toEqual({
         accessRequests: {
           type: 'big_map',
-          value: '16629',
+          value: '16643',
         },
         organizations: {
           type: 'map',
@@ -98,7 +98,7 @@ describe('[lib/storage/generateStorageResponse]', () => {
       expect(generateStorageResponse(storage!)).toEqual({
         accessRequests: {
           type: 'big_map',
-          value: '16628',
+          value: '16644',
         },
         organizations: {
           type: 'map',
