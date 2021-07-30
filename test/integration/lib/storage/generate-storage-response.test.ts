@@ -98,7 +98,7 @@ describe('[lib/storage/generateStorageResponse]', () => {
       expect(generateStorageResponse(storage!)).toEqual({
         accessRequests: {
           type: 'big_map',
-          value: '90632',
+          value: '16628',
         },
         organizations: {
           type: 'map',
