@@ -35,11 +35,11 @@ describe('[lib/storage/generateStorageResponse]', () => {
       expect(generateStorageResponse(storage!)).toEqual({
         allowed: {
           type: 'big_map',
-          value: '88052',
+          value: '16626',
         },
         balances: {
           type: 'big_map',
-          value: '88053',
+          value: '16627',
         },
         decimals: 10,
         locked: false,
