@@ -8,7 +8,7 @@ import * as getContractStorageLib from '../../../../../../src/lib/storage/get-co
 import {
   postgreConfig,
   serverConfig,
-  tezosNodeEdonetUrl,
+  tezosNodeGranadaUrl,
 } from '../../../../../__fixtures__/config';
 import { PostgreService } from '../../../../../../src/services/postgre';
 import {
@@ -21,7 +21,7 @@ import {
 
 describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
-  const tezosService = new TezosService(tezosNodeEdonetUrl);
+  const tezosService = new TezosService(tezosNodeGranadaUrl);
   const postgreService = new PostgreService(postgreConfig);
 
   webProcess.postgreService = postgreService;

@@ -5,7 +5,7 @@ import { OperationNotFoundError } from '../../../src/const/errors/indexer-error'
 import { IndexerClient } from '../../../src/services/clients/indexer-client';
 import { IndexerPool } from '../../../src/services/indexer-pool';
 import { TezosService } from '../../../src/services/tezos';
-import { tezosNodeEdonetUrl } from '../../__fixtures__/config';
+import { tezosNodeGranadaUrl } from '../../__fixtures__/config';
 import {
   notFoundOperationHash,
   operationHash,
@@ -131,7 +131,7 @@ describe('[services/indexer-pool]', () => {
 
   describe('#checkIfOperationIsConfirmedByRandomIndexer', () => {
     const indexerPool = new IndexerPool(logger);
-    const tezosService = new TezosService(tezosNodeEdonetUrl);
+    const tezosService = new TezosService(tezosNodeGranadaUrl);
 
     let loggerErrorSpy: jest.SpyInstance;
     let firstIndexer: IndexerClient;

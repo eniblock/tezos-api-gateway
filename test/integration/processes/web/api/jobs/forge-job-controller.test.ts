@@ -3,7 +3,7 @@ import supertest from 'supertest';
 import {
   postgreConfig,
   serverConfig,
-  tezosNodeEdonetUrl,
+  tezosNodeGranadaUrl,
 } from '../../../../../__fixtures__/config';
 import { resetTable, selectData } from '../../../../../__utils__/postgre';
 import {
@@ -23,7 +23,7 @@ import { ForgeOperationParams } from '../../../../../../src/const/interfaces/for
 describe('[processes/web/api/jobs] Forge job controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
   const postgreService = new PostgreService(postgreConfig);
-  const tezosService = new TezosService(tezosNodeEdonetUrl);
+  const tezosService = new TezosService(tezosNodeGranadaUrl);
 
   webProcess.postgreService = postgreService;
 

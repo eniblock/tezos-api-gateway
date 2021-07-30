@@ -6,7 +6,7 @@ import {
   operationHash,
 } from '../../../__fixtures__/operation';
 import { logger } from '../../../__fixtures__/services/logger';
-import { tezosNodeEdonetUrl } from '../../../__fixtures__/config';
+import { tezosNodeGranadaUrl } from '../../../__fixtures__/config';
 
 import { IndexerClient } from '../../../../src/services/clients/indexer-client';
 import { indexerConfigs } from '../../../../src/config';
@@ -67,7 +67,7 @@ describe('[services/clients] Indexer Client', () => {
   });
 
   describe('#checkIfOperationIsConfirmed', () => {
-    const tezosService = new TezosService(tezosNodeEdonetUrl);
+    const tezosService = new TezosService(tezosNodeGranadaUrl);
     let loggerErrorSpy: jest.SpyInstance;
 
     beforeEach(() => {

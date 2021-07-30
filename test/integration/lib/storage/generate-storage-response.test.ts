@@ -7,7 +7,7 @@ import {
 import { getContractStorageFromTezosNode } from '../../../../src/lib/storage/get-contract-storage';
 import { TezosService } from '../../../../src/services/tezos';
 
-import { tezosNodeEdonetUrl } from '../../../__fixtures__/config';
+import { tezosNodeGranadaUrl } from '../../../__fixtures__/config';
 import {
   FA2Contract3,
   FA2Contract4,
@@ -18,7 +18,7 @@ import {
 import { logger } from '../../../__fixtures__/services/logger';
 
 describe('[lib/storage/generateStorageResponse]', () => {
-  const tezosService = new TezosService(tezosNodeEdonetUrl);
+  const tezosService = new TezosService(tezosNodeGranadaUrl);
 
   afterEach(() => {
     jest.restoreAllMocks();

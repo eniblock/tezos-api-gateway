@@ -13,7 +13,7 @@ import {
 
 import {
   postgreConfig,
-  tezosNodeEdonetUrl,
+  tezosNodeGranadaUrl,
 } from '../../../__fixtures__/config';
 import { resetTable, selectData } from '../../../__utils__/postgre';
 import {
@@ -25,7 +25,7 @@ import {
 
 describe('[lib/jobs/forge-operation]', () => {
   const postgreService = new PostgreService(postgreConfig);
-  const tezosService = new TezosService(tezosNodeEdonetUrl);
+  const tezosService = new TezosService(tezosNodeGranadaUrl);
 
   beforeAll(async () => {
     await postgreService.initializeDatabase();
