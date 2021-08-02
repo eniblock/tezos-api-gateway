@@ -80,7 +80,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
           operation_hash: null,
         },
         {
-          status: 'published',
+          status: 'done',
           raw_transaction: 'raw_transaction_2',
           operation_hash: operationHash,
         },

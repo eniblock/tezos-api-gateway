@@ -22,7 +22,7 @@ describe('[services/clients] Indexer Client', () => {
   });
 
   describe('#getOperationBlockLevel', () => {
-    const conseilIndexerClient = new IndexerClient(indexerConfigs[3], logger);
+    const betterCallIndexerClient = new IndexerClient(indexerConfigs[1], logger);
 
     it('should return undefined when the indexer throw any errors that is not NOT_FOUND', async () => {
       const loggerInfoSpy = jest.spyOn(indexerClient.logger, 'info');
@@ -30,7 +30,7 @@ describe('[services/clients] Indexer Client', () => {
         .get(`/${operationHash}`)
         .reply(500);
 
-      const conseilIndexerNock = nock(conseilIndexerClient.config.apiUrl)
+      const conseilIndexerNock = nock(betterCallIndexerClient.config.apiUrl)
         .get(`/${operationHash}`)
         .reply(500);
 
@@ -38,7 +38,7 @@ describe('[services/clients] Indexer Client', () => {
         indexerClient.getOperationBlockLevel(operationHash),
       ).resolves.toBeUndefined();
       await expect(
-        conseilIndexerClient.getOperationBlockLevel(operationHash),
+        betterCallIndexerClient.getOperationBlockLevel(operationHash),
       ).resolves.toBeUndefined();
 
       indexerNock.done();
@@ -52,17 +52,17 @@ describe('[services/clients] Indexer Client', () => {
         indexerClient.getOperationBlockLevel(notFoundOperationHash),
       ).rejects.toThrowError(OperationNotFoundError);
       await expect(
-        conseilIndexerClient.getOperationBlockLevel(notFoundOperationHash),
+        betterCallIndexerClient.getOperationBlockLevel(notFoundOperationHash),
       ).rejects.toThrowError(OperationNotFoundError);
     }, 8000);
 
     it('should return the block level of the operation', async () => {
       await expect(
         indexerClient.getOperationBlockLevel(operationHash),
-      ).resolves.toEqual(323239);
+      ).resolves.toEqual(265526);
       await expect(
-        conseilIndexerClient.getOperationBlockLevel(operationHash),
-      ).resolves.toEqual(323239);
+        betterCallIndexerClient.getOperationBlockLevel(operationHash),
+      ).resolves.toEqual(265526);
     }, 8000);
   });
 

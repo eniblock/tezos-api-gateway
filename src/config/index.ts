@@ -69,21 +69,21 @@ const betterCallIndexerConfig: IndexerConfig = {
   keyToBlockLevel: process.env.BETTER_CALL_KEY_TO_BLOCK_LEVEL || 'level',
 };
 
-const conseilIndexerConfig: IndexerConfig = {
-  name: 'conseil',
-  apiUrl:
-    process.env.CONSEIL_URL ||
-    'https://conseil-granada.cryptonomic-infra.tech:443/v2/data/tezos/granadanet/operation_groups/',
-  keyToOperation: process.env.CONSEIL_KEY_TO_OPERATION || 'operation_group',
-  keyToBlockLevel: process.env.CONSEIL_KEY_TO_BLOCK_LEVEL || 'blockLevel',
-  apiKey: process.env.CONSEIL_API_KEY || '503801e8-a8a0-4e7c-8c24-7bd310805843',
-};
+// const conseilIndexerConfig: IndexerConfig = {
+//   name: 'conseil',
+//   apiUrl:
+//     process.env.CONSEIL_URL ||
+//     'https://conseil-granada.cryptonomic-infra.tech:443/v2/data/tezos/granadanet/operation_groups/',
+//   keyToOperation: process.env.CONSEIL_KEY_TO_OPERATION || 'operation_group',
+//   keyToBlockLevel: process.env.CONSEIL_KEY_TO_BLOCK_LEVEL || 'blockLevel',
+//   apiKey: process.env.CONSEIL_API_KEY || '503801e8-a8a0-4e7c-8c24-7bd310805843',
+// };
 
 export const indexerConfigs = [
   // tzstatsIndexerConfig,
   tzktIndexerConfig,
   betterCallIndexerConfig,
-  conseilIndexerConfig,
+  // conseilIndexerConfig,
 ];
 
 export const nbOfConfirmation = parseInt(
@@ -99,7 +99,7 @@ export const vaultClientConfig = {
 };
 
 export const contractAddress =
-  process.env.CONTRACT_ADDRESS || 'KT1LnJEtZttLAJeP45EzYvChAksRS1xE4hJ1';
+  process.env.CONTRACT_ADDRESS || 'KT193dYyEtaFMLVQEtgsSgyx8ukhk1LJVice'; // flexibleToken.py
 
 export const transferAmount = parseInt(2, process.env.TRANSFER_AMOUNT);
 
