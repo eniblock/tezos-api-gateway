@@ -167,8 +167,8 @@ In order to run tezos-api-gateway environment locally you need to have some depe
 
 Also you need to have a local registry, a local cluster and a cert-manager.
 
-**Fortunately** we have a script which do everything. To do so you need to install an open source project called [Click](https://github.com/click-project/click-project)  
-Click-project is a framework which help us to create awesome command line interfaces.
+**Fortunately** we have a script that takes care of everything. To do so you need to install an open source project called [Click](https://github.com/click-project/click-project)  
+Click-project is a framework that helps us create awesome command line interfaces.
 ```shell
 sudo apt install python3-pip
 python3 -m pip install click-project
