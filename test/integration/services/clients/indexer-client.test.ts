@@ -22,7 +22,10 @@ describe('[services/clients] Indexer Client', () => {
   });
 
   describe('#getOperationBlockLevel', () => {
-    const betterCallIndexerClient = new IndexerClient(indexerConfigs[1], logger);
+    const betterCallIndexerClient = new IndexerClient(
+      indexerConfigs[1],
+      logger,
+    );
 
     it('should return undefined when the indexer throw any errors that is not NOT_FOUND', async () => {
       const loggerInfoSpy = jest.spyOn(indexerClient.logger, 'info');
