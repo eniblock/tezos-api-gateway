@@ -9,8 +9,8 @@ import {
 } from '../../../__fixtures__/smart-contract';
 import {
   postgreConfig,
-  tezosNodeEdonetUrl,
-  tezosNodeEdonetUrls,
+  tezosNodeGranadaUrl,
+  tezosNodeGranadaUrls,
 } from '../../../__fixtures__/config';
 import { logger } from '../../../__fixtures__/services/logger';
 import { resetTable, selectData } from '../../../__utils__/postgre';
@@ -30,8 +30,8 @@ import { GatewayPool } from '../../../../src/services/gateway-pool';
 
 describe('[lib/jobs/inject-operation]', () => {
   const postgreService = new PostgreService(postgreConfig);
-  const tezosService = new TezosService(tezosNodeEdonetUrl);
-  const gatewayPool = new GatewayPool(tezosNodeEdonetUrls, logger);
+  const tezosService = new TezosService(tezosNodeGranadaUrl);
+  const gatewayPool = new GatewayPool(tezosNodeGranadaUrls, logger);
 
   beforeAll(async () => {
     await postgreService.initializeDatabase();

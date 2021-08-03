@@ -7,7 +7,7 @@ import {
 import { getContractStorageFromTezosNode } from '../../../../src/lib/storage/get-contract-storage';
 import { TezosService } from '../../../../src/services/tezos';
 
-import { tezosNodeEdonetUrl } from '../../../__fixtures__/config';
+import { tezosNodeGranadaUrl } from '../../../__fixtures__/config';
 import {
   FA2Contract3,
   FA2Contract4,
@@ -18,7 +18,7 @@ import {
 import { logger } from '../../../__fixtures__/services/logger';
 
 describe('[lib/storage/generateStorageResponse]', () => {
-  const tezosService = new TezosService(tezosNodeEdonetUrl);
+  const tezosService = new TezosService(tezosNodeGranadaUrl);
 
   afterEach(() => {
     jest.restoreAllMocks();
@@ -35,11 +35,11 @@ describe('[lib/storage/generateStorageResponse]', () => {
       expect(generateStorageResponse(storage!)).toEqual({
         allowed: {
           type: 'big_map',
-          value: '88052',
+          value: '16641',
         },
         balances: {
           type: 'big_map',
-          value: '88053',
+          value: '16642',
         },
         decimals: 10,
         locked: false,
@@ -61,7 +61,7 @@ describe('[lib/storage/generateStorageResponse]', () => {
       expect(generateStorageResponse(storage!)).toEqual({
         accessRequests: {
           type: 'big_map',
-          value: '90693',
+          value: '16643',
         },
         organizations: {
           type: 'map',
@@ -98,7 +98,7 @@ describe('[lib/storage/generateStorageResponse]', () => {
       expect(generateStorageResponse(storage!)).toEqual({
         accessRequests: {
           type: 'big_map',
-          value: '90632',
+          value: '16644',
         },
         organizations: {
           type: 'map',

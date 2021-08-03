@@ -4,7 +4,7 @@ import {
   amqpConfig,
   postgreConfig,
   serverConfig,
-  tezosNodeEdonetUrl,
+  tezosNodeGranadaUrl,
 } from '../../../../../__fixtures__/config';
 import { logger } from '../../../../../__fixtures__/services/logger';
 import {
@@ -27,7 +27,7 @@ import { TezosService } from '../../../../../../src/services/tezos';
 describe('[processes/web/api/jobs] Inject job controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
   const postgreService = new PostgreService(postgreConfig);
-  const tezosService = new TezosService(tezosNodeEdonetUrl);
+  const tezosService = new TezosService(tezosNodeGranadaUrl);
   const amqpService = new AmqpService(amqpConfig, logger);
 
   webProcess.postgreService = postgreService;

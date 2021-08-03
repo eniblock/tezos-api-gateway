@@ -2,12 +2,12 @@ import { getEntryPointSchemaFromTezosNode } from '../../../../src/lib/entrypoint
 import { ClientError } from '../../../../src/const/errors/client-error';
 import { TezosService } from '../../../../src/services/tezos';
 
-import { tezosNodeEdonetUrl } from '../../../__fixtures__/config';
+import { tezosNodeGranadaUrl } from '../../../__fixtures__/config';
 import { logger } from '../../../__fixtures__/services/logger';
 import { FA2Contract } from '../../../__fixtures__/smart-contract';
 
 describe('[lib/entrypoints/get-entrypoint-schema]', () => {
-  const tezosService = new TezosService(tezosNodeEdonetUrl);
+  const tezosService = new TezosService(tezosNodeGranadaUrl);
 
   afterEach(() => {
     jest.restoreAllMocks();

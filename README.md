@@ -113,7 +113,7 @@ npm run prettier:write
 | SEND_TRANSACTIONS_QUEUE_EXCHANGE           | topic_logs                                                         | The exchange name that the queue should be formed by         |
 | SEND_TRANSACTIONS_QUEUE_EXCHANGE_TYPE      | topic                                                              | The exchange type                                            |
 | SEND_TRANSACTIONS_WORKER_QUEUE_ROUTING_KEY | send_transactions.\*                                               | The routing key that the queue will be formed by             |
-| TEZOS_NODE_URLS                            | https://api.tez.ie/rpc/florencenet,https://florencenet.smartpy.io/ | List of Tezos Node Urls, separated by comma `,`              |
+| TEZOS_NODE_URLS                            | https://api.tez.ie/rpc/granadanet,https://granadanet.smartpy.io/ | List of Tezos Node Urls, separated by comma `,`              |
 | VAULT_URL                                  | http://localhost:8300/v1/                                          | The vault server URL                                         |
 | VAULT_TOKEN                                | myroot                                                             | The api token to access Vault server                         |
 
@@ -124,14 +124,14 @@ npm run prettier:write
 | BETTER_CALL_URL                | https://api.better-call.dev/v1/opg/                                                                  | The Better Call API Url to retrieve information about an operation       |
 | BETTER_CALL_KEY_TO_OPERATION   | 0                                                                                                    | The object key or array index to get the the information of an operation |
 | BETTER_CALL_KEY_TO_BLOCK_LEVEL | level                                                                                                | The object key representing the block level                              |
-| CONSEIL_URL                    | https://conseil-florence.cryptonomic-infra.tech:443/v2/data/tezos/florencenet/operation_groups/      | The Conseil API Url to retrieve information about an operation           |
+| CONSEIL_URL                    | https://conseil-granada.cryptonomic-infra.tech:443/v2/data/tezos/granadanet/operation_groups/      | The Conseil API Url to retrieve information about an operation           |
 | CONSEIL_KEY_TO_OPERATION       | operation_group                                                                                      | The object key or array index to get the the information of an operation |
 | CONSEIL_KEY_TO_BLOCK_LEVEL     | blockLevel                                                                                           | The object key representing the block level                              |
 | CONSEIL_API_KEY                | 503801e8-a8a0-4e7c-8c24-7bd310805843                                                                 | The api key to access the Conseil Indexer                                |
-| TZSTATS_URL                    | https://api.florence.tzstats.com/explorer/op/                                                        | The Tzstat API Url to retrieve information about an operation            |
+| TZSTATS_URL                    | https://api.granada.tzstats.com/explorer/op/                                                        | The Tzstat API Url to retrieve information about an operation            |
 | TZSTATS_KEY_TO_OPERATION       | 0                                                                                                    | The object key or array index to get the the information of an operation |
 | TZSTATS_KEY_TO_BLOCK_LEVEL     | height                                                                                               | The object key representing the block level                              |
-| TZKT_URL                       | https://api.florencenet.tzkt.io/v1/operations/                                                       | The Tzkt API Url to retrieve information about an operation              |
+| TZKT_URL                       | https://api.granadanet.tzkt.io/v1/operations/                                                       | The Tzkt API Url to retrieve information about an operation              |
 | TZKT_KEY_TO_OPERATION          | 0                                                                                                    | The object key or array index to get the the information of an operation |
 | TZKT_KEY_TO_BLOCK_LEVEL        | level                                                                                                | The object key representing the block level                              |
 
@@ -145,8 +145,8 @@ npm run prettier:write
 | DB_PORT_TEST                | 5432                                                               | The port to connect to database                 |
 | DB_PWD_TEST                 | randompwd                                                          | The password to connect to database             |
 | DB_USERNAME_TEST            | tezos-service                                                      | The user name to connect to database            |
-| TEZOS_NODE_EDONET_TEST      | https://api.tez.ie/rpc/florencenet                                 | A Tezos Node URL                                |
-| TEZOS_NODE_EDONET_TEST_URLS | https://api.tez.ie/rpc/florencenet,https://florencenet.smartpy.io/ | List of Tezos Node Urls, separated by comma `,` |
+| TEZOS_NODE_EDONET_TEST      | https://api.tez.ie/rpc/granadanet                                 | A Tezos Node URL                                |
+| TEZOS_NODE_EDONET_TEST_URLS | https://api.tez.ie/rpc/granadanet,https://granadanet.smartpy.io/ | List of Tezos Node Urls, separated by comma `,` |
 
 ## Kubernetes Installation
 ### Summary

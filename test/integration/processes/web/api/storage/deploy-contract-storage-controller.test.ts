@@ -3,7 +3,7 @@ import { WebProcess } from '../../../../../../src/processes/web/web-process';
 import {
   postgreConfig,
   serverConfig,
-  tezosNodeEdonetUrl,
+  tezosNodeGranadaUrl,
 } from '../../../../../__fixtures__/config';
 import { TezosService } from '../../../../../../src/services/tezos';
 import { SignerFactory } from '../../../../../../src/services/signer-factory';
@@ -12,7 +12,7 @@ import { PostgreService } from '../../../../../../src/services/postgre';
 
 describe('[processes/web/api/storage] Deploy Contract Controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
-  const tezosService = new TezosService(tezosNodeEdonetUrl);
+  const tezosService = new TezosService(tezosNodeGranadaUrl);
   const postgreService = new PostgreService(postgreConfig);
   const fakeSigner = new FakeSigner('pkh');
   const signerFactory = new SignerFactory();
