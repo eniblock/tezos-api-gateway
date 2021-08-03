@@ -14,13 +14,15 @@ export const serverConfig = {
   port: 5555,
 };
 
-export const tezosNodeEdonetUrl =
-  process.env.TEZOS_NODE_EDONET_TEST || 'https://testnet-tezos.giganode.io';
+export const tezosNodeGranadaUrl =
+  process.env.TEZOS_NODE_EDONET_TEST || 'https://granadanet.smartpy.io/';
 
-export const tezosNodeEdonetUrls = (
+export const tezosNodeGranadaUrls = (
   process.env.TEZOS_NODE_EDONET_TEST_URLS ||
-  'https://api.tez.ie/rpc/florencenet,https://florencenet.smartpy.io/'
-).split(',');
+  'https://api.tez.ie/rpc/granadanet,https://granadanet.smartpy.io/'
+)
+  //'https://testnet-tezos.giganode.io,https://api.tez.ie/rpc/granadanet,https://granadanet.smartpy.io/'
+  .split(',');
 
 export const amqpConfig: AmqpConfig = {
   url: process.env.AMQP_URL || 'amqp://localhost',

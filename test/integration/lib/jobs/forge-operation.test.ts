@@ -13,7 +13,7 @@ import {
 
 import {
   postgreConfig,
-  tezosNodeEdonetUrl,
+  tezosNodeGranadaUrl,
 } from '../../../__fixtures__/config';
 import { resetTable, selectData } from '../../../__utils__/postgre';
 import {
@@ -25,7 +25,7 @@ import {
 
 describe('[lib/jobs/forge-operation]', () => {
   const postgreService = new PostgreService(postgreConfig);
-  const tezosService = new TezosService(tezosNodeEdonetUrl);
+  const tezosService = new TezosService(tezosNodeGranadaUrl);
 
   beforeAll(async () => {
     await postgreService.initializeDatabase();
@@ -236,10 +236,10 @@ describe('[lib/jobs/forge-operation]', () => {
             testAccount2 +
             '"}}}',
           amount: 0,
-          fee: 2021,
+          fee: 824,
           source: testAccount,
           storage_limit: 67,
-          gas_limit: 16898,
+          gas_limit: 4925,
           branch: insertedForgeParameters[0].branch,
           counter: insertedForgeParameters[0].counter,
           job_id: createdJob.id,
@@ -255,10 +255,10 @@ describe('[lib/jobs/forge-operation]', () => {
             testAccount2 +
             '"}}}',
           amount: 0,
-          fee: 2066,
+          fee: 870,
           source: testAccount,
           storage_limit: 0,
-          gas_limit: 17343,
+          gas_limit: 5383,
           branch: insertedForgeParameters[1].branch,
           counter: insertedForgeParameters[1].counter,
           job_id: createdJob.id,

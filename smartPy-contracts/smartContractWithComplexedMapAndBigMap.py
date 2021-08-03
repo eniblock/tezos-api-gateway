@@ -81,20 +81,20 @@ def test():
     organizations = sp.map(
             {
                 sp.record(
-                    address = 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+                    address = 'tz1MPQBaR1r4hKveeCnNYPExnme5KBpbkWUP',
                     jwtToken = 'jwt'
                     ): sp.record(
                                 name = 'toto',
-                                publicKeyHash = sp.address('tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw'),
+                                publicKeyHash = sp.address('tz1MPQBaR1r4hKveeCnNYPExnme5KBpbkWUP'),
                                 publicKey = 'toto public key',
                                 datasources = datasource1
                             ),
                 sp.record(
-                    address = 'tz1hdQscorfqMzFqYxnrApuS5i6QSTuoAp3w',
+                    address = 'tz1WWJAgu1orxZqzDsakADEoHk3zg4nRP5Va',
                     jwtToken = 'jwt'
                     ): sp.record(
                                 name = 'tata',
-                                publicKeyHash = sp.address('tz1hdQscorfqMzFqYxnrApuS5i6QSTuoAp3w'),
+                                publicKeyHash = sp.address('tz1WWJAgu1orxZqzDsakADEoHk3zg4nRP5Va'),
                                 publicKey = 'tata public key',
                                 datasources = datasource2
                             )
@@ -109,8 +109,8 @@ def test():
             ): sp.record(
                     
                     address = sp.record (
-                        requesterAddress = sp.address('tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw'),
-                        providerAddress = sp.address('tz1hdQscorfqMzFqYxnrApuS5i6QSTuoAp3w')
+                        requesterAddress = sp.address('tz1MPQBaR1r4hKveeCnNYPExnme5KBpbkWUP'),
+                        providerAddress = sp.address('tz1WWJAgu1orxZqzDsakADEoHk3zg4nRP5Va')
                     ),
                     createdAt = sp.timestamp(1571761674),
                     jwtToken = sp.some('jwtToken')
@@ -122,8 +122,8 @@ def test():
             ): sp.record(
                     
                     address = sp.record (
-                        requesterAddress = sp.address('tz1hdQscorfqMzFqYxnrApuS5i6QSTuoAp3w'),
-                        providerAddress = sp.address('tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw')
+                        requesterAddress = sp.address('tz1WWJAgu1orxZqzDsakADEoHk3zg4nRP5Va'),
+                        providerAddress = sp.address('tz1MPQBaR1r4hKveeCnNYPExnme5KBpbkWUP')
                     ),
                     createdAt = sp.timestamp(1571761690),
                     jwtToken = sp.none
