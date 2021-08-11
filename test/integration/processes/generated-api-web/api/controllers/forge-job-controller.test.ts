@@ -3,7 +3,7 @@ import supertest from 'supertest';
 import {
   postgreConfig,
   serverConfig,
-  tezosNodeEdonetUrl,
+  tezosNodeGranadaUrl,
 } from '../../../../../__fixtures__/config';
 import { resetTable, selectData } from '../../../../../__utils__/postgre';
 
@@ -21,7 +21,7 @@ import {
 describe('[processes/generated-api-web/api/controllers] Forge job controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
   const postgreService = new PostgreService(postgreConfig);
-  const tezosService = new TezosService(tezosNodeEdonetUrl);
+  const tezosService = new TezosService(tezosNodeGranadaUrl);
 
   webProcess.postgreService = postgreService;
 
@@ -195,10 +195,10 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
             testAccount2 +
             '"}}}',
           amount: 0,
-          fee: 2037,
+          fee: 840,
           source: testAccount,
           storage_limit: 67,
-          gas_limit: 16898,
+          gas_limit: 4925,
           branch: insertedForgeParameters[0].branch,
           counter: insertedForgeParameters[0].counter,
           job_id: body.id,

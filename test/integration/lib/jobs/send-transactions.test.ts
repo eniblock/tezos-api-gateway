@@ -5,8 +5,8 @@ import { resetTable, selectData } from '../../../__utils__/postgre';
 import {
   amqpConfig,
   postgreConfig,
-  tezosNodeEdonetUrl,
-  tezosNodeEdonetUrls,
+  tezosNodeGranadaUrl,
+  tezosNodeGranadaUrls,
 } from '../../../__fixtures__/config';
 import {
   TestContractMethod,
@@ -42,9 +42,9 @@ import { GatewayPool } from '../../../../src/services/gateway-pool';
 
 describe('[lib/jobs/send-transactions] Send Transactions', () => {
   const postgreService = new PostgreService(postgreConfig);
-  const tezosService = new TezosService(tezosNodeEdonetUrl);
+  const tezosService = new TezosService(tezosNodeGranadaUrl);
   const amqpService = new AmqpService(amqpConfig, logger);
-  const gatewayPool = new GatewayPool(tezosNodeEdonetUrls, logger);
+  const gatewayPool = new GatewayPool(tezosNodeGranadaUrls, logger);
 
   beforeAll(async () => {
     await postgreService.initializeDatabase();
@@ -191,7 +191,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
       setSignerSpy = jest.spyOn(tezosService, 'setSigner');
 
       getContractSpy = jest
-        .spyOn(tezosService, 'getContract')
+        .spyOn(tezosService, 'getContractFromCache')
         .mockImplementation();
 
       jest

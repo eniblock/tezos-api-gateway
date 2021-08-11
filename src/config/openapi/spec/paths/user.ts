@@ -5,7 +5,7 @@ export default {
     post: {
       summary: 'Create user accounts',
       description:
-        'Create vault keys for by user Id, activate the accounts on the blockchain network, and return the Tezos address',
+        'Create vault keys for userId, activate the accounts on the blockchain network, and return the Tezos address, these are delegated accounts because Vault will be able to sign operations on your behalf since it generates public/private keys and stores them',
       requestBody: {
         description:
           'list of the identifiers of the users to be created, and the master key id to activate them',
@@ -81,6 +81,15 @@ export default {
               type: 'string',
               description: 'account identifiers',
             },
+          },
+        },
+        {
+          name: 'isDelegated',
+          in: 'query',
+          required: false,
+          schema: {
+            type: 'boolean',
+            default: true,
           },
         },
       ],
@@ -204,6 +213,57 @@ export default {
                     type: 'boolean',
                     description:
                       "Public key revelation status. Unrevealed account can't send manager operation (transaction, origination etc.). If the returned value is null that means that we were not able to fetch data",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    '/user/add': {
+      post: {
+        summary: 'Associate an user id with a public key into Vault',
+        description:
+          'Associate an user id with a public key into Vault, this is a self managed account because Vault will only store your public key',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                additionalProperties: false,
+                required: ['userId', 'publicKey'],
+                properties: {
+                  userId: {
+                    type: 'string',
+                    description: 'User account identifier',
+                  },
+                  publicKey: {
+                    type: 'string',
+                    description: 'public key hash of the created account',
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          201: {
+            description: 'successful association of user id / public key',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  properties: {
+                    userId: {
+                      type: 'string',
+                      description: 'User account identifier',
+                    },
+                    account: {
+                      type: 'string',
+                      description: 'public key hash of the created account',
                   },
                 },
               },

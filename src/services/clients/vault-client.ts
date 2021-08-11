@@ -129,12 +129,14 @@ export class VaultClient extends AbstractClient {
    *
    * @param {string} path                 - data location path
    * @param {string} key                  - the secret data key
+   * @param {string} keyNameOfSecret      - key name of the secret
    *
    * @return {string} return the stored secret
    */
   public async getSecret(
     path: string,
     key: string,
+    keyNameOfSecret: string,
   ): Promise<string | undefined> {
     const getSecretUrl = url.resolve(
       this.baseUrl,
@@ -151,7 +153,7 @@ export class VaultClient extends AbstractClient {
         '[VaultClient] Retrieve secret from vault',
       );
 
-      return result.data!.data!.userId;
+      return result.data!.data![keyNameOfSecret];
     } catch (err) {
       this.handleError(err, { keyName: key });
 
@@ -207,5 +209,87 @@ export class VaultClient extends AbstractClient {
     }
 
     return;
+  }
+
+  /**
+   * Call the the vault service to set a secret
+   *
+   * @param {string} path      - the where the secret will be stored
+   * @param {string} ref       - the reference
+   * @param {string} key       - the key for the secret
+   * @param {string} value     - the value of the key
+   *
+   * @return {Promise<void>}
+   */
+  public async setSecret(
+    path: string,
+    ref: string,
+    key: string,
+    value: string,
+  ): Promise<void> {
+    const createKeyUrl = url.resolve(
+      this.baseUrl,
+      `secret/data/${path}/${ref}`,
+    );
+
+    try {
+      const { body: result } = await superagent
+        .post(createKeyUrl)
+        .set({ 'X-Vault-Token': this._token })
+        .send({
+          data: {
+            [key]: value,
+          },
+        });
+
+      this.logger.info(
+        { resultData: result.data },
+        '[VaultClient] data received',
+      );
+    } catch (err) {
+      this.handleError(err, { keyName: ref });
+
+      if (err.status >= 400 && err.status < 500) {
+        throw new ClientError({
+          status: err.status,
+          message: JSON.stringify(err.response?.body),
+        });
+      }
+    }
+  }
+
+  /**
+   * @description              - fetch a list of keys from a {path} of KV Secrets Engine v2
+   * @param {string} path
+   * @return {string[]}        - a list of secret keys
+   */
+  public async getSecretMetadataList(path: string): Promise<string[]> {
+    const getSecretMetadataListUrl = url.resolve(
+      this.baseUrl,
+      `secret/metadata/${path}`,
+    );
+
+    try {
+      const { body: result } = await superagent(
+        'LIST',
+        getSecretMetadataListUrl,
+      ).set({ 'X-Vault-Token': this._token });
+
+      this.logger.info(
+        { resultData: result.data },
+        '[VaultClient] data received',
+      );
+      return result.data!.keys!;
+    } catch (err) {
+      this.handleError(err, { path });
+
+      if (err.status >= 400 && err.status < 500) {
+        throw new ClientError({
+          status: err.status,
+          message: JSON.stringify(err.response?.body),
+        });
+      }
+      throw err;
+    }
   }
 }

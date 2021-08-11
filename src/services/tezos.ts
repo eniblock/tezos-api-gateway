@@ -3,6 +3,7 @@ import { BlockResponse, OperationContentsTransaction } from '@taquito/rpc';
 import { OriginationOperation } from '@taquito/taquito/dist/types/operations/origination-operation';
 
 import { ForgeOperationResult } from '../const/interfaces/forge-operation-result';
+import cacheLocal from '../services/cache-local';
 
 export class TezosService {
   private _tezos: TezosToolkit;
@@ -29,6 +30,15 @@ export class TezosService {
 
   public async getContract(contractAddress: string) {
     return this._tezos.contract.at(contractAddress);
+  }
+
+  public async getContractFromCache(contractAddress: string) {
+    let contract = cacheLocal.get<any>(contractAddress);
+    if (contract === undefined) {
+      contract = await this.getContract(contractAddress);
+      cacheLocal.set(contractAddress, contract);
+    }
+    return contract;
   }
 
   public async getContractResponse(address: string) {

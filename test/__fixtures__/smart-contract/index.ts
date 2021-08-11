@@ -5,13 +5,13 @@ export const signedTransaction =
 export const signature =
   'edsigtorku6MkHkh8X97m5KofrJjQ18xT94JxjGjsQDsG9xrQ5P2wqHmE9H3FNew7hKMVFBGm8qsdcbtVC8V6g6rhEDQSALZbiA';
 export const branch = 'BLGPF5StvDnNGBpAV9uYNJUiCdw2vz7HRCUwxNEmh61EYYCbGNH';
-export const flexibleTokenContract = 'KT1LnJEtZttLAJeP45EzYvChAksRS1xE4hJ1'; // flexibleToken.py
-export const FA2Contract = 'KT1PaDxqNj7PkDTxps549uTLToKjmRQP6r99'; // template FA2
-export const FA2Contract3 = 'KT1SHwBVQFpg7wVCZRrYSfrK4eKoTGX87HTy'; // smartContractWithComplexedMapAndBigMap.py
-export const FA2Contract4 = 'KT1UCuBFrb21PBP4zXE7GwtcnF1Z2812VgCp'; // simpleMapKeyContract.py
+export const flexibleTokenContract = 'KT193dYyEtaFMLVQEtgsSgyx8ukhk1LJVice'; // flexibleToken.py
+export const FA2Contract = 'KT1RZmM8sCj25Sc8MzbUirh7trKe2oRRFqJT'; // template FA2
+export const FA2Contract3 = 'KT1LBCV9ScQS1sjgteTQva163Qepyn9aMpLz'; // smartContractWithComplexedMapAndBigMap.py
+export const FA2Contract4 = 'KT1PUfwatrm77YBegKx6JJEQ3cSeYiNb7P16'; // simpleMapKeyContract.py
 export const FA2Contract5 = 'KT1938ykzsYS1FR3WAyTa2BUTuTadtV1M9v8'; // Nonexistent contract
 export const FA2Contract7 = 'Bad contract format                '; // Bad contract format
-export const FA2Contract8 = 'KT1Nqq1uTuXEq46FCYsSRgUiKR9se2jjeSNV'; // Logical Pictures
+export const FA2Contract8 = 'KT1Lpf9hv9ndt6feuwbiSqdCoY1bd7YVNd9q'; // Logical Pictures
 
-export const testAccount = 'tz1hdQscorfqMzFqYxnrApuS5i6QSTuoAp3w';
-export const testAccount2 = 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw'; // Receiver account
+export const testAccount = 'tz1WWJAgu1orxZqzDsakADEoHk3zg4nRP5Va';
+export const testAccount2 = 'tz1MPQBaR1r4hKveeCnNYPExnme5KBpbkWUP'; // Receiver account

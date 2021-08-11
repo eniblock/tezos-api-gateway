@@ -6,6 +6,7 @@ import getUserController from './get-user-controller';
 import getUserByAddressController from './get-user-by-address-controller';
 import getUserInfoController from './get-user-info-controller';
 import { IndexerPool } from '../../../../services/indexer-pool';
+import addUserWithPublicKeyController from './add-user-with-public-key';
 
 /**
  * Setup entrypoints namespace route.
@@ -34,6 +35,13 @@ export default function registerUserRoutes(
   router.get(
     '/user/info/:address',
     getUserInfoController.getUserInfo(indexerPool),
+  );
+   
+  router.post(
+    '/user/add',
+    addUserWithPublicKeyController.addUserWithPublicKey(
+      gatewayPool,
+    ) as Application,
   );
 
   return router;

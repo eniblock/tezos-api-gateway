@@ -25,7 +25,7 @@ export const serverConfig = {
 
 export const tezosNodeUrls = (
   process.env.TEZOS_NODE_URLS ||
-  'https://florence-tezos.giganode.io,https://florencenet.smartpy.io,https://api.tez.ie/rpc/florencenet'
+  'https://granada-tezos.giganode.io,https://granadanet.smartpy.io,https://api.tez.ie/rpc/granadanet'
 ).split(',');
 
 export const amqpConfig: AmqpConfig = {
@@ -46,58 +46,44 @@ export const webProcessConfig: ProcessConfig = {
   exitTimeout: parseInt(3000, process.env.WEB_PROCESS_TIMEOUT),
 };
 
-const tzstatsIndexerConfig: IndexerConfig = {
-  name: 'tzstats',
-  apiUrl: process.env.TZSTATS_URL || 'https://api.florence.tzstats.com/',
-  keyToOperation: parseInt(0, process.env.TZSTATS_KEY_TO_OPERATION),
-  keyToBlockLevel: process.env.TZSTATS_KEY_TO_BLOCK_LEVEL || 'height',
-  pathToOperation: 'explorer/op/',
-  pathToUserInfo: 'explorer/account/',
-  keyToBalance: 'total_balance',
-  keyToReveal: 'is_revealed',
-};
-
+// const tzstatsIndexerConfig: IndexerConfig = {
+//   name: 'tzstats',
+//   apiUrl:
+//     process.env.TZSTATS_URL || 'https://api.granada.tzstats.com/explorer/op/',
+//   keyToOperation: parseInt(0, process.env.TZSTATS_KEY_TO_OPERATION),
+//   keyToBlockLevel: process.env.TZSTATS_KEY_TO_BLOCK_LEVEL || 'height',
+// };
+//
 const tzktIndexerConfig: IndexerConfig = {
   name: 'tzkt',
-  apiUrl: process.env.TZKT_URL || 'https://api.florencenet.tzkt.io/',
+  apiUrl:
+    process.env.TZKT_URL || 'https://api.granadanet.tzkt.io/v1/operations/',
   keyToOperation: parseInt(0, process.env.TZKT_KEY_TO_OPERATION),
   keyToBlockLevel: process.env.TZKT_KEY_TO_BLOCK_LEVEL || 'level',
-  pathToOperation: 'v1/operations/',
-  pathToUserInfo: 'v1/accounts/',
-  keyToReveal: 'revealed',
 };
 
 const betterCallIndexerConfig: IndexerConfig = {
   name: 'better-call',
-  apiUrl: process.env.BETTER_CALL_URL || 'https://api.better-call.dev/',
+  apiUrl: process.env.BETTER_CALL_URL || 'https://api.better-call.dev/v1/opg/',
   keyToOperation: parseInt(0, process.env.BETTER_CALL_KEY_TO_OPERATION),
   keyToBlockLevel: process.env.BETTER_CALL_KEY_TO_BLOCK_LEVEL || 'level',
-  pathToOperation: 'v1/opg/',
-  pathToUserInfo:
-    process.env.BETTER_CALL_PATH_TO_USER_INFO || 'v1/account/florencenet/',
 };
 
-const conseilIndexerConfig: IndexerConfig = {
-  name: 'conseil',
-  apiUrl:
-    process.env.CONSEIL_URL ||
-    'https://conseil-florence.cryptonomic-infra.tech:443/',
-  keyToOperation: process.env.CONSEIL_KEY_TO_OPERATION || 'operation_group',
-  keyToBlockLevel: process.env.CONSEIL_KEY_TO_BLOCK_LEVEL || 'blockLevel',
-  apiKey: process.env.CONSEIL_API_KEY || '503801e8-a8a0-4e7c-8c24-7bd310805843',
-  pathToOperation:
-    process.env.CONSEIL_PATH_TO_OPERATION ||
-    'v2/data/tezos/florencenet/operation_groups/',
-  pathToUserInfo:
-    process.env.CONSEIL_PATH_TO_USER_INFO ||
-    'v2/data/tezos/florencenet/accounts/',
-};
+// const conseilIndexerConfig: IndexerConfig = {
+//   name: 'conseil',
+//   apiUrl:
+//     process.env.CONSEIL_URL ||
+//     'https://conseil-granada.cryptonomic-infra.tech:443/v2/data/tezos/granadanet/operation_groups/',
+//   keyToOperation: process.env.CONSEIL_KEY_TO_OPERATION || 'operation_group',
+//   keyToBlockLevel: process.env.CONSEIL_KEY_TO_BLOCK_LEVEL || 'blockLevel',
+//   apiKey: process.env.CONSEIL_API_KEY || '503801e8-a8a0-4e7c-8c24-7bd310805843',
+// };
 
 export const indexerConfigs = [
-  tzstatsIndexerConfig,
+  // tzstatsIndexerConfig,
   tzktIndexerConfig,
   betterCallIndexerConfig,
-  conseilIndexerConfig,
+  // conseilIndexerConfig,
 ];
 
 export const nbOfConfirmation = parseInt(
@@ -113,7 +99,7 @@ export const vaultClientConfig = {
 };
 
 export const contractAddress =
-  process.env.CONTRACT_ADDRESS || 'KT1LnJEtZttLAJeP45EzYvChAksRS1xE4hJ1';
+  process.env.CONTRACT_ADDRESS || 'KT193dYyEtaFMLVQEtgsSgyx8ukhk1LJVice'; // flexibleToken.py
 
 export const transferAmount = parseInt(2, process.env.TRANSFER_AMOUNT);
 

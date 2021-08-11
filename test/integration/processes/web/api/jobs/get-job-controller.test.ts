@@ -10,14 +10,14 @@ import { TezosService } from '../../../../../../src/services/tezos';
 import {
   postgreConfig,
   serverConfig,
-  tezosNodeEdonetUrl,
+  tezosNodeGranadaUrl,
 } from '../../../../../__fixtures__/config';
 import { resetTable } from '../../../../../__utils__/postgre';
 
 describe('[processes/web/api/jobs] Get job controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
   const postgreService = new PostgreService(postgreConfig);
-  const tezosService = new TezosService(tezosNodeEdonetUrl);
+  const tezosService = new TezosService(tezosNodeGranadaUrl);
   let job: Jobs;
 
   webProcess.postgreService = postgreService;
