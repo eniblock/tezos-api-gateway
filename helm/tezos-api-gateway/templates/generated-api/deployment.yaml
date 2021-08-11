@@ -39,23 +39,23 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: DB_USERNAME
-              value: {{ .Values.generatedApi.postgresql.postgresqlUsername | quote }}
+              value: {{ .Values.db.postgresqlUsername | quote }}
             - name: DB_NAME
-              value: {{ .Values.generatedApi.postgresql.postgresqlDatabase | quote }}
+              value: {{ .Values.db.postgresqlDatabase | quote }}
             - name: DB_PWD
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Release.Name }}-{{ .Values.generatedApi.postgresql.name }}"
+                  name: "{{ .Release.Name }}-{{ .Values.db.nameOverride }}"
                   key: postgresql-password
             - name: DB_HOST
-              value: "{{ .Release.Name }}-{{ .Values.generatedApi.postgresql.name }}"
+              value: "{{ .Release.Name }}-{{ .Values.db.nameOverride }}"
             - name: AMQP_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Release.Name }}-{{ .Values.generatedApi.rabbitmq.name }}"
+                  name: "{{ .Release.Name }}-{{ .Values.rabbitmq.nameOverride }}"
                   key: rabbitmq-password
             - name: AMQP_URL
-              value: "amqp://user:$(AMQP_PASSWORD)@{{ .Release.Name }}-{{ .Values.generatedApi.rabbitmq.name }}"
+              value: "amqp://user:$(AMQP_PASSWORD)@{{ .Release.Name }}-{{ .Values.rabbitmq.nameOverride }}"
             - name: VAULT_URL
               value: "http://{{ .Release.Name }}-{{ .Values.generatedApi.vault.name }}:{{ .Values.generatedApi.vault.port }}/v1/"
             - name: VAULT_TOKEN
