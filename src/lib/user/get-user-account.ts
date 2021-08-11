@@ -41,13 +41,8 @@ export async function getUserAccounts(
         if (!publicKey) {
           throw new UndefinedPublicKeyError(user);
         }
-        await sodium.ready;
-        const bufferPublicKey = await Buffer.from(publicKey, 'base64');
 
-        const pkh = b58cencode(
-          sodium.crypto_generichash(20, new Uint8Array(bufferPublicKey)),
-          prefix.tz1,
-        );
+        const pkh = await publicKeyHashed(publicKey);
 
         logger.info(
           { publicKeyHash: pkh },
@@ -68,4 +63,67 @@ export async function getUserAccounts(
 
     throw err;
   }
+}
+
+export async function getSelfManagedUserAccounts(users: string[]) {
+  logger.info(
+    {
+      userId: users,
+    },
+    '[lib/user/getUserAccounts] Going to get accounts for self-managed users',
+  );
+
+  try {
+    const vaultClient = new VaultClient(vaultClientConfig, logger);
+    const userIdFromVault = await vaultClient.getSecretMetadataList(
+      'self-managed',
+    );
+
+    return await Promise.all(
+      users.map(async (user) => {
+        if (!userIdFromVault.includes(user)) {
+          return {
+            userId: user,
+            account: null,
+          };
+        }
+
+        const publicKey = await vaultClient.getSecret(
+          'self-managed',
+          user,
+          'publicKey',
+        );
+        if (publicKey === undefined) throw new UndefinedPublicKeyError(user);
+
+        const pkh = await publicKeyHashed(publicKey);
+
+        logger.info(
+          { publicKeyHash: pkh },
+          '[VaultSigner/publicKeyHash] Retrieved public key hash',
+        );
+
+        return {
+          userId: user,
+          account: pkh,
+        };
+      }),
+    );
+  } catch (err) {
+    logger.error(
+      { error: err },
+      '[lib/user/getUserAccounts] An Unexpected error happened',
+    );
+
+    throw err;
+  }
+}
+
+async function publicKeyHashed(publicKey: string) {
+  await sodium.ready;
+  const bufferPublicKey = await Buffer.from(publicKey, 'base64');
+
+  return b58cencode(
+    sodium.crypto_generichash(20, new Uint8Array(bufferPublicKey)),
+    prefix.tz1,
+  );
 }
