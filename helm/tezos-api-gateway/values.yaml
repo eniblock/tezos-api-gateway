@@ -315,7 +315,7 @@ db:
   resources:
     requests:
       memory: 256Mi
-      cpu: 100m
+      cpu: 50m
 
 rabbitmq:
   name: rabbitmq
