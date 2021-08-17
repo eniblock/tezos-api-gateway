@@ -316,6 +316,9 @@ db:
     requests:
       memory: 256Mi
       cpu: 50m
+  primary:
+    podAnnotations:
+      "cluster-autoscaler.kubernetes.io/safe-to-evict": "true"
 
 rabbitmq:
   name: rabbitmq
