@@ -25,7 +25,7 @@ export const serverConfig = {
 
 export const tezosNodeUrls = (
   process.env.TEZOS_NODE_URLS ||
-  'https://granada-tezos.giganode.io,https://granadanet.smartpy.io,https://api.tez.ie/rpc/granadanet'
+  'https://granadanet.smartpy.io,https://api.tez.ie/rpc/granadanet,https://rpc.granada.tzstats.com'
 ).split(',');
 
 export const amqpConfig: AmqpConfig = {
@@ -46,14 +46,14 @@ export const webProcessConfig: ProcessConfig = {
   exitTimeout: parseInt(3000, process.env.WEB_PROCESS_TIMEOUT),
 };
 
-// const tzstatsIndexerConfig: IndexerConfig = {
-//   name: 'tzstats',
-//   apiUrl:
-//     process.env.TZSTATS_URL || 'https://api.granada.tzstats.com/explorer/op/',
-//   keyToOperation: parseInt(0, process.env.TZSTATS_KEY_TO_OPERATION),
-//   keyToBlockLevel: process.env.TZSTATS_KEY_TO_BLOCK_LEVEL || 'height',
-// };
-//
+const tzstatsIndexerConfig: IndexerConfig = {
+  name: 'tzstats',
+  apiUrl:
+    process.env.TZSTATS_URL || 'https://api.granada.tzstats.com/explorer/op/',
+  keyToOperation: parseInt(0, process.env.TZSTATS_KEY_TO_OPERATION),
+  keyToBlockLevel: process.env.TZSTATS_KEY_TO_BLOCK_LEVEL || 'height',
+};
+
 const tzktIndexerConfig: IndexerConfig = {
   name: 'tzkt',
   apiUrl:
@@ -80,7 +80,7 @@ const betterCallIndexerConfig: IndexerConfig = {
 // };
 
 export const indexerConfigs = [
-  // tzstatsIndexerConfig,
+  tzstatsIndexerConfig,
   tzktIndexerConfig,
   betterCallIndexerConfig,
   // conseilIndexerConfig,

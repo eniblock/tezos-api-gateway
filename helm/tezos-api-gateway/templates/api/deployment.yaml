@@ -66,6 +66,10 @@ spec:
                 secretKeyRef:
                   name: "{{ .Release.Name }}-{{ .Values.api.vault.name }}"
                   key: VAULT_ROOT_TOKEN
+            {{- range $key, $value := .Values.api.extraEnvVars }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
           ports:
             - name: http
               containerPort: 3333
