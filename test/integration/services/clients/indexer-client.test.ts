@@ -23,7 +23,7 @@ describe('[services/clients] Indexer Client', () => {
 
   describe('#getOperationBlockLevel', () => {
     const betterCallIndexerClient = new IndexerClient(
-      indexerConfigs[1],
+      indexerConfigs[2],
       logger,
     );
 
@@ -33,13 +33,8 @@ describe('[services/clients] Indexer Client', () => {
         .get(`/${indexerClient.config.pathToOperation}${operationHash}`)
         .reply(500);
 
-<<<<<<< HEAD
-      const conseilIndexerNock = nock(conseilIndexerClient.config.apiUrl)
-        .get(`/${conseilIndexerClient.config.pathToOperation}${operationHash}`)
-=======
-      const conseilIndexerNock = nock(betterCallIndexerClient.config.apiUrl)
-        .get(`/${operationHash}`)
->>>>>>> develop
+      const betterCallIndexerNock = nock(betterCallIndexerClient.config.apiUrl)
+        .get(`/${betterCallIndexerClient.config.pathToOperation}${operationHash}`)
         .reply(500);
 
       await expect(
@@ -50,7 +45,7 @@ describe('[services/clients] Indexer Client', () => {
       ).resolves.toBeUndefined();
 
       indexerNock.done();
-      conseilIndexerNock.done();
+      betterCallIndexerNock.done();
 
       expect(loggerInfoSpy).toHaveBeenCalled();
     });
