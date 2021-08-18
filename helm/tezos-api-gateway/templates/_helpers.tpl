@@ -90,3 +90,35 @@ Parameter: [$, Secret name, [Secret key 1, Secret key 2, ...]]
 {{- end }}
 {{- end }}
 {{- end }}
+
+{{/*
+Db fullname
+*/}}
+{{- define "tezos-api-gateway.db.fullname" -}}
+{{- if .Values.db.fullnameOverride }}
+{{- .Values.db.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- $name := default .Chart.Name .Values.db.nameOverride }}
+{{- if eq $name .Release.Name }}
+{{- .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+RabbitMQ fullname
+*/}}
+{{- define "tezos-api-gateway.rabbitmq.fullname" -}}
+{{- if .Values.rabbitmq.fullnameOverride }}
+{{- .Values.rabbitmq.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- $name := default .Chart.Name .Values.rabbitmq.nameOverride }}
+{{- if eq $name .Release.Name }}
+{{- .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
+{{- end }}
+{{- end }}
+{{- end }}

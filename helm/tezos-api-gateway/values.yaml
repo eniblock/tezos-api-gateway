@@ -66,10 +66,6 @@ api:
 
   numberOfOperationConfirmation: 1
 
-  vault:
-    name: vault
-    port: 8200
-
 generatedApi:
   enabled: false
 
@@ -128,10 +124,6 @@ generatedApi:
 
   numberOfOperationConfirmation: 1
 
-  vault:
-    name: vault
-    port: 8200
-
 operationStatusWorker:
   replicaCount: 1
 
@@ -171,10 +163,6 @@ operationStatusWorker:
   affinity: {}
 
   numberOfOperationConfirmation: 1
-
-  vault:
-    name: vault
-    port: 8200
 
 sendTransactionsWorker:
   replicaCount: 1
@@ -216,10 +204,6 @@ sendTransactionsWorker:
 
   numberOfOperationConfirmation: 1
 
-  vault:
-    name: vault
-    port: 8200
-
 injectionWorker:
   replicaCount: 1
 
@@ -259,10 +243,6 @@ injectionWorker:
   affinity: {}
 
   numberOfOperationConfirmation: 1
-
-  vault:
-    name: vault
-    port: 8200
 
 db:
   nameOverride: db
@@ -307,6 +287,7 @@ rabbitmq:
       memory: 300Mi
 
 vault:
+  nameOverride: vault
   server:
     debug: false
 
@@ -330,3 +311,5 @@ vault:
     requests:
       cpu: 50m
       memory: 125Mi
+  service:
+    port: 8200
