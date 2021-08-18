@@ -66,27 +66,3 @@ Create the name of the service account to use
 {{- printf "{\"auths\":{\"%s\":{\"username\":\"%s\",\"password\":\"%s\",\"email\":\"%s\",\"auth\":\"%s\"}}}" .registry .username .password .email (printf "%s:%s" .username .password | b64enc) | b64enc }}
 {{- end }}
 {{- end }}
-
-{{/*
-Create secret data with automatic initialization
-Parameter: [$, Secret name, [Secret key 1, Secret key 2, ...]]
-*/}}
-{{- define "tezos-api-gateway.automaticSecret" -}}
-{{- $ := index . 0 -}}
-{{- $name := index . 1 -}}
-{{- $keys := index . 2 -}}
-{{- $secretLength := 20 }}
-{{- if and (hasKey $.Values.global "dev") ($.Values.global.dev) }}
-{{- range $keys }}
-{{ . }}: {{ printf "%s-%s" $name . | sha256sum | trunc $secretLength | b64enc | quote }}
-{{- end }}
-{{- else if $.Release.IsUpgrade }}
-{{- range $keys }}
-{{ . }}: {{ index (lookup "v1" "Secret" $.Release.Namespace $name).data . }}
-{{- end }}
-{{- else }}
-{{- range $keys }}
-{{ . }}: {{ randAlphaNum $secretLength | b64enc | quote }}
-{{- end }}
-{{- end }}
-{{- end }}
