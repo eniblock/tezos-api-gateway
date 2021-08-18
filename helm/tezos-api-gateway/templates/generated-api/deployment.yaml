@@ -65,6 +65,10 @@ spec:
                   key: VAULT_ROOT_TOKEN
             - name: CONTRACT_ADDRESS
               value: {{ .Values.generatedApi.contract}}
+            {{- range $key, $value := .Values.extraEnvVars }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
           ports:
             - name: http
               containerPort: 3333

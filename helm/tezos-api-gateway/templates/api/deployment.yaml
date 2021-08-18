@@ -66,7 +66,7 @@ spec:
                 secretKeyRef:
                   name: "{{ .Release.Name }}-{{ .Values.api.vault.name }}"
                   key: VAULT_ROOT_TOKEN
-            {{- range $key, $value := .Values.api.extraEnvVars }}
+            {{- range $key, $value := .Values.extraEnvVars }}
             - name: {{ $key }}
               value: {{ $value | quote }}
             {{- end }}
