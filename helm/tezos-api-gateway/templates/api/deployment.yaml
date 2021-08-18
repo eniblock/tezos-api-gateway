@@ -60,11 +60,11 @@ spec:
             - name: AMQP_URL
               value: "amqp://user:$(AMQP_PASSWORD)@{{ .Release.Name }}-{{ .Values.rabbitmq.nameOverride }}"
             - name: VAULT_URL
-              value: "http://{{ .Release.Name }}-{{ .Values.api.vault.name }}:{{ .Values.api.vault.port }}/v1/"
+              value: "http://{{ .Release.Name }}-{{ .Values.vault.nameOverride }}:{{ .Values.vault.service.port }}/v1/"
             - name: VAULT_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Release.Name }}-{{ .Values.api.vault.name }}"
+                  name: "{{ .Release.Name }}-{{ .Values.vault.nameOverride }}"
                   key: VAULT_ROOT_TOKEN
             {{- range $key, $value := .Values.extraEnvVars }}
             - name: {{ $key }}
