@@ -259,11 +259,15 @@ db:
       memory: 256Mi
       cpu: 50m
   primary:
+    annotations:
+      reloader.stakater.com/auto: "true"
     podAnnotations:
       "cluster-autoscaler.kubernetes.io/safe-to-evict": "true"
 
 rabbitmq:
   nameOverride: rabbitmq
+  commonAnnotations:
+    reloader.stakater.com/auto: "true"
   auth:
     tls:
       enabled: true
