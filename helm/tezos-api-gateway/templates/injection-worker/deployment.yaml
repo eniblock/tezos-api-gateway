@@ -39,23 +39,23 @@ spec:
           command: ["node", "build/src/processes/workers/injection/index.js"]
           env:
             - name: DB_USERNAME
-              value: {{ .Values.db.postgresqlUsername | quote }}
+              value: {{ .Values.injectionWorker.postgresql.postgresqlUsername | quote }}
             - name: DB_NAME
-              value: {{ .Values.db.postgresqlDatabase | quote }}
+              value: {{ .Values.injectionWorker.postgresql.postgresqlDatabase | quote }}
             - name: DB_PWD
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Release.Name }}-{{ .Values.db.nameOverride }}"
+                  name: "{{ .Release.Name }}-{{ .Values.injectionWorker.postgresql.name }}"
                   key: postgresql-password
             - name: DB_HOST
-              value: "{{ .Release.Name }}-{{ .Values.db.nameOverride }}"
+              value: "{{ .Release.Name }}-{{ .Values.injectionWorker.postgresql.name }}"
             - name: AMQP_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Release.Name }}-{{ .Values.rabbitmq.nameOverride }}"
+                  name: "{{ .Release.Name }}-{{ .Values.injectionWorker.rabbitmq.name }}"
                   key: rabbitmq-password
             - name: AMQP_URL
-              value: "amqp://user:$(AMQP_PASSWORD)@{{ .Release.Name }}-{{ .Values.rabbitmq.nameOverride }}"
+              value: "amqp://user:$(AMQP_PASSWORD)@{{ .Release.Name }}-{{ .Values.injectionWorker.rabbitmq.name }}"
             - name: VAULT_URL
               value: "http://{{ .Release.Name }}-{{ .Values.injectionWorker.vault.name }}:{{ .Values.injectionWorker.vault.port }}/v1/"
             - name: VAULT_TOKEN
@@ -63,6 +63,10 @@ spec:
                 secretKeyRef:
                   name: "{{ .Release.Name }}-{{ .Values.injectionWorker.vault.name }}"
                   key: VAULT_ROOT_TOKEN
+            {{- range $key, $value := .Values.extraEnvVars }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
           ports:
             - name: prometheus
               containerPort: 9466
