@@ -66,14 +66,6 @@ api:
 
   numberOfOperationConfirmation: 1
 
-  postgresql:
-    name: db
-    postgresqlDatabase: tezos_api_gateway
-    postgresqlUsername: tezos-service
-
-  rabbitmq:
-    name: rabbitmq
-
   vault:
     name: vault
     port: 8200
@@ -136,14 +128,6 @@ generatedApi:
 
   numberOfOperationConfirmation: 1
 
-  postgresql:
-    name: db
-    postgresqlDatabase: tezos_api_gateway
-    postgresqlUsername: tezos-service
-
-  rabbitmq:
-    name: rabbitmq
-
   vault:
     name: vault
     port: 8200
@@ -187,14 +171,6 @@ operationStatusWorker:
   affinity: {}
 
   numberOfOperationConfirmation: 1
-
-  postgresql:
-    name: db
-    postgresqlDatabase: tezos_api_gateway
-    postgresqlUsername: tezos-service
-
-  rabbitmq:
-    name: rabbitmq
 
   vault:
     name: vault
@@ -240,14 +216,6 @@ sendTransactionsWorker:
 
   numberOfOperationConfirmation: 1
 
-  postgresql:
-    name: db
-    postgresqlDatabase: tezos_api_gateway
-    postgresqlUsername: tezos-service
-
-  rabbitmq:
-    name: rabbitmq
-
   vault:
     name: vault
     port: 8200
@@ -292,21 +260,15 @@ injectionWorker:
 
   numberOfOperationConfirmation: 1
 
-  postgresql:
-    name: db
-    postgresqlDatabase: tezos_api_gateway
-    postgresqlUsername: tezos-service
-
-  rabbitmq:
-    name: rabbitmq
-
   vault:
     name: vault
     port: 8200
 
 db:
+  nameOverride: db
   postgresqlDatabase: tezos_api_gateway
   postgresqlUsername: tezos-service
+  existingSecret: "{{ .Release.Name }}-{{ .Values.nameOverride }}"
   persistence:
     enabled: true
     size: 1Gi
@@ -315,23 +277,27 @@ db:
   resources:
     requests:
       memory: 256Mi
-      cpu: 100m
+      cpu: 50m
+  primary:
+    podAnnotations:
+      "cluster-autoscaler.kubernetes.io/safe-to-evict": "true"
 
 rabbitmq:
-  name: rabbitmq
+  nameOverride: rabbitmq
   auth:
     tls:
       enabled: true
       existingSecretFullChain: true
-      existingSecret: tezos-api-gateway-rabbitmq-tls-secret
+      existingSecret: "{{ .Release.Name }}-{{ .Values.nameOverride }}-tls-secret"
       sslOptionsVerify: verify_none
-    erlangCookie: 94155874a93041aca19378c9a4ee28ac
+    existingPasswordSecret: "{{ .Release.Name }}-{{ .Values.nameOverride }}"
+    existingErlangSecret: "{{ .Release.Name }}-{{ .Values.nameOverride }}"
   persistence:
     enabled: true
     size: 1Gi
   loadBalancer:
     host: localhost
-    secretName: tezos-api-gateway-rabbitmq-tls-secret
+    secretName: "{{ .Release.Name }}-{{ .Values.rabbitmq.nameOverride }}-tls-secret"
     issuerRef:
       kind: ClusterIssuer
       name: local

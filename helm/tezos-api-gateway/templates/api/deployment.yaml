@@ -42,23 +42,23 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: DB_USERNAME
-              value: {{ .Values.api.postgresql.postgresqlUsername | quote }}
+              value: {{ .Values.db.postgresqlUsername | quote }}
             - name: DB_NAME
-              value: {{ .Values.api.postgresql.postgresqlDatabase | quote }}
+              value: {{ .Values.db.postgresqlDatabase | quote }}
             - name: DB_PWD
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Release.Name }}-{{ .Values.api.postgresql.name }}"
+                  name: "{{ .Release.Name }}-{{ .Values.db.nameOverride }}"
                   key: postgresql-password
             - name: DB_HOST
-              value: "{{ .Release.Name }}-{{ .Values.api.postgresql.name }}"
+              value: "{{ .Release.Name }}-{{ .Values.db.nameOverride }}"
             - name: AMQP_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Release.Name }}-{{ .Values.api.rabbitmq.name }}"
+                  name: "{{ .Release.Name }}-{{ .Values.rabbitmq.nameOverride }}"
                   key: rabbitmq-password
             - name: AMQP_URL
-              value: "amqp://user:$(AMQP_PASSWORD)@{{ .Release.Name }}-{{ .Values.api.rabbitmq.name }}"
+              value: "amqp://user:$(AMQP_PASSWORD)@{{ .Release.Name }}-{{ .Values.rabbitmq.nameOverride }}"
             - name: VAULT_URL
               value: "http://{{ .Release.Name }}-{{ .Values.api.vault.name }}:{{ .Values.api.vault.port }}/v1/"
             - name: VAULT_TOKEN
@@ -66,6 +66,10 @@ spec:
                 secretKeyRef:
                   name: "{{ .Release.Name }}-{{ .Values.api.vault.name }}"
                   key: VAULT_ROOT_TOKEN
+            {{- range $key, $value := .Values.api.extraEnvVars }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
           ports:
             - name: http
               containerPort: 3333
