@@ -1,6 +1,7 @@
+global:
+  dev: true
+
 nameOverride: tag
-db:
-  postgresqlPassword: randompwd
 
 rabbitmq:
   ingress:
@@ -11,7 +12,6 @@ rabbitmq:
     tls: true
     certManager: true
   auth:
-    password: randompwd
     tls:
       existingSecret: rabbitmq.tezos-api-gateway.localhost-tls
       sslOptionsVerify: verify_none
