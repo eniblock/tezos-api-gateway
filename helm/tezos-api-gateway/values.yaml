@@ -1,6 +1,6 @@
 image:
   repository: "registry.gitlab.com/xdev-tech/xdev-enterprise-business-network/tezos-api-gateway"
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   # tag: "sometag"
 
