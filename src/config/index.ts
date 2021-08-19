@@ -74,7 +74,7 @@ const betterCallIndexerConfig: IndexerConfig = {
   keyToBlockLevel: process.env.BETTER_CALL_KEY_TO_BLOCK_LEVEL || 'level',
   pathToOperation: 'v1/opg/',
   pathToUserInfo:
-      process.env.BETTER_CALL_PATH_TO_USER_INFO || 'v1/account/granadanet/',
+    process.env.BETTER_CALL_PATH_TO_USER_INFO || 'v1/account/granadanet/',
 };
 
 // const conseilIndexerConfig: IndexerConfig = {
@@ -92,7 +92,6 @@ const betterCallIndexerConfig: IndexerConfig = {
 //     process.env.CONSEIL_PATH_TO_USER_INFO ||
 //     'v2/data/tezos/granadanet/accounts/',
 // };
-
 
 export const indexerConfigs = [
   tzstatsIndexerConfig,

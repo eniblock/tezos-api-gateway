@@ -34,7 +34,9 @@ describe('[services/clients] Indexer Client', () => {
         .reply(500);
 
       const betterCallIndexerNock = nock(betterCallIndexerClient.config.apiUrl)
-        .get(`/${betterCallIndexerClient.config.pathToOperation}${operationHash}`)
+        .get(
+          `/${betterCallIndexerClient.config.pathToOperation}${operationHash}`,
+        )
         .reply(500);
 
       await expect(

@@ -213,7 +213,6 @@ export default {
                     type: 'boolean',
                     description:
                       "Public key revelation status. Unrevealed account can't send manager operation (transaction, origination etc.). If the returned value is null that means that we were not able to fetch data",
-                    },
                   },
                 },
               },
@@ -222,48 +221,49 @@ export default {
         },
       },
     },
-    '/user/add': {
-      post: {
-        summary: 'Associate an user id with a public key into Vault',
-        description:
-          'Associate an user id with a public key into Vault, this is a self managed account because Vault will only store your public key',
-        requestBody: {
-          required: true,
-          content: {
-            'application/json': {
-              schema: {
-                type: 'object',
-                additionalProperties: false,
-                required: ['userId', 'publicKey'],
-                properties: {
-                  userId: {
-                    type: 'string',
-                    description: 'User account identifier',
-                  },
-                  publicKey: {
-                    type: 'string',
-                    description: 'public key hash of the created account',
-                  },
+  },
+  '/user/add': {
+    post: {
+      summary: 'Associate an user id with a public key into Vault',
+      description:
+        'Associate an user id with a public key into Vault, this is a self managed account because Vault will only store your public key',
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['userId', 'publicKey'],
+              properties: {
+                userId: {
+                  type: 'string',
+                  description: 'User account identifier',
+                },
+                publicKey: {
+                  type: 'string',
+                  description: 'public key hash of the created account',
                 },
               },
             },
           },
         },
-        responses: {
-          201: {
-            description: 'successful association of user id / public key',
-            content: {
-              'application/json': {
-                schema: {
-                  type: 'object',
-                  properties: {
-                    userId: {
-                      type: 'string',
-                      description: 'User account identifier',
-                    },
-                    account: {
-                      type: 'string',
-                      description: 'public key hash of the created account',
+      },
+      responses: {
+        201: {
+          description: 'successful association of user id / public key',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  userId: {
+                    type: 'string',
+                    description: 'User account identifier',
+                  },
+                  account: {
+                    type: 'string',
+                    description: 'public key hash of the created account',
                   },
                 },
               },

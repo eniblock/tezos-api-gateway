@@ -36,7 +36,7 @@ export default function registerUserRoutes(
     '/user/info/:address',
     getUserInfoController.getUserInfo(indexerPool),
   );
-   
+
   router.post(
     '/user/add',
     addUserWithPublicKeyController.addUserWithPublicKey(
