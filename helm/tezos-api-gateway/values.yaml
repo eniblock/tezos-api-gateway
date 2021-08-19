@@ -263,6 +263,10 @@ db:
       reloader.stakater.com/auto: "true"
     podAnnotations:
       "cluster-autoscaler.kubernetes.io/safe-to-evict": "true"
+  rbac:
+    create: true
+  serviceAccount:
+    enabled: true
 
 rabbitmq:
   nameOverride: rabbitmq
