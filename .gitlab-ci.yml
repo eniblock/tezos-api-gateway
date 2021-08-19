@@ -34,6 +34,15 @@ test:
       - "*.json"
       - "*.js"
 
+helm-lint:
+  stage: test
+  image: registry.gitlab.com/the-blockchain-xdev/xdev-product/build-images/helm:develop
+  allow_failure: true
+  script:
+    - helm registry login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - helm dependency update ./helm/tezos-api-gateway
+    - lint helm/tezos-api-gateway --values helm/tezos-api-gateway/values-dev.yaml
+
 sonarcloud-check:
   image:
     name: sonarsource/sonar-scanner-cli:latest
