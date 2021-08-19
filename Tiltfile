@@ -3,8 +3,8 @@
 if config.tilt_subcommand == 'up':
     # check that registry gitlab secrets are properly configured and login with helm
     docker_config = decode_json(local('clk k8s -c ' + k8s_context() + ' docker-credentials -hd gitlab-registry', quiet=True))
-    # docker_config = decode_json(local('clk k8s -c ' + k8s_context() + ' docker-credentials -h gitlab-registry', quiet=True))
     os.environ['CI_JOB_TOKEN'] = docker_config['registry.gitlab.com']['password']
+
     # update the helm package dependencies a first time at startup, so helm can load the helm chart
     local('clk k8s -c ' + k8s_context() + ' helm-dependency-update helm/tezos-api-gateway')
 
