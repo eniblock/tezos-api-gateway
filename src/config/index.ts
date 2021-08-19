@@ -25,7 +25,7 @@ export const serverConfig = {
 
 export const tezosNodeUrls = (
   process.env.TEZOS_NODE_URLS ||
-  'https://granada-tezos.giganode.io,https://granadanet.smartpy.io,https://api.tez.ie/rpc/granadanet'
+  'https://granadanet.smartpy.io,https://api.tez.ie/rpc/granadanet,https://rpc.granada.tzstats.com'
 ).split(',');
 
 export const amqpConfig: AmqpConfig = {
