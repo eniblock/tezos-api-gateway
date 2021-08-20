@@ -6,6 +6,8 @@ metadata:
   labels:
     {{- include "tezos-api-gateway.labels" . | nindent 4 }}
     app.kubernetes.io/component: api
+  annotations:
+    reloader.stakater.com/auto: "true"
 spec:
   {{- if not .Values.api.autoscaling.enabled }}
   replicas: {{ .Values.api.replicaCount }}
