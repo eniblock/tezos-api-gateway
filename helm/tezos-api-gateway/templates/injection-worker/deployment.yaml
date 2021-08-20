@@ -5,6 +5,8 @@ metadata:
   labels:
     {{- include "tezos-api-gateway.labels" . | nindent 4 }}
     app.kubernetes.io/component: injection-worker
+  annotations:
+    reloader.stakater.com/auto: "true"
 spec:
   {{- if not .Values.injectionWorker.autoscaling.enabled }}
   replicas: {{ .Values.injectionWorker.replicaCount }}
