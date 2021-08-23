@@ -30,7 +30,7 @@ k8s_resource('tag-vault', port_forwards='8300')
 k8s_resource('tag-db', port_forwards='5432')
 
 local_resource('helm lint',
-               'docker run --rm -t -v $PWD:/app registry.gitlab.com/the-blockchain-xdev/xdev-product/build-images/helm:1.3.0' +
+               'docker run --rm -t -v $PWD:/app registry.gitlab.com/xdev-tech/build/helm:1.5' +
                ' lint helm/tezos-api-gateway --values helm/tezos-api-gateway/values-dev.yaml',
                'helm/tezos-api-gateway/')
 

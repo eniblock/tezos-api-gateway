@@ -61,14 +61,14 @@ sonarcloud-check:
 publish_docker:
   stage: publish
   image:
-    name: registry.gitlab.com/xdev-tech/build/docker:1.5.0
+    name: registry.gitlab.com/xdev-tech/build/docker:1.5
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - build_with_helm_tag $CI_REGISTRY_IMAGE ./helm/tezos-api-gateway
 
 publish_helm:
   stage: publish
-  image: registry.gitlab.com/xdev-tech/build/helm:1.5.0
+  image: registry.gitlab.com/xdev-tech/build/helm:1.5
   script:
     - helm registry login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - helm dependency update ./helm/tezos-api-gateway
