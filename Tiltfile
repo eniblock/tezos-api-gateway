@@ -1,20 +1,22 @@
 #!/usr/bin/env python
 
-if config.tilt_subcommand == 'up':
-    # check that registry gitlab secrets are properly configured and login with helm
-    docker_config = decode_json(local('clk k8s -c ' + k8s_context() + ' docker-credentials -hd gitlab-registry', quiet=True))
-    os.environ['CI_JOB_TOKEN'] = docker_config['registry.gitlab.com']['password']
+config.define_bool("no-volumes")
+cfg = config.parse()
 
+clk_k8s = 'clk -a --force-color k8s -c ' + k8s_context() + ' '
+
+load('ext://kubectl_build', 'image_build', 'kubectl_build_registry_secret', 'kubectl_build_enable')
+kubectl_build_registry_secret('gitlab-registry')
+kubectl_build_enable(local(clk_k8s + 'features --field value --format plain kubectl_build'))
+
+if config.tilt_subcommand == 'up':
     # update the helm package dependencies a first time at startup, so helm can load the helm chart
-    local('clk k8s -c ' + k8s_context() + ' helm-dependency-update helm/tezos-api-gateway')
+    local(clk_k8s + 'helm-dependency-update helm/tezos-api-gateway')
 
 # manually download the dependencies
 local_resource('helm dependencies',
-               'clk k8s -c ' + k8s_context() + ' helm-dependency-update helm/tezos-api-gateway -ft Tiltfile',
+               clk_k8s + 'helm-dependency-update helm/tezos-api-gateway -ft Tiltfile',
                trigger_mode=TRIGGER_MODE_MANUAL, auto_init=False)
-
-config.define_bool("no-volumes")
-cfg = config.parse()
 
 k8s_yaml(
     helm(
@@ -23,7 +25,7 @@ k8s_yaml(
         name="tag",
     )
 )
-docker_build('registry.gitlab.com/xdev-tech/xdev-enterprise-business-network/tezos-api-gateway', '.')
+image_build('registry.gitlab.com/xdev-tech/xdev-enterprise-business-network/tezos-api-gateway', '.')
 k8s_resource('tag-rabbitmq', port_forwards=['15672', '5672'])
 k8s_resource('tag-api', port_forwards='3333')
 k8s_resource('tag-vault', port_forwards='8300')
