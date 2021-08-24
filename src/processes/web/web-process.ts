@@ -199,6 +199,9 @@ export class WebProcess extends AbstractProcess {
     );
 
     this._app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(spec));
+    this._app.get('/openapi.json', (_req, res) => {
+      res.send(JSON.stringify(spec));
+    });
   }
 
   /**
