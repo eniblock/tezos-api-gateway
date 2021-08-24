@@ -50,7 +50,7 @@ describe('[processes/generated-api-web/api/controllers] Send job controller', ()
     await webProcess.stop();
   });
 
-  describe('#sendTransactionsAndCreateJob', () => {
+  describe('#sendTransactionsAndCreateJobAsync', () => {
     it('should return 404 when there is no such an entry point in the smart contract', async () => {
       const { body, status } = await request
         .post('/api/send/transferMany')
@@ -197,7 +197,7 @@ describe('[processes/generated-api-web/api/controllers] Send job controller', ()
 
       it('should return 500 when unexpected error happen', async () => {
         jest
-          .spyOn(jobsLib, 'sendTransactionsToQueue')
+          .spyOn(jobsLib, 'sendTransactionsAsync')
           .mockRejectedValue(new Error('Unexpected error'));
 
         const { body, status } = await request.post('/api/send/transfer').send({

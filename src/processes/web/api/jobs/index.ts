@@ -52,7 +52,7 @@ export default function registerJobsRoutes(
     '/send/jobs',
     setQueryParams,
     sendJobController.sendTransactionsAndCreateJob(
-      amqpService,
+      gatewayPool,
       postgreService,
       metricPrometheusService,
     ) as Application,
@@ -60,7 +60,7 @@ export default function registerJobsRoutes(
 
   router.post(
     '/async/send/jobs',
-    sendJobController.sendTransactionsAndCreateJob(
+    sendJobController.sendTransactionsAndCreateJobAsync(
       amqpService,
       postgreService,
       metricPrometheusService,

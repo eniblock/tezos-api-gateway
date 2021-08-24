@@ -50,7 +50,7 @@ describe('[processes/web/api/jobs] Send job controller', () => {
     await webProcess.stop();
   });
 
-  describe('#sendTransactionsAndCreateJob', () => {
+  describe('#sendTransactionsAndCreateJobAsync', () => {
     it('should return 400 when a required parameter is missing', async () => {
       const { body, status } = await request.post('/api/send/jobs').send({
         secureKeyName: 'toto',
@@ -162,7 +162,7 @@ describe('[processes/web/api/jobs] Send job controller', () => {
 
       it('should return 500 when unexpected error happen', async () => {
         jest
-          .spyOn(jobsLib, 'sendTransactionsToQueue')
+          .spyOn(jobsLib, 'sendTransactions')
           .mockRejectedValue(new Error('Unexpected error'));
 
         const { body, status } = await request.post('/api/send/jobs').send({

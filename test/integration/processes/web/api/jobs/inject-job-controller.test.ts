@@ -58,7 +58,7 @@ describe('[processes/web/api/jobs] Inject job controller', () => {
     await webProcess.stop();
   });
 
-  describe('#injectOperationAndUpdateJob', () => {
+  describe('#injectOperationAndUpdateJobAsync', () => {
     it('should return 400 when a required parameter is missing', async () => {
       const { body, status } = await request.patch('/api/inject/jobs').send({
         jobId: 1,

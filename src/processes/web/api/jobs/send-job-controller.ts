@@ -13,11 +13,72 @@ import { logger } from '../../../../services/logger';
 import { PostgreService } from '../../../../services/postgre';
 import { VaultSigner } from '../../../../services/signers/vault';
 import { MetricPrometheusService } from '../../../../services/metric-prometheus';
+import { insertJob } from '../../../../models/jobs';
+import { JobStatus } from '../../../../const/job-status';
+import { GatewayPool } from '../../../../services/gateway-pool';
 
 type ReqQuery = { cache: boolean };
 
-function sendTransactionsAndCreateJob(
+function sendTransactionsAndCreateJobAsync(
   amqpService: AmqpService,
+  postgreClient: PostgreService,
+  metricPrometheusService: MetricPrometheusService,
+) {
+  return async (req: Request<any, any, any, ReqQuery>, res: Response, next: NextFunction) => {
+    try {
+      const {
+        transactions,
+        secureKeyName,
+        callerId,
+      }: SendTransactionsParams = req.body;
+      const { cache: useCache } = req.query;
+
+      logger.info(
+        { transactions, secureKeyName },
+        '[transactions/sendTransactionsAsync] Send the transactions to Tezos',
+      );
+
+      const vaultSigner = new VaultSigner(
+        vaultClientConfig,
+        secureKeyName,
+        logger,
+      );
+
+      const pkh = await vaultSigner.publicKeyHash();
+
+      logger.info(
+        { publicKeyHash: pkh, transactions, secureKeyName },
+        '[transactions/sendTransactionsAsync] This account requested to send the transactions to Tezos',
+      );
+
+      const job = await libSendTransaction.sendTransactionsAsync(
+        { transactions, secureKeyName, callerId, useCache },
+        postgreClient,
+        amqpService,
+        logger,
+      );
+
+      transactions.forEach(
+        ({ contractAddress, entryPoint }: TransactionDetails) => {
+          metricPrometheusService.entryPointCounter.add(1, {
+            [contractAddress]: entryPoint,
+          });
+        },
+      );
+
+      return res.status(StatusCodes.CREATED).json(job);
+    } catch (err) {
+      if (err instanceof ClientError) {
+        return next(createHttpError(err.status, err.message));
+      }
+
+      return next(err);
+    }
+  };
+}
+
+function sendTransactionsAndCreateJob(
+  gatewayPool: GatewayPool,
   postgreClient: PostgreService,
   metricPrometheusService: MetricPrometheusService,
 ) {
@@ -52,10 +113,23 @@ function sendTransactionsAndCreateJob(
         '[transactions/sendTransactions] This account requested to send the transactions to Tezos',
       );
 
-      const job = await libSendTransaction.sendTransactionsToQueue(
-        { transactions, secureKeyName, callerId, useCache },
+      const {
+        rows: [insertedJob],
+      } = await insertJob(postgreClient.pool, {
+        status: JobStatus.CREATED,
+      });
+
+      const jobId = insertedJob.id;
+
+      logger.info(
+        { insertedJob },
+        '[lib/jobs/sendTransactions] Successfully create a job',
+      );
+
+      const job = await libSendTransaction.sendTransactions(
+        { transactions, secureKeyName, jobId, callerId, useCache },
+        gatewayPool,
         postgreClient,
-        amqpService,
         logger,
       );
 
@@ -78,4 +152,7 @@ function sendTransactionsAndCreateJob(
   };
 }
 
-export default { sendTransactionsAndCreateJob };
+export default {
+  sendTransactionsAndCreateJobAsync,
+  sendTransactionsAndCreateJob,
+};
