@@ -122,3 +122,19 @@ RabbitMQ fullname
 {{- end }}
 {{- end }}
 {{- end }}
+
+{{/*
+Vault fullname
+*/}}
+{{- define "tezos-api-gateway.vault.fullname" -}}
+{{- if .Values.vault.fullnameOverride }}
+{{- .Values.vault.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- $name := default .Chart.Name .Values.vault.nameOverride }}
+{{- if eq $name .Release.Name }}
+{{- .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
+{{- end }}
+{{- end }}
+{{- end }}

@@ -63,8 +63,8 @@ spec:
             - name: VAULT_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Release.Name }}-{{ .Values.vault.nameOverride }}"
-                  key: VAULT_ROOT_TOKEN
+                  name: {{ include "tezos-api-gateway.vault.fullname" . }}
+                  key: root-token
             {{- range $key, $value := .Values.extraEnvVars }}
             - name: {{ $key }}
               value: {{ $value | quote }}

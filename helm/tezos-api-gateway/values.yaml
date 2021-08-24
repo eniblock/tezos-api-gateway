@@ -301,6 +301,7 @@ vault:
 
     dev:
       enabled: false
+      existingSecret: "{{ .Release.Name }}-{{ .Values.nameOverride }}"
 
     standalone:
       enabled: true
