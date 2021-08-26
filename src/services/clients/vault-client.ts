@@ -292,4 +292,61 @@ export class VaultClient extends AbstractClient {
       throw err;
     }
   }
+
+  /**
+   * @description         - returns a list of keys. Only the key names are returned (not the actual keys themselves).
+   * @return {string[]}
+   */
+  public async getAllTransitNames() {
+    const getAllTransitNamesList = url.resolve(this.baseUrl, 'transit/keys');
+
+    try {
+      const { body: result } = await superagent(
+        'LIST',
+        getAllTransitNamesList,
+      ).set({ 'X-Vault-Token': this._token });
+
+      this.logger.info(
+        { resultData: result.data },
+        '[VaultClient] data received',
+      );
+      return result.data!.keys!;
+    } catch (err) {
+      this.handleError(err, { path: 'transit/keys' });
+
+      if (err.status >= 400 && err.status < 500) {
+        throw new ClientError({
+          status: err.status,
+          message: JSON.stringify(err.response?.body),
+        });
+      }
+      throw err;
+    }
+  }
+
+  /**
+   * @description  - rotates the version of the named key. After rotation, new plaintext requests will be encrypted with the new version of the key.
+   * @param name
+   */
+  async rotateKeys(name: string) {
+    const rotateKeysUrl = url.resolve(
+      this.baseUrl,
+      `transit/keys/${name}/rotate`,
+    );
+
+    try {
+      await superagent
+        .post(rotateKeysUrl)
+        .set({ 'X-Vault-Token': this._token });
+    } catch (err) {
+      this.handleError(err, { keyName: name });
+
+      if (err.status >= 400 && err.status < 500) {
+        throw new ClientError({
+          status: err.status,
+          message: JSON.stringify(err.response?.body),
+        });
+      }
+    }
+  }
 }
