@@ -17,8 +17,11 @@ spec:
       app.kubernetes.io/component: injection-worker
   template:
     metadata:
-      {{- with .Values.injectionWorker.podAnnotations }}
       annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9466'
+        prometheus.io/path: '/metrics'
+      {{- with .Values.injectionWorker.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:

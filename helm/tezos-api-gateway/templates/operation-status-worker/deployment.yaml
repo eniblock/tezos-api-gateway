@@ -17,8 +17,11 @@ spec:
       app.kubernetes.io/component: operation-status-worker
   template:
     metadata:
-      {{- with .Values.operationStatusWorker.podAnnotations }}
       annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9465'
+        prometheus.io/path: '/metrics'
+      {{- with .Values.operationStatusWorker.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:

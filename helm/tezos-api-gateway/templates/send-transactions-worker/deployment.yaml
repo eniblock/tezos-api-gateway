@@ -17,8 +17,11 @@ spec:
       app.kubernetes.io/component: send-transactions-worker
   template:
     metadata:
-      {{- with .Values.sendTransactionsWorker.podAnnotations }}
       annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9466'
+        prometheus.io/path: '/metrics'
+      {{- with .Values.sendTransactionsWorker.podAnnotations }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
