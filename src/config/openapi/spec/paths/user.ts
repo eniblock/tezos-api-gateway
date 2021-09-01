@@ -230,4 +230,55 @@ export default {
       },
     },
   },
+  '/user/update-wallet': {
+    patch: {
+      summary: 'Update self-custody wallet',
+      description:
+        "User's old key is replaced with new key (from params). Can only be performed on Self-Custody wallets.",
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['userId', 'publicKey'],
+              properties: {
+                userId: {
+                  type: 'string',
+                  description: 'User account identifier',
+                },
+                publicKey: {
+                  $ref: '#/components/schemas/tezos_address',
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        204: {
+          description: 'Public key successfully updated.',
+        },
+        400: error[400],
+        404: error[404],
+        500: error.default,
+      },
+    },
+  },
+  '/user/update-delegated-wallets': {
+    patch: {
+      summary: 'Update delegated wallet',
+      description:
+        "Users' old keys are replaced with newly created keys. Will be performed for ALL the delegated wallets.",
+      responses: {
+        204: {
+          description: 'Public key successfully updated.',
+        },
+        400: error[400],
+        404: error[404],
+        500: error.default,
+      },
+    },
+  },
 };

@@ -5,6 +5,7 @@ import createUserController from './create-user-controller';
 import getUserController from './get-user-controller';
 import getUserByAddressController from './get-user-by-address-controller';
 import addUserWithPublicKeyController from './add-user-with-public-key';
+import updateUserKeys from './update-user-keys';
 
 /**
  * Setup entrypoints namespace route.
@@ -34,6 +35,16 @@ export default function registerUserRoutes(
     addUserWithPublicKeyController.addUserWithPublicKey(
       gatewayPool,
     ) as Application,
+  );
+
+  router.patch(
+    '/user/update-wallet',
+    updateUserKeys.selfManaged() as Application,
+  );
+
+  router.patch(
+    '/user/update-delegated-wallets',
+    updateUserKeys.delegated() as Application,
   );
 
   return router;
