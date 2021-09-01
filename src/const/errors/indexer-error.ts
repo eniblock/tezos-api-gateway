@@ -4,3 +4,9 @@ export class OperationNotFoundError extends Error {
     this.name = 'Operation not found';
   }
 }
+
+export class UserNotFoundError extends Error {
+  constructor(userAddress: string) {
+    super(`Could not find an user with this address: ${userAddress}`);
+  }
+}

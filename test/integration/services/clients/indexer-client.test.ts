@@ -23,18 +23,20 @@ describe('[services/clients] Indexer Client', () => {
 
   describe('#getOperationBlockLevel', () => {
     const betterCallIndexerClient = new IndexerClient(
-      indexerConfigs[1],
+      indexerConfigs[2],
       logger,
     );
 
     it('should return undefined when the indexer throw any errors that is not NOT_FOUND', async () => {
       const loggerInfoSpy = jest.spyOn(indexerClient.logger, 'info');
       const indexerNock = nock(indexerClient.config.apiUrl)
-        .get(`/${operationHash}`)
+        .get(`/${indexerClient.config.pathToOperation}${operationHash}`)
         .reply(500);
 
-      const conseilIndexerNock = nock(betterCallIndexerClient.config.apiUrl)
-        .get(`/${operationHash}`)
+      const betterCallIndexerNock = nock(betterCallIndexerClient.config.apiUrl)
+        .get(
+          `/${betterCallIndexerClient.config.pathToOperation}${operationHash}`,
+        )
         .reply(500);
 
       await expect(
@@ -45,7 +47,7 @@ describe('[services/clients] Indexer Client', () => {
       ).resolves.toBeUndefined();
 
       indexerNock.done();
-      conseilIndexerNock.done();
+      betterCallIndexerNock.done();
 
       expect(loggerInfoSpy).toHaveBeenCalled();
     });
@@ -123,7 +125,7 @@ describe('[services/clients] Indexer Client', () => {
 
     it('should return undefined the block level is undefined', async () => {
       const indexerNock = nock(indexerClient.config.apiUrl)
-        .get(`/${operationHash}`)
+        .get(`/${indexerClient.config.pathToOperation}${operationHash}`)
         .reply(500);
 
       await expect(

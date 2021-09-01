@@ -48,35 +48,49 @@ export const webProcessConfig: ProcessConfig = {
 
 const tzstatsIndexerConfig: IndexerConfig = {
   name: 'tzstats',
-  apiUrl:
-    process.env.TZSTATS_URL || 'https://api.granada.tzstats.com/explorer/op/',
+  apiUrl: process.env.TZSTATS_URL || 'https://api.granada.tzstats.com/',
   keyToOperation: parseInt(0, process.env.TZSTATS_KEY_TO_OPERATION),
   keyToBlockLevel: process.env.TZSTATS_KEY_TO_BLOCK_LEVEL || 'height',
+  pathToOperation: 'explorer/op/',
+  pathToUserInfo: 'explorer/account/',
+  keyToBalance: 'total_balance',
+  keyToReveal: 'is_revealed',
 };
 
 const tzktIndexerConfig: IndexerConfig = {
   name: 'tzkt',
-  apiUrl:
-    process.env.TZKT_URL || 'https://api.granadanet.tzkt.io/v1/operations/',
+  apiUrl: process.env.TZKT_URL || 'https://api.granadanet.tzkt.io/',
   keyToOperation: parseInt(0, process.env.TZKT_KEY_TO_OPERATION),
   keyToBlockLevel: process.env.TZKT_KEY_TO_BLOCK_LEVEL || 'level',
+  pathToOperation: 'v1/operations/',
+  pathToUserInfo: 'v1/accounts/',
+  keyToReveal: 'revealed',
 };
 
 const betterCallIndexerConfig: IndexerConfig = {
   name: 'better-call',
-  apiUrl: process.env.BETTER_CALL_URL || 'https://api.better-call.dev/v1/opg/',
+  apiUrl: process.env.BETTER_CALL_URL || 'https://api.better-call.dev/',
   keyToOperation: parseInt(0, process.env.BETTER_CALL_KEY_TO_OPERATION),
   keyToBlockLevel: process.env.BETTER_CALL_KEY_TO_BLOCK_LEVEL || 'level',
+  pathToOperation: 'v1/opg/',
+  pathToUserInfo:
+    process.env.BETTER_CALL_PATH_TO_USER_INFO || 'v1/account/granadanet/',
 };
 
 // const conseilIndexerConfig: IndexerConfig = {
 //   name: 'conseil',
 //   apiUrl:
 //     process.env.CONSEIL_URL ||
-//     'https://conseil-granada.cryptonomic-infra.tech:443/v2/data/tezos/granadanet/operation_groups/',
+//     'https://conseil-granada.cryptonomic-infra.tech:443/',
 //   keyToOperation: process.env.CONSEIL_KEY_TO_OPERATION || 'operation_group',
 //   keyToBlockLevel: process.env.CONSEIL_KEY_TO_BLOCK_LEVEL || 'blockLevel',
 //   apiKey: process.env.CONSEIL_API_KEY || '503801e8-a8a0-4e7c-8c24-7bd310805843',
+//   pathToOperation:
+//     process.env.CONSEIL_PATH_TO_OPERATION ||
+//     'v2/data/tezos/granadanet/operation_groups/',
+//   pathToUserInfo:
+//     process.env.CONSEIL_PATH_TO_USER_INFO ||
+//     'v2/data/tezos/granadanet/accounts/',
 // };
 
 export const indexerConfigs = [
