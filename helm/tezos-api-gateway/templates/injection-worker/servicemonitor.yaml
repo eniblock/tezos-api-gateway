@@ -1,0 +1,25 @@
+{{- if and .Values.injectionWorker.enabled .Values.injectionWorker.metrics.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "tezos-api-gateway.fullname" . }}-injection-worker
+  labels:
+    {{- include "tezos-api-gateway.labels" . | nindent 4 }}
+    app.kubernetes.io/component: injection-worker
+spec:
+  selector:
+    matchLabels:
+      {{- include "tezos-api-gateway.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: injection-worker
+  endpoints:
+    - port: prometheus
+      {{- if .Values.injectionWorker.metrics.interval }}
+      interval: {{ .Values.injectionWorker.metrics.interval }}
+      {{- end }}
+      {{- if .Values.injectionWorker.metrics.scrapeTimeout }}
+      scrapeTimeout: {{ .Values.injectionWorker.metrics.scrapeTimeout }}
+      {{- end }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+{{- end }}

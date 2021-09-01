@@ -1,0 +1,25 @@
+{{- if and .Values.sendTransactionsWorker.enabled .Values.sendTransactionsWorker.metrics.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "tezos-api-gateway.fullname" . }}-send-transactions-worker
+  labels:
+    {{- include "tezos-api-gateway.labels" . | nindent 4 }}
+    app.kubernetes.io/component: send-transactions-worker
+spec:
+  selector:
+    matchLabels:
+      {{- include "tezos-api-gateway.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: send-transactions-worker
+  endpoints:
+    - port: prometheus
+      {{- if .Values.sendTransactionsWorker.metrics.interval }}
+      interval: {{ .Values.sendTransactionsWorker.metrics.interval }}
+      {{- end }}
+      {{- if .Values.sendTransactionsWorker.metrics.scrapeTimeout }}
+      scrapeTimeout: {{ .Values.sendTransactionsWorker.metrics.scrapeTimeout }}
+      {{- end }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+{{- end }}
