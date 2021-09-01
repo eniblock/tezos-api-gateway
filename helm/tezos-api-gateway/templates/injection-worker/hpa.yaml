@@ -1,4 +1,4 @@
-{{- if .Values.injectionWorker.autoscaling.enabled }}
+{{- if and .Values.injectionWorker.enabled .Values.injectionWorker.autoscaling.enabled }}
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:

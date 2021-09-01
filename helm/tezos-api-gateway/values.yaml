@@ -66,6 +66,11 @@ api:
 
   numberOfOperationConfirmation: 1
 
+  metrics:
+    enabled: true
+    interval:
+    scrapeTimeout:
+
 generatedApi:
   enabled: false
 
@@ -124,7 +129,14 @@ generatedApi:
 
   numberOfOperationConfirmation: 1
 
+  metrics:
+    enabled: false # Add metrics server first
+    interval:
+    scrapeTimeout:
+
 operationStatusWorker:
+  enabled: true
+
   replicaCount: 1
 
   podAnnotations: {}
@@ -164,7 +176,14 @@ operationStatusWorker:
 
   numberOfOperationConfirmation: 1
 
+  metrics:
+    enabled: true
+    interval:
+    scrapeTimeout:
+
 sendTransactionsWorker:
+  enabled: true
+
   replicaCount: 1
 
   podAnnotations: {}
@@ -204,7 +223,14 @@ sendTransactionsWorker:
 
   numberOfOperationConfirmation: 1
 
+  metrics:
+    enabled: true
+    interval:
+    scrapeTimeout:
+
 injectionWorker:
+  enabled: true
+
   replicaCount: 1
 
   podAnnotations: {}
@@ -244,6 +270,11 @@ injectionWorker:
 
   numberOfOperationConfirmation: 1
 
+  metrics:
+    enabled: true
+    interval:
+    scrapeTimeout:
+
 db:
   nameOverride: db
   postgresqlDatabase: tezos_api_gateway
@@ -267,6 +298,10 @@ db:
     create: true
   serviceAccount:
     enabled: true
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
 
 rabbitmq:
   nameOverride: rabbitmq
@@ -293,6 +328,10 @@ rabbitmq:
     requests:
       cpu: 500m
       memory: 300Mi
+  metrics:
+    enabled: true
+    serviceMonitor:
+      enabled: true
 
 vault:
   nameOverride: vault

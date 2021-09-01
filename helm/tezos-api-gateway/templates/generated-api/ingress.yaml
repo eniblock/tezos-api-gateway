@@ -1,5 +1,4 @@
-{{- if .Values.generatedApi.enabled }}
-{{- if .Values.generatedApi.ingress.enabled -}}
+{{- if and .Values.generatedApi.enabled .Values.generatedApi.ingress.enabled }}
 {{- $fullName := include "tezos-api-gateway.fullname" . -}}
 {{- $svcPort := .Values.generatedApi.service.port -}}
 {{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
@@ -39,5 +38,4 @@ spec:
               servicePort: {{ $svcPort }}
           {{- end }}
     {{- end }}
-  {{- end }}
 {{- end }}
