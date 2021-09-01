@@ -9,6 +9,7 @@ import registerEntryPointsRoutes from './entrypoints';
 import registerUserRoutes from './user';
 import { SignerFactory } from '../../../services/signer-factory';
 import { MetricPrometheusService } from '../../../services/metric-prometheus';
+import { IndexerPool } from '../../../services/indexer-pool';
 
 export default function setupRoutes(
   app: ExpressApp,
@@ -17,6 +18,7 @@ export default function setupRoutes(
   amqpService: AmqpService,
   signerFactory: SignerFactory,
   metricPrometheusService: MetricPrometheusService,
+  indexerPool: IndexerPool,
 ): ExpressApp {
   const router = createRouter();
 
@@ -29,7 +31,7 @@ export default function setupRoutes(
   );
   registerStorageRoutes(router, gatewayPool, signerFactory);
   registerEntryPointsRoutes(router, gatewayPool);
-  registerUserRoutes(router, gatewayPool);
+  registerUserRoutes(router, gatewayPool, indexerPool);
 
   app.use('/api', router);
 
