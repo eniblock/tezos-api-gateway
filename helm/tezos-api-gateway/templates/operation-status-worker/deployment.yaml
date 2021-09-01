@@ -1,3 +1,4 @@
+{{- if .Values.operationStatusWorker.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -17,11 +18,8 @@ spec:
       app.kubernetes.io/component: operation-status-worker
   template:
     metadata:
-      annotations:
-        prometheus.io/scrape: 'true'
-        prometheus.io/port: '9465'
-        prometheus.io/path: '/metrics'
       {{- with .Values.operationStatusWorker.podAnnotations }}
+      annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
@@ -98,3 +96,4 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+{{- end }}

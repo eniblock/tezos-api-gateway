@@ -1,4 +1,4 @@
-{{- if .Values.operationStatusWorker.autoscaling.enabled }}
+{{- if and .Values.operationStatusWorker.enabled .Values.operationStatusWorker.autoscaling.enabled }}
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:

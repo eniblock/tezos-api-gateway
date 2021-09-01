@@ -18,11 +18,8 @@ spec:
       app.kubernetes.io/component: api
   template:
     metadata:
-      annotations:
-        prometheus.io/scrape: 'true'
-        prometheus.io/port: '9464'
-        prometheus.io/path: '/metrics'
       {{- with .Values.api.podAnnotations }}
+      annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:

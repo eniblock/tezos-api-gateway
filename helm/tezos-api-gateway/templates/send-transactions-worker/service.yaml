@@ -1,3 +1,4 @@
+{{- if .Values.sendTransactionsWorker.enabled }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -7,11 +8,14 @@ metadata:
     app.kubernetes.io/component: send-transactions-worker
 spec:
   type: {{ .Values.sendTransactionsWorker.service.type }}
+  {{- if .Values.sendTransactionsWorker.metrics.enabled }}
   ports:
     - port: {{ .Values.sendTransactionsWorker.service.port }}
       targetPort: 9466
       protocol: TCP
       name: prometheus
+  {{- end }}
   selector:
     {{- include "tezos-api-gateway.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: send-transactions-worker
+{{- end }}

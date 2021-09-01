@@ -1,4 +1,4 @@
-{{- if .Values.sendTransactionsWorker.autoscaling.enabled }}
+{{- if and .Values.sendTransactionsWorker.enabled .Values.sendTransactionsWorker.autoscaling.enabled }}
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
