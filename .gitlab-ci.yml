@@ -26,8 +26,6 @@ test:
   script:
     - npm test
   only:
-    refs:
-      - merge_requests
     changes:
       - src/**/*
       - test/**/*
@@ -37,7 +35,6 @@ test:
 helm-lint:
   stage: test
   image: registry.gitlab.com/the-blockchain-xdev/xdev-product/build-images/helm:1.3.0
-  allow_failure: true
   script:
     - helm registry login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - helm dependency update ./helm/tezos-api-gateway
@@ -53,10 +50,6 @@ sonarcloud-check:
       - .sonar/cache
   script:
     - sonar-scanner
-  only:
-    - merge_requests
-    - master
-    - develop
 
 publish_docker:
   stage: publish
