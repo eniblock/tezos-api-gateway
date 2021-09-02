@@ -302,6 +302,10 @@ db:
     enabled: true
     serviceMonitor:
       enabled: true
+    resources:
+      requests:
+        memory: 32Mi
+        cpu: 10m
 
 rabbitmq:
   nameOverride: rabbitmq
