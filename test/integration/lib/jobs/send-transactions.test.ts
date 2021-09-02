@@ -100,6 +100,8 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
             ],
             secureKeyName: 'toto',
             jobId: insertJobs[0].id,
+            callerId: undefined,
+            useCache: true,
           },
         ],
       ]);
@@ -158,6 +160,8 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
             ],
             secureKeyName: 'toto',
             jobId: insertJobs[0].id,
+            callerId: undefined,
+            useCache: true,
           },
         ],
       ]);
