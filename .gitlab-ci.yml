@@ -26,8 +26,6 @@ test:
   script:
     - npm test
   only:
-    refs:
-      - merge_requests
     changes:
       - src/**/*
       - test/**/*
