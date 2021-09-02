@@ -29,15 +29,15 @@ export class TezosService {
   }
 
   public async getContract(contractAddress: string) {
-    return this._tezos.contract.at(contractAddress);
+    const contract = this._tezos.contract.at(contractAddress);
+    cacheLocal.set(contractAddress, contract);
+    return contract;
   }
 
   public async getContractFromCache(contractAddress: string) {
     let contract = cacheLocal.get<any>(contractAddress);
-    if (contract === undefined) {
+    if (contract === undefined)
       contract = await this.getContract(contractAddress);
-      cacheLocal.set(contractAddress, contract);
-    }
     return contract;
   }
 

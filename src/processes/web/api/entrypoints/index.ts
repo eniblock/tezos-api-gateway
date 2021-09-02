@@ -2,6 +2,7 @@ import { Application, Router } from 'express';
 
 import { GatewayPool } from '../../../../services/gateway-pool';
 import retrieveEntrypointsSchema from './retrieve-entrypoint-schema-controller';
+import setQueryParams from '../../middleware/set-query-params';
 
 /**
  * Setup entrypoints namespace route.
@@ -16,6 +17,7 @@ export default function registerEntryPointsRoutes(
 ): Router {
   router.get(
     '/entrypoints/:contract_address',
+    setQueryParams,
     retrieveEntrypointsSchema.retrieveEntryPointsSchemaFromTezosNode(
       gatewayPool,
     ) as Application,

@@ -7,11 +7,17 @@ import { GatewayPool } from '../../../../services/gateway-pool';
 import { InvalidEntryPoint } from '../../../../const/errors/invalid-entry-point';
 import { getEntryPointSchemaFromTezosNode } from '../../../../lib/entrypoints/get-entrypoint-schema';
 
+type ReqQuery = { entryPoints: string[]; cache: boolean };
+
 function retrieveEntryPointsSchemaFromTezosNode(gatewayPool: GatewayPool) {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (
+    req: Request<any, any, any, ReqQuery>,
+    res: Response,
+    next: NextFunction,
+  ) => {
     try {
       const { contract_address: contractAddress } = req.params;
-      const { entryPoints } = req.query;
+      const { entryPoints, cache: useCache } = req.query;
 
       logger.info(
         {
@@ -28,7 +34,8 @@ function retrieveEntryPointsSchemaFromTezosNode(gatewayPool: GatewayPool) {
         logger,
         tezosService,
         contractAddress,
-        entryPoints as string[] | undefined,
+        useCache,
+        entryPoints,
       );
 
       return res.status(OK).json(result);

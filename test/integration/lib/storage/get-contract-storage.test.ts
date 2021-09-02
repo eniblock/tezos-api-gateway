@@ -101,7 +101,7 @@ describe('[lib/storage/get-contract-storage]', () => {
     it('should throw an error and log error if unexpected error happened', async () => {
       const loggerErrorSpy = jest.spyOn(logger, 'error');
       const getContractSpy = jest
-        .spyOn(tezosService, 'getContractFromCache')
+        .spyOn(tezosService, 'getContract')
         .mockRejectedValue(new Error('Unexpected error'));
 
       await expect(

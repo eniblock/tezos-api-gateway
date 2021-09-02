@@ -103,6 +103,7 @@ export async function sendTransactions(
     secureKeyName,
     jobId,
     callerId,
+    useCache,
   }: SendTransactionsToQueueParams,
   gatewayPool: GatewayPool,
   postgreService: PostgreService,
@@ -133,6 +134,7 @@ export async function sendTransactions(
 
     const { hash: operationHash } = await getOperationHashFromTezos(
       transactions,
+      useCache,
       tezosService,
       logger,
     );
@@ -207,6 +209,7 @@ export async function sendTransactions(
  */
 async function getOperationHashFromTezos(
   transactions: TransactionDetails[],
+  useCache: boolean,
   tezosService: TezosService,
   logger: Logger,
 ) {
@@ -214,6 +217,7 @@ async function getOperationHashFromTezos(
     return (
       await getContractMethodByTransactionDetails(
         transactions[0],
+        useCache,
         tezosService,
         logger,
       )
@@ -226,6 +230,7 @@ async function getOperationHashFromTezos(
     batch.withContractCall(
       await getContractMethodByTransactionDetails(
         transaction,
+        useCache,
         tezosService,
         logger,
       ),
@@ -248,10 +253,13 @@ async function getOperationHashFromTezos(
  */
 async function getContractMethodByTransactionDetails(
   { contractAddress, entryPoint, entryPointParams }: TransactionDetails,
+  useCache: boolean,
   tezosService: TezosService,
   logger: Logger,
 ) {
-  const contract = await tezosService.getContractFromCache(contractAddress);
+  const contract = useCache
+    ? await tezosService.getContractFromCache(contractAddress)
+    : await tezosService.getContract(contractAddress);
 
   return getContractMethod(logger, contract, entryPoint, entryPointParams);
 }

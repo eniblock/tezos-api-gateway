@@ -12,14 +12,21 @@ import { VaultSigner } from '../../../../services/signers/vault';
 import { TransactionDetails } from '../../../../const/interfaces/send-transactions-params';
 import { MetricPrometheusService } from '../../../../services/metric-prometheus';
 
+type ReqQuery = { useCache: boolean };
+
 function sendTransactionsAndCreateJob(
   amqpService: AmqpService,
   postgreClient: PostgreService,
   metricPrometheusService: MetricPrometheusService,
 ) {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (
+    req: Request<any, any, any, ReqQuery>,
+    res: Response,
+    next: NextFunction,
+  ) => {
     try {
       const { parameters, secureKeyName, callerId } = req.body;
+      const { useCache } = req.query;
 
       logger.info(
         { parameters, secureKeyName },
@@ -49,7 +56,7 @@ function sendTransactionsAndCreateJob(
       );
 
       const job = await libSendTransaction.sendTransactionsToQueue(
-        { transactions, secureKeyName, callerId },
+        { transactions, secureKeyName, callerId, useCache },
         postgreClient,
         amqpService,
         logger,

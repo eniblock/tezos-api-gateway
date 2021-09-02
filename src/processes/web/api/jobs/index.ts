@@ -8,6 +8,7 @@ import { AmqpService } from '../../../../services/amqp';
 import { GatewayPool } from '../../../../services/gateway-pool';
 import getJobController from './get-job-controller';
 import { MetricPrometheusService } from '../../../../services/metric-prometheus';
+import setQueryParams from '../../middleware/set-query-params';
 
 /**
  * Setup jobs namespace route.
@@ -32,6 +33,7 @@ export default function registerJobsRoutes(
 
   router.patch(
     '/inject/jobs',
+    setQueryParams,
     injectJobController.injectOperationAndUpdateJob(
       postgreService,
       amqpService,
@@ -40,6 +42,7 @@ export default function registerJobsRoutes(
 
   router.post(
     '/send/jobs',
+    setQueryParams,
     sendJobController.sendTransactionsAndCreateJob(
       amqpService,
       postgreService,
