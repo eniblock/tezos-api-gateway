@@ -18,7 +18,7 @@ import { WebProcess } from '../../../../../../src/processes/web/web-process';
 import { PostgreTables } from '../../../../../../src/const/postgre/postgre-tables';
 import { PostgreService } from '../../../../../../src/services/postgre';
 import { TezosService } from '../../../../../../src/services/tezos';
-import { ForgeOperationParams } from '../../../../../../src/const/interfaces/forge-operation-params';
+import { ForgeOperationBodyParams } from '../../../../../../src/const/interfaces/forge-operation-params';
 
 describe('[processes/web/api/jobs] Forge job controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -53,7 +53,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
   });
 
   describe('#forgeOperationAndCreateJob', () => {
-    const requestParam: ForgeOperationParams = {
+    const requestBodyParam: ForgeOperationBodyParams = {
       transactions: [
         {
           contractAddress: flexibleTokenContract,
@@ -86,7 +86,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
 
     it('should return 400 when there is an extra parameter in request param', async () => {
       const { body, status } = await request.post('/api/forge/jobs').send({
-        ...requestParam,
+        ...requestBodyParam,
         extra: 'extra',
       });
 
@@ -99,7 +99,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
 
     it('should return 400 when there is a parameter not match the format', async () => {
       const { body, status } = await request.post('/api/forge/jobs').send({
-        ...requestParam,
+        ...requestBodyParam,
         transactions: [
           {
             contractAddress: FA2Contract7,
@@ -122,7 +122,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
 
     it('should return 400 when entry point parameters does not match entry schema', async () => {
       const { body, status } = await request.post('/api/forge/jobs').send({
-        ...requestParam,
+        ...requestBodyParam,
         transactions: [
           {
             contractAddress: flexibleTokenContract,
@@ -147,7 +147,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
 
     it('should return 400 when a map parameter does not match the map structure', async () => {
       const { body, status } = await request.post('/api/forge/jobs').send({
-        ...requestParam,
+        ...requestBodyParam,
         transactions: [
           {
             contractAddress: FA2Contract,
@@ -180,7 +180,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
 
       const { body, status } = await request
         .post('/api/forge/jobs')
-        .send(requestParam);
+        .send(requestBodyParam);
 
       expect(status).toEqual(404);
       expect(body).toEqual({
@@ -193,7 +193,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
 
     it('should return 500 when unexpected error happen', async () => {
       const { body, status } = await request.post('/api/forge/jobs').send({
-        ...requestParam,
+        ...requestBodyParam,
         transactions: [
           {
             contractAddress: flexibleTokenContract,
@@ -216,7 +216,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
     it('should return 201 and correctly inserted data in the database', async () => {
       const { body, status } = await request
         .post('/api/forge/jobs')
-        .send(requestParam);
+        .send(requestBodyParam);
 
       expect({ body, status }).toEqual({
         status: 201,

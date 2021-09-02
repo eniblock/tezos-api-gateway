@@ -70,6 +70,7 @@ describe('[lib/jobs/inject-operation]', () => {
       ],
       callerId: 'myCaller',
       sourceAddress: testAccount,
+      useCache: true,
     };
 
     let insertedJob: Jobs;

@@ -142,6 +142,7 @@ describe('[processes/web/api/jobs] Inject job controller', () => {
           ],
           callerId: 'myCaller',
           sourceAddress: testAccount,
+          useCache: true,
         },
         tezosService,
         postgreService,

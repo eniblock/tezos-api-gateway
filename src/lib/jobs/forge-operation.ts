@@ -182,7 +182,7 @@ function getEstimationForNode(
  */
 async function getOperationContentsTransactionWithParametersJson(
   tezosService: TezosService,
-  { transactions, sourceAddress }: ForgeOperationParams,
+  { transactions, sourceAddress, useCache }: ForgeOperationParams,
 ): Promise<OperationContentsTransactionWithParametersJson[]> {
   const { counter: counterAsString } = await tezosService.getContractResponse(
     sourceAddress,
@@ -204,6 +204,7 @@ async function getOperationContentsTransactionWithParametersJson(
       const { parameter } = await getATransactionParameters(
         tezosService,
         transaction,
+        useCache,
       );
       return { ...transaction, parameter };
     }),
@@ -249,8 +250,11 @@ async function getOperationContentsTransactionWithParametersJson(
 async function getATransactionParameters(
   tezosService: TezosService,
   { contractAddress, entryPoint, entryPointParams }: TransactionDetails,
+  useCache: boolean,
 ) {
-  const contract = await tezosService.getContractFromCache(contractAddress);
+  const contract = useCache
+    ? await tezosService.getContractFromCache(contractAddress)
+    : await tezosService.getContract(contractAddress);
 
   return getTransferToParams(logger, contract, entryPoint, entryPointParams);
 }

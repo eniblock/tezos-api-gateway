@@ -12,6 +12,7 @@ export interface SendTransactionsParams {
   transactions: TransactionDetails[];
   secureKeyName: string;
   callerId?: string;
+  useCache: boolean;
 }
 
 export type SendTransactionsToQueueParams = SendTransactionsParams & {

@@ -12,13 +12,20 @@ import { GatewayPool } from '../../../../services/gateway-pool';
 import { logger } from '../../../../services/logger';
 import { PostgreService } from '../../../../services/postgre';
 
+type ReqQuery = { useCache: boolean };
+
 function forgeOperationAndCreateJob(
   gatewayPool: GatewayPool,
   postgreClient: PostgreService,
 ) {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (
+    req: Request<any, any, any, ReqQuery>,
+    res: Response,
+    next: NextFunction,
+  ) => {
     try {
       const { parameters, sourceAddress, callerId } = req.body;
+      const { useCache } = req.query;
 
       logger.info(
         {
@@ -51,6 +58,7 @@ function forgeOperationAndCreateJob(
           transactions,
           sourceAddress,
           callerId,
+          useCache,
         },
         tezosService,
         postgreClient,

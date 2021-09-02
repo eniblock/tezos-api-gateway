@@ -101,7 +101,7 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
       });
 
       expect(getEntrypointSchemaSpy.mock.calls).toEqual([
-        [logger, tezosService, FA2Contract, undefined],
+        [logger, tezosService, FA2Contract, true, undefined],
       ]);
     });
 
