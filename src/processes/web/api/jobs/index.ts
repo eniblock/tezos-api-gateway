@@ -42,6 +42,7 @@ export default function registerJobsRoutes(
 
   router.patch(
     '/async/inject/jobs',
+    setQueryParams,
     injectJobController.injectOperationAndUpdateJobAsync(
       postgreService,
       amqpService,
@@ -60,6 +61,7 @@ export default function registerJobsRoutes(
 
   router.post(
     '/async/send/jobs',
+    setQueryParams,
     sendJobController.sendTransactionsAndCreateJobAsync(
       amqpService,
       postgreService,

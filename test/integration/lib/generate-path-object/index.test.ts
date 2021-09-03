@@ -25,6 +25,19 @@ describe('[lib/generate-path-object] Index', () => {
       ).resolves.toEqual({
         '/forge/balance_of': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to forge a transaction',
               required: true,
@@ -61,6 +74,19 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/forge/mint': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to forge a transaction',
               required: true,
@@ -116,6 +142,19 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/forge/set_administrator': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to forge a transaction',
               required: true,
@@ -142,6 +181,19 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/forge/set_metadata': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to forge a transaction',
               required: true,
@@ -181,6 +233,19 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/forge/set_pause': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to forge a transaction',
               required: true,
@@ -207,6 +272,19 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/forge/transfer': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to forge a transaction',
               required: true,
@@ -233,6 +311,19 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/forge/update_operators': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to forge a transaction',
               required: true,
@@ -259,6 +350,70 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/send/balance_of': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
+            requestBody: {
+              description: 'Necessary information to send a transaction',
+              required: true,
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    additionalProperties: false,
+                    required: ['secureKeyName', 'parameters'],
+                    properties: {
+                      parameters: {
+                        type: 'object',
+                        additionalProperties: false,
+                        required: ['requests', 'callback'],
+                        properties: {
+                          requests: {
+                            $ref: '#/components/schemas/flexible_array',
+                          },
+                          callback: {
+                            type: 'object',
+                          },
+                        },
+                      },
+                      secureKeyName: {
+                        type: 'string',
+                        description:
+                          'The key name which contains public key and perform action sign',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            responses: FORGE_RESPONSE_SCHEMA,
+          },
+        },
+        '/async/send/balance_of': {
+          post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to send a transaction',
               required: true,
@@ -297,6 +452,89 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/send/mint': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
+            requestBody: {
+              description: 'Necessary information to send a transaction',
+              required: true,
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    additionalProperties: false,
+                    required: ['secureKeyName', 'parameters'],
+                    properties: {
+                      parameters: {
+                        type: 'object',
+                        additionalProperties: false,
+                        required: ['address', 'amount', 'metadata', 'token_id'],
+                        properties: {
+                          address: {
+                            $ref: '#/components/schemas/tezos_address',
+                          },
+                          amount: {
+                            type: 'number',
+                          },
+                          metadata: {
+                            type: 'object',
+                            additionalProperties: false,
+                            required: ['key', 'value'],
+                            properties: {
+                              key: {
+                                type: 'string',
+                              },
+                              value: {
+                                type: 'string',
+                                pattern: '^[0-9a-zA-Z]$',
+                                description: 'A bytes string',
+                                example: '54686520546f6b656e204f6e65',
+                              },
+                            },
+                          },
+                          token_id: {
+                            type: 'number',
+                          },
+                        },
+                      },
+                      secureKeyName: {
+                        type: 'string',
+                        description:
+                          'The key name which contains public key and perform action sign',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            responses: FORGE_RESPONSE_SCHEMA,
+          },
+        },
+        '/async/send/mint': {
+          post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to send a transaction',
               required: true,
@@ -354,6 +592,60 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/send/set_administrator': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
+            requestBody: {
+              description: 'Necessary information to send a transaction',
+              required: true,
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    additionalProperties: false,
+                    required: ['secureKeyName', 'parameters'],
+                    properties: {
+                      parameters: {
+                        $ref: '#/components/schemas/tezos_address',
+                      },
+                      secureKeyName: {
+                        type: 'string',
+                        description:
+                          'The key name which contains public key and perform action sign',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            responses: FORGE_RESPONSE_SCHEMA,
+          },
+        },
+        '/async/send/set_administrator': {
+          post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to send a transaction',
               required: true,
@@ -382,6 +674,73 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/send/set_metadata': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
+            requestBody: {
+              description: 'Necessary information to send a transaction',
+              required: true,
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    additionalProperties: false,
+                    required: ['secureKeyName', 'parameters'],
+                    properties: {
+                      parameters: {
+                        type: 'object',
+                        additionalProperties: false,
+                        required: ['k', 'v'],
+                        properties: {
+                          k: {
+                            type: 'string',
+                          },
+                          v: {
+                            type: 'string',
+                            pattern: '^[0-9a-zA-Z]$',
+                            description: 'A bytes string',
+                            example: '54686520546f6b656e204f6e65',
+                          },
+                        },
+                      },
+                      secureKeyName: {
+                        type: 'string',
+                        description:
+                          'The key name which contains public key and perform action sign',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            responses: FORGE_RESPONSE_SCHEMA,
+          },
+        },
+        '/async/send/set_metadata': {
+          post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to send a transaction',
               required: true,
@@ -423,6 +782,60 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/send/set_pause': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
+            requestBody: {
+              description: 'Necessary information to send a transaction',
+              required: true,
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    additionalProperties: false,
+                    required: ['secureKeyName', 'parameters'],
+                    properties: {
+                      parameters: {
+                        type: 'boolean',
+                      },
+                      secureKeyName: {
+                        type: 'string',
+                        description:
+                          'The key name which contains public key and perform action sign',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            responses: FORGE_RESPONSE_SCHEMA,
+          },
+        },
+        '/async/send/set_pause': {
+          post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to send a transaction',
               required: true,
@@ -451,6 +864,60 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/send/transfer': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
+            requestBody: {
+              description: 'Necessary information to send a transaction',
+              required: true,
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    additionalProperties: false,
+                    required: ['secureKeyName', 'parameters'],
+                    properties: {
+                      parameters: {
+                        $ref: '#/components/schemas/flexible_array',
+                      },
+                      secureKeyName: {
+                        type: 'string',
+                        description:
+                          'The key name which contains public key and perform action sign',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            responses: FORGE_RESPONSE_SCHEMA,
+          },
+        },
+        '/async/send/transfer': {
+          post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to send a transaction',
               required: true,
@@ -479,6 +946,60 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/send/update_operators': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
+            requestBody: {
+              description: 'Necessary information to send a transaction',
+              required: true,
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    additionalProperties: false,
+                    required: ['secureKeyName', 'parameters'],
+                    properties: {
+                      parameters: {
+                        $ref: '#/components/schemas/flexible_array',
+                      },
+                      secureKeyName: {
+                        type: 'string',
+                        description:
+                          'The key name which contains public key and perform action sign',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            responses: FORGE_RESPONSE_SCHEMA,
+          },
+        },
+        '/async/send/update_operators': {
+          post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to send a transaction',
               required: true,
@@ -514,6 +1035,19 @@ describe('[lib/generate-path-object] Index', () => {
       ).resolves.toEqual({
         '/forge/acceptOwnership': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to forge a transaction',
               required: true,
@@ -537,6 +1071,19 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/forge/approve': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to forge a transaction',
               required: true,
@@ -573,6 +1120,19 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/forge/lock': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to forge a transaction',
               required: true,
@@ -596,6 +1156,19 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/forge/setName': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to forge a transaction',
               required: true,
@@ -622,6 +1195,19 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/forge/setSymbol': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to forge a transaction',
               required: true,
@@ -648,6 +1234,19 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/forge/transfer': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to forge a transaction',
               required: true,
@@ -684,6 +1283,19 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/forge/transferFrom': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to forge a transaction',
               required: true,
@@ -723,6 +1335,19 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/forge/transferOwnerShip': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to forge a transaction',
               required: true,
@@ -749,6 +1374,19 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/forge/unlock': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to forge a transaction',
               required: true,
@@ -772,6 +1410,57 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/send/acceptOwnership': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
+            requestBody: {
+              description: 'Necessary information to send a transaction',
+              required: true,
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    additionalProperties: false,
+                    required: ['secureKeyName'],
+                    properties: {
+                      secureKeyName: {
+                        type: 'string',
+                        description:
+                          'The key name which contains public key and perform action sign',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            responses: FORGE_RESPONSE_SCHEMA,
+          },
+        },
+        '/async/send/acceptOwnership': {
+          post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to send a transaction',
               required: true,
@@ -797,6 +1486,70 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/send/approve': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
+            requestBody: {
+              description: 'Necessary information to send a transaction',
+              required: true,
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    additionalProperties: false,
+                    required: ['secureKeyName', 'parameters'],
+                    properties: {
+                      parameters: {
+                        type: 'object',
+                        additionalProperties: false,
+                        required: ['spender', 'tokens'],
+                        properties: {
+                          spender: {
+                            $ref: '#/components/schemas/tezos_address',
+                          },
+                          tokens: {
+                            type: 'number',
+                          },
+                        },
+                      },
+                      secureKeyName: {
+                        type: 'string',
+                        description:
+                          'The key name which contains public key and perform action sign',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            responses: FORGE_RESPONSE_SCHEMA,
+          },
+        },
+        '/async/send/approve': {
+          post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to send a transaction',
               required: true,
@@ -835,6 +1588,57 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/send/lock': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
+            requestBody: {
+              description: 'Necessary information to send a transaction',
+              required: true,
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    additionalProperties: false,
+                    required: ['secureKeyName'],
+                    properties: {
+                      secureKeyName: {
+                        type: 'string',
+                        description:
+                          'The key name which contains public key and perform action sign',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            responses: FORGE_RESPONSE_SCHEMA,
+          },
+        },
+        '/async/send/lock': {
+          post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to send a transaction',
               required: true,
@@ -860,6 +1664,60 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/send/setName': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
+            requestBody: {
+              description: 'Necessary information to send a transaction',
+              required: true,
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    additionalProperties: false,
+                    required: ['secureKeyName', 'parameters'],
+                    properties: {
+                      parameters: {
+                        type: 'string',
+                      },
+                      secureKeyName: {
+                        type: 'string',
+                        description:
+                          'The key name which contains public key and perform action sign',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            responses: FORGE_RESPONSE_SCHEMA,
+          },
+        },
+        '/async/send/setName': {
+          post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to send a transaction',
               required: true,
@@ -888,6 +1746,60 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/send/setSymbol': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
+            requestBody: {
+              description: 'Necessary information to send a transaction',
+              required: true,
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    additionalProperties: false,
+                    required: ['secureKeyName', 'parameters'],
+                    properties: {
+                      parameters: {
+                        type: 'string',
+                      },
+                      secureKeyName: {
+                        type: 'string',
+                        description:
+                          'The key name which contains public key and perform action sign',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            responses: FORGE_RESPONSE_SCHEMA,
+          },
+        },
+        '/async/send/setSymbol': {
+          post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to send a transaction',
               required: true,
@@ -916,6 +1828,70 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/send/transfer': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
+            requestBody: {
+              description: 'Necessary information to send a transaction',
+              required: true,
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    additionalProperties: false,
+                    required: ['secureKeyName', 'parameters'],
+                    properties: {
+                      parameters: {
+                        type: 'object',
+                        additionalProperties: false,
+                        required: ['destination', 'tokens'],
+                        properties: {
+                          destination: {
+                            $ref: '#/components/schemas/tezos_address',
+                          },
+                          tokens: {
+                            type: 'number',
+                          },
+                        },
+                      },
+                      secureKeyName: {
+                        type: 'string',
+                        description:
+                          'The key name which contains public key and perform action sign',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            responses: FORGE_RESPONSE_SCHEMA,
+          },
+        },
+        '/async/send/transfer': {
+          post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to send a transaction',
               required: true,
@@ -954,6 +1930,73 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/send/transferFrom': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
+            requestBody: {
+              description: 'Necessary information to send a transaction',
+              required: true,
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    additionalProperties: false,
+                    required: ['secureKeyName', 'parameters'],
+                    properties: {
+                      parameters: {
+                        type: 'object',
+                        additionalProperties: false,
+                        required: ['_from', '_to', 'tokens'],
+                        properties: {
+                          _from: {
+                            $ref: '#/components/schemas/tezos_address',
+                          },
+                          _to: {
+                            $ref: '#/components/schemas/tezos_address',
+                          },
+                          tokens: {
+                            type: 'number',
+                          },
+                        },
+                      },
+                      secureKeyName: {
+                        type: 'string',
+                        description:
+                          'The key name which contains public key and perform action sign',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            responses: FORGE_RESPONSE_SCHEMA,
+          },
+        },
+        '/async/send/transferFrom': {
+          post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to send a transaction',
               required: true,
@@ -995,6 +2038,60 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/send/transferOwnerShip': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
+            requestBody: {
+              description: 'Necessary information to send a transaction',
+              required: true,
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    additionalProperties: false,
+                    required: ['secureKeyName', 'parameters'],
+                    properties: {
+                      parameters: {
+                        $ref: '#/components/schemas/tezos_address',
+                      },
+                      secureKeyName: {
+                        type: 'string',
+                        description:
+                          'The key name which contains public key and perform action sign',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            responses: FORGE_RESPONSE_SCHEMA,
+          },
+        },
+        '/async/send/transferOwnerShip': {
+          post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to send a transaction',
               required: true,
@@ -1023,6 +2120,57 @@ describe('[lib/generate-path-object] Index', () => {
         },
         '/send/unlock': {
           post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
+            requestBody: {
+              description: 'Necessary information to send a transaction',
+              required: true,
+              content: {
+                'application/json': {
+                  schema: {
+                    type: 'object',
+                    additionalProperties: false,
+                    required: ['secureKeyName'],
+                    properties: {
+                      secureKeyName: {
+                        type: 'string',
+                        description:
+                          'The key name which contains public key and perform action sign',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+            responses: FORGE_RESPONSE_SCHEMA,
+          },
+        },
+        '/async/send/unlock': {
+          post: {
+            parameters: [
+              {
+                name: 'cache',
+                in: 'query',
+                schema: {
+                  type: 'boolean',
+                  default: true,
+                },
+                required: false,
+                description:
+                  'Specifies if the cache should be used to retrieve the contract',
+              },
+            ],
             requestBody: {
               description: 'Necessary information to send a transaction',
               required: true,

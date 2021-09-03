@@ -24,7 +24,11 @@ function sendTransactionsAndCreateJobAsync(
   postgreClient: PostgreService,
   metricPrometheusService: MetricPrometheusService,
 ) {
-  return async (req: Request<any, any, any, ReqQuery>, res: Response, next: NextFunction) => {
+  return async (
+    req: Request<any, any, any, ReqQuery>,
+    res: Response,
+    next: NextFunction,
+  ) => {
     try {
       const {
         transactions,

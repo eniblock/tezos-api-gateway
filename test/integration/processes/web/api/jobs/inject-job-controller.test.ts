@@ -60,10 +60,12 @@ describe('[processes/web/api/jobs] Inject job controller', () => {
 
   describe('#injectOperationAndUpdateJobAsync', () => {
     it('should return 400 when a required parameter is missing', async () => {
-      const { body, status } = await request.patch('/api/inject/jobs').send({
-        jobId: 1,
-        signature: 'signature',
-      });
+      const { body, status } = await request
+        .patch('/api/async/inject/jobs')
+        .send({
+          jobId: 1,
+          signature: 'signature',
+        });
 
       expect(status).toEqual(400);
       expect(body).toEqual({
@@ -74,11 +76,13 @@ describe('[processes/web/api/jobs] Inject job controller', () => {
     });
 
     it('should return 400 when there is a parameter not match the format', async () => {
-      const { body, status } = await request.patch('/api/inject/jobs').send({
-        jobId: '1',
-        signature: 'signature',
-        signedTransaction: 'signedTransaction',
-      });
+      const { body, status } = await request
+        .patch('/api/async/inject/jobs')
+        .send({
+          jobId: '1',
+          signature: 'signature',
+          signedTransaction: 'signedTransaction',
+        });
 
       expect(status).toEqual(400);
       expect(body).toEqual({
@@ -88,11 +92,13 @@ describe('[processes/web/api/jobs] Inject job controller', () => {
     });
 
     it('should return 404 when could not find the job with this id', async () => {
-      const { body, status } = await request.patch('/api/inject/jobs').send({
-        jobId: 1,
-        signature: 'signature',
-        signedTransaction: 'signedTransaction',
-      });
+      const { body, status } = await request
+        .patch('/api/async/inject/jobs')
+        .send({
+          jobId: 1,
+          signature: 'signature',
+          signedTransaction: 'signedTransaction',
+        });
 
       expect(status).toEqual(404);
       expect(body).toEqual({
@@ -106,11 +112,13 @@ describe('[processes/web/api/jobs] Inject job controller', () => {
         .spyOn(jobModel, 'selectJobs')
         .mockRejectedValue(new Error('Unexpected error'));
 
-      const { body, status } = await request.patch('/api/inject/jobs').send({
-        jobId: 1,
-        signature: 'signature',
-        signedTransaction: 'signedTransaction',
-      });
+      const { body, status } = await request
+        .patch('/api/async/inject/jobs')
+        .send({
+          jobId: 1,
+          signature: 'signature',
+          signedTransaction: 'signedTransaction',
+        });
 
       expect(status).toEqual(500);
       expect(body).toEqual({
@@ -152,11 +160,13 @@ describe('[processes/web/api/jobs] Inject job controller', () => {
         .spyOn(amqpService, 'sendToQueue')
         .mockImplementation();
 
-      const { body, status } = await request.patch('/api/inject/jobs').send({
-        jobId: createdJob.id,
-        signature,
-        signedTransaction,
-      });
+      const { body, status } = await request
+        .patch('/api/async/inject/jobs')
+        .send({
+          jobId: createdJob.id,
+          signature,
+          signedTransaction,
+        });
 
       expect({ body, status }).toEqual({
         status: 200,

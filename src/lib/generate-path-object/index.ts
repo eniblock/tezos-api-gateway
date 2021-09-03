@@ -143,6 +143,19 @@ function generatePathItemSchema(
 
   return {
     post: {
+      parameters: [
+        {
+          name: 'cache',
+          in: 'query',
+          schema: {
+            type: 'boolean',
+            default: true,
+          },
+          required: false,
+          description:
+            'Specifies if the cache should be used to retrieve the contract',
+        },
+      ],
       requestBody: {
         description: `Necessary information to ${action} a transaction`,
         required: true,

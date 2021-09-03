@@ -15,7 +15,8 @@ export function generateTransactionDetails(
   urlPath: string,
   parameters?: EntryPointParams,
 ): TransactionDetails {
-  const entryPoint = urlPath.split('/').pop() || '';
+  // We take the string after the last '/', then we keep the substring before the '?' char
+  const entryPoint = urlPath.split('/').pop()?.split('?')[0] || '';
 
   return {
     contractAddress,

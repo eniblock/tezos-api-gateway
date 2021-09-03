@@ -193,27 +193,29 @@ describe('[processes/web/api/jobs] Send job controller', () => {
           .spyOn(amqpService, 'publishMessage')
           .mockImplementation();
 
-        const { body, status } = await request.post('/api/send/jobs').send({
-          secureKeyName: 'toto',
-          transactions: [
-            {
-              contractAddress: flexibleTokenContract,
-              entryPoint: 'transfer',
-              entryPointParams: {
-                tokens: 1,
-                destination: testAccount2,
+        const { body, status } = await request
+          .post('/api/async/send/jobs')
+          .send({
+            secureKeyName: 'toto',
+            transactions: [
+              {
+                contractAddress: flexibleTokenContract,
+                entryPoint: 'transfer',
+                entryPointParams: {
+                  tokens: 1,
+                  destination: testAccount2,
+                },
               },
-            },
-            {
-              contractAddress: flexibleTokenContract,
-              entryPoint: 'transfer',
-              entryPointParams: {
-                tokens: 1,
-                destination: testAccount2,
+              {
+                contractAddress: flexibleTokenContract,
+                entryPoint: 'transfer',
+                entryPointParams: {
+                  tokens: 1,
+                  destination: testAccount2,
+                },
               },
-            },
-          ],
-        });
+            ],
+          });
 
         vaultNock.done();
         expect({ body, status }).toEqual({

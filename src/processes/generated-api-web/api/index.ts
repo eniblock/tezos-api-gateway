@@ -19,6 +19,7 @@ import formatParametersToTransactionDetails from '../../web/middleware/format-pa
 import forgeJobController from '../../web/api/jobs/forge-job-controller';
 import sendJobController from '../../web/api/jobs/send-job-controller';
 import injectJobController from '../../web/api/jobs/inject-job-controller';
+import setQueryParams from '../../web/middleware/set-query-params';
 
 export default function setupRoutes(
   app: ExpressApp,
@@ -75,6 +76,7 @@ function registerRoutes(
   sendPaths.forEach((path) => {
     router.post(
       path,
+      setQueryParams,
       formatParametersToTransactionDetails,
       sendJobController.sendTransactionsAndCreateJob(
         gatewayPool,
@@ -87,6 +89,7 @@ function registerRoutes(
   asyncSendPaths.forEach((path) => {
     router.post(
       path,
+      setQueryParams,
       formatParametersToTransactionDetails,
       sendJobController.sendTransactionsAndCreateJobAsync(
         amqpService,
@@ -98,6 +101,7 @@ function registerRoutes(
 
   router.patch(
     '/inject',
+    setQueryParams,
     injectJobController.injectOperationAndUpdateJob(
       postgreService,
       gatewayPool,
@@ -106,6 +110,7 @@ function registerRoutes(
 
   router.patch(
     '/async/inject',
+    setQueryParams,
     injectJobController.injectOperationAndUpdateJobAsync(
       postgreService,
       amqpService,

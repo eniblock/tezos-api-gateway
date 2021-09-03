@@ -8,6 +8,19 @@ describe('[helpers/extract-arrays]', () => {
         extractForgeAndSendTransactionsPaths({
           '/forge/acceptOwnership': {
             post: {
+              parameters: [
+                {
+                  name: 'cache',
+                  in: 'query',
+                  schema: {
+                    type: 'boolean',
+                    default: true,
+                  },
+                  required: false,
+                  description:
+                    'Specifies if the cache should be used to retrieve the contract',
+                },
+              ],
               requestBody: {
                 description: 'Necessary information to forge a transaction',
                 required: true,
@@ -31,6 +44,19 @@ describe('[helpers/extract-arrays]', () => {
           },
           '/forge/approve': {
             post: {
+              parameters: [
+                {
+                  name: 'cache',
+                  in: 'query',
+                  schema: {
+                    type: 'boolean',
+                    default: true,
+                  },
+                  required: false,
+                  description:
+                    'Specifies if the cache should be used to retrieve the contract',
+                },
+              ],
               requestBody: {
                 description: 'Necessary information to forge a transaction',
                 required: true,
@@ -67,6 +93,19 @@ describe('[helpers/extract-arrays]', () => {
           },
           '/forge/lock': {
             post: {
+              parameters: [
+                {
+                  name: 'cache',
+                  in: 'query',
+                  schema: {
+                    type: 'boolean',
+                    default: true,
+                  },
+                  required: false,
+                  description:
+                    'Specifies if the cache should be used to retrieve the contract',
+                },
+              ],
               requestBody: {
                 description: 'Necessary information to forge a transaction',
                 required: true,
@@ -90,6 +129,73 @@ describe('[helpers/extract-arrays]', () => {
           },
           '/send/transferFrom': {
             post: {
+              parameters: [
+                {
+                  name: 'cache',
+                  in: 'query',
+                  schema: {
+                    type: 'boolean',
+                    default: true,
+                  },
+                  required: false,
+                  description:
+                    'Specifies if the cache should be used to retrieve the contract',
+                },
+              ],
+              requestBody: {
+                description: 'Necessary information to send a transaction',
+                required: true,
+                content: {
+                  'application/json': {
+                    schema: {
+                      type: 'object',
+                      additionalProperties: false,
+                      required: ['secureKeyName', 'parameters'],
+                      properties: {
+                        parameters: {
+                          type: 'object',
+                          additionalProperties: false,
+                          required: ['_from', '_to', 'tokens'],
+                          properties: {
+                            _from: {
+                              $ref: '#/components/schemas/tezos_address',
+                            },
+                            _to: {
+                              $ref: '#/components/schemas/tezos_address',
+                            },
+                            tokens: {
+                              type: 'number',
+                            },
+                          },
+                        },
+                        secureKeyName: {
+                          type: 'string',
+                          description:
+                            'The key name which contains public key and perform action sign',
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              responses: FORGE_RESPONSE_SCHEMA,
+            },
+          },
+          '/async/send/transferFrom': {
+            post: {
+              parameters: [
+                {
+                  name: 'cache',
+                  in: 'query',
+                  schema: {
+                    type: 'boolean',
+                    default: true,
+                  },
+                  required: false,
+                  description:
+                    'Specifies if the cache should be used to retrieve the contract',
+                },
+              ],
               requestBody: {
                 description: 'Necessary information to send a transaction',
                 required: true,
@@ -131,6 +237,60 @@ describe('[helpers/extract-arrays]', () => {
           },
           '/send/transferOwnerShip': {
             post: {
+              parameters: [
+                {
+                  name: 'cache',
+                  in: 'query',
+                  schema: {
+                    type: 'boolean',
+                    default: true,
+                  },
+                  required: false,
+                  description:
+                    'Specifies if the cache should be used to retrieve the contract',
+                },
+              ],
+              requestBody: {
+                description: 'Necessary information to send a transaction',
+                required: true,
+                content: {
+                  'application/json': {
+                    schema: {
+                      type: 'object',
+                      additionalProperties: false,
+                      required: ['secureKeyName', 'parameters'],
+                      properties: {
+                        parameters: {
+                          $ref: '#/components/schemas/tezos_address',
+                        },
+                        secureKeyName: {
+                          type: 'string',
+                          description:
+                            'The key name which contains public key and perform action sign',
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              responses: FORGE_RESPONSE_SCHEMA,
+            },
+          },
+          '/async/send/transferOwnerShip': {
+            post: {
+              parameters: [
+                {
+                  name: 'cache',
+                  in: 'query',
+                  schema: {
+                    type: 'boolean',
+                    default: true,
+                  },
+                  required: false,
+                  description:
+                    'Specifies if the cache should be used to retrieve the contract',
+                },
+              ],
               requestBody: {
                 description: 'Necessary information to send a transaction',
                 required: true,
@@ -159,6 +319,57 @@ describe('[helpers/extract-arrays]', () => {
           },
           '/send/unlock': {
             post: {
+              parameters: [
+                {
+                  name: 'cache',
+                  in: 'query',
+                  schema: {
+                    type: 'boolean',
+                    default: true,
+                  },
+                  required: false,
+                  description:
+                    'Specifies if the cache should be used to retrieve the contract',
+                },
+              ],
+              requestBody: {
+                description: 'Necessary information to send a transaction',
+                required: true,
+                content: {
+                  'application/json': {
+                    schema: {
+                      type: 'object',
+                      additionalProperties: false,
+                      required: ['secureKeyName'],
+                      properties: {
+                        secureKeyName: {
+                          type: 'string',
+                          description:
+                            'The key name which contains public key and perform action sign',
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+              responses: FORGE_RESPONSE_SCHEMA,
+            },
+          },
+          '/async/send/unlock': {
+            post: {
+              parameters: [
+                {
+                  name: 'cache',
+                  in: 'query',
+                  schema: {
+                    type: 'boolean',
+                    default: true,
+                  },
+                  required: false,
+                  description:
+                    'Specifies if the cache should be used to retrieve the contract',
+                },
+              ],
               requestBody: {
                 description: 'Necessary information to send a transaction',
                 required: true,
@@ -189,6 +400,11 @@ describe('[helpers/extract-arrays]', () => {
           '/send/transferFrom',
           '/send/transferOwnerShip',
           '/send/unlock',
+        ],
+        asyncSendPaths: [
+          '/async/send/transferFrom',
+          '/async/send/transferOwnerShip',
+          '/async/send/unlock',
         ],
       });
     });

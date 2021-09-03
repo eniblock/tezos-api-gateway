@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { generateTransactionDetails } from '../../../helpers/generate-transaction-details';
 import { logger } from '../../../services/logger';
 
+type ReqQuery = { cache: boolean };
 /**
  * Format
  *
@@ -12,7 +13,7 @@ import { logger } from '../../../services/logger';
  * @return void
  */
 export default function formatParametersToTransactionDetails(
-  req: Request,
+  req: Request<any, any, any, ReqQuery>,
   _res: Response,
   next: NextFunction,
 ): void {
