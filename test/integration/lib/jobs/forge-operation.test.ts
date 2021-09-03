@@ -66,6 +66,7 @@ describe('[lib/jobs/forge-operation]', () => {
       ],
       callerId: 'myCaller',
       sourceAddress: testAccount,
+      useCache: true,
     };
 
     it('should throw AddressNotFoundError when source address is not correct (no counter in the response)', async () => {

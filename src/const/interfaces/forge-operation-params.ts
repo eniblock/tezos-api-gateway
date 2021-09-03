@@ -6,8 +6,16 @@ export interface GenericObject {
 
 export type EntryPointParams = GenericObject | string | number | unknown[];
 
-export interface ForgeOperationParams {
+export interface ForgeOperationBodyParams {
   transactions: TransactionDetails[];
   sourceAddress: string;
   callerId?: string;
 }
+
+export interface ForgeOperationQueryParams {
+  useCache: boolean;
+}
+
+export interface ForgeOperationParams
+  extends ForgeOperationBodyParams,
+    ForgeOperationQueryParams {}

@@ -251,6 +251,8 @@ describe('[processes/web/api/jobs] Send job controller', () => {
               ],
               secureKeyName: 'toto',
               jobId: body.id,
+              callerId: undefined,
+              useCache: true,
             },
           ],
         ]);

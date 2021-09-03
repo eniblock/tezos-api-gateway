@@ -12,7 +12,8 @@ export async function getContractParameterSchema(
   tezosService: TezosService,
   contractAddress: string,
 ) {
-  const contract = await tezosService.getContractFromCache(contractAddress);
+  // We don't use getContractFromCache() because it would cache the contract with the wrong signer (NoopSigner)
+  const contract = await tezosService.getContract(contractAddress);
 
   return contract.parameterSchema.ExtractSchema();
 }

@@ -5,6 +5,19 @@ export default {
     post: {
       summary: 'Request to forge an operation',
       description: 'Request to forge an operation',
+      parameters: [
+        {
+          name: 'cache',
+          in: 'query',
+          schema: {
+            type: 'boolean',
+            default: true,
+          },
+          required: false,
+          description:
+            'Specifies if the cache should be used to retrieve the contract',
+        },
+      ],
       requestBody: {
         description: 'Necessary information to forge an operation',
         required: true,
@@ -166,6 +179,19 @@ export default {
     post: {
       summary: 'Request to send a list of transactions to Tezos',
       description: 'Request to send a list of transactions to Tezos',
+      parameters: [
+        {
+          name: 'cache',
+          in: 'query',
+          schema: {
+            type: 'boolean',
+            default: true,
+          },
+          required: false,
+          description:
+            'Specifies if the cache should be used to retrieve the contract',
+        },
+      ],
       requestBody: {
         description: 'Necessary information to send transactions',
         required: true,
