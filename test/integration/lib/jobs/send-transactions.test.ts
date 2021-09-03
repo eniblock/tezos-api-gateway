@@ -27,7 +27,7 @@ import * as libSmartContracts from '../../../../src/lib/smart-contracts';
 import { VaultSigner } from '../../../../src/services/signers/vault';
 import {
   sendTransactions,
-  sendTransactionsToQueue,
+  sendTransactionsAsync,
 } from '../../../../src/lib/jobs/send-transactions';
 import { JobStatus } from '../../../../src/const/job-status';
 import { Jobs } from '../../../../src/const/interfaces/jobs';
@@ -63,7 +63,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
     await postgreService.disconnect();
   });
 
-  describe('#sendTransactionsToQueue', () => {
+  describe('#sendTransactionsAsync', () => {
     let publishMessageSpy: jest.SpyInstance;
 
     beforeEach(() => {
@@ -73,7 +73,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
     });
 
     it('should correctly insert the job and publish message to the queue', async () => {
-      await sendTransactionsToQueue(
+      await sendTransactionsAsync(
         {
           transactions: [
             { contractAddress: 'contractAddress', entryPoint: 'entrypoint' },
@@ -124,7 +124,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
       });
 
       await expect(
-        sendTransactionsToQueue(
+        sendTransactionsAsync(
           {
             transactions: [
               { contractAddress: 'contractAddress', entryPoint: 'entrypoint' },
@@ -146,7 +146,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
       expect(loggerErrorSpy.mock.calls).toEqual([
         [
           { error: 'Unexpected error' },
-          '[lib/jobs/sendTransactionsToQueue] Unexpected error happened',
+          '[lib/jobs/sendTransactionsAsync] Unexpected error happened',
         ],
       ]);
 

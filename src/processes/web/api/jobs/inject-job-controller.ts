@@ -8,10 +8,12 @@ import { AmqpService } from '../../../../services/amqp';
 import { publishToInjectionQueue } from '../../../../lib/amqp/publish-to-injection-queue';
 import { PostgreService } from '../../../../services/postgre';
 import { selectJobs } from '../../../../models/jobs';
+import { GatewayPool } from '../../../../services/gateway-pool';
+import { injectOperation } from '../../../../lib/jobs/inject-operation';
 
 function injectOperationAndUpdateJob(
   postgreService: PostgreService,
-  amqpService: AmqpService,
+  gatewayPool: GatewayPool,
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -33,6 +35,52 @@ function injectOperationAndUpdateJob(
           `Could not find any jobs with this id ${jobId}`,
         );
       }
+
+      await injectOperation(
+        { gatewayPool, postgreService },
+        {
+          jobId,
+          signature,
+          signedTransaction,
+        },
+      );
+
+      return res.status(OK).json(job);
+    } catch (err) {
+      if (err instanceof JobIdNotFoundError) {
+        return next(createHttpError(StatusCodes.NOT_FOUND, err.message));
+      }
+
+      return next(err);
+    }
+  };
+}
+
+function injectOperationAndUpdateJobAsync(
+  postgreService: PostgreService,
+  amqpService: AmqpService,
+) {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { jobId, signature, signedTransaction } = req.body;
+
+      logger.info(
+        {
+          jobId,
+          signature,
+          signedTransaction,
+        },
+        '[jobs/patchController] Patch the job and inject the operation asynchronously to blockchain with the following data',
+      );
+
+      const [job] = await selectJobs(postgreService.pool, '*', `id=${jobId}`);
+
+      if (!job) {
+        throw new JobIdNotFoundError(
+          `Could not find any jobs with this id ${jobId}`,
+        );
+      }
+
       publishToInjectionQueue(amqpService, {
         jobId,
         signature,
@@ -50,4 +98,7 @@ function injectOperationAndUpdateJob(
   };
 }
 
-export default { injectOperationAndUpdateJob };
+export default {
+  injectOperationAndUpdateJob,
+  injectOperationAndUpdateJobAsync,
+};

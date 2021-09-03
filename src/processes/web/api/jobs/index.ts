@@ -36,6 +36,15 @@ export default function registerJobsRoutes(
     setQueryParams,
     injectJobController.injectOperationAndUpdateJob(
       postgreService,
+      gatewayPool,
+    ) as Application,
+  );
+
+  router.patch(
+    '/async/inject/jobs',
+    setQueryParams,
+    injectJobController.injectOperationAndUpdateJobAsync(
+      postgreService,
       amqpService,
     ) as Application,
   );
@@ -44,6 +53,16 @@ export default function registerJobsRoutes(
     '/send/jobs',
     setQueryParams,
     sendJobController.sendTransactionsAndCreateJob(
+      gatewayPool,
+      postgreService,
+      metricPrometheusService,
+    ) as Application,
+  );
+
+  router.post(
+    '/async/send/jobs',
+    setQueryParams,
+    sendJobController.sendTransactionsAndCreateJobAsync(
       amqpService,
       postgreService,
       metricPrometheusService,
