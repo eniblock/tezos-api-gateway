@@ -1,4 +1,4 @@
-import { generateTransactionDetails } from '../../../src/helpers/generate-transactions';
+import { generateTransactionDetails } from '../../../src/helpers/generate-transaction-details';
 import { flexibleTokenContract } from '../../__fixtures__/smart-contract';
 
 describe('[helpers/generate-transactions]', () => {

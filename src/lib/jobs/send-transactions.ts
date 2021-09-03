@@ -41,7 +41,7 @@ const SEND_TRANSACTIONS_KNOWN_ERRORS = [
  *
  * @return {Promise<object>} the job object
  */
-export async function sendTransactionsToQueue(
+export async function sendTransactionsAsync(
   sendTransactionsParams: SendTransactionsParams,
   postgreService: PostgreService,
   amqpService: AmqpService,
@@ -59,7 +59,7 @@ export async function sendTransactionsToQueue(
 
     logger.info(
       { insertedJob },
-      '[lib/jobs/sendTransactionsToQueue] Successfully create a job',
+      '[lib/jobs/sendTransactionsAsync] Successfully create a job',
     );
 
     await publishForSendTransactions(amqpService, {
@@ -70,14 +70,14 @@ export async function sendTransactionsToQueue(
 
     logger.info(
       { insertedJob },
-      '[lib/jobs/sendTransactionsToQueue] Successfully publish send transactions request to the queue',
+      '[lib/jobs/sendTransactionsAsync] Successfully publish send transactions request to the queue',
     );
 
     return insertedJob as Jobs;
   } catch (err) {
     logger.error(
       { error: err.message },
-      '[lib/jobs/sendTransactionsToQueue] Unexpected error happened',
+      '[lib/jobs/sendTransactionsAsync] Unexpected error happened',
     );
 
     throw err;
@@ -174,6 +174,8 @@ export async function sendTransactions(
       { result },
       '[lib/jobs/send-transactions/#sendTransactions] Successfully update job status and operation hash',
     );
+
+    return result[0] as Jobs;
   } catch (err) {
     if (!(err instanceof JobIdNotFoundError)) {
       await updateJobStatusAndErrorMessage(

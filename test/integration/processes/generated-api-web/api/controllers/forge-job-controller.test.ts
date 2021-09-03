@@ -11,7 +11,7 @@ import { PostgreTables } from '../../../../../../src/const/postgre/postgre-table
 import { PostgreService } from '../../../../../../src/services/postgre';
 import { TezosService } from '../../../../../../src/services/tezos';
 import { WebProcess } from '../../../../../../src/processes/generated-api-web/web-process';
-import * as generateTransactionDetailsLib from '../../../../../../src/helpers/generate-transactions';
+import * as generateTransactionDetailsLib from '../../../../../../src/helpers/generate-transaction-details';
 import {
   flexibleTokenContract,
   testAccount,
