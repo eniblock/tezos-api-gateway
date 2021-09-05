@@ -27,14 +27,17 @@ k8s_yaml(
 )
 image_build('registry.gitlab.com/xdev-tech/xdev-enterprise-business-network/tezos-api-gateway', '.')
 k8s_resource('tag-rabbitmq', port_forwards=['15672', '5672'])
-k8s_resource('tag-api', port_forwards='3333')
+k8s_resource('tag-api', port_forwards='3333', resource_deps=['tag-rabbitmq'])
 k8s_resource('tag-vault', port_forwards='8300')
 k8s_resource('tag-db', port_forwards='5432')
+k8s_resource('tag-send-transactions-worker', resource_deps=['tag-rabbitmq'])
+k8s_resource('tag-injection-worker', resource_deps=['tag-rabbitmq'])
+k8s_resource('tag-operation-status-worker', resource_deps=['tag-rabbitmq'])
 
 local_resource('helm lint',
                'docker run --rm -t -v $PWD:/app registry.gitlab.com/xdev-tech/build/helm:1.5' +
                ' lint helm/tezos-api-gateway --values helm/tezos-api-gateway/values-dev.yaml',
-               'helm/tezos-api-gateway/')
+               'helm/tezos-api-gateway/', allow_parallel=True)
 
 if config.tilt_subcommand == 'down' and not cfg.get("no-volumes"):
   local('kubectl --context ' + k8s_context() + ' delete pvc --selector=app.kubernetes.io/instance=tag --wait=false')
