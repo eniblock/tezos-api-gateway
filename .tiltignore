@@ -1,0 +1,4 @@
+helm/**/charts
+helm/**/tmpcharts
+helm/**/Chart.lock
+.history
