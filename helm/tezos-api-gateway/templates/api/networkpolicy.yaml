@@ -1,0 +1,19 @@
+{{- if .Values.api.networkPolicy.enabled }}
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ include "tezos-api-gateway.fullname" . }}-api
+  labels:
+    {{- include "tezos-api-gateway.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "tezos-api-gateway.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: api
+  ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            {{ include "tezos-api-gateway.fullname" . }}-api-client: "true"
+{{- end }}
