@@ -2,18 +2,18 @@
 kind: NetworkPolicy
 apiVersion: networking.k8s.io/v1
 metadata:
-  name: {{ include "tezos-api-gateway.fullname" . }}-send-transaction-worker
+  name: {{ include "tezos-api-gateway.fullname" . }}-send-transactions-worker
   labels:
     {{- include "tezos-api-gateway.labels" . | nindent 4 }}
-    app.kubernetes.io/component: send-transaction-worker
+    app.kubernetes.io/component: send-transactions-worker
 spec:
   podSelector:
     matchLabels:
       {{- include "tezos-api-gateway.selectorLabels" . | nindent 6 }}
-      app.kubernetes.io/component: send-transaction-worker
+      app.kubernetes.io/component: send-transactions-worker
   ingress:
     - from:
       - podSelector:
           matchLabels:
-            {{ include "tezos-api-gateway.fullname" . }}-send-transaction-worker-client: "true"
+            {{ include "tezos-api-gateway.fullname" . }}-send-transactions-worker-client: "true"
 {{- end }}
