@@ -27,6 +27,7 @@ spec:
         app.kubernetes.io/component: injection-worker
         {{ .Release.Name }}-{{ .Values.db.nameOverride }}-client: "true"
         {{ .Release.Name }}-{{ .Values.rabbitmq.nameOverride }}-client: "true"
+        {{ .Release.Name }}-{{ .Values.vault.nameOverride }}-client: "true"
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
