@@ -10,6 +10,7 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: {{ $fullName }}-api
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tezos-api-gateway.labels" . | nindent 4 }}
   {{- with .Values.api.ingress.annotations }}

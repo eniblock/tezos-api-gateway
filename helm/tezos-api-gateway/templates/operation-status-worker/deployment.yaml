@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "tezos-api-gateway.fullname" . }}-operation-status-worker
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tezos-api-gateway.labels" . | nindent 4 }}
     app.kubernetes.io/component: operation-status-worker
