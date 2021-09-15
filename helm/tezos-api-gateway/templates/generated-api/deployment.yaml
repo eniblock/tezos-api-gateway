@@ -3,6 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "tezos-api-gateway.fullname" . }}-generated-api
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tezos-api-gateway.labels" . | nindent 4 }}
     app.kubernetes.io/component: generated-api
@@ -25,6 +26,9 @@ spec:
       labels:
         {{- include "tezos-api-gateway.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: generated-api
+        {{ .Release.Name }}-{{ .Values.db.nameOverride }}-client: "true"
+        {{ .Release.Name }}-{{ .Values.rabbitmq.nameOverride }}-client: "true"
+        {{ .Release.Name }}-{{ .Values.vault.nameOverride }}-client: "true"
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
