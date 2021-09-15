@@ -1,0 +1,20 @@
+{{- if .Values.injectionWorker.networkPolicy.enabled }}
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: {{ include "tezos-api-gateway.fullname" . }}-injection-worker
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tezos-api-gateway.labels" . | nindent 4 }}
+    app.kubernetes.io/component: injection-worker
+spec:
+  podSelector:
+    matchLabels:
+      {{- include "tezos-api-gateway.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: injection-worker
+  ingress:
+    - from:
+      - podSelector:
+          matchLabels:
+            {{ include "tezos-api-gateway.fullname" . }}-injection-worker-client: "true"
+{{- end }}

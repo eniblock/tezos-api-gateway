@@ -3,6 +3,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ include "tezos-api-gateway.fullname" . }}-send-transactions-worker
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tezos-api-gateway.labels" . | nindent 4 }}
     app.kubernetes.io/component: send-transactions-worker

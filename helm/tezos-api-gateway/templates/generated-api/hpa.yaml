@@ -3,6 +3,7 @@ apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "tezos-api-gateway.fullname" . }}-generated-api
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tezos-api-gateway.labels" . | nindent 4 }}
 spec:

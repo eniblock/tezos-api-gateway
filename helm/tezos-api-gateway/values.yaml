@@ -25,6 +25,9 @@ api:
 
   podAnnotations: {}
 
+  networkPolicy:
+    enabled: true
+
   podSecurityContext: {}
   # fsGroup: 2000
 
@@ -80,6 +83,9 @@ generatedApi:
   replicaCount: 1
 
   podAnnotations: {}
+
+  networkPolicy:
+    enabled: true
 
   podSecurityContext: {}
   # fsGroup: 2000
@@ -141,6 +147,9 @@ operationStatusWorker:
 
   podAnnotations: {}
 
+  networkPolicy:
+    enabled: true
+
   podSecurityContext: {}
   # fsGroup: 2000
 
@@ -188,6 +197,9 @@ sendTransactionsWorker:
 
   podAnnotations: {}
 
+  networkPolicy:
+    enabled: true
+
   podSecurityContext: {}
   # fsGroup: 2000
 
@@ -234,6 +246,9 @@ injectionWorker:
   replicaCount: 1
 
   podAnnotations: {}
+
+  networkPolicy:
+    enabled: true
 
   podSecurityContext: {}
   # fsGroup: 2000
@@ -306,6 +321,9 @@ db:
       requests:
         memory: 32Mi
         cpu: 10m
+  networkPolicy:
+    enabled: true
+    allowExternal: false
 
 rabbitmq:
   nameOverride: rabbitmq
@@ -336,6 +354,9 @@ rabbitmq:
     enabled: true
     serviceMonitor:
       enabled: true
+  networkPolicy:
+    enabled: true
+    allowExternal: false
 
 vault:
   nameOverride: vault
