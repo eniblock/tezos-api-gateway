@@ -1,6 +1,7 @@
 stages:
   - test
-  - publish
+  - docker
+  - helm
 
 variables:
   CONTAINER_TEST_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
@@ -51,17 +52,17 @@ sonarcloud-check:
   script:
     - sonar-scanner
 
-publish_docker:
-  stage: publish
+docker:
+  stage: docker
   image:
-    name: registry.gitlab.com/xdev-tech/build/docker:1.5
+    name: registry.gitlab.com/xdev-tech/build/docker:2.0
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - build_with_helm_tag $CI_REGISTRY_IMAGE ./helm/tezos-api-gateway
 
-publish_helm:
-  stage: publish
-  image: registry.gitlab.com/xdev-tech/build/helm:1.5
+helm:
+  stage: helm
+  image: registry.gitlab.com/xdev-tech/build/helm:2.0
   script:
     - helm registry login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - helm dependency update ./helm/tezos-api-gateway
