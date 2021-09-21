@@ -5,7 +5,7 @@ import { OK, StatusCodes } from 'http-status-codes';
 import { logger } from '../../../../services/logger';
 import { JobIdNotFoundError } from '../../../../const/errors/job-id-not-found-error';
 import { AmqpService } from '../../../../services/amqp';
-import { publishToInjectionQueue } from '../../../../lib/amqp/publish-to-injection-queue';
+import { sendToInjectionQueue } from '../../../../lib/amqp/send-to-injection-queue';
 import { PostgreService } from '../../../../services/postgre';
 import { selectJobs } from '../../../../models/jobs';
 import { GatewayPool } from '../../../../services/gateway-pool';
@@ -81,7 +81,7 @@ function injectOperationAndUpdateJobAsync(
         );
       }
 
-      publishToInjectionQueue(amqpService, {
+      sendToInjectionQueue(amqpService, {
         jobId,
         signature,
         signedTransaction,

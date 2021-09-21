@@ -3,7 +3,6 @@ import { AmqpConfig } from '../services/amqp';
 import { ProcessConfig } from '../processes/abstract-process';
 import { parseInt } from '../utils/parse-int';
 import { IndexerConfig } from '../const/interfaces/indexer-config';
-import { ExchangeType } from '../const/exchange-type';
 import { MetricConfig } from '../const/interfaces/metric-config';
 
 export const loggerConfig = {
@@ -30,15 +29,8 @@ export const tezosNodeUrls = (
 
 export const amqpConfig: AmqpConfig = {
   url: process.env.AMQP_URL || 'amqp://localhost',
-  queueName: process.env.AMQP_QUEUE_NAME || 'injection',
-  exchange: {
-    name: process.env.SEND_TRANSACTIONS_QUEUE_EXCHANGE || 'topic_logs',
-    type:
-      (process.env.SEND_TRANSACTIONS_QUEUE_EXCHANGE_TYPE as ExchangeType) ||
-      ExchangeType.topic,
-  },
-  routingKey:
-    process.env.SEND_TRANSACTIONS_QUEUE_ROUTING_KEY || 'send_transactions',
+  queues: process.env.AMPQ_QUEUES || 'inject-transaction send-transaction',
+  reconnectTimeoutInMs: parseInt(3000, process.env.RECONNECT_TIMEOUT),
 };
 
 export const webProcessConfig: ProcessConfig = {

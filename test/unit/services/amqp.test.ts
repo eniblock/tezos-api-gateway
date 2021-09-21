@@ -20,97 +20,53 @@ describe('[services/amqp] Amqp Service', () => {
     jest.restoreAllMocks();
   });
 
-  describe('#createChannel', () => {
+  describe('#connect', () => {
     afterEach(async () => {
       await amqpService.stop();
     });
 
-    it('should correct create the channel', async () => {
+    it('should connect to broker and create the channel', async () => {
       const amqpSpy = jest.spyOn(amqp, 'connect');
-
-      await amqpService.createChannel();
+      await amqpService.connect();
+      // jest.advanceTimersByTime(3000);
 
       expect(amqpService.connection).not.toBeUndefined();
       expect(amqpService.channel).not.toBeUndefined();
-
       expect(amqpSpy.mock.calls).toEqual([[amqpConfig.url]]);
     });
   });
 
   describe('#start', () => {
-    let createChannelSpy: jest.SpyInstance;
+    let connectSpy: jest.SpyInstance;
 
     beforeEach(async () => {
-      await amqpService.createChannel();
-      createChannelSpy = jest.spyOn(amqpService, 'createChannel');
+      await amqpService.connect();
+      connectSpy = jest.spyOn(amqpService, 'connect');
     });
 
     afterEach(async () => {
       await amqpService.stop();
+      jest.useRealTimers();
     });
 
-    it('should properly start the service, call assertQueue without calling assertExchange when exchange is not defined', async () => {
-      createChannelSpy.mockImplementation();
-
-      const assertQueueSpy = jest.spyOn(
-        amqpService.channel as amqp.Channel,
-        'assertQueue',
-      );
-      const assertExchangeSpy = jest.spyOn(
-        amqpService.channel as amqp.Channel,
-        'assertExchange',
-      );
+    it('should properly start the service, call unstackOfflinesQueues in a setTimeout', async () => {
+      jest.useFakeTimers();
+      connectSpy.mockImplementation();
+      jest.runAllTimers();
 
       await expect(amqpService.start()).resolves.toEqual(true);
-
-      expect(createChannelSpy).toHaveBeenCalledTimes(1);
-      expect(assertExchangeSpy).toHaveBeenCalledTimes(0);
-      expect(assertQueueSpy.mock.calls).toEqual([['test', { durable: true }]]);
-    });
-
-    it('should properly start the service, call assertQueue and also assertExchange when exchange is defined', async () => {
-      const amqpServiceWithExchange = new AmqpService(
-        {
-          ...amqpConfig,
-          exchange: { name: 'topic_logs', type: ExchangeType.topic },
-        },
-        logger,
-      );
-
-      await amqpServiceWithExchange.createChannel();
-
-      const assertQueueSpy = jest.spyOn(
-        amqpServiceWithExchange.channel as amqp.Channel,
-        'assertQueue',
-      );
-      const assertExchangeSpy = jest.spyOn(
-        amqpServiceWithExchange.channel as amqp.Channel,
-        'assertExchange',
-      );
-
-      createChannelSpy = jest
-        .spyOn(amqpServiceWithExchange, 'createChannel')
-        .mockImplementation();
-
-      await expect(amqpServiceWithExchange.start()).resolves.toEqual(true);
-
-      expect(createChannelSpy).toHaveBeenCalledTimes(1);
-      expect(assertQueueSpy.mock.calls).toEqual([['test', { durable: true }]]);
-      expect(assertExchangeSpy.mock.calls).toEqual([
-        ['topic_logs', 'topic', { durable: true }],
-      ]);
-
-      await amqpServiceWithExchange.stop();
+      expect(setTimeout).toHaveBeenCalledTimes(1);
+      expect(connectSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should throw when unexpected error happen', async () => {
-      createChannelSpy.mockRejectedValue(new Error('Unexpected Error'));
+      connectSpy.mockRejectedValue(new Error('Unexpected Error'));
 
       await expect(amqpService.start()).rejects.toThrow(
         Error('Unexpected Error'),
       );
 
-      expect(createChannelSpy).toHaveBeenCalledTimes(1);
+      expect(connectSpy).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -159,11 +115,11 @@ describe('[services/amqp] Amqp Service', () => {
         .spyOn(amqpService.channel!, 'sendToQueue')
         .mockImplementation();
 
-      await amqpService.sendToQueue<message>(testMessage);
+      amqpService.sendToQueue(testMessage, 'send-transaction');
 
       expect(channelSpy.mock.calls).toEqual([
         [
-          'test',
+          'send-transaction',
           Buffer.from(JSON.stringify({ message: 'this is a test' })),
           { persistent: true },
         ],
@@ -176,26 +132,12 @@ describe('[services/amqp] Amqp Service', () => {
       return Promise.resolve();
     };
 
-    it('should throw an error when both queueName and exchange are not defined', async () => {
-      const noQueueNameAndExchangeAmqpService = new AmqpService(
-        { url: amqpConfig.url },
-        logger,
-      );
-
-      await noQueueNameAndExchangeAmqpService.start();
-
-      await expect(
-        noQueueNameAndExchangeAmqpService.consume<string>(handler),
-      ).rejects.toThrow(Error('Either queue name or exchange key must be set'));
-
-      await noQueueNameAndExchangeAmqpService.stop();
-    });
-
     describe('When queue name is not defined', () => {
       const noQueueNameAmqpService = new AmqpService(
         {
           url: amqpConfig.url,
           exchange: { name: 'topic_logs', type: ExchangeType.topic },
+          reconnectTimeoutInMs: 3000,
         },
         logger,
       );
@@ -215,6 +157,13 @@ describe('[services/amqp] Amqp Service', () => {
           noQueueNameAmqpService.channel as amqp.Channel,
           'bindQueue',
         );
+        jest
+          .spyOn(noQueueNameAmqpService.channel as amqp.Channel, 'assertQueue')
+          .mockResolvedValue({
+            queue: 'amq.gen-XXXXXXXXX',
+            messageCount: 0,
+            consumerCount: 0,
+          });
 
         await expect(noQueueNameAmqpService.consume(handler)).resolves.toEqual(
           undefined,
@@ -222,7 +171,7 @@ describe('[services/amqp] Amqp Service', () => {
 
         expect(consumeSpy).toHaveBeenCalledTimes(1);
         expect(bindQueueSpy.mock.calls).toEqual([
-          [noQueueNameAmqpService.config.queueName, 'topic_logs', '#'],
+          ['amq.gen-XXXXXXXXX', 'topic_logs', '#'],
         ]);
 
         await noQueueNameAmqpService.stop();
@@ -232,6 +181,7 @@ describe('[services/amqp] Amqp Service', () => {
         const noQueueNameWithRoutingKeyAmqpService = new AmqpService(
           {
             url: amqpConfig.url,
+            reconnectTimeoutInMs: 3000,
             exchange: { name: 'direct_logs', type: ExchangeType.direct },
             routingKey: 'routing',
           },
@@ -249,6 +199,16 @@ describe('[services/amqp] Amqp Service', () => {
           noQueueNameWithRoutingKeyAmqpService.channel as amqp.Channel,
           'bindQueue',
         );
+        jest
+          .spyOn(
+            noQueueNameWithRoutingKeyAmqpService.channel as amqp.Channel,
+            'assertQueue',
+          )
+          .mockResolvedValue({
+            queue: 'amq.gen-XXXXXXXXX',
+            messageCount: 0,
+            consumerCount: 0,
+          });
 
         await expect(
           noQueueNameWithRoutingKeyAmqpService.consume(handler),
@@ -256,11 +216,7 @@ describe('[services/amqp] Amqp Service', () => {
 
         expect(consumeSpy).toHaveBeenCalledTimes(1);
         expect(bindQueueSpy.mock.calls).toEqual([
-          [
-            noQueueNameWithRoutingKeyAmqpService.config.queueName,
-            'direct_logs',
-            'routing',
-          ],
+          ['amq.gen-XXXXXXXXX', 'direct_logs', 'routing'],
         ]);
 
         await noQueueNameWithRoutingKeyAmqpService.stop();

@@ -30,11 +30,15 @@ describe('[processes/workers/check-operation-status] Check Operation Status Proc
     });
 
     it('should correctly start the injection worker', async () => {
+      const startRabbitMQSpy = jest
+        .spyOn(checkOperationStatusProcess, 'startRabbitMQ')
+        .mockImplementation();
       await expect(checkOperationStatusProcess.start()).resolves.toEqual(true);
 
       expect(checkOperationStatusProcess.indexerPool.indexers.length).toEqual(
         2,
       );
+      expect(startRabbitMQSpy).toHaveBeenCalledTimes(1);
       expect(checkOperationStatusSpy.mock.calls).toEqual([
         [
           {

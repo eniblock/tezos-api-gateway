@@ -64,11 +64,11 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
   });
 
   describe('#sendTransactionsAsync', () => {
-    let publishMessageSpy: jest.SpyInstance;
+    let sendToQueueSpy: jest.SpyInstance;
 
     beforeEach(() => {
-      publishMessageSpy = jest
-        .spyOn(amqpService, 'publishMessage')
+      sendToQueueSpy = jest
+        .spyOn(amqpService, 'sendToQueue')
         .mockImplementation();
     });
 
@@ -90,10 +90,8 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
         selectFields: '*',
       });
 
-      expect(publishMessageSpy.mock.calls).toEqual([
+      expect(sendToQueueSpy.mock.calls).toEqual([
         [
-          'topic_logs',
-          'send_transactions.toto',
           {
             transactions: [
               { contractAddress: 'contractAddress', entryPoint: 'entrypoint' },
@@ -103,6 +101,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
             callerId: undefined,
             useCache: true,
           },
+          'send-transaction',
         ],
       ]);
 
@@ -119,7 +118,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
 
     it('should throw error and log an error when any unexpected error happened ', async () => {
       const loggerErrorSpy = jest.spyOn(logger, 'error');
-      publishMessageSpy.mockImplementation(() => {
+      sendToQueueSpy.mockImplementation(() => {
         throw new Error('Unexpected error');
       });
 
@@ -150,10 +149,8 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
         ],
       ]);
 
-      expect(publishMessageSpy.mock.calls).toEqual([
+      expect(sendToQueueSpy.mock.calls).toEqual([
         [
-          'topic_logs',
-          'send_transactions.toto',
           {
             transactions: [
               { contractAddress: 'contractAddress', entryPoint: 'entrypoint' },
@@ -163,6 +160,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
             callerId: undefined,
             useCache: true,
           },
+          'send-transaction',
         ],
       ]);
 

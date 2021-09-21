@@ -26,7 +26,8 @@ export const tezosNodeGranadaUrls = (
 
 export const amqpConfig: AmqpConfig = {
   url: process.env.AMQP_URL || 'amqp://localhost',
-  queueName: 'test',
+  queues: 'test',
+  reconnectTimeoutInMs: 3000,
 };
 
 export const vaultClientConfig: VaultClientConfig = {

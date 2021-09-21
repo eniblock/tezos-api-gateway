@@ -14,7 +14,7 @@ export class SendTransactionsConsumerProcess extends AbstractProcess {
 
   protected _postgreService: PostgreService;
   protected _gatewayPool: GatewayPool;
-  protected _amqpService: AmqpService;
+  protected _amqpService: AmqpService<SendTransactionsToQueueParams>;
 
   constructor(logger: Logger) {
     super(sendTransactionsWorkerProcessConfig, logger);
@@ -43,6 +43,18 @@ export class SendTransactionsConsumerProcess extends AbstractProcess {
     return this._amqpService;
   }
 
+  protected async setWorkerConsumer() {
+    const handler = createHandler(
+      this.gatewayPool,
+      this.postgreService,
+      this.logger,
+    );
+    await this.amqpService.consume<SendTransactionsToQueueParams>(
+      handler,
+      amqpConfig.queues,
+    );
+  }
+
   /**
    * Start steps:
    *  - Check if the process is already running
@@ -56,7 +68,7 @@ export class SendTransactionsConsumerProcess extends AbstractProcess {
     }
 
     await this.postgreService.initializeDatabase();
-    await this.amqpService.start();
+    await this.startRabbitMQ(this.amqpService, amqpConfig);
 
     this.amqpService.schema = {
       type: 'object',
@@ -95,13 +107,6 @@ export class SendTransactionsConsumerProcess extends AbstractProcess {
         },
       },
     };
-
-    const handler = createHandler(
-      this.gatewayPool,
-      this.postgreService,
-      this.logger,
-    );
-    this.amqpService.consume<SendTransactionsToQueueParams>(handler);
 
     this._isRunning = true;
     this.logger.info('✔ Send transactions worker is running');

@@ -219,7 +219,7 @@ describe('[processes/generated-api-web/api/controllers] Send job controller', ()
 
       it('should return 201 and the job with operation hash when', async () => {
         const publishMessageSpy = jest
-          .spyOn(amqpService, 'publishMessage')
+          .spyOn(amqpService, 'sendToQueue')
           .mockImplementation();
 
         const { body, status } = await request
@@ -245,8 +245,6 @@ describe('[processes/generated-api-web/api/controllers] Send job controller', ()
         });
         expect(publishMessageSpy.mock.calls).toEqual([
           [
-            'topic_logs',
-            'send_transactions.toto',
             {
               transactions: [
                 {
@@ -263,6 +261,7 @@ describe('[processes/generated-api-web/api/controllers] Send job controller', ()
               secureKeyName: 'toto',
               jobId: body.id,
             },
+            'send-transaction',
           ],
         ]);
       });

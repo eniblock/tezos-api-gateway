@@ -1,7 +1,8 @@
 import * as Logger from 'bunyan';
 
 import { injectionWorkerProcessConfig } from './config';
-import { amqpConfig, tezosNodeUrls } from '../../../config';
+import { tezosNodeUrls } from '../../../config';
+import { amqpConfig } from './config/';
 import { PatchJobParams } from '../../../const/interfaces/patch-job-params';
 import { PostgreService } from '../../../services/postgre';
 import { AmqpService } from '../../../services/amqp';
@@ -14,7 +15,7 @@ export class InjectionConsumerProcess extends AbstractProcess {
 
   protected _postgreService: PostgreService;
   protected _gatewayPool: GatewayPool;
-  protected _amqpService: AmqpService;
+  protected _amqpService: AmqpService<PatchJobParams>;
 
   constructor(logger: Logger) {
     super(injectionWorkerProcessConfig, logger);
@@ -43,6 +44,11 @@ export class InjectionConsumerProcess extends AbstractProcess {
     return this._amqpService;
   }
 
+  protected async setWorkerConsumer() {
+    const handler = createHandler(this.gatewayPool, this.postgreService);
+    await this.amqpService.consume<PatchJobParams>(handler, amqpConfig.queues);
+  }
+
   /**
    * Start steps:
    *  - Check if the process is already running
@@ -56,7 +62,7 @@ export class InjectionConsumerProcess extends AbstractProcess {
     }
 
     await this.postgreService.initializeDatabase();
-    await this.amqpService.start();
+    await this.startRabbitMQ(this.amqpService, amqpConfig);
 
     this.amqpService.schema = {
       type: 'object',
@@ -76,9 +82,6 @@ export class InjectionConsumerProcess extends AbstractProcess {
         },
       },
     };
-
-    const handler = createHandler(this.gatewayPool, this.postgreService);
-    this.amqpService.consume<PatchJobParams>(handler);
 
     this._isRunning = true;
     this.logger.info('✔ Injection worker is running');

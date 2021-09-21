@@ -1,5 +1,6 @@
 import Timeout = NodeJS.Timeout;
 import Logger from 'bunyan';
+import { AmqpConfig, AmqpService } from '../services/amqp';
 
 export interface ProcessConfig {
   exitTimeout: number;
@@ -118,9 +119,39 @@ export abstract class AbstractProcess {
       });
   }
 
+  protected abstract setWorkerConsumer(): void;
+
   protected bindProcess(): void {
     process.once('SIGTERM', signalHandler(this, 'SIGTERM'));
     process.once('SIGINT', signalHandler(this, 'SIGINT'));
     process.once('uncaughtException', errorHandler(this, 'uncaughtException'));
+  }
+
+  public async startRabbitMQ(amqpService: AmqpService, amqpConfig: AmqpConfig) {
+    await amqpService.start();
+    const queues = amqpConfig.queues!.split(' ');
+    for (const q of queues) {
+      await amqpService.channel.assertQueue(q, {
+        durable: true,
+      });
+    }
+
+    if (amqpConfig.exchange) {
+      const { name, type } = amqpConfig.exchange;
+
+      await amqpService.channel.assertExchange(name, type, {
+        durable: true,
+      });
+    }
+
+    amqpService.connection.on('close', async () => {
+      this.logger.error(
+        {},
+        '[AmqpService] Connection was closed, reconnecting...',
+      );
+      await this.startRabbitMQ(amqpService, amqpConfig);
+    });
+
+    await this.setWorkerConsumer();
   }
 }

@@ -16,18 +16,15 @@ describe('[processes/workers/injection] Injection Consumer Process', () => {
     const initializeDatabaseSpy = jest
       .spyOn(injectionConsumerProcess.postgreService, 'initializeDatabase')
       .mockImplementation();
-    const startAmqpSpy = jest
-      .spyOn(injectionConsumerProcess.amqpService, 'start')
-      .mockImplementation();
-    const consumeSpy = jest
-      .spyOn(injectionConsumerProcess.amqpService, 'consume')
+    const startRabbitMQSpy = jest
+      .spyOn(injectionConsumerProcess, 'startRabbitMQ')
       .mockImplementation();
 
     it('should correctly start the injection worker', async () => {
       await expect(injectionConsumerProcess.start()).resolves.toEqual(true);
 
       expect(initializeDatabaseSpy).toHaveBeenCalledTimes(1);
-      expect(startAmqpSpy).toHaveBeenCalledTimes(1);
+      expect(startRabbitMQSpy).toHaveBeenCalledTimes(1);
       expect(injectionConsumerProcess.amqpService.schema).toEqual({
         type: 'object',
         required: ['jobId', 'signedTransaction', 'signature'],
@@ -46,8 +43,6 @@ describe('[processes/workers/injection] Injection Consumer Process', () => {
           },
         },
       });
-
-      expect(consumeSpy).toHaveBeenCalledTimes(1);
     });
 
     it('if the process already started, should not start again', async () => {
@@ -56,8 +51,6 @@ describe('[processes/workers/injection] Injection Consumer Process', () => {
       await expect(injectionConsumerProcess.start()).resolves.toEqual(false);
 
       expect(initializeDatabaseSpy).toHaveBeenCalledTimes(1);
-      expect(startAmqpSpy).toHaveBeenCalledTimes(1);
-      expect(consumeSpy).toHaveBeenCalledTimes(1);
     });
   });
 
