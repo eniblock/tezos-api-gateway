@@ -32,9 +32,9 @@ type SendToQueueParam<H> = {
 export class AmqpService<H = {}> {
   private _connection!: amqp.Connection;
   private _channel!: amqp.Channel;
-  // private _consumeHandler: ((params: H) => Promise<void>) | undefined;
   private _offlinePubQueue: PublishParam<H>[];
   private _offlineSendToQueue: SendToQueueParam<H>[];
+  private _isCloseIntended: boolean;
 
   private _config: AmqpConfig;
   private _schema: MessageValidationSchema | undefined;
@@ -45,6 +45,7 @@ export class AmqpService<H = {}> {
     this._logger = logger;
     this._offlinePubQueue = [];
     this._offlineSendToQueue = [];
+    this._isCloseIntended = false;
   }
 
   public get connection() {
@@ -59,9 +60,14 @@ export class AmqpService<H = {}> {
     return this._config;
   }
 
+  public get isCloseIntended() {
+    return this._isCloseIntended;
+  }
+
   public get schema(): MessageValidationSchema | undefined {
     return this._schema;
   }
+
   /**
    * Set the schema to validate the message when the service consume the msg
    *
@@ -71,24 +77,17 @@ export class AmqpService<H = {}> {
     this._schema = schema;
   }
 
-  public async timerGame() {
-    setTimeout(() => {
-      this._logger.info('test', '[AmqpService] Connection error, retrying...');
-    }, 1000);
-  }
-
   /**
    * Connect to the RabbitMQ server
    */
   public async connect() {
-    return new Promise<void>((resolve) => {
+    await new Promise<void>((resolve) => {
       const interval = setInterval(async () => {
         try {
           this._connection = await amqp.connect(this._config.url);
-          this._logger.info({}, '[AmqpService] Connected');
-
           this._channel = await this.connection.createChannel();
           await this.channel!.prefetch(1);
+          this._logger.info({}, '[AmqpService] Connected');
 
           clearInterval(interval);
           resolve();
@@ -107,15 +106,11 @@ export class AmqpService<H = {}> {
    */
   public async start(): Promise<boolean> {
     try {
-      this._logger.info('before connect');
       await this.connect();
-      this._logger.info('after connect');
 
       // We set a timeout to make sure that the workers had time to connect to the broker
       setTimeout(async () => {
-        this._logger.info('before unstackOfflinesQueues');
         await this.unstackOfflinesQueues();
-        this._logger.info('after unstackOfflinesQueues');
       }, this._config.reconnectTimeoutInMs);
     } catch (error) {
       throw error;
@@ -130,6 +125,7 @@ export class AmqpService<H = {}> {
   public async stop(): Promise<boolean> {
     try {
       if (this._connection) {
+        this._isCloseIntended = true;
         await this.connection.close();
       }
     } catch (error) {
@@ -141,7 +137,7 @@ export class AmqpService<H = {}> {
 
   /**
    * Send the message to a queue
-   * If the sending fails, we push to message to a offline queue
+   * If the sending fails, we push to message to an offline queue
    *
    * @param {object} params  - the object which will be formatted to json string
    * @param {string} queue   - the target queue
@@ -165,7 +161,7 @@ export class AmqpService<H = {}> {
 
   /**
    * Publish the message to a certain exchange
-   * If the publish fails, we push to message to a offline queue
+   * If the publish fails, we push to message to an offline queue
    *
    * @param {string} exchange      - the exchange name
    * @param {string} routingKey    - the routing key
@@ -222,8 +218,8 @@ export class AmqpService<H = {}> {
       queueName = queue.queue;
 
       routingKey
-        ? this.channel?.bindQueue(queueName, exchange!.name, routingKey)
-        : this.channel?.bindQueue(queueName, exchange!.name, '#');
+        ? await this.channel?.bindQueue(queueName, exchange!.name, routingKey)
+        : await this.channel?.bindQueue(queueName, exchange!.name, '#');
     }
 
     return this.channel.consume(queueName, (msg) => {

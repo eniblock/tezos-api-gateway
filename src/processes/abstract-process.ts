@@ -145,6 +145,7 @@ export abstract class AbstractProcess {
     }
 
     amqpService.connection.on('close', async () => {
+      if (amqpService.isCloseIntended) return;
       this.logger.error(
         {},
         '[AmqpService] Connection was closed, reconnecting...',
