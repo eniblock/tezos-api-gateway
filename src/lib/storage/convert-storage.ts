@@ -84,17 +84,9 @@ function convertDeepLayerDataFieldToStorageResponseValue(
   return Promise.all(
     rootDataFields.map(async ({ key, dataFields }) => {
       let mapValue = null;
-      if (map instanceof MichelsonMap) {
-        mapValue = map.get(key);
-      } else {
-        try {
-          mapValue = await map.get(key as any);
-        } catch (err) {
-          err.status = StatusCodes.NOT_FOUND;
-          logger.error('Key Not Found in Map - errorStatus : ' + err.status);
-          throw err;
-        }
-      }
+      map instanceof MichelsonMap
+        ? (mapValue = map.get(key))
+        : (mapValue = await tryGetFromMap(logger, map, key));
 
       if (!mapValue) {
         return { key, error: 'The current map does not contain this key' };
@@ -123,6 +115,36 @@ function convertDeepLayerDataFieldToStorageResponseValue(
       };
     }),
   );
+}
+
+/**
+ * The map.get function often returns a 502 error (for unknown reasons, maybe because we request the node too much).
+ * If we get a 502, we retry until the request succeed.
+ * There is no need for a timeout between each call, because the 502 has the same effect
+ *
+ * @param {object} logger                         - the logger
+ * @param {MichelsonMap | BigMapAbstraction} map  - the map that contains the data
+ * @param {string | GenericObject} key            - the key of the data we wish to retrieve
+ */
+async function tryGetFromMap(
+  logger: Logger,
+  map: MichelsonMap<MichelsonMapKey, any> | BigMapAbstraction,
+  key: string | GenericObject,
+): Promise<any> {
+  try {
+    return await map.get(key as any);
+  } catch (err) {
+    if (err.status === 502) {
+      logger.error(
+        '[lib/storage/convert-storage/#tryGetFromMap] Got a 502, retrying - Error : ' +
+          err.message,
+      );
+      return tryGetFromMap(logger, map, key);
+    }
+    err.status = StatusCodes.NOT_FOUND;
+    logger.error('Key Not Found in Map - errorStatus : ' + err.status);
+    throw err;
+  }
 }
 
 /**
