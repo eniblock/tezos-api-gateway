@@ -129,11 +129,13 @@ export abstract class AbstractProcess {
 
   public async startRabbitMQ(amqpService: AmqpService, amqpConfig: AmqpConfig) {
     await amqpService.start();
-    const queues = amqpConfig.queues!.split(' ');
-    for (const q of queues) {
-      await amqpService.channel.assertQueue(q, {
-        durable: true,
-      });
+    if (amqpConfig.queues) {
+      const queues = amqpConfig.queues!.split(' ');
+      for (const q of queues) {
+        await amqpService.channel.assertQueue(q, {
+          durable: true,
+        });
+      }
     }
 
     if (amqpConfig.exchange) {

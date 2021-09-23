@@ -19,8 +19,8 @@
     "injection-worker:dev": "nodemon build/src/processes/workers/injection/index.js",
     "send-transactions-worker": "npm run build && node build/src/processes/workers/send-transactions/index.js | bunyan",
     "send-transactions-worker:dev": "nodemon build/src/processes/workers/send-transactions/index.js | bunyan",
-    "check-operation-status": "npm run build && node build/src/processes/workers/check-operation-status/index.js",
-    "check-operation-status:dev": "nodemon build/src/processes/workers/check-operation-status/index.js",
+    "check-operation-status": "npm run build && node build/src/processes/workers/check-operation-status/index.js | bunyan",
+    "check-operation-status:dev": "nodemon build/src/processes/workers/check-operation-status/index.js | bunyan",
     "tslint": "tslint --project ."
   },
   "keywords": [],

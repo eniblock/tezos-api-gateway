@@ -35,6 +35,7 @@ export class AmqpService<H = {}> {
   private _offlinePubQueue: PublishParam<H>[];
   private _offlineSendToQueue: SendToQueueParam<H>[];
   private _isCloseIntended: boolean;
+  private _isConnecting: boolean;
 
   private _config: AmqpConfig;
   private _schema: MessageValidationSchema | undefined;
@@ -46,6 +47,7 @@ export class AmqpService<H = {}> {
     this._offlinePubQueue = [];
     this._offlineSendToQueue = [];
     this._isCloseIntended = false;
+    this._isConnecting = false;
   }
 
   public get connection() {
@@ -83,15 +85,22 @@ export class AmqpService<H = {}> {
   public async connect() {
     await new Promise<void>((resolve) => {
       const interval = setInterval(async () => {
+        // If the reconnectTimeout is lower that the time required to connect to the broker,
+        // there will be several connections made, hence this check
+        if (this._isConnecting) return;
         try {
+          this._isConnecting = true;
           this._connection = await amqp.connect(this._config.url);
+
           this._channel = await this.connection.createChannel();
           await this.channel!.prefetch(1);
           this._logger.info({}, '[AmqpService] Connected');
 
+          this._isConnecting = false;
           clearInterval(interval);
           resolve();
         } catch (err) {
+          this._isConnecting = false;
           this._logger.error(
             { err },
             '[AmqpService] Connection error, retrying...',
