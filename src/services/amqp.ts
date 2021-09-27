@@ -72,8 +72,6 @@ export class AmqpService {
     try {
       await this.createChannel();
 
-      this.channel!.prefetch(1);
-
       if (this._config.queueName) {
         await this.channel!.assertQueue(this._config.queueName, {
           durable: true,
@@ -170,12 +168,16 @@ export class AmqpService {
 
       this._config.queueName = queue.queue;
       routingKey
-        ? this.channel?.bindQueue(
+        ? await this.channel?.bindQueue(
             this._config.queueName,
             exchange!.name,
             routingKey,
           )
-        : this.channel?.bindQueue(this._config.queueName, exchange!.name, '#');
+        : await this.channel?.bindQueue(
+            this._config.queueName,
+            exchange!.name,
+            '#',
+          );
     }
 
     return this.channel?.consume(this._config.queueName!, (msg) => {
