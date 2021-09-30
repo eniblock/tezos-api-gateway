@@ -15,6 +15,9 @@ import { TezosService } from '../../../../src/services/tezos';
 
 describe('[services/clients] Indexer Client', () => {
   const indexerClient = new IndexerClient(indexerConfigs[0], logger);
+  const indexerClients = indexerConfigs.map((indexer) => {
+    return new IndexerClient(indexer, logger);
+  });
 
   afterEach(() => {
     jest.restoreAllMocks();
@@ -22,52 +25,54 @@ describe('[services/clients] Indexer Client', () => {
   });
 
   describe('#getOperationBlockLevel', () => {
-    const betterCallIndexerClient = new IndexerClient(
-      indexerConfigs[2],
-      logger,
-    );
-
     it('should return undefined when the indexer throw any errors that is not NOT_FOUND', async () => {
-      const loggerInfoSpy = jest.spyOn(indexerClient.logger, 'info');
-      const indexerNock = nock(indexerClient.config.apiUrl)
-        .get(`/${indexerClient.config.pathToOperation}${operationHash}`)
-        .reply(500);
+      const loggerInfoSpies: any[] = [];
+      const nocks: nock.Scope[] = [];
+      const indexerPromises: Promise<void>[] = [];
+      for (const indexer of indexerClients) {
+        loggerInfoSpies.push(jest.spyOn(indexer.logger, 'info'));
 
-      const betterCallIndexerNock = nock(betterCallIndexerClient.config.apiUrl)
-        .get(
-          `/${betterCallIndexerClient.config.pathToOperation}${operationHash}`,
-        )
-        .reply(500);
+        const indexerNock = nock(indexer.config.apiUrl)
+          .get(`/${indexer.config.pathToOperation}${operationHash}`)
+          .reply(500);
+        nocks.push(indexerNock);
 
-      await expect(
-        indexerClient.getOperationBlockLevel(operationHash),
-      ).resolves.toBeUndefined();
-      await expect(
-        betterCallIndexerClient.getOperationBlockLevel(operationHash),
-      ).resolves.toBeUndefined();
+        const indexerPromise = expect(
+          indexer.getOperationBlockLevel(operationHash),
+        ).resolves.toBeUndefined();
+        indexerPromises.push(indexerPromise);
+      }
 
-      indexerNock.done();
-      betterCallIndexerNock.done();
+      await Promise.all(indexerPromises);
 
-      expect(loggerInfoSpy).toHaveBeenCalled();
+      indexerClients.forEach((_indexerClient, i) => {
+        nocks[i].done();
+        expect(loggerInfoSpies[i]).toHaveBeenCalled();
+      });
     });
 
     it('should throw OperationNotFoundError', async () => {
-      await expect(
-        indexerClient.getOperationBlockLevel(notFoundOperationHash),
-      ).rejects.toThrowError(OperationNotFoundError);
-      await expect(
-        betterCallIndexerClient.getOperationBlockLevel(notFoundOperationHash),
-      ).rejects.toThrowError(OperationNotFoundError);
+      const indexerPromises: Promise<void>[] = [];
+      for (const indexer of indexerClients) {
+        indexerPromises.push(
+          expect(
+            indexer.getOperationBlockLevel(notFoundOperationHash),
+          ).rejects.toThrowError(OperationNotFoundError),
+        );
+      }
+      await Promise.all(indexerPromises);
     }, 8000);
 
     it('should return the block level of the operation', async () => {
-      await expect(
-        indexerClient.getOperationBlockLevel(operationHash),
-      ).resolves.toEqual(265526);
-      await expect(
-        betterCallIndexerClient.getOperationBlockLevel(operationHash),
-      ).resolves.toEqual(265526);
+      const indexerPromises: Promise<void>[] = [];
+      for (const indexer of indexerClients) {
+        indexerPromises.push(
+          expect(
+            indexer.getOperationBlockLevel(operationHash),
+          ).resolves.toEqual(265526),
+        );
+      }
+      await Promise.all(indexerPromises);
     }, 8000);
   });
 
