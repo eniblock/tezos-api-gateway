@@ -18,7 +18,7 @@ import {
 import { VaultSigner } from '../../services/signers/vault';
 import { JobStatus } from '../../const/job-status';
 import { AmqpService } from '../../services/amqp';
-import { publishForSendTransactions } from '../amqp/publish-to-send-transactions-queue';
+import { sendToSendTransactionQueue } from '../amqp/send-to-send-transaction-queue';
 import { vaultClientConfig } from '../../config';
 import { insertTransactionWithParametersJson } from '../../models/transactions';
 import { JobIdNotFoundError } from '../../const/errors/job-id-not-found-error';
@@ -62,7 +62,7 @@ export async function sendTransactionsAsync(
       '[lib/jobs/sendTransactionsAsync] Successfully create a job',
     );
 
-    await publishForSendTransactions(amqpService, {
+    await sendToSendTransactionQueue(amqpService, {
       ...sendTransactionsParams,
       jobId,
       callerId,

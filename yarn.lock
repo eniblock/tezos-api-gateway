@@ -1100,7 +1100,14 @@
     "require-from-string" "^2.0.2"
     "uri-js" "^4.2.2"
 
-"amqplib@^0.7.1":
+"amqp-connection-manager@^3.7.0":
+  "integrity" "sha512-pWlrXVQNnSV9Jsewq6wnZjddzlHI/gZroDdmMEYfsqaAUa2V2ENCXbDdoi0r/GVesxueY/Yb8nBO024lfdtdPQ=="
+  "resolved" "https://registry.npmjs.org/amqp-connection-manager/-/amqp-connection-manager-3.7.0.tgz"
+  "version" "3.7.0"
+  dependencies:
+    "promise-breaker" "^5.0.0"
+
+"amqplib@*", "amqplib@^0.7.1":
   "integrity" "sha512-KePK3tTOLGU4emTo+PwSDMbc123jrxo13FpRpim1LzJoSlQrIBB2/kMeCC40jK/Zb0olHGaABjLqXDsdK46iLA=="
   "resolved" "https://registry.npmjs.org/amqplib/-/amqplib-0.7.1.tgz"
   "version" "0.7.1"
@@ -3115,6 +3122,13 @@
     "slash" "^3.0.0"
     "stack-utils" "^2.0.2"
 
+"jest-mock-extended@^2.0.4":
+  "integrity" "sha512-MgL3B3GjURQFjjPGqbCANydA5BFNPygv0mYp4Tjfxohh9MWwxxX8Eq2p6ncCt/Vt+RAnaLlDaI7gwrDRD7Pt9A=="
+  "resolved" "https://registry.npmjs.org/jest-mock-extended/-/jest-mock-extended-2.0.4.tgz"
+  "version" "2.0.4"
+  dependencies:
+    "ts-essentials" "^7.0.3"
+
 "jest-mock@^26.6.2":
   "integrity" "sha512-YyFjePHHp1LzpzYcmgqkJ0nm0gg/lJx2aZFzFy1S6eUqNjXsOqTK10zNRff2dNfssgokjkG65OlWNcIlgd3zew=="
   "resolved" "https://registry.npmjs.org/jest-mock/-/jest-mock-26.6.2.tgz"
@@ -3291,7 +3305,7 @@
     "merge-stream" "^2.0.0"
     "supports-color" "^7.0.0"
 
-"jest@^26.6.3", "jest@>=26 <27":
+"jest@^24.0.0 || ^25.0.0 || ^26.0.0 || ^27.0.0", "jest@^26.6.3", "jest@>=26 <27":
   "integrity" "sha512-lGS5PXGAzR4RF7V5+XObhqz2KZIDUA1yD0DG6pBVmy10eh0ZIXQImRuzocsI/N2XZ1GrLFwTS27In2i2jlpq1Q=="
   "resolved" "https://registry.npmjs.org/jest/-/jest-26.6.3.tgz"
   "version" "26.6.3"
@@ -4287,6 +4301,11 @@
   "resolved" "https://registry.npmjs.org/process-nextick-args/-/process-nextick-args-2.0.1.tgz"
   "version" "2.0.1"
 
+"promise-breaker@^5.0.0":
+  "integrity" "sha512-mgsWQuG4kJ1dtO6e/QlNDLFtMkMzzecsC69aI5hlLEjGHFNpHrvGhFi4LiK5jg2SMQj74/diH+wZliL9LpGsyA=="
+  "resolved" "https://registry.npmjs.org/promise-breaker/-/promise-breaker-5.0.0.tgz"
+  "version" "5.0.0"
+
 "prompts@^2.0.1":
   "integrity" "sha512-awZAKrk3vN6CroQukBL+R9051a4R3zCZBlJm/HBfrSZ8iTpYix3VX1vU4mveiLpiwmOJT4wokTF9m6HUk4KqWQ=="
   "resolved" "https://registry.npmjs.org/prompts/-/prompts-2.4.0.tgz"
@@ -5198,6 +5217,11 @@
   dependencies:
     "punycode" "^2.1.1"
 
+"ts-essentials@^7.0.3":
+  "integrity" "sha512-8+gr5+lqO3G84KdiTSMRLtuyJ+nTBVRKuCrK4lidMPdVeEp0uqC875uE5NMcaA7YYMN7XsNiFQuMvasF8HT/xQ=="
+  "resolved" "https://registry.npmjs.org/ts-essentials/-/ts-essentials-7.0.3.tgz"
+  "version" "7.0.3"
+
 "ts-jest@^26.4.4":
   "integrity" "sha512-3lFWKbLxJm34QxyVNNCgXX1u4o/RV0myvA2y2Bxm46iGIjKlaY0own9gIckbjZJPn+WaJEnfPPJ20HHGpoq4yg=="
   "resolved" "https://registry.npmjs.org/ts-jest/-/ts-jest-26.4.4.tgz"
@@ -5332,7 +5356,7 @@
   "resolved" "https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz"
   "version" "0.0.6"
 
-"typescript@^4.2.4", "typescript@>=2.1.0 || >=2.1.0-dev || >=2.2.0-dev || >=2.3.0-dev || >=2.4.0-dev || >=2.5.0-dev || >=2.6.0-dev || >=2.7.0-dev || >=2.8.0-dev || >=2.9.0-dev || >= 3.0.0-dev || >= 3.1.0-dev", "typescript@>=2.3.0-dev || >=2.4.0-dev || >=2.5.0-dev || >=2.6.0-dev || >=2.7.0-dev || >=2.8.0-dev || >=2.9.0-dev || >=3.0.0-dev || >= 3.1.0-dev || >= 3.2.0-dev || >= 4.0.0-dev", "typescript@>=2.7", "typescript@>=3.8 <5.0":
+"typescript@^3.0.0 || ^4.0.0", "typescript@^4.2.4", "typescript@>=2.1.0 || >=2.1.0-dev || >=2.2.0-dev || >=2.3.0-dev || >=2.4.0-dev || >=2.5.0-dev || >=2.6.0-dev || >=2.7.0-dev || >=2.8.0-dev || >=2.9.0-dev || >= 3.0.0-dev || >= 3.1.0-dev", "typescript@>=2.3.0-dev || >=2.4.0-dev || >=2.5.0-dev || >=2.6.0-dev || >=2.7.0-dev || >=2.8.0-dev || >=2.9.0-dev || >=3.0.0-dev || >= 3.1.0-dev || >= 3.2.0-dev || >= 4.0.0-dev", "typescript@>=2.7", "typescript@>=3.7.0", "typescript@>=3.8 <5.0":
   "integrity" "sha512-V+evlYHZnQkaz8TRBuxTA92yZBPotr5H+WhQ7bD3hZUndx5tGOa1fuCgeSjxAzM1RiN5IzvadIXTVefuuwZCRg=="
   "resolved" "https://registry.npmjs.org/typescript/-/typescript-4.2.4.tgz"
   "version" "4.2.4"

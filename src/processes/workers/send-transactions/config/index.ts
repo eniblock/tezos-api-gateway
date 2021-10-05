@@ -1,5 +1,4 @@
 import { AmqpConfig } from '../../../../services/amqp';
-import { ExchangeType } from '../../../../const/exchange-type';
 import { ProcessConfig } from '../../../abstract-process';
 import { parseInt } from '../../../../utils/parse-int';
 
@@ -15,13 +14,5 @@ export const sendTransactionsWorkerLoggerConfig = {
 
 export const amqpConfig: AmqpConfig = {
   url: process.env.AMQP_URL || 'amqp://localhost',
-  exchange: {
-    name: process.env.SEND_TRANSACTIONS_QUEUE_EXCHANGE || 'topic_logs',
-    type:
-      (process.env.SEND_TRANSACTIONS_QUEUE_EXCHANGE_TYPE as ExchangeType) ||
-      ExchangeType.topic,
-  },
-  routingKey:
-    process.env.SEND_TRANSACTIONS_WORKER_QUEUE_ROUTING_KEY ||
-    'send_transactions.*',
+  queues: process.env.AMQP_QUEUE_NAME || 'send-transaction',
 };

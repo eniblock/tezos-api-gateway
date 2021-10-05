@@ -39,8 +39,6 @@ describe('[processes/web/api/user] Create user controller', () => {
           userId: 'tata',
         });
 
-      // tslint:disable-next-line:no-console
-      console.log('test ========', body);
       expect(status).toEqual(400);
       expect(body).toEqual({
         message: "request.body should have required property 'publicKey'",

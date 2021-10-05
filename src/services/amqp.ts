@@ -1,15 +1,16 @@
-import amqp, { ConsumeMessage } from 'amqplib';
+import { ConfirmChannel, ConsumeMessage } from 'amqplib';
 import Ajv, { ValidateFunction } from 'ajv';
 import Logger from 'bunyan';
 
 import { MessageValidationSchema } from '../const/interfaces/message-validation-schema';
 import { MissingMessageValidationSchemaError } from '../const/errors/missing-message-validation-schema-error';
 import { ExchangeType } from '../const/exchange-type';
-import { Options } from 'amqplib/properties';
+import { Options, Replies } from 'amqplib/properties';
+import * as amqpConMan from 'amqp-connection-manager';
 
 export interface AmqpConfig {
   url: string;
-  queueName?: string;
+  queues?: string;
   exchange?: {
     name: string;
     type: ExchangeType;
@@ -18,10 +19,10 @@ export interface AmqpConfig {
 }
 
 export class AmqpService {
-  private _connection: amqp.Connection | undefined;
-  private _channel: amqp.Channel | undefined;
+  private _connection!: amqpConMan.AmqpConnectionManager;
+  private _channel!: amqpConMan.ChannelWrapper;
 
-  private _config: AmqpConfig;
+  private readonly _config: AmqpConfig;
   private _schema: MessageValidationSchema | undefined;
   private _logger: Logger;
 
@@ -45,6 +46,7 @@ export class AmqpService {
   public get schema(): MessageValidationSchema | undefined {
     return this._schema;
   }
+
   /**
    * Set the schema to validate the message when the service consume the msg
    *
@@ -55,36 +57,47 @@ export class AmqpService {
   }
 
   /**
-   * Create the amqp channel
+   * Connect to the broker and start the amqp channel
    */
-  public async createChannel() {
-    this._connection = await amqp.connect(this._config.url);
-
-    this._channel = await this.connection!.createChannel();
-
-    await this.channel!.prefetch(1);
-  }
-
-  /**
-   * Start the amqp channel
-   */
-  public async start(): Promise<boolean> {
+  public async start(
+    consumer?: (channel: ConfirmChannel) => Promise<Replies.Consume>,
+    context?: any,
+  ): Promise<boolean> {
     try {
-      await this.createChannel();
+      this._connection = await amqpConMan.connect(this._config.url);
 
-      if (this._config.queueName) {
-        await this.channel!.assertQueue(this._config.queueName, {
-          durable: true,
-        });
-      }
+      this._channel = this._connection.createChannel({
+        json: true,
+        setup: (channel: ConfirmChannel) => {
+          const assertQueuePromisesArray: Promise<Replies.AssertQueue>[] = [];
+          if (this.config.queues) {
+            const queues = this.config.queues!.split(' ');
+            for (const q of queues) {
+              assertQueuePromisesArray.push(
+                channel.assertQueue(q, {
+                  durable: true,
+                }),
+              );
+            }
+          }
+          let assertExchangePromise;
+          if (this.config.exchange) {
+            const { name, type } = this.config.exchange;
 
-      if (this._config.exchange) {
-        const { name, type } = this._config.exchange;
+            assertExchangePromise = channel.assertExchange(name, type, {
+              durable: true,
+            });
+          }
+          const prefetchChannel = channel.prefetch(1);
 
-        await this.channel!.assertExchange(name, type, {
-          durable: true,
-        });
-      }
+          return Promise.all([
+            assertQueuePromisesArray,
+            assertExchangePromise,
+            prefetchChannel,
+            consumer?.apply(context, [channel]),
+          ]);
+        },
+      });
     } catch (error) {
       throw error;
     }
@@ -98,7 +111,7 @@ export class AmqpService {
   public async stop(): Promise<boolean> {
     try {
       if (this._connection) {
-        await this.connection!.close();
+        await this.connection.close();
       }
     } catch (error) {
       throw error;
@@ -108,30 +121,24 @@ export class AmqpService {
   }
 
   /**
-   * Send the message the the queue
+   * Send the message to a queue
    *
    * @param {object} params  - the object which will be formatted to json string
+   * @param {string} queue   - the target queue
    */
-  public sendToQueue<T>(params: T) {
-    if (!this._config.queueName) {
-      throw new Error('Queue name is not set');
-    }
-
-    return this.channel?.sendToQueue(
-      this._config.queueName,
-      Buffer.from(JSON.stringify(params)),
-      { persistent: true },
-    );
+  public async sendToQueue<T>(params: T, queue: string) {
+    await this.channel.sendToQueue(queue, params, { persistent: true });
   }
 
   /**
-   * Publish the message to an certain exchange
+   * Publish the message to a certain exchange
    *
    * @param {string} exchange      - the exchange name
    * @param {string} routingKey    - the routing key
    * @param {object} params        - the message to be sent
+   * @param {object} options       - the publishing options
    */
-  public publishMessage<T>(
+  public async publishMessage<T>(
     exchange: string,
     routingKey: string,
     params: T,
@@ -144,43 +151,32 @@ export class AmqpService {
       '[AmqpService/publishMessage] Publish with options',
     );
 
-    return this.channel!.publish(
-      exchange,
-      routingKey,
-      Buffer.from(JSON.stringify(params)),
-      finalOptions,
-    );
+    return this.channel.publish(exchange, routingKey, params, finalOptions);
   }
 
   /**
    * Listen to the message in queue, validate the message format then treat the message
    *
+   * @param {object} channel    - the channel used by the consumer
    * @param {function} handler  - the function to treat the message
+   * @param {string} queueName  - the name of the queue
    */
-  public async consume<T>(handler: (params: T) => Promise<void>) {
-    const { queueName, routingKey, exchange } = this._config;
-    if (!queueName && !exchange) {
-      throw new Error('Either queue name or exchange key must be set');
-    }
-
+  public async consume<T>(
+    channel: ConfirmChannel,
+    handler: (params: T) => Promise<void>,
+    queueName?: string,
+  ) {
     if (!queueName) {
-      const queue = await this.channel!.assertQueue('', { exclusive: true });
+      const { routingKey, exchange } = this._config;
+      const queue = await channel.assertQueue('', { exclusive: true });
+      queueName = queue.queue;
 
-      this._config.queueName = queue.queue;
       routingKey
-        ? await this.channel?.bindQueue(
-            this._config.queueName,
-            exchange!.name,
-            routingKey,
-          )
-        : await this.channel?.bindQueue(
-            this._config.queueName,
-            exchange!.name,
-            '#',
-          );
+        ? await channel.bindQueue(queueName, exchange!.name, routingKey)
+        : await channel.bindQueue(queueName, exchange!.name, '#');
     }
 
-    return this.channel?.consume(this._config.queueName!, (msg) => {
+    return channel.consume(queueName, (msg) => {
       this.messageHandler(msg, handler);
     });
   }
@@ -236,7 +232,7 @@ export class AmqpService {
       validatedMessage = this.validateMessage<T>(messageContent);
 
       if (!validatedMessage) {
-        return this.channel!.ack(msg);
+        return this.channel.ack(msg);
       }
     } catch (err) {
       this._logger.error(
@@ -244,7 +240,7 @@ export class AmqpService {
         '[AmqpService] Unexpected error happens during message validation',
       );
 
-      return this.channel!.ack(msg);
+      return this.channel.ack(msg);
     }
 
     try {
@@ -256,6 +252,6 @@ export class AmqpService {
       );
     }
 
-    this.channel!.ack(msg);
+    this.channel.ack(msg);
   }
 }

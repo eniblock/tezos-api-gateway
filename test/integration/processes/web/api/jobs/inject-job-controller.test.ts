@@ -180,6 +180,7 @@ describe('[processes/web/api/jobs] Inject job controller', () => {
             signature,
             signedTransaction,
           },
+          'inject-transaction',
         ],
       ]);
     });
