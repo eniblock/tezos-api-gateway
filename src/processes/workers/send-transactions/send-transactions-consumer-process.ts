@@ -8,6 +8,8 @@ import { createHandler } from './lib/create-handler';
 import { AbstractProcess } from '../../abstract-process';
 import { SendTransactionsToQueueParams } from '../../../const/interfaces/send-transactions-params';
 import { GatewayPool } from '../../../services/gateway-pool';
+import { ConfirmChannel } from 'amqplib';
+import { Replies } from 'amqplib/properties';
 
 export class SendTransactionsConsumerProcess extends AbstractProcess {
   protected _isRunning: boolean = false;
@@ -43,6 +45,21 @@ export class SendTransactionsConsumerProcess extends AbstractProcess {
     return this._amqpService;
   }
 
+  protected async setWorkerConsumer(
+    channel: ConfirmChannel,
+  ): Promise<Replies.Consume> {
+    const handler = createHandler(
+      this.gatewayPool,
+      this.postgreService,
+      this.logger,
+    );
+    return this.amqpService.consume<SendTransactionsToQueueParams>(
+      channel,
+      handler,
+      amqpConfig.queues,
+    );
+  }
+
   /**
    * Start steps:
    *  - Check if the process is already running
@@ -56,7 +73,7 @@ export class SendTransactionsConsumerProcess extends AbstractProcess {
     }
 
     await this.postgreService.initializeDatabase();
-    await this.amqpService.start();
+    await this.amqpService.start(this.setWorkerConsumer, this);
 
     this.amqpService.schema = {
       type: 'object',
@@ -95,13 +112,6 @@ export class SendTransactionsConsumerProcess extends AbstractProcess {
         },
       },
     };
-
-    const handler = createHandler(
-      this.gatewayPool,
-      this.postgreService,
-      this.logger,
-    );
-    this.amqpService.consume<SendTransactionsToQueueParams>(handler);
 
     this._isRunning = true;
     this.logger.info('✔ Send transactions worker is running');

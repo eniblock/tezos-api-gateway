@@ -19,9 +19,6 @@ describe('[processes/workers/injection] Injection Consumer Process', () => {
     const startAmqpSpy = jest
       .spyOn(injectionConsumerProcess.amqpService, 'start')
       .mockImplementation();
-    const consumeSpy = jest
-      .spyOn(injectionConsumerProcess.amqpService, 'consume')
-      .mockImplementation();
 
     it('should correctly start the injection worker', async () => {
       await expect(injectionConsumerProcess.start()).resolves.toEqual(true);
@@ -46,8 +43,6 @@ describe('[processes/workers/injection] Injection Consumer Process', () => {
           },
         },
       });
-
-      expect(consumeSpy).toHaveBeenCalledTimes(1);
     });
 
     it('if the process already started, should not start again', async () => {
@@ -56,8 +51,6 @@ describe('[processes/workers/injection] Injection Consumer Process', () => {
       await expect(injectionConsumerProcess.start()).resolves.toEqual(false);
 
       expect(initializeDatabaseSpy).toHaveBeenCalledTimes(1);
-      expect(startAmqpSpy).toHaveBeenCalledTimes(1);
-      expect(consumeSpy).toHaveBeenCalledTimes(1);
     });
   });
 

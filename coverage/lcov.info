@@ -531,7 +531,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:src/lib/amqp/publish-to-injection-queue.ts
+SF:src/lib/amqp/send-to-injection-queue.ts
 FN:10,publishToInjectionQueue
 FNF:1
 FNH:1
@@ -544,7 +544,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src/lib/amqp/publish-to-send-transactions-queue.ts
+SF:src/lib/amqp/send-to-send-transaction-queue.ts
 FN:12,publishForSendTransactions
 FNF:1
 FNH:1

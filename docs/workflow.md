@@ -5,9 +5,13 @@ There are 2 main objectives of Tezos API Gateway project:
 - Interact with Tezos smart contract
 - Follow up an operation
 
+The diagrams shown in this documentation illustrate the asynchronous mode, where RabbitMQ is used to transfer messages between the web server and the workers (for the injection and send processes).
+
+The synchronous mode doesn't use the workers or RabbitMQ : all actions are processed by the web server.
+
 ## Definitions
 
-###JOBS
+### JOBS
 
 A job is created after a request to interact with Tezos smart contract sent to Tezos Api Gateway (through **forge** or **send transactions**)
 
@@ -15,7 +19,7 @@ A job is created after a request to interact with Tezos smart contract sent to T
 
 The status of the job:
 
-| Status    | Explaination                                                                                                         |
+| Status    | Explanation                                                                                                          |
 | --------- | -------------------------------------------------------------------------------------------------------------------- |
 | CREATED   | The job is just created, which means a request to **forge/send** is just sent                                        |
 | PUBLISHED | The request to interact with Tezos smart contract is published to Tezos (which means **_operation hash_** is formed) |
@@ -25,7 +29,7 @@ The status of the job:
 
 There are 2 ways that user can interact with Tezos smart contract:
 
-###1. Send transactions
+### 1. Send transactions
 
 Tezos Api Gateway supports the **Vault Signer**.
 
@@ -40,7 +44,7 @@ If user want to perform the signing inside the Tezos Api Gateway using **Vault**
 - **[Generic][1]/[Generated][2] API Web Server**
 - **[Send transactions worker][4]**
 
-###2. Forge and Injection
+### 2. Forge and Injection
 
 For any reasons that user does not want to use **Vault Signer**, or want to perform the signing process outside the system,
 he/she can choose **forge and injection option**. This process break the interaction into 2 steps:
@@ -54,7 +58,7 @@ he/she can choose **forge and injection option**. This process break the interac
 <u>_SERVICES INVOLVE_</u>
 
 - **[Generic][1]/[Generated][2] API Web Server**
-- **[Injection worker][4]**
+- **[Injection worker][3]**
 
 ### Follow up an operation
 

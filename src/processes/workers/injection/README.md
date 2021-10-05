@@ -54,9 +54,11 @@ npm run injection-worker:dev | bunyan
 
 ### ENVIRONMENT VARIABLES
 
-| Name                     | Default Value            | Explaination                        |
-| ------------------------ | ------------------------ | ----------------------------------- |
-| LOGGER_NAME              | Injection Worker         | The name of the logger              |
-| LOGGER_LEVEL             | info                     | The level of the logger             |
-| INJECTION_WORKER_NAME    | Send Transactions Worker | The name of the process             |
-| INJECTION_WORKER_TIMEOUT | 3000                     | The process timeout in milliseconds |
+| Name                     | Default Value      | Explanation                             |
+| ------------------------ | ------------------ | --------------------------------------- |
+| AMQP_URL                 | amqp://localhost   | The URL to link to the RabbitMQ server  |
+| AMQP_QUEUES              | inject-transaction | The name of the queues that can be used |
+| LOGGER_NAME              | Injection Worker   | The name of the logger                  |
+| LOGGER_LEVEL             | info               | The level of the logger                 |
+| INJECTION_WORKER_NAME    | Injection Worker   | The name of the process                 |
+| INJECTION_WORKER_TIMEOUT | 3000               | The process timeout in milliseconds     |

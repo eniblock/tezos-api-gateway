@@ -54,13 +54,11 @@ npm run send-transactions-worker:dev | bunyan
 
 ### ENVIRONMENT VARIABLES
 
-| Name                                       | Default Value            | Explaination                                         |
-| ------------------------------------------ | ------------------------ | ---------------------------------------------------- |
-| AMQP_URL                                   | amqp://localhost         | the url to link to rabbiMq server                    |
-| LOGGER_NAME                                | Send Transactions Worker | The name of the logger                               |
-| LOGGER_LEVEL                               | info                     | The level of the logger                              |
-| SEND_TRANSACTION_WORKER_NAME               | Send Transactions Worker | The name of the process                              |
-| SEND_TRANSACTION_WORKER_TIMEOUT            | 3000                     | The process timeout in milliseconds                  |
-| SEND_TRANSACTIONS_QUEUE_EXCHANGE           | topic_logs               | The exchange name that the queue should be formed by |
-| SEND_TRANSACTIONS_QUEUE_EXCHANGE_TYPE      | topic                    | The exchange type                                    |
-| SEND_TRANSACTIONS_WORKER_QUEUE_ROUTING_KEY | send_transactions.\*     | The routing key that the queue will be formed by     |
+| Name                            | Default Value            | Explanation                             |
+| ------------------------------- | ------------------------ | --------------------------------------- |
+| AMQP_URL                        | amqp://localhost         | The URL to link to the RabbitMQ server  |
+| AMQP_QUEUES                     | send-transaction         | The name of the queues that can be used |
+| LOGGER_NAME                     | Send Transactions Worker | The name of the logger                  |
+| LOGGER_LEVEL                    | info                     | The level of the logger                 |
+| SEND_TRANSACTION_WORKER_NAME    | Send Transactions Worker | The name of the process                 |
+| SEND_TRANSACTION_WORKER_TIMEOUT | 3000                     | The process timeout in milliseconds     |

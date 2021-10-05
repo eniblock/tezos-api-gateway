@@ -26,6 +26,7 @@ describe('[processes/web/api/storage] Deploy Contract Controller', () => {
   beforeAll(async () => {
     webProcess.signerFactory = signerFactory;
     await webProcess.start();
+    await webProcess.amqpService.channel.waitForConnect();
   });
 
   beforeEach(() => {
@@ -43,23 +44,6 @@ describe('[processes/web/api/storage] Deploy Contract Controller', () => {
   });
 
   describe('#compileAndDeployContract', () => {
-    it('Should return 400 when secureKeyName or smarContractCode has unexpected values', async () => {
-      const { body, status } = await request
-        .post('/api/tezos_node/contract/deploy')
-        .set('Content-Type', 'application/json')
-        .send({
-          secureKeyName: 'nothing',
-          smartContractCode: 'nothing',
-        });
-
-      expect(status).toEqual(400);
-      expect(body).toEqual({
-        message:
-          'smartpysh failed to compile, check the description of the prop smartContractCode in const/openapi or try to compile with SmartPy cli',
-        status: 400,
-      });
-    });
-
     it('Should return 400 when secureKeyName has unexpected value and smartContractCode is correct', async () => {
       const { body, status } = await request
         .post('/api/tezos_node/contract/deploy')
