@@ -54,7 +54,7 @@ npm run check-operation-status:dev | bunyan
 
 ### ENVIRONMENT VARIABLES
 
-| Name                                  | Default Value                 | Explaination                        |
+| Name                                  | Default Value                 | Explanation                         |
 | ------------------------------------- | ----------------------------- | ----------------------------------- |
 | LOGGER_NAME                           | Check Operation Status Worker | The name of the logger              |
 | LOGGER_LEVEL                          | info                          | The level of the logger             |

@@ -8,7 +8,7 @@ export const injectionWorkerProcessConfig: ProcessConfig = {
 };
 
 export const injectionWorkerLoggerConfig = {
-  name: process.env.LOGGER_NAME || 'InjectionWorker',
+  name: process.env.LOGGER_NAME || 'Injection Worker',
   level: process.env.LOGGER_LEVEL || 'info',
 };
 
