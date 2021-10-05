@@ -30,7 +30,6 @@ export const tezosNodeUrls = (
 export const amqpConfig: AmqpConfig = {
   url: process.env.AMQP_URL || 'amqp://localhost',
   queues: process.env.AMPQ_QUEUES || 'inject-transaction send-transaction',
-  reconnectTimeoutInMs: parseInt(3000, process.env.RECONNECT_TIMEOUT),
 };
 
 export const webProcessConfig: ProcessConfig = {

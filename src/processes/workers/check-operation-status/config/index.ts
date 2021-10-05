@@ -26,7 +26,6 @@ export const amqpConfig: AmqpConfig = {
       (process.env.PUBLISH_EVENT_EXCHANGE_TYPE as ExchangeType) ||
       ExchangeType.headers,
   },
-  reconnectTimeoutInMs: parseInt(3000, process.env.RECONNECT_TIMEOUT),
 };
 
 export const cronTime =

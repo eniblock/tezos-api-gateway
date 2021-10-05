@@ -68,7 +68,7 @@ export class CheckOperationStatusProcess extends AbstractProcess {
     this._isRunning = true;
     this.logger.info('✔ Check operation status is running');
     await this.indexerPool.initializeIndexers();
-    await this.startRabbitMQ(this.amqpService, amqpConfig);
+    await this.amqpService.start();
 
     const tezosService = await this.gatewayPool.getTezosService();
 
@@ -109,9 +109,5 @@ export class CheckOperationStatusProcess extends AbstractProcess {
     this._isRunning = false;
 
     return true;
-  }
-
-  protected setWorkerConsumer() {
-    // No consumer as of now
   }
 }

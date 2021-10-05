@@ -8,13 +8,15 @@ import { createHandler } from './lib/create-handler';
 import { AbstractProcess } from '../../abstract-process';
 import { SendTransactionsToQueueParams } from '../../../const/interfaces/send-transactions-params';
 import { GatewayPool } from '../../../services/gateway-pool';
+import { ConfirmChannel } from 'amqplib';
+import { Replies } from 'amqplib/properties';
 
 export class SendTransactionsConsumerProcess extends AbstractProcess {
   protected _isRunning: boolean = false;
 
   protected _postgreService: PostgreService;
   protected _gatewayPool: GatewayPool;
-  protected _amqpService: AmqpService<SendTransactionsToQueueParams>;
+  protected _amqpService: AmqpService;
 
   constructor(logger: Logger) {
     super(sendTransactionsWorkerProcessConfig, logger);
@@ -43,13 +45,16 @@ export class SendTransactionsConsumerProcess extends AbstractProcess {
     return this._amqpService;
   }
 
-  protected async setWorkerConsumer() {
+  protected async setWorkerConsumer(
+    channel: ConfirmChannel,
+  ): Promise<Replies.Consume> {
     const handler = createHandler(
       this.gatewayPool,
       this.postgreService,
       this.logger,
     );
-    await this.amqpService.consume<SendTransactionsToQueueParams>(
+    return this.amqpService.consume<SendTransactionsToQueueParams>(
+      channel,
       handler,
       amqpConfig.queues,
     );
@@ -68,7 +73,7 @@ export class SendTransactionsConsumerProcess extends AbstractProcess {
     }
 
     await this.postgreService.initializeDatabase();
-    await this.startRabbitMQ(this.amqpService, amqpConfig);
+    await this.amqpService.start(this.setWorkerConsumer, this);
 
     this.amqpService.schema = {
       type: 'object',

@@ -1,11 +1,12 @@
-import amqp, { ConsumeMessage } from 'amqplib';
+import { ConfirmChannel, ConsumeMessage } from 'amqplib';
 import Ajv, { ValidateFunction } from 'ajv';
 import Logger from 'bunyan';
 
 import { MessageValidationSchema } from '../const/interfaces/message-validation-schema';
 import { MissingMessageValidationSchemaError } from '../const/errors/missing-message-validation-schema-error';
 import { ExchangeType } from '../const/exchange-type';
-import { Options } from 'amqplib/properties';
+import { Options, Replies } from 'amqplib/properties';
+import * as amqpConMan from 'amqp-connection-manager';
 
 export interface AmqpConfig {
   url: string;
@@ -14,40 +15,20 @@ export interface AmqpConfig {
     name: string;
     type: ExchangeType;
   };
-  reconnectTimeoutInMs?: number;
   routingKey?: string;
 }
-type PublishParam<H> = {
-  exchange: string;
-  routingKey: string;
-  params: H;
-  options: Options.Publish;
-};
 
-type SendToQueueParam<H> = {
-  params: H;
-  queueName: string;
-};
+export class AmqpService {
+  private _connection!: amqpConMan.AmqpConnectionManager;
+  private _channel!: amqpConMan.ChannelWrapper;
 
-export class AmqpService<H = {}> {
-  private _connection!: amqp.Connection;
-  private _channel!: amqp.Channel;
-  private _offlinePubQueue: PublishParam<H>[];
-  private _offlineSendToQueue: SendToQueueParam<H>[];
-  private _isCloseIntended: boolean;
-  private _isConnecting: boolean;
-
-  private _config: AmqpConfig;
+  private readonly _config: AmqpConfig;
   private _schema: MessageValidationSchema | undefined;
   private _logger: Logger;
 
   constructor(config: AmqpConfig, logger: Logger) {
     this._config = config;
     this._logger = logger;
-    this._offlinePubQueue = [];
-    this._offlineSendToQueue = [];
-    this._isCloseIntended = false;
-    this._isConnecting = false;
   }
 
   public get connection() {
@@ -60,10 +41,6 @@ export class AmqpService<H = {}> {
 
   public get config() {
     return this._config;
-  }
-
-  public get isCloseIntended() {
-    return this._isCloseIntended;
   }
 
   public get schema(): MessageValidationSchema | undefined {
@@ -80,47 +57,47 @@ export class AmqpService<H = {}> {
   }
 
   /**
-   * Connect to the RabbitMQ server
-   */
-  public async connect() {
-    await new Promise<void>((resolve) => {
-      const interval = setInterval(async () => {
-        // If the reconnectTimeout is lower that the time required to connect to the broker,
-        // there will be several connections made, hence this check
-        if (this._isConnecting) return;
-        try {
-          this._isConnecting = true;
-          this._connection = await amqp.connect(this._config.url);
-
-          this._channel = await this.connection.createChannel();
-          await this.channel!.prefetch(1);
-          this._logger.info({}, '[AmqpService] Connected');
-
-          this._isConnecting = false;
-          clearInterval(interval);
-          resolve();
-        } catch (err) {
-          this._isConnecting = false;
-          this._logger.error(
-            { err },
-            '[AmqpService] Connection error, retrying...',
-          );
-        }
-      }, this._config.reconnectTimeoutInMs);
-    });
-  }
-
-  /**
    * Connect to the broker and start the amqp channel
    */
-  public async start(): Promise<boolean> {
+  public async start(
+    consumer?: (channel: ConfirmChannel) => Promise<Replies.Consume>,
+    context?: any,
+  ): Promise<boolean> {
     try {
-      await this.connect();
+      this._connection = await amqpConMan.connect(this._config.url);
 
-      // We set a timeout to make sure that the workers had time to connect to the broker
-      setTimeout(async () => {
-        await this.unstackOfflinesQueues();
-      }, this._config.reconnectTimeoutInMs);
+      this._channel = this._connection.createChannel({
+        json: true,
+        setup: (channel: ConfirmChannel) => {
+          const assertQueuePromisesArray: Promise<Replies.AssertQueue>[] = [];
+          if (this.config.queues) {
+            const queues = this.config.queues!.split(' ');
+            for (const q of queues) {
+              assertQueuePromisesArray.push(
+                channel.assertQueue(q, {
+                  durable: true,
+                }),
+              );
+            }
+          }
+          let assertExchangePromise;
+          if (this.config.exchange) {
+            const { name, type } = this.config.exchange;
+
+            assertExchangePromise = channel.assertExchange(name, type, {
+              durable: true,
+            });
+          }
+          const prefetchChannel = channel.prefetch(1);
+
+          return Promise.all([
+            assertQueuePromisesArray,
+            assertExchangePromise,
+            prefetchChannel,
+            consumer?.apply(context, [channel]),
+          ]);
+        },
+      });
     } catch (error) {
       throw error;
     }
@@ -134,7 +111,6 @@ export class AmqpService<H = {}> {
   public async stop(): Promise<boolean> {
     try {
       if (this._connection) {
-        this._isCloseIntended = true;
         await this.connection.close();
       }
     } catch (error) {
@@ -146,41 +122,26 @@ export class AmqpService<H = {}> {
 
   /**
    * Send the message to a queue
-   * If the sending fails, we push to message to an offline queue
    *
    * @param {object} params  - the object which will be formatted to json string
    * @param {string} queue   - the target queue
    */
-  public sendToQueue(params: H, queue: string) {
-    try {
-      return this.channel.sendToQueue(
-        queue,
-        Buffer.from(JSON.stringify(params)),
-        { persistent: true },
-      );
-    } catch (err) {
-      this._logger.error(
-        { err },
-        '[AmqpService] An unexpected error happened during sendToQueue, publishing to the offline sendToQueue',
-      );
-      this._offlineSendToQueue.push({ params, queueName: queue });
-      return true;
-    }
+  public async sendToQueue<T>(params: T, queue: string) {
+    await this.channel.sendToQueue(queue, params, { persistent: true });
   }
 
   /**
    * Publish the message to a certain exchange
-   * If the publish fails, we push to message to an offline queue
    *
    * @param {string} exchange      - the exchange name
    * @param {string} routingKey    - the routing key
    * @param {object} params        - the message to be sent
    * @param {object} options       - the publishing options
    */
-  public async publishMessage(
+  public async publishMessage<T>(
     exchange: string,
     routingKey: string,
-    params: H,
+    params: T,
     options: Options.Publish = {},
   ) {
     const finalOptions = { ...options, persistent: true };
@@ -190,48 +151,32 @@ export class AmqpService<H = {}> {
       '[AmqpService/publishMessage] Publish with options',
     );
 
-    try {
-      return this.channel.publish(
-        exchange,
-        routingKey,
-        Buffer.from(JSON.stringify(params)),
-        finalOptions,
-      );
-    } catch (err) {
-      this._logger.error(
-        { err },
-        '[AmqpService] An unexpected error happened during publish, publishing to the offline publish queue',
-      );
-      this._offlinePubQueue.push({
-        exchange,
-        routingKey,
-        params,
-        options: finalOptions,
-      });
-      return true;
-    }
+    return this.channel.publish(exchange, routingKey, params, finalOptions);
   }
 
   /**
    * Listen to the message in queue, validate the message format then treat the message
    *
+   * @param {object} channel    - the channel used by the consumer
    * @param {function} handler  - the function to treat the message
+   * @param {string} queueName  - the name of the queue
    */
   public async consume<T>(
+    channel: ConfirmChannel,
     handler: (params: T) => Promise<void>,
     queueName?: string,
   ) {
     if (!queueName) {
       const { routingKey, exchange } = this._config;
-      const queue = await this.channel!.assertQueue('', { exclusive: true });
+      const queue = await channel.assertQueue('', { exclusive: true });
       queueName = queue.queue;
 
       routingKey
-        ? await this.channel?.bindQueue(queueName, exchange!.name, routingKey)
-        : await this.channel?.bindQueue(queueName, exchange!.name, '#');
+        ? await channel.bindQueue(queueName, exchange!.name, routingKey)
+        : await channel.bindQueue(queueName, exchange!.name, '#');
     }
 
-    return this.channel.consume(queueName, (msg) => {
+    return channel.consume(queueName, (msg) => {
       this.messageHandler(msg, handler);
     });
   }
@@ -308,30 +253,5 @@ export class AmqpService<H = {}> {
     }
 
     this.channel.ack(msg);
-  }
-
-  /**
-   * Resend all the messages stacked in offline queues
-   * As the condition of a for loop is reevaluated on each iteration and the queues can be mutated,
-   * we must first store the array's length to avoid an infinite loop
-   */
-  public async unstackOfflinesQueues() {
-    // tslint:disable-next-line:prefer-for-of
-    for (let i = 0, length = this._offlinePubQueue.length; i < length; i++) {
-      const m = this._offlinePubQueue.shift();
-      if (m)
-        await this.publishMessage(
-          m.exchange,
-          m.routingKey,
-          m.params,
-          m.options,
-        );
-    }
-
-    // tslint:disable-next-line:prefer-for-of
-    for (let i = 0, length = this._offlineSendToQueue.length; i < length; i++) {
-      const m = this._offlineSendToQueue.shift();
-      if (m) this.sendToQueue(m.params, m.queueName);
-    }
   }
 }

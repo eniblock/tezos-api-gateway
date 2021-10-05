@@ -15,5 +15,4 @@ export const sendTransactionsWorkerLoggerConfig = {
 export const amqpConfig: AmqpConfig = {
   url: process.env.AMQP_URL || 'amqp://localhost',
   queues: process.env.AMQP_QUEUE_NAME || 'send-transaction',
-  reconnectTimeoutInMs: parseInt(3000, process.env.RECONNECT_TIMEOUT),
 };

@@ -114,7 +114,7 @@ export class WebProcess extends AbstractProcess {
     }
 
     await this._postgreService.initializeDatabase();
-    await this.startRabbitMQ(this.amqpService, amqpConfig);
+    await this._amqpService.start();
     await this._metricPrometheusService.start();
 
     const tezosService = await this.gatewayPool.getTezosService();
@@ -245,9 +245,5 @@ export class WebProcess extends AbstractProcess {
    */
   protected appPostConfig() {
     this._app.use(errorHandler());
-  }
-
-  protected setWorkerConsumer() {
-    // No consumer as of now
   }
 }

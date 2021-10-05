@@ -28,7 +28,7 @@ export async function publishEventWhenTransactionsConfirmed(
     throw new Error('Exchange is not set');
   }
 
-  amqpService.publishMessage(exchange.name, '', message, {
+  amqpService.publishMessage<EventMessage>(exchange.name, '', message, {
     headers,
   });
 }

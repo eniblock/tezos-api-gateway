@@ -8,9 +8,9 @@ import { QueuesEnum } from '../../const/queues-enum';
  * @param {object} amqpService        - the amqp service helps to publish
  * @param {object} parameter          - all the parameters to patch job
  */
-export async function sendToInjectionQueue(
+export function sendToInjectionQueue(
   amqpService: AmqpService,
   parameter: PatchJobParams,
 ) {
-  amqpService.sendToQueue(parameter, QueuesEnum.INJECT);
+  amqpService.sendToQueue<PatchJobParams>(parameter, QueuesEnum.INJECT);
 }

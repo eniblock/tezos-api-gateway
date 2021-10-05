@@ -9,13 +9,14 @@ import { AmqpService } from '../../../services/amqp';
 import { createHandler } from './lib/create-handler';
 import { AbstractProcess } from '../../abstract-process';
 import { GatewayPool } from '../../../services/gateway-pool';
+import { ConfirmChannel } from 'amqplib';
 
 export class InjectionConsumerProcess extends AbstractProcess {
   protected _isRunning: boolean = false;
 
   protected _postgreService: PostgreService;
   protected _gatewayPool: GatewayPool;
-  protected _amqpService: AmqpService<PatchJobParams>;
+  protected _amqpService: AmqpService;
 
   constructor(logger: Logger) {
     super(injectionWorkerProcessConfig, logger);
@@ -44,9 +45,13 @@ export class InjectionConsumerProcess extends AbstractProcess {
     return this._amqpService;
   }
 
-  protected async setWorkerConsumer() {
+  protected async setWorkerConsumer(channel: ConfirmChannel) {
     const handler = createHandler(this.gatewayPool, this.postgreService);
-    await this.amqpService.consume<PatchJobParams>(handler, amqpConfig.queues);
+    return this.amqpService.consume<PatchJobParams>(
+      channel,
+      handler,
+      amqpConfig.queues,
+    );
   }
 
   /**
@@ -62,7 +67,7 @@ export class InjectionConsumerProcess extends AbstractProcess {
     }
 
     await this.postgreService.initializeDatabase();
-    await this.startRabbitMQ(this.amqpService, amqpConfig);
+    await this.amqpService.start(this.setWorkerConsumer, this);
 
     this.amqpService.schema = {
       type: 'object',

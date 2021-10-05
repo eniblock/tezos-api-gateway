@@ -16,15 +16,15 @@ describe('[processes/workers/injection] Injection Consumer Process', () => {
     const initializeDatabaseSpy = jest
       .spyOn(injectionConsumerProcess.postgreService, 'initializeDatabase')
       .mockImplementation();
-    const startRabbitMQSpy = jest
-      .spyOn(injectionConsumerProcess, 'startRabbitMQ')
+    const startAmqpSpy = jest
+      .spyOn(injectionConsumerProcess.amqpService, 'start')
       .mockImplementation();
 
     it('should correctly start the injection worker', async () => {
       await expect(injectionConsumerProcess.start()).resolves.toEqual(true);
 
       expect(initializeDatabaseSpy).toHaveBeenCalledTimes(1);
-      expect(startRabbitMQSpy).toHaveBeenCalledTimes(1);
+      expect(startAmqpSpy).toHaveBeenCalledTimes(1);
       expect(injectionConsumerProcess.amqpService.schema).toEqual({
         type: 'object',
         required: ['jobId', 'signedTransaction', 'signature'],

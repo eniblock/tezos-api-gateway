@@ -30,15 +30,12 @@ describe('[processes/workers/check-operation-status] Check Operation Status Proc
     });
 
     it('should correctly start the injection worker', async () => {
-      const startRabbitMQSpy = jest
-        .spyOn(checkOperationStatusProcess, 'startRabbitMQ')
-        .mockImplementation();
       await expect(checkOperationStatusProcess.start()).resolves.toEqual(true);
+      await checkOperationStatusProcess.amqpService.channel.waitForConnect();
 
       expect(checkOperationStatusProcess.indexerPool.indexers.length).toEqual(
         2,
       );
-      expect(startRabbitMQSpy).toHaveBeenCalledTimes(1);
       expect(checkOperationStatusSpy.mock.calls).toEqual([
         [
           {
@@ -55,6 +52,7 @@ describe('[processes/workers/check-operation-status] Check Operation Status Proc
 
     it('if the process already started, should not start again', async () => {
       await checkOperationStatusProcess.start();
+      await checkOperationStatusProcess.amqpService.channel.waitForConnect();
 
       await expect(checkOperationStatusProcess.start()).resolves.toEqual(false);
     });
@@ -67,6 +65,7 @@ describe('[processes/workers/check-operation-status] Check Operation Status Proc
 
     it('should correctly start the injection worker', async () => {
       await checkOperationStatusProcess.start();
+      await checkOperationStatusProcess.amqpService.channel.waitForConnect();
 
       await expect(checkOperationStatusProcess.stop()).resolves.toEqual(true);
 
