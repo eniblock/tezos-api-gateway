@@ -145,7 +145,7 @@ npm run prettier:write
 2. [Setup](#2-setup)
 
 ### 1. Prerequisites for local environment
-We assume that [**docker**](https://docs.docker.com/engine/install/ubuntu/#installation-methods) is already installed on your computer.  
+We assume that [**docker**](https://docs.docker.com/engine/install/ubuntu/#installation-methods) is already installed on your computer.
 In order to run tezos-api-gateway environment locally you need to have some dependencies:
 - k3d (v4.4.4)
 - helm
@@ -159,7 +159,7 @@ Also you need to have a local registry, a local cluster and a cert-manager.
 <br/>
 
 #### Ubuntu 20.04
-**Fortunately** we have a script that takes care of everything. To do so you need to install an open source project called [Click](https://github.com/click-project/click-project)  
+**Fortunately** we have a script that takes care of everything. To do so you need to install an open source project called [Click](https://github.com/click-project/click-project)
 Click-project is a framework that helps us create awesome command line interfaces.
 ```shell
 sudo apt install python3-pip
@@ -178,29 +178,29 @@ Finally to install everything.
 clk k8s install-cert-manager --flow
 ```
 
-:exclamation: :no_entry: **Be careful** if this command never ends do not close the *clk* process and open a new terminal.  
-You probably have a restarting container.   
-To verify it you can use **'docker ps'**.  
-Then look at the status of **rancher/k3s** image.  
-So if the status is **'Restarting'**.  
-Then display the logs of rancher/k3s.  
-eg. **docker logs <em>\<CONTAINER ID></em>**  
-at the end it should probably display the following:  
+:exclamation: :no_entry: **Be careful** if this command never ends do not close the *clk* process and open a new terminal.
+You probably have a restarting container.
+To verify it you can use **'docker ps'**.
+Then look at the status of **rancher/k3s** image.
+So if the status is **'Restarting'**.
+Then display the logs of rancher/k3s.
+eg. **docker logs <em>\<CONTAINER ID></em>**
+at the end it should probably display the following:
 ```shell
-conntrack.go:103] Set sysctl 'net/netfilter/nf_conntrack_max' to <A NUMBER>  
-server.go:495] open /proc/sys/net/netfilter/nf_conntrack_max: permission denied  
+conntrack.go:103] Set sysctl 'net/netfilter/nf_conntrack_max' to <A NUMBER>
+server.go:495] open /proc/sys/net/netfilter/nf_conntrack_max: permission denied
 ```
-The k3s image couldn't set a 'Maximum connection tracking' for the kernel's networking stack.  
-So do it manually.  
-eg. **sudo sysctl -w net/netfilter/nf_conntrack_max=<em>\<THE NUMBER DISPLAYED IN LOGS></em>**  
-Wait until the rancher/k3s container status is 'UP'.  
-Now redo the previous **clk command** or in case you closed the *clk* process you need to delete the k3d cluster and registry  
+The k3s image couldn't set a 'Maximum connection tracking' for the kernel's networking stack.
+So do it manually.
+eg. **sudo sysctl -w net/netfilter/nf_conntrack_max=<em>\<THE NUMBER DISPLAYED IN LOGS></em>**
+Wait until the rancher/k3s container status is 'UP'.
+Now redo the previous **clk command** or in case you closed the *clk* process you need to delete the k3d cluster and registry
 eg. ***k3d cluster delete && k3d registry delete --all***. Then you can redo the previous **clk command**
 
 <br/>
 
 #### Mac os
-Before going any further, make sure that kubernetes is enabled in docker desktop preferences.  
+Before going any further, make sure that kubernetes is enabled in docker desktop preferences.
 You need to install some dependencies
 ```shell
 # install k3d 4.4.4 for compatibility with click-project k8s recipe
@@ -229,11 +229,11 @@ clk k8s install-cert-manager
 ```shell
 Error Loading request extension section v3_req
 ```
-You can fix it by modifying the install-cert-manage config.  
+You can fix it by modifying the install-cert-manage config.
 For me the config was downloaded at "/Users/$USER/Library/Application Support/clk/recipes/k8s/python/k8s.py"
 open it and go at the line number 293 and add this line:
 '-config', '/usr/local/etc/openssl@1.1/openssl.cnf'
-generally, alternative version of openssl configs are installed via homebrew, check if the openssl.cnf exist.  
+generally, alternative version of openssl configs are installed via homebrew, check if the openssl.cnf exist.
 Now save then you can redo the previous *clk* command
 
 <br/>
