@@ -39,7 +39,7 @@ if cfg.get('dev'):
     ))
 image_build('registry.gitlab.com/xdev-tech/xdev-enterprise-business-network/tezos-api-gateway', '.', **extra_build_opts)
 k8s_resource('tag-rabbitmq', port_forwards=['15672', '5672'])
-k8s_resource('tag-api', port_forwards='3333', resource_deps=['tag-rabbitmq'])
+k8s_resource('tag-api', port_forwards=['3333', '9229'], resource_deps=['tag-rabbitmq'])
 k8s_resource('tag-vault', port_forwards='8300')
 k8s_resource('tag-db', port_forwards='5432')
 k8s_resource('tag-send-transactions-worker', resource_deps=['tag-rabbitmq'])
