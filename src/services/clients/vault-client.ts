@@ -325,6 +325,46 @@ export class VaultClient extends AbstractClient {
   }
 
   /**
+   * Get a key stored in /transit by its name
+   *
+   * @param {string} keyName  - key name
+   *
+   * @return {object}         - the key object
+   */
+  public async getTransitByName(keyName: string) {
+    const getTransitByName = url.resolve(
+      this.baseUrl,
+      `transit/keys/${keyName}`,
+    );
+
+    try {
+      const { body: result } = await superagent.get(getTransitByName).set({
+        'X-Vault-Token': this._token,
+      });
+
+      this.logger.info(
+        { resultData: result.data },
+        '[VaultClient] data received',
+      );
+      return result.data;
+    } catch (err) {
+      this.handleError(err, { path: 'transit/:keyName', keyName });
+      if (err.status === 404) {
+        throw new ClientError({
+          status: err.status,
+          message: `Not found : ${keyName} doesn't exist in Vault`,
+        });
+      } else if (err.status >= 400 && err.status < 500) {
+        throw new ClientError({
+          status: err.status,
+          message: JSON.stringify(err.response?.body),
+        });
+      }
+      throw err;
+    }
+  }
+
+  /**
    * @description  - rotates the version of the named key. After rotation, new plaintext requests will be encrypted with the new version of the key.
    * @param name
    */

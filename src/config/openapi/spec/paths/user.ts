@@ -327,4 +327,45 @@ export default {
       },
     },
   },
+  '/user/{id}/metadata': {
+    post: {
+      summary: 'Associate metadata with an account',
+      description: 'Create or update metadata for a given existing userId.',
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: 'Successful creation or update of metadata',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  userId: {
+                    type: 'string',
+                    description: 'User account identifier',
+                  },
+                  account: {
+                    type: 'object',
+                    description: 'Metadata saved',
+                  },
+                },
+              },
+            },
+          },
+        },
+        400: error[400],
+        404: error[404],
+        500: error.default,
+      },
+    },
+  },
 };
