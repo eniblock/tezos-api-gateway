@@ -17,8 +17,9 @@ RUN npm run build
 # dev image with live update
 FROM builder as dev
 RUN npm install -g bunyan nodemon
-CMD npm run start:dev
+COPY nodemon.json .
+CMD nodemon $SCRIPT | bunyan
 
 # final image
 FROM builder
-CMD ["node", "build/src/processes/web/index.js"]
+CMD node $SCRIPT

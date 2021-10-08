@@ -43,8 +43,9 @@ spec:
             {{- toYaml .Values.sendTransactionsWorker.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["node", "build/src/processes/workers/send-transactions/index.js"]
           env:
+            - name: SCRIPT
+              value: build/src/processes/workers/send-transactions/index.js
             - name: DB_USERNAME
               value: {{ .Values.db.postgresqlUsername | quote }}
             - name: DB_NAME
@@ -86,6 +87,12 @@ spec:
             httpGet:
               path: /metrics
               port: prometheus
+          startupProbe:
+            httpGet:
+              path: /metrics
+              port: prometheus
+            periodSeconds: 5
+            failureThreshold: 24
           resources:
             {{- toYaml .Values.sendTransactionsWorker.resources | nindent 12 }}
       {{- with .Values.sendTransactionsWorker.nodeSelector }}
