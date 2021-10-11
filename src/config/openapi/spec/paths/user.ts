@@ -327,9 +327,9 @@ export default {
       },
     },
   },
-  '/user/{id}/metadata': {
+  '/user/{userId}/metadata': {
     post: {
-      summary: 'Associate metadata with an account',
+      summary: 'Create the metadata of the user whose id is passed',
       description: 'Create or update metadata for a given existing userId.',
       requestBody: {
         required: true,
@@ -337,6 +337,14 @@ export default {
           'application/json': {
             schema: {
               type: 'object',
+              additionalProperties: false,
+              required: ['data'],
+              properties: {
+                data: {
+                  type: 'string',
+                  description: 'The string to store',
+                },
+              },
             },
           },
         },
@@ -353,9 +361,63 @@ export default {
                     type: 'string',
                     description: 'User account identifier',
                   },
-                  account: {
-                    type: 'object',
+                  data: {
+                    type: 'string',
                     description: 'Metadata saved',
+                  },
+                },
+              },
+            },
+          },
+        },
+        400: error[400],
+        404: error[404],
+        500: error.default,
+      },
+    },
+    get: {
+      summary: 'Retrieve the metadata of the user whose id is passed ',
+      description: 'Retrieve metadata for a given existing userId.',
+      responses: {
+        200: {
+          description: 'Metadata successfully fetched',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  userId: {
+                    type: 'string',
+                    description: 'User account identifier',
+                  },
+                  data: {
+                    type: 'string',
+                    description: 'Metadata saved',
+                  },
+                },
+              },
+            },
+          },
+        },
+        400: error[400],
+        404: error[404],
+        500: error.default,
+      },
+    },
+    delete: {
+      summary: 'Delete the metadata of the user whose id is passed ',
+      description: 'Delete metadata for a given existing userId.',
+      responses: {
+        200: {
+          description: 'Metadata successfully deleted',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  userId: {
+                    type: 'string',
+                    description: 'User account identifier',
                   },
                 },
               },

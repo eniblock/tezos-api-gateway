@@ -4,16 +4,16 @@ import { StatusCodes } from 'http-status-codes';
 import { VaultClient } from '../../../../services/clients/vault-client';
 import { vaultClientConfig } from '../../../../config';
 
-export default { createUpdateUserMetadata };
+export default { createUpdateUserMetadata, getUserMetadata, deleteMetadata };
 
 function createUpdateUserMetadata() {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id: userId } = req.params;
-      const data = req.body;
+      const { data } = req.body;
       logger.info(
         { userId, data },
-        '[user/user-metadata-controller/createUpdateUserMetadata] Create or update the following user metadata ',
+        '[user/user-metadata-controller/createUpdateUserMetadata] Create or update the following user metadata',
       );
 
       const vaultClient = new VaultClient(vaultClientConfig, logger);
@@ -23,6 +23,44 @@ function createUpdateUserMetadata() {
       await vaultClient.setSecret('metadata', userId, 'metadata', data);
 
       return res.status(StatusCodes.CREATED).json({ userId, data });
+    } catch (err) {
+      return next(err);
+    }
+  };
+}
+
+function getUserMetadata() {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id: userId } = req.params;
+      logger.info(
+        { userId },
+        '[user/user-metadata-controller/getUserMetadata] Get the user metadata for the following user',
+      );
+
+      const vaultClient = new VaultClient(vaultClientConfig, logger);
+      const data = await vaultClient.getSecret('metadata', userId, 'metadata');
+
+      return res.status(StatusCodes.OK).json({ data });
+    } catch (err) {
+      return next(err);
+    }
+  };
+}
+
+function deleteMetadata() {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const { id: userId } = req.params;
+      logger.info(
+        { userId },
+        '[user/user-metadata-controller/getUserMetadata] Delete the user metadata for the following user',
+      );
+
+      const vaultClient = new VaultClient(vaultClientConfig, logger);
+      const data = await vaultClient.deleteSecret('metadata', userId);
+
+      return res.status(StatusCodes.OK).json({ data });
     } catch (err) {
       return next(err);
     }

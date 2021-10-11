@@ -389,4 +389,40 @@ export class VaultClient extends AbstractClient {
       }
     }
   }
+
+  /**
+   * Call the the vault service to permanently delete a secret
+   *
+   * @param {string} path      - the where the secret will be stored
+   * @param {string} ref       - the reference
+   *
+   * @return {Promise<void>}
+   */
+  public async deleteSecret(path: string, ref: string): Promise<void> {
+    const createKeyUrl = url.resolve(
+      this.baseUrl,
+      `secret/metadata/${path}/${ref}`,
+    );
+
+    try {
+      const { body: result } = await superagent
+        .delete(createKeyUrl)
+        .set({ 'X-Vault-Token': this._token })
+        .send();
+
+      this.logger.info(
+        { resultData: result.data },
+        '[VaultClient] data received',
+      );
+    } catch (err) {
+      this.handleError(err, { keyName: ref });
+
+      if (err.status >= 400 && err.status < 500) {
+        throw new ClientError({
+          status: err.status,
+          message: JSON.stringify(err.response?.body),
+        });
+      }
+    }
+  }
 }

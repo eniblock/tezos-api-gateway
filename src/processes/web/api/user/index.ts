@@ -61,5 +61,9 @@ export default function registerUserRoutes(
     userMetadataController.createUpdateUserMetadata(),
   );
 
+  router.get('/user/:id/metadata', userMetadataController.getUserMetadata());
+
+  router.delete('/user/:id/metadata', userMetadataController.deleteMetadata());
+
   return router;
 }
