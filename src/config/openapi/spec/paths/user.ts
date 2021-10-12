@@ -329,7 +329,7 @@ export default {
   },
   '/user/{userId}/metadata': {
     post: {
-      summary: 'Create the metadata of the user whose id is passed',
+      summary: 'Create or update the metadata of the user whose id is passed',
       description: 'Create or update metadata for a given existing userId.',
       requestBody: {
         required: true,
@@ -376,7 +376,7 @@ export default {
       },
     },
     get: {
-      summary: 'Retrieve the metadata of the user whose id is passed ',
+      summary: 'Retrieve the metadata of the user whose id is passed',
       description: 'Retrieve metadata for a given existing userId.',
       responses: {
         200: {
@@ -405,7 +405,7 @@ export default {
       },
     },
     delete: {
-      summary: 'Delete the metadata of the user whose id is passed ',
+      summary: 'Delete the metadata of the user whose id is passed',
       description: 'Delete metadata for a given existing userId.',
       responses: {
         200: {
@@ -414,12 +414,7 @@ export default {
             'application/json': {
               schema: {
                 type: 'object',
-                properties: {
-                  userId: {
-                    type: 'string',
-                    description: 'User account identifier',
-                  },
-                },
+                properties: {},
               },
             },
           },

@@ -417,7 +417,7 @@ export class VaultClient extends AbstractClient {
 
       this.logger.info(
         { resultData: result.data },
-        '[VaultClient] data received',
+        '[VaultClient] Operation done',
       );
     } catch (err) {
       this.handleError(err, { keyName: ref });
