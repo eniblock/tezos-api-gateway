@@ -4,7 +4,11 @@ import { StatusCodes } from 'http-status-codes';
 import { VaultClient } from '../../../../services/clients/vault-client';
 import { vaultClientConfig } from '../../../../config';
 
-export default { createUpdateUserMetadata, getUserMetadata, deleteMetadata };
+export default {
+  createUpdateUserMetadata,
+  getUserMetadata,
+  deleteUserMetadata,
+};
 
 function createUpdateUserMetadata() {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -48,13 +52,13 @@ function getUserMetadata() {
   };
 }
 
-function deleteMetadata() {
+function deleteUserMetadata() {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { id: userId } = req.params;
       logger.info(
         { userId },
-        '[user/user-metadata-controller/getUserMetadata] Delete the user metadata for the following user',
+        '[user/user-metadata-controller/deleteUserMetadata] Delete the user metadata for the following user',
       );
 
       const vaultClient = new VaultClient(vaultClientConfig, logger);

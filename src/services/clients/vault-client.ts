@@ -157,10 +157,15 @@ export class VaultClient extends AbstractClient {
     } catch (err) {
       this.handleError(err, { keyName: key });
 
-      if (err.status >= 400 && err.status < 500) {
+      if (err.status === 404) {
         throw new ClientError({
           status: err.status,
-          message: JSON.stringify(err.response?.body),
+          message: `Not found : secret ${key} doesn't exist in Vault`,
+        });
+      } else if (err.status >= 400 && err.status < 500) {
+        throw new ClientError({
+          status: err.status,
+          message: err.message,
         });
       }
     }

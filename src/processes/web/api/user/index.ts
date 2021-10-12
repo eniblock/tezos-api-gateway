@@ -63,7 +63,10 @@ export default function registerUserRoutes(
 
   router.get('/user/:id/metadata', userMetadataController.getUserMetadata());
 
-  router.delete('/user/:id/metadata', userMetadataController.deleteMetadata());
+  router.delete(
+    '/user/:id/metadata',
+    userMetadataController.deleteUserMetadata(),
+  );
 
   return router;
 }
