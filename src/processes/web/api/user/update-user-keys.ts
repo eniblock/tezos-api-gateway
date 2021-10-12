@@ -43,9 +43,7 @@ function selfManaged() {
 function delegated() {
   return async (_: Request, res: Response, next: NextFunction) => {
     try {
-      logger.info(
-        '[user/update-user-keys] updating delegated user keys with the following data',
-      );
+      logger.info('[user/update-user-keys] updating delegated user keys');
 
       const vaultClient = new VaultClient(vaultClientConfig, logger);
       const names = await vaultClient.getAllTransitNames();
