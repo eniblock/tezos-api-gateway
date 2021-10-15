@@ -13,3 +13,18 @@ export interface Transaction {
   branch?: string;
   caller_id: string;
 }
+
+export interface IndexerTransaction {
+  destination: string;
+  source: string;
+  timestamp: string;
+  status: string;
+  fee: number;
+  storage_limit: number;
+  counter: number;
+  hash: string;
+  block: string;
+  type: string;
+  height: number;
+  entrypoint: string;
+}
