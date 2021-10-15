@@ -7,6 +7,7 @@ import { AmqpService } from '../../../services/amqp';
 import { GatewayPool } from '../../../services/gateway-pool';
 import registerEntryPointsRoutes from './entrypoints';
 import registerUserRoutes from './user';
+import registerContractRoutes from './contract';
 import { SignerFactory } from '../../../services/signer-factory';
 import { MetricPrometheusService } from '../../../services/metric-prometheus';
 import { IndexerPool } from '../../../services/indexer-pool';
@@ -32,6 +33,7 @@ export default function setupRoutes(
   registerStorageRoutes(router, gatewayPool, signerFactory);
   registerEntryPointsRoutes(router, gatewayPool);
   registerUserRoutes(router, gatewayPool, indexerPool);
+  registerContractRoutes(router, indexerPool);
 
   app.use('/api', router);
 

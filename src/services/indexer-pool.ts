@@ -5,9 +5,12 @@ import { indexerConfigs } from '../config';
 import { generateRandomInt } from '../utils';
 import {
   OperationNotFoundError,
+  UnsupportedIndexerError,
   UserNotFoundError,
 } from '../const/errors/indexer-error';
 import { TezosService } from './tezos';
+import { ContractTransactionsParams } from '../const/interfaces/contract/contract-transactions-params';
+import { IndexerTransaction } from '../const/interfaces/transaction';
 
 export class IndexerPool {
   private _indexers: IndexerClient[];
@@ -58,7 +61,7 @@ export class IndexerPool {
 
         this.logger.info(
           {
-            currentIndexer: currentIndexer.config,
+            currentIndexer: currentIndexer.config.name,
           },
           '[IndexerPool/getOperationBlockLevelByRandomIndexer] Using this indexer to get the operation block level',
         );
@@ -112,7 +115,7 @@ export class IndexerPool {
 
         this.logger.info(
           {
-            currentIndexer: currentIndexer.config,
+            currentIndexer: currentIndexer.config.name,
             operationHash,
             nbOfConfirmation,
           },
@@ -163,7 +166,7 @@ export class IndexerPool {
 
         this.logger.info(
           {
-            currentIndexer: currentIndexer.config,
+            currentIndexer: currentIndexer.config.name,
           },
           '[IndexerPool/getUserInfoByRandomIndexer] Using this indexer to get the user information',
         );
@@ -188,6 +191,46 @@ export class IndexerPool {
 
         throw err;
       }
+    }
+    return null;
+  }
+
+  /**
+   * @description                      - Get a random indexer then retrieve the transaction list of a contract
+   * @param {string} contractAddress   - Contract address
+   * @param {object} params            - Query params
+   */
+  public async getTransactionListOfSCByRandomIndexer(
+    contractAddress: string,
+    params: ContractTransactionsParams,
+  ): Promise<IndexerTransaction[] | null> {
+    let currentIndexer: IndexerClient;
+
+    try {
+      currentIndexer = this.getRandomIndexer();
+
+      this.logger.info(
+        {
+          currentIndexer: currentIndexer.config.name,
+        },
+        '[IndexerPool/getTransactionListOfSCByRandomIndexer] Using this indexer to get the user information',
+      );
+
+      const transactionList = await currentIndexer.getTransactionListOfSC(
+        contractAddress,
+        params,
+      );
+
+      return transactionList;
+    } catch (err) {
+      if (!(err instanceof OperationNotFoundError || UnsupportedIndexerError)) {
+        this.logger.error(
+          err,
+          '[IndexerPool/getTransactionListOfSCByRandomIndexer] An unexpected error happened',
+        );
+      }
+
+      throw err;
     }
     return null;
   }

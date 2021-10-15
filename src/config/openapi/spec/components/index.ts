@@ -1,4 +1,7 @@
-import { testAccount } from '../../../../../test/__fixtures__/smart-contract';
+import {
+  flexibleTokenContract,
+  testAccount,
+} from '../../../../../test/__fixtures__/smart-contract';
 import { error } from './errors';
 
 const components = {
@@ -53,6 +56,12 @@ const components = {
       description: 'An tezos address (contract or account)',
       example: testAccount,
     },
+    tezos_contract_address: {
+      type: 'string',
+      pattern: '^KT+[0-9a-zA-Z]{34}$',
+      description: 'An tezos smart contract address',
+      example: flexibleTokenContract,
+    },
     page: {
       type: 'integer',
       default: 0,
@@ -62,6 +71,12 @@ const components = {
       type: 'integer',
       default: 1000,
       description: 'Current results limit applied',
+    },
+    order: {
+      type: 'string',
+      pattern: '^\\basc\\b|\\bdesc\\b$',
+      default: 'asc',
+      enum: ['asc', 'desc'],
     },
   },
   parameters: {

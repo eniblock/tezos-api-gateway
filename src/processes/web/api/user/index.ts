@@ -11,7 +11,7 @@ import addUserWithPublicKeyController from './add-user-with-public-key';
 import updateUserKeys from './update-user-keys';
 
 /**
- * Setup entrypoints namespace route.
+ * Setup user namespace route.
  *
  * @param   {Router} router        - The express router.
  * @param   {object} gatewayPool  - the service to interact with tezos
