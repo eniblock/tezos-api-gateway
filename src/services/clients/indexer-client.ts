@@ -5,11 +5,15 @@ import superagent from 'superagent';
 import url from 'url';
 import {
   OperationNotFoundError,
+  UnsupportedIndexerError,
   UserNotFoundError,
 } from '../../const/errors/indexer-error';
-import { IndexerConfig } from '../../const/interfaces/indexer-config';
+import { IndexerConfig, IndexerEnum } from '../../const/interfaces/indexer';
 import { TezosService } from '../tezos';
 import { AbstractClient } from './abstract-client';
+import { ContractTransactionsParams } from '../../const/interfaces/contract/contract-transactions-params';
+import { mapIndexerTransactionToTransaction } from '../../const/mappers/transactions-mapper';
+import { IndexerTransaction } from '../../const/interfaces/transaction';
 
 export class IndexerClient extends AbstractClient {
   private _config: IndexerConfig;
@@ -122,8 +126,8 @@ export class IndexerClient extends AbstractClient {
 
   /**
    * @description       - Call the indexer api to fetch user information
-   * @param userAddress - User address
-   * @return {Object}
+   * @param   {string} - User address
+   * @return  {Object}
    * @throw {UserNotFoundError}
    */
   public async getUserInfo(userAddress: string) {
@@ -211,6 +215,84 @@ export class IndexerClient extends AbstractClient {
       }
 
       this.handleError(err, { userAddress, indexerConfig: this.config });
+      return null;
+    }
+  }
+
+  /**
+   * @description       - Call the indexer api to retrieve a smart contract transaction list
+   * @param   string    - Contract address
+   * @return  {Object}
+   * @throw {OperationNotFoundError}
+   */
+  public async getTransactionListOfSC(
+    contractAddress: string,
+    params: ContractTransactionsParams,
+  ): Promise<IndexerTransaction[] | null> {
+    const {
+      name: indexerName,
+      apiUrl: indexerUrl,
+      pathToContractCalls,
+    } = this.config;
+
+    this.logger.info(
+      {
+        indexerName,
+      },
+      '[IndexerClient/getTransactionListOfSC] Calling the indexer to get the transaction list',
+    );
+
+    let getContractTransactionListUrl = `${indexerUrl}${pathToContractCalls}`;
+    const limit = params.limit || 20;
+    const offset = params.offset || 0;
+    let queryParams = `limit=${limit}&offset=${offset}`;
+
+    switch (indexerName) {
+      case IndexerEnum.TZSTATS: {
+        getContractTransactionListUrl += `${contractAddress}/calls`;
+        const order = params.order ? `order=${params.order}` : '';
+        const entrypoint = params.entrypoint
+          ? `entrypoint=${params.entrypoint}`
+          : '';
+        queryParams += `&${order}&${entrypoint}`;
+        break;
+      }
+      case IndexerEnum.TZKT: {
+        const order = params.order ? `sort.${params.order}=id` : '';
+        const entrypoint = params.entrypoint
+          ? `entrypoint.eq=${params.entrypoint}`
+          : '';
+        queryParams += `&target.eq=${contractAddress}&${order}&${entrypoint}`;
+        break;
+      }
+      default:
+        throw new UnsupportedIndexerError(indexerName);
+        break;
+    }
+
+    try {
+      const { body: result } = await superagent
+        .get(getContractTransactionListUrl)
+        .query(queryParams);
+
+      const transactionList = result.map((tx: any) =>
+        mapIndexerTransactionToTransaction(tx, indexerName),
+      );
+
+      this.logger.info(
+        '[IndexerClient/getTransactionListOfSC] Successfully fetched the transaction list',
+      );
+
+      return transactionList;
+    } catch (err) {
+      if (
+        err.status === StatusCodes.NOT_FOUND ||
+        err.status === StatusCodes.BAD_REQUEST
+      ) {
+        throw new OperationNotFoundError(contractAddress);
+      }
+
+      this.handleError(err, { contractAddress, indexerConfig: this.config });
       return null;
     }
   }

@@ -10,3 +10,9 @@ export class UserNotFoundError extends Error {
     super(`Could not find an user with this address: ${userAddress}`);
   }
 }
+
+export class UnsupportedIndexerError extends Error {
+  constructor(indexerName: string) {
+    super(`Could not use the indexer ${indexerName} for this action`);
+  }
+}

@@ -2,7 +2,7 @@ import { PostgreConfig } from '../const/interfaces/postgre-config';
 import { AmqpConfig } from '../services/amqp';
 import { ProcessConfig } from '../processes/abstract-process';
 import { parseInt } from '../utils/parse-int';
-import { IndexerConfig } from '../const/interfaces/indexer-config';
+import { IndexerConfig, IndexerEnum } from '../const/interfaces/indexer';
 import { MetricConfig } from '../const/interfaces/metric-config';
 
 export const loggerConfig = {
@@ -38,27 +38,32 @@ export const webProcessConfig: ProcessConfig = {
 };
 
 const tzstatsIndexerConfig: IndexerConfig = {
-  name: 'tzstats',
+  name: IndexerEnum.TZSTATS,
   apiUrl: process.env.TZSTATS_URL || 'https://api.granada.tzstats.com/',
-  keyToOperation: parseInt(0, process.env.TZSTATS_KEY_TO_OPERATION),
-  keyToBlockLevel: process.env.TZSTATS_KEY_TO_BLOCK_LEVEL || 'height',
   pathToOperation: 'explorer/op/',
   pathToUserInfo: 'explorer/account/',
+  pathToContractCalls: 'explorer/contract/',
+  keyToOperation: parseInt(0, process.env.TZSTATS_KEY_TO_OPERATION),
+  keyToBlockLevel: process.env.TZSTATS_KEY_TO_BLOCK_LEVEL || 'height',
   keyToBalance: 'total_balance',
   keyToReveal: 'is_revealed',
 };
 
 const tzktIndexerConfig: IndexerConfig = {
-  name: 'tzkt',
+  name: IndexerEnum.TZKT,
   apiUrl: process.env.TZKT_URL || 'https://api.granadanet.tzkt.io/',
+  pathToOperation: 'v1/operations/',
+  pathToContractCalls: 'v1/operations/transactions/',
+  pathToUserInfo: 'v1/accounts/',
   keyToOperation: parseInt(0, process.env.TZKT_KEY_TO_OPERATION),
   keyToBlockLevel: process.env.TZKT_KEY_TO_BLOCK_LEVEL || 'level',
-  pathToOperation: 'v1/operations/',
-  pathToUserInfo: 'v1/accounts/',
   keyToReveal: 'revealed',
 };
 
-export const indexerConfigs = [tzstatsIndexerConfig, tzktIndexerConfig];
+export const indexerConfigs: IndexerConfig[] = [
+  tzstatsIndexerConfig,
+  tzktIndexerConfig,
+];
 
 export const nbOfConfirmation = parseInt(
   3,
