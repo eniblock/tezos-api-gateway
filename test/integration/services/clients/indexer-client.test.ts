@@ -12,7 +12,7 @@ import { IndexerClient } from '../../../../src/services/clients/indexer-client';
 import { indexerConfigs } from '../../../../src/config';
 import { OperationNotFoundError } from '../../../../src/const/errors/indexer-error';
 import { TezosService } from '../../../../src/services/tezos';
-import { flexibleTokenContract } from '../../../__fixtures__/smart-contract';
+import { flexibleTokenContract2 } from '../../../__fixtures__/smart-contract';
 import { IndexerEnum } from '../../../../src/const/interfaces/indexer';
 
 describe('[services/clients] Indexer Client', () => {
@@ -180,17 +180,37 @@ describe('[services/clients] Indexer Client', () => {
   describe('#getTransactionListOfSC', () => {
     it('should return the block level of the operation', async () => {
       const originationOp = {
-        destination: 'KT193dYyEtaFMLVQEtgsSgyx8ukhk1LJVice',
-        source: 'tz1WWJAgu1orxZqzDsakADEoHk3zg4nRP5Va',
-        timestamp: '2021-07-30T15:44:04Z',
+        destination: 'KT1PC7JUBQQXawknSuZrkEvsphG7n55QNpEv',
+        source: 'tz1QdgwqsVV7SmpFPrWjs9B5oBNcj2brzqfG',
+        timestamp: '2021-10-21T08:32:39Z',
         status: 'applied',
-        fee: 0.003752,
-        storage_limit: 3516,
-        counter: 191328,
-        hash: 'opWN2JdzS3JUM6qdvSvndQRP8sTJh5w1RQbsKrHwwy5h6gJePXA',
-        block: 'BMayfFPGdnRpaziKcoB6q72sQBSYtGoNj7N2karKniVFDCFxXGz',
+        fee: 3649,
+        storage_limit: 3414,
+        counter: 365115,
+        hash: 'onvByVBBjEQhYHnT72wy1wMDmp4Hznj5i1T7QU6wjjTEraWbwN8',
+        block: 'BLR39HJGPvpsVGSkVKuppXP4rZCR4oBoEzfjoXjo2aXmaZbrx9C',
         type: 'origination',
-        height: 265526,
+        height: 597774,
+        parameters: '',
+        entrypoint: undefined,
+      };
+      const firstTx = {
+        destination: 'KT1PC7JUBQQXawknSuZrkEvsphG7n55QNpEv',
+        source: 'tz1QdgwqsVV7SmpFPrWjs9B5oBNcj2brzqfG',
+        timestamp: '2021-10-21T16:24:19Z',
+        status: 'applied',
+        fee: 839,
+        storage_limit: 67,
+        counter: 365117,
+        hash: 'onefEAXu4hq9JHxJRM47rvHmkiVf3SYRe9M7PnNgvjhrRvza8UN',
+        block: 'BMaCpTdnbCzUcQhXgL9FQUJwkdzvgzxmLG4Hyzac882FTMir8jT',
+        type: 'transaction',
+        height: 599142,
+        entrypoint: 'transfer',
+        parameters: {
+          destination: 'tz1MPQBaR1r4hKveeCnNYPExnme5KBpbkWUP',
+          tokens: '5',
+        },
       };
       const indexerPromises: Promise<void>[] = [];
       for (const indexer of indexerClients) {
@@ -198,14 +218,14 @@ describe('[services/clients] Indexer Client', () => {
         if (indexer.config.name === IndexerEnum.TZKT) {
           indexerPromises.push(
             expect(
-              indexer.getTransactionListOfSC(flexibleTokenContract, {}),
-            ).resolves.toEqual([]),
+              indexer.getTransactionListOfSC(flexibleTokenContract2, {}),
+            ).resolves.toEqual([firstTx]),
           );
         } else {
           indexerPromises.push(
             expect(
-              indexer.getTransactionListOfSC(flexibleTokenContract, {}),
-            ).resolves.toEqual([originationOp]),
+              indexer.getTransactionListOfSC(flexibleTokenContract2, {}),
+            ).resolves.toEqual([originationOp, firstTx]),
           );
         }
       }

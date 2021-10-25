@@ -27,4 +27,5 @@ export interface IndexerTransaction {
   type: string;
   height: number;
   entrypoint: string;
+  parameters: object | string;
 }

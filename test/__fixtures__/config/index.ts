@@ -20,9 +20,7 @@ export const tezosNodeGranadaUrl =
 export const tezosNodeGranadaUrls = (
   process.env.TEZOS_NODE_EDONET_TEST_URLS ||
   'https://api.tez.ie/rpc/granadanet,https://granadanet.smartpy.io/'
-)
-  //'https://testnet-tezos.giganode.io,https://api.tez.ie/rpc/granadanet,https://granadanet.smartpy.io/'
-  .split(',');
+).split(',');
 
 export const amqpConfig: AmqpConfig = {
   url: process.env.AMQP_URL || 'amqp://localhost',
