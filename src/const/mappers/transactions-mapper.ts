@@ -22,7 +22,7 @@ export function mapIndexerTransactionToTransaction(
         source: rawTx.sender,
         timestamp: rawTx.time,
         status: rawTx.status,
-        fee: rawTx.fee,
+        fee: rawTx.fee * 1000000,
         storage_limit: rawTx.storage_limit,
         counter: rawTx.counter,
         hash: rawTx.hash,
@@ -30,6 +30,7 @@ export function mapIndexerTransactionToTransaction(
         type: rawTx.type,
         height: rawTx.height,
         entrypoint: rawTx.entrypoint,
+        parameters: rawTx.parameters?.value[rawTx.entrypoint] || '',
       };
     case IndexerEnum.TZKT:
       return {
@@ -37,7 +38,7 @@ export function mapIndexerTransactionToTransaction(
         source: rawTx.sender.address,
         timestamp: rawTx.timestamp,
         status: rawTx.status,
-        fee: rawTx.storageFee,
+        fee: rawTx.bakerFee,
         storage_limit: rawTx.storageLimit,
         counter: rawTx.counter,
         hash: rawTx.hash,
@@ -45,6 +46,7 @@ export function mapIndexerTransactionToTransaction(
         type: rawTx.type,
         height: rawTx.level,
         entrypoint: rawTx.parameter.entrypoint,
+        parameters: rawTx.parameter.value,
       };
     default:
       throw new UnsupportedIndexerError(indexerName);

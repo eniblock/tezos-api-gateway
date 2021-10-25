@@ -96,16 +96,6 @@ describe('[processes/web/api/user] User metadata controller', () => {
   });
 
   describe('#getUserMetadata', () => {
-    it("should return 404 when the user doesn't exist", async () => {
-      const { body, status } = await request.get('/api/user/userId/metadata');
-
-      expect(status).toEqual(404);
-      expect(body).toEqual({
-        message: "Not found : secret userId doesn't exist in Vault",
-        status: 404,
-      });
-    });
-
     it('should return 201, the userId of user account and the data when the request is valid', async () => {
       const vaultNockGetSecret = nock('http://localhost:8300')
         .get(`/v1/secret/data/metadata/userId`)
@@ -133,18 +123,6 @@ describe('[processes/web/api/user] User metadata controller', () => {
       expect(status).toEqual(200);
       expect(body).toEqual({
         data: 'test',
-      });
-    });
-  });
-
-  describe('#deleteUserMetadata', () => {
-    it("should return 404 when the user doesn't exist", async () => {
-      const { body, status } = await request.get('/api/user/userId/metadata');
-
-      expect(status).toEqual(404);
-      expect(body).toEqual({
-        message: "Not found : secret userId doesn't exist in Vault",
-        status: 404,
       });
     });
   });

@@ -73,6 +73,7 @@ export default {
                 description: 'The transaction list',
                 items: {
                   type: 'object',
+                  additionalProperties: false,
                   properties: {
                     destination: {
                       type: 'string',
@@ -109,6 +110,16 @@ export default {
                     },
                     entrypoint: {
                       type: 'string',
+                    },
+                    parameters: {
+                      oneOf: [
+                        {
+                          type: 'object',
+                        },
+                        {
+                          type: 'string',
+                        },
+                      ],
                     },
                   },
                 },
