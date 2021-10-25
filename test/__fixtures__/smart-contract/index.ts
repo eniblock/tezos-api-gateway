@@ -6,6 +6,7 @@ export const signature =
   'edsigtorku6MkHkh8X97m5KofrJjQ18xT94JxjGjsQDsG9xrQ5P2wqHmE9H3FNew7hKMVFBGm8qsdcbtVC8V6g6rhEDQSALZbiA';
 export const branch = 'BLGPF5StvDnNGBpAV9uYNJUiCdw2vz7HRCUwxNEmh61EYYCbGNH';
 export const flexibleTokenContract = 'KT193dYyEtaFMLVQEtgsSgyx8ukhk1LJVice'; // flexibleToken.py
+export const flexibleTokenContract2 = 'KT1PC7JUBQQXawknSuZrkEvsphG7n55QNpEv';
 export const FA2Contract = 'KT1RZmM8sCj25Sc8MzbUirh7trKe2oRRFqJT'; // template FA2
 export const FA2Contract3 = 'KT1LBCV9ScQS1sjgteTQva163Qepyn9aMpLz'; // smartContractWithComplexedMapAndBigMap.py
 export const FA2Contract4 = 'KT1PUfwatrm77YBegKx6JJEQ3cSeYiNb7P16'; // simpleMapKeyContract.py
