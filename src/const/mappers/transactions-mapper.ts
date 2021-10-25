@@ -18,11 +18,13 @@ export function mapIndexerTransactionToTransaction(
   switch (indexerName) {
     case IndexerEnum.TZSTATS:
       return {
+        indexer: IndexerEnum.TZSTATS,
         destination: rawTx.receiver,
         source: rawTx.sender,
         timestamp: rawTx.time,
         status: rawTx.status,
-        fee: rawTx.fee * 1000000,
+        bakerFee: rawTx.fee,
+        storageFee: rawTx.burned,
         storage_limit: rawTx.storage_limit,
         counter: rawTx.counter,
         hash: rawTx.hash,
@@ -34,11 +36,13 @@ export function mapIndexerTransactionToTransaction(
       };
     case IndexerEnum.TZKT:
       return {
+        indexer: IndexerEnum.TZKT,
         destination: rawTx.target.address,
         source: rawTx.sender.address,
         timestamp: rawTx.timestamp,
         status: rawTx.status,
-        fee: rawTx.bakerFee,
+        bakerFee: rawTx.bakerFee / 1000000,
+        storageFee: rawTx.storageFee / 1000000,
         storage_limit: rawTx.storageLimit,
         counter: rawTx.counter,
         hash: rawTx.hash,

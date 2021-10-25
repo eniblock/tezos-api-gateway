@@ -75,6 +75,9 @@ export default {
                   type: 'object',
                   additionalProperties: false,
                   properties: {
+                    indexer: {
+                      type: 'string',
+                    },
                     destination: {
                       type: 'string',
                     },
@@ -87,7 +90,10 @@ export default {
                     status: {
                       type: 'string',
                     },
-                    fee: {
+                    bakerFee: {
+                      type: 'number',
+                    },
+                    storageFee: {
                       type: 'number',
                     },
                     storage_limit: {
