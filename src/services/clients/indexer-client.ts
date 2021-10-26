@@ -220,8 +220,9 @@ export class IndexerClient extends AbstractClient {
   }
 
   /**
-   * @description       - Call the indexer api to retrieve a smart contract transaction list
-   * @param   string    - Contract address
+   * @description                       - Call the indexer api to retrieve a smart contract transaction list
+   * @param   {string} contractAddress  - Contract address
+   * @param   {Object} params           - the query parameters
    * @return  {Object}
    * @throw {OperationNotFoundError}
    */
@@ -229,11 +230,7 @@ export class IndexerClient extends AbstractClient {
     contractAddress: string,
     params: ContractTransactionsParams,
   ): Promise<IndexerTransaction[] | null> {
-    const {
-      name: indexerName,
-      apiUrl: indexerUrl,
-      pathToContractCalls,
-    } = this.config;
+    const { name: indexerName } = this.config;
 
     this.logger.info(
       {
@@ -242,37 +239,14 @@ export class IndexerClient extends AbstractClient {
       '[IndexerClient/getTransactionListOfSC] Calling the indexer to get the transaction list',
     );
 
-    let getContractTransactionListUrl = `${indexerUrl}${pathToContractCalls}`;
-    const limit = params.limit || 20;
-    const offset = params.offset || 0;
-    let queryParams = `limit=${limit}&offset=${offset}`;
-
-    switch (indexerName) {
-      case IndexerEnum.TZSTATS: {
-        getContractTransactionListUrl += `${contractAddress}/calls`;
-        const order = params.order ? `order=${params.order}` : '';
-        const entrypoint = params.entrypoint
-          ? `entrypoint=${params.entrypoint}`
-          : '';
-        queryParams += `&${order}&${entrypoint}`;
-        break;
-      }
-      case IndexerEnum.TZKT: {
-        const order = params.order ? `sort.${params.order}=id` : '';
-        const entrypoint = params.entrypoint
-          ? `entrypoint.eq=${params.entrypoint}`
-          : '';
-        queryParams += `&target.eq=${contractAddress}&${order}&${entrypoint}`;
-        break;
-      }
-      default:
-        throw new UnsupportedIndexerError(indexerName);
-        break;
-    }
+    const { domainAndPath, queryParams } = this.buildURLForTransactionList(
+      contractAddress,
+      params,
+    );
 
     try {
       const { body: result } = await superagent
-        .get(getContractTransactionListUrl)
+        .get(domainAndPath)
         .query(queryParams);
 
       const transactionList = result.map((tx: any) =>
@@ -295,5 +269,60 @@ export class IndexerClient extends AbstractClient {
       this.handleError(err, { contractAddress, indexerConfig: this.config });
       return null;
     }
+  }
+
+  /**
+   * @description                       - Build the domain, path et query parameters for retrieving transaction list
+   *                                      from the configured indexer and params
+   * @param   {string} contractAddress  - Contract address
+   * @param   {Object} params           - the query parameters
+   * @return  {Object}
+   * @throw {UnsupportedIndexerError}
+   */
+  public buildURLForTransactionList(
+    contractAddress: string,
+    params: ContractTransactionsParams,
+  ): { domainAndPath: string; queryParams: string } {
+    const {
+      name: indexerName,
+      apiUrl: indexerUrl,
+      pathToContractCalls,
+    } = this.config;
+    const limit = params.limit || 20;
+    const offset = params.offset || 0;
+
+    let domainAndPath = `${indexerUrl}${pathToContractCalls}`;
+    let queryParams = `limit=${limit}&offset=${offset}`;
+
+    switch (indexerName) {
+      case IndexerEnum.TZSTATS: {
+        if (params.parameter !== undefined)
+          throw new UnsupportedIndexerError(IndexerEnum.TZSTATS);
+
+        domainAndPath += `${contractAddress}/calls`;
+        const order = params.order ? `&order=${params.order}` : '';
+        const entrypoint = params.entrypoint
+          ? `&entrypoint=${params.entrypoint}`
+          : '';
+        queryParams += `${order}${entrypoint}`;
+        break;
+      }
+      case IndexerEnum.TZKT: {
+        const order = params.order ? `&sort.${params.order}=id` : '';
+        const entrypoint = params.entrypoint
+          ? `&entrypoint.eq=${params.entrypoint}`
+          : '';
+        const parameter = params.parameter
+          ? `&parameter.as=${params.parameter}`
+          : '';
+        queryParams += `&target.eq=${contractAddress}${order}${entrypoint}${parameter}`;
+        break;
+      }
+      default:
+        throw new UnsupportedIndexerError(indexerName);
+        break;
+    }
+
+    return { domainAndPath, queryParams };
   }
 }
