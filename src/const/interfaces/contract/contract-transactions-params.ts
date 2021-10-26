@@ -3,4 +3,5 @@ export interface ContractTransactionsParams {
   entrypoint?: string;
   limit?: number;
   offset?: number;
+  parameter?: string;
 }

@@ -21,6 +21,7 @@ describe('[processes/web/api/user] Create user controller', () => {
 
   beforeAll(async () => {
     await webProcess.start();
+    await webProcess.amqpService.channel.waitForConnect();
   });
 
   afterEach(() => {

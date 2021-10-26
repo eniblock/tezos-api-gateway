@@ -220,8 +220,9 @@ export class IndexerClient extends AbstractClient {
   }
 
   /**
-   * @description       - Call the indexer api to retrieve a smart contract transaction list
-   * @param   string    - Contract address
+   * @description                       - Call the indexer api to retrieve a smart contract transaction list
+   * @param   {string} contractAddress  - Contract address
+   * @param   {Object} params           - the query parameters
    * @return  {Object}
    * @throw {OperationNotFoundError}
    */
@@ -250,19 +251,22 @@ export class IndexerClient extends AbstractClient {
     switch (indexerName) {
       case IndexerEnum.TZSTATS: {
         getContractTransactionListUrl += `${contractAddress}/calls`;
-        const order = params.order ? `order=${params.order}` : '';
+        const order = params.order ? `&order=${params.order}` : '';
         const entrypoint = params.entrypoint
-          ? `entrypoint=${params.entrypoint}`
+          ? `&entrypoint=${params.entrypoint}`
           : '';
-        queryParams += `&${order}&${entrypoint}`;
+        queryParams += `${order}${entrypoint}`;
         break;
       }
       case IndexerEnum.TZKT: {
-        const order = params.order ? `sort.${params.order}=id` : '';
+        const order = params.order ? `&sort.${params.order}=id` : '';
         const entrypoint = params.entrypoint
-          ? `entrypoint.eq=${params.entrypoint}`
+          ? `&entrypoint.eq=${params.entrypoint}`
           : '';
-        queryParams += `&target.eq=${contractAddress}&${order}&${entrypoint}`;
+        const parameter = params.parameter
+          ? `&parameter.as=${params.parameter}`
+          : '';
+        queryParams += `&target.eq=${contractAddress}${order}${entrypoint}${parameter}`;
         break;
       }
       default:
