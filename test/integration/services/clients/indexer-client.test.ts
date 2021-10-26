@@ -180,11 +180,13 @@ describe('[services/clients] Indexer Client', () => {
   describe('#getTransactionListOfSC', () => {
     it('should return the block level of the operation', async () => {
       const originationOp = {
+        indexer: IndexerEnum.TZSTATS,
         destination: 'KT1PC7JUBQQXawknSuZrkEvsphG7n55QNpEv',
         source: 'tz1QdgwqsVV7SmpFPrWjs9B5oBNcj2brzqfG',
         timestamp: '2021-10-21T08:32:39Z',
         status: 'applied',
-        fee: 3649,
+        bakerFee: 0.003649,
+        storageFee: 0.8535,
         storage_limit: 3414,
         counter: 365115,
         hash: 'onvByVBBjEQhYHnT72wy1wMDmp4Hznj5i1T7QU6wjjTEraWbwN8',
@@ -199,7 +201,8 @@ describe('[services/clients] Indexer Client', () => {
         source: 'tz1QdgwqsVV7SmpFPrWjs9B5oBNcj2brzqfG',
         timestamp: '2021-10-21T16:24:19Z',
         status: 'applied',
-        fee: 839,
+        bakerFee: 0.000839,
+        storageFee: 0.01675,
         storage_limit: 67,
         counter: 365117,
         hash: 'onefEAXu4hq9JHxJRM47rvHmkiVf3SYRe9M7PnNgvjhrRvza8UN',
@@ -219,13 +222,16 @@ describe('[services/clients] Indexer Client', () => {
           indexerPromises.push(
             expect(
               indexer.getTransactionListOfSC(flexibleTokenContract2, {}),
-            ).resolves.toEqual([firstTx]),
+            ).resolves.toEqual([{ ...firstTx, indexer: IndexerEnum.TZKT }]),
           );
-        } else {
+        } else if (indexer.config.name === IndexerEnum.TZSTATS) {
           indexerPromises.push(
             expect(
               indexer.getTransactionListOfSC(flexibleTokenContract2, {}),
-            ).resolves.toEqual([originationOp, firstTx]),
+            ).resolves.toEqual([
+              originationOp,
+              { ...firstTx, indexer: IndexerEnum.TZSTATS },
+            ]),
           );
         }
       }

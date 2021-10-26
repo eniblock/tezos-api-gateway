@@ -1,3 +1,5 @@
+import { IndexerEnum } from './indexer';
+
 export interface Transaction {
   id: number;
   destination: string;
@@ -15,11 +17,13 @@ export interface Transaction {
 }
 
 export interface IndexerTransaction {
+  indexer: IndexerEnum;
   destination: string;
   source: string;
   timestamp: string;
   status: string;
-  fee: number;
+  bakerFee: number;
+  storageFee: number;
   storage_limit: number;
   counter: number;
   hash: string;
