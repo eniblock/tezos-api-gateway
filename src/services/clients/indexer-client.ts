@@ -230,11 +230,7 @@ export class IndexerClient extends AbstractClient {
     contractAddress: string,
     params: ContractTransactionsParams,
   ): Promise<IndexerTransaction[] | null> {
-    const {
-      name: indexerName,
-      apiUrl: indexerUrl,
-      pathToContractCalls,
-    } = this.config;
+    const { name: indexerName } = this.config;
 
     this.logger.info(
       {
@@ -243,14 +239,67 @@ export class IndexerClient extends AbstractClient {
       '[IndexerClient/getTransactionListOfSC] Calling the indexer to get the transaction list',
     );
 
-    let getContractTransactionListUrl = `${indexerUrl}${pathToContractCalls}`;
+    const { domainAndPath, queryParams } = this.buildURLForTransactionList(
+      contractAddress,
+      params,
+    );
+
+    try {
+      const { body: result } = await superagent
+        .get(domainAndPath)
+        .query(queryParams);
+
+      const transactionList = result.map((tx: any) =>
+        mapIndexerTransactionToTransaction(tx, indexerName),
+      );
+
+      this.logger.info(
+        '[IndexerClient/getTransactionListOfSC] Successfully fetched the transaction list',
+      );
+
+      return transactionList;
+    } catch (err) {
+      if (
+        err.status === StatusCodes.NOT_FOUND ||
+        err.status === StatusCodes.BAD_REQUEST
+      ) {
+        throw new OperationNotFoundError(contractAddress);
+      }
+
+      this.handleError(err, { contractAddress, indexerConfig: this.config });
+      return null;
+    }
+  }
+
+  /**
+   * @description                       - Build the domain, path et query parameters for retrieving transaction list
+   *                                      from the configured indexer and params
+   * @param   {string} contractAddress  - Contract address
+   * @param   {Object} params           - the query parameters
+   * @return  {Object}
+   * @throw {UnsupportedIndexerError}
+   */
+  public buildURLForTransactionList(
+    contractAddress: string,
+    params: ContractTransactionsParams,
+  ): { domainAndPath: string; queryParams: string } {
+    const {
+      name: indexerName,
+      apiUrl: indexerUrl,
+      pathToContractCalls,
+    } = this.config;
     const limit = params.limit || 20;
     const offset = params.offset || 0;
+
+    let domainAndPath = `${indexerUrl}${pathToContractCalls}`;
     let queryParams = `limit=${limit}&offset=${offset}`;
 
     switch (indexerName) {
       case IndexerEnum.TZSTATS: {
-        getContractTransactionListUrl += `${contractAddress}/calls`;
+        if (params.parameter !== undefined)
+          throw new UnsupportedIndexerError(IndexerEnum.TZSTATS);
+
+        domainAndPath += `${contractAddress}/calls`;
         const order = params.order ? `&order=${params.order}` : '';
         const entrypoint = params.entrypoint
           ? `&entrypoint=${params.entrypoint}`
@@ -274,30 +323,6 @@ export class IndexerClient extends AbstractClient {
         break;
     }
 
-    try {
-      const { body: result } = await superagent
-        .get(getContractTransactionListUrl)
-        .query(queryParams);
-
-      const transactionList = result.map((tx: any) =>
-        mapIndexerTransactionToTransaction(tx, indexerName),
-      );
-
-      this.logger.info(
-        '[IndexerClient/getTransactionListOfSC] Successfully fetched the transaction list',
-      );
-
-      return transactionList;
-    } catch (err) {
-      if (
-        err.status === StatusCodes.NOT_FOUND ||
-        err.status === StatusCodes.BAD_REQUEST
-      ) {
-        throw new OperationNotFoundError(contractAddress);
-      }
-
-      this.handleError(err, { contractAddress, indexerConfig: this.config });
-      return null;
-    }
+    return { domainAndPath, queryParams };
   }
 }
