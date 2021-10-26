@@ -182,7 +182,7 @@ export class WebProcess extends AbstractProcess {
         'Access-Control-Allow-Headers',
         'Origin, X-Requested-With, Content-Type, Accept, X-Request-Token',
       );
-      res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+      res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH');
 
       if (req.method === 'OPTIONS') {
         return res.send();
