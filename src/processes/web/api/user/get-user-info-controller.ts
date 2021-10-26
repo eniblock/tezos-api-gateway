@@ -8,7 +8,7 @@ import { UserNotFoundError } from '../../../../const/errors/indexer-error';
 
 /**
  * @description       - Handler to fetch user information
- * @param indexerPool - The pool that gives us a indexer like tzstat, conseil, etc..
+ * @param indexerPool - The pool that gives us a indexer like tzstat, tzkt, etc..
  */
 function getUserInfo(indexerPool: IndexerPool) {
   return async (req: Request, res: Response, next: NextFunction) => {

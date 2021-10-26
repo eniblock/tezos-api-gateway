@@ -14,6 +14,7 @@ import { OperationNotFoundError } from '../../../../src/const/errors/indexer-err
 import { TezosService } from '../../../../src/services/tezos';
 import { flexibleTokenContract2 } from '../../../__fixtures__/smart-contract';
 import { IndexerEnum } from '../../../../src/const/interfaces/indexer';
+import { firstTx, originationOp } from '../../../__fixtures__/transactions';
 
 describe('[services/clients] Indexer Client', () => {
   const indexerClient = new IndexerClient(indexerConfigs[0], logger);
@@ -179,42 +180,6 @@ describe('[services/clients] Indexer Client', () => {
 
   describe('#getTransactionListOfSC', () => {
     it('should return the block level of the operation', async () => {
-      const originationOp = {
-        indexer: IndexerEnum.TZSTATS,
-        destination: 'KT1PC7JUBQQXawknSuZrkEvsphG7n55QNpEv',
-        source: 'tz1QdgwqsVV7SmpFPrWjs9B5oBNcj2brzqfG',
-        timestamp: '2021-10-21T08:32:39Z',
-        status: 'applied',
-        bakerFee: 0.003649,
-        storageFee: 0.8535,
-        storage_limit: 3414,
-        counter: 365115,
-        hash: 'onvByVBBjEQhYHnT72wy1wMDmp4Hznj5i1T7QU6wjjTEraWbwN8',
-        block: 'BLR39HJGPvpsVGSkVKuppXP4rZCR4oBoEzfjoXjo2aXmaZbrx9C',
-        type: 'origination',
-        height: 597774,
-        parameters: '',
-        entrypoint: undefined,
-      };
-      const firstTx = {
-        destination: 'KT1PC7JUBQQXawknSuZrkEvsphG7n55QNpEv',
-        source: 'tz1QdgwqsVV7SmpFPrWjs9B5oBNcj2brzqfG',
-        timestamp: '2021-10-21T16:24:19Z',
-        status: 'applied',
-        bakerFee: 0.000839,
-        storageFee: 0.01675,
-        storage_limit: 67,
-        counter: 365117,
-        hash: 'onefEAXu4hq9JHxJRM47rvHmkiVf3SYRe9M7PnNgvjhrRvza8UN',
-        block: 'BMaCpTdnbCzUcQhXgL9FQUJwkdzvgzxmLG4Hyzac882FTMir8jT',
-        type: 'transaction',
-        height: 599142,
-        entrypoint: 'transfer',
-        parameters: {
-          destination: 'tz1MPQBaR1r4hKveeCnNYPExnme5KBpbkWUP',
-          tokens: '5',
-        },
-      };
       const indexerPromises: Promise<void>[] = [];
       for (const indexer of indexerClients) {
         // TZKT doesn't return the origination transaction
