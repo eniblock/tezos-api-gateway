@@ -29,7 +29,6 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
 
   beforeAll(async () => {
     await webProcess.start();
-    await webProcess.amqpService.channel.waitForConnect();
   });
 
   beforeEach(() => {

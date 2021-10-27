@@ -3,6 +3,7 @@ import users from './user';
 import storage from './storage';
 import entrypoints from './entrypoints';
 import contract from './contract';
+import conf from './conf';
 
 export const paths = {
   ...jobs,
@@ -10,6 +11,7 @@ export const paths = {
   ...entrypoints,
   ...users,
   ...contract,
+  ...conf,
 };
 
 export default paths;

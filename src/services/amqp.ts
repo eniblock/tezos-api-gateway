@@ -98,6 +98,7 @@ export class AmqpService {
           ]);
         },
       });
+      await this.channel.waitForConnect();
     } catch (error) {
       throw error;
     }

@@ -19,7 +19,6 @@ describe('[processes/web/api/user] User metadata controller', () => {
 
   beforeAll(async () => {
     await webProcess.start();
-    await webProcess.amqpService.channel.waitForConnect();
   });
 
   afterAll(async () => {
@@ -60,9 +59,17 @@ describe('[processes/web/api/user] User metadata controller', () => {
     });
 
     it("should return 404 when the user doesn't exist", async () => {
+      const vaultNock = nock('http://localhost:8300')
+        .get(`/v1/transit/keys/userId`)
+        .reply(404, {
+          errors: [],
+        });
+
       const { body, status } = await request
         .post('/api/user/userId/metadata')
         .send({ data: 'test' });
+
+      vaultNock.done();
 
       expect(status).toEqual(404);
       expect(body).toEqual({

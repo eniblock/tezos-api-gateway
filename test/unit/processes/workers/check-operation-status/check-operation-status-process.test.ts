@@ -31,7 +31,6 @@ describe('[processes/workers/check-operation-status] Check Operation Status Proc
 
     it('should correctly start the injection worker', async () => {
       await expect(checkOperationStatusProcess.start()).resolves.toEqual(true);
-      await checkOperationStatusProcess.amqpService.channel.waitForConnect();
 
       expect(checkOperationStatusProcess.indexerPool.indexers.length).toEqual(
         2,
@@ -52,7 +51,6 @@ describe('[processes/workers/check-operation-status] Check Operation Status Proc
 
     it('if the process already started, should not start again', async () => {
       await checkOperationStatusProcess.start();
-      await checkOperationStatusProcess.amqpService.channel.waitForConnect();
 
       await expect(checkOperationStatusProcess.start()).resolves.toEqual(false);
     });
@@ -65,7 +63,6 @@ describe('[processes/workers/check-operation-status] Check Operation Status Proc
 
     it('should correctly start the injection worker', async () => {
       await checkOperationStatusProcess.start();
-      await checkOperationStatusProcess.amqpService.channel.waitForConnect();
 
       await expect(checkOperationStatusProcess.stop()).resolves.toEqual(true);
 
