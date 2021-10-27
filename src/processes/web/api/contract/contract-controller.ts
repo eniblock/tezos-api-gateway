@@ -28,7 +28,7 @@ function getTransactionListOfSC(indexerPool: IndexerPool) {
 
       logger.info(
         { contractAddress },
-        '[user/contract-controller] Requesting transactions made on this contract ',
+        '[contract/contract-controller] Requesting transactions made on this contract ',
       );
 
       const currentIndexer =

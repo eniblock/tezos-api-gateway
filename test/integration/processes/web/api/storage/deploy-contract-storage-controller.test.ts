@@ -26,7 +26,6 @@ describe('[processes/web/api/storage] Deploy Contract Controller', () => {
   beforeAll(async () => {
     webProcess.signerFactory = signerFactory;
     await webProcess.start();
-    await webProcess.amqpService.channel.waitForConnect();
   });
 
   beforeEach(() => {

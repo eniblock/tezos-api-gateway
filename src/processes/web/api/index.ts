@@ -8,6 +8,7 @@ import { GatewayPool } from '../../../services/gateway-pool';
 import registerEntryPointsRoutes from './entrypoints';
 import registerUserRoutes from './user';
 import registerContractRoutes from './contract';
+import registerConfRoutes from './conf';
 import { SignerFactory } from '../../../services/signer-factory';
 import { MetricPrometheusService } from '../../../services/metric-prometheus';
 import { IndexerPool } from '../../../services/indexer-pool';
@@ -34,6 +35,7 @@ export default function setupRoutes(
   registerEntryPointsRoutes(router, gatewayPool);
   registerUserRoutes(router, gatewayPool, indexerPool);
   registerContractRoutes(router, indexerPool);
+  registerConfRoutes(router, indexerPool, gatewayPool);
 
   app.use('/api', router);
 

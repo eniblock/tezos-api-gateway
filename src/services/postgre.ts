@@ -23,7 +23,7 @@ export class PostgreService {
   }
 
   public async disconnect() {
-    this._pool.end();
+    await this._pool.end();
   }
 
   public async initializeDatabase() {

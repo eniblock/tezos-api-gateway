@@ -498,7 +498,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
             '"} does not match the schema: {"destination":"address","tokens":"nat"}',
         },
       ]);
-    });
+    }, 10000);
 
     it('should throw InvalidMapStructureParams but not log error  when contract entry point parameters does not match', async () => {
       jest.restoreAllMocks();
