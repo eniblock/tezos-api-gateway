@@ -31,7 +31,6 @@ describe('[processes/web/api/jobs] Get job controller', () => {
     await resetTable(postgreService.pool, PostgreTables.JOBS);
 
     await webProcess.start();
-    await webProcess.amqpService.channel.waitForConnect();
     [job] = (
       await insertJob(postgreService.pool, {
         status: JobStatus.CREATED,

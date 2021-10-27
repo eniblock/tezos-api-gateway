@@ -34,7 +34,6 @@ describe('[services/amqp] Amqp Service', () => {
 
     it('should properly start the service', async () => {
       await amqpService.start();
-      await amqpService.channel.waitForConnect();
       expect(amqpService.connection).not.toBeUndefined();
       expect(amqpService.channel).not.toBeUndefined();
       expect(connectSpy).toHaveBeenCalledTimes(1);
@@ -59,7 +58,6 @@ describe('[services/amqp] Amqp Service', () => {
 
     it('should properly stop the service', async () => {
       await amqpService.start();
-      await amqpService.channel.waitForConnect();
       const connectionSpy = jest.spyOn(amqpService.connection!, 'close');
 
       await expect(amqpService.stop()).resolves.toEqual(true);
@@ -69,7 +67,6 @@ describe('[services/amqp] Amqp Service', () => {
 
     it('should throw when unexpected error happen', async () => {
       await amqpService.start();
-      await amqpService.channel.waitForConnect();
       const connectionSpy = jest
         .spyOn(amqpService.connection!, 'close')
         .mockRejectedValueOnce(new Error('Unexpected Error'));
@@ -87,7 +84,6 @@ describe('[services/amqp] Amqp Service', () => {
   describe('#sendToQueue', () => {
     beforeEach(async () => {
       await amqpService.start();
-      await amqpService.channel.waitForConnect();
     });
 
     afterEach(async () => {
@@ -134,7 +130,6 @@ describe('[services/amqp] Amqp Service', () => {
 
       it('should correctly call assertQueue without routingKey', async () => {
         await noQueueNameAmqpService.start();
-        await noQueueNameAmqpService.channel.waitForConnect();
         const { name, type } = configWithoutRoutingKey.exchange;
         await noQueueNameAmqpService.channel.assertExchange(name, type, {
           durable: true,
@@ -169,7 +164,6 @@ describe('[services/amqp] Amqp Service', () => {
         );
 
         await noQueueNameWithRoutingKeyAmqpService.start();
-        await noQueueNameWithRoutingKeyAmqpService.channel.waitForConnect();
 
         const assertQueueSpy = jest
           .spyOn(channelConfirmMock, 'assertQueue')
