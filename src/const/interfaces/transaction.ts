@@ -22,8 +22,8 @@ export interface IndexerTransaction {
   source: string;
   timestamp: string;
   status: string;
-  bakerFee: number;
-  storageFee: number;
+  baker_fee: number;
+  storage_fee: number;
   storage_limit: number;
   counter: number;
   hash: string;
