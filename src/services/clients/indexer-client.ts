@@ -320,7 +320,6 @@ export class IndexerClient extends AbstractClient {
       }
       default:
         throw new UnsupportedIndexerError(indexerName);
-        break;
     }
 
     return { domainAndPath, queryParams };

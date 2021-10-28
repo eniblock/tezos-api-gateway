@@ -498,7 +498,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
             '"} does not match the schema: {"destination":"address","tokens":"nat"}',
         },
       ]);
-    }, 10000);
+    }, 20000);
 
     it('should throw InvalidMapStructureParams but not log error  when contract entry point parameters does not match', async () => {
       jest.restoreAllMocks();
@@ -549,7 +549,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
           error_message: '"metadata" does not match the structure of a map',
         },
       ]);
-    });
+    }, 20000);
 
     it('should throw error and log an error when any unexpected error happened ', async () => {
       const loggerErrorSpy = jest.spyOn(logger, 'error');

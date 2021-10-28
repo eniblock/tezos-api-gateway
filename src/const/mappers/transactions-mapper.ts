@@ -23,13 +23,14 @@ export function mapIndexerTransactionToTransaction(
         source: rawTx.sender,
         timestamp: rawTx.time,
         status: rawTx.status,
-        bakerFee: rawTx.fee,
-        storageFee: rawTx.burned,
+        baker_fee: rawTx.fee,
+        storage_fee: rawTx.burned,
         storage_limit: rawTx.storage_limit,
         counter: rawTx.counter,
         hash: rawTx.hash,
         block: rawTx.block,
         type: rawTx.type,
+
         height: rawTx.height,
         entrypoint: rawTx.entrypoint,
         parameters: rawTx.parameters?.value[rawTx.entrypoint] || '',
@@ -41,8 +42,8 @@ export function mapIndexerTransactionToTransaction(
         source: rawTx.sender.address,
         timestamp: rawTx.timestamp,
         status: rawTx.status,
-        bakerFee: rawTx.bakerFee / 1000000,
-        storageFee: rawTx.storageFee / 1000000,
+        baker_fee: rawTx.bakerFee / 1000000,
+        storage_fee: rawTx.storageFee / 1000000,
         storage_limit: rawTx.storageLimit,
         counter: rawTx.counter,
         hash: rawTx.hash,
@@ -54,6 +55,5 @@ export function mapIndexerTransactionToTransaction(
       };
     default:
       throw new UnsupportedIndexerError(indexerName);
-      break;
   }
 }
