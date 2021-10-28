@@ -1,6 +1,6 @@
 {
   "name": "tezos-api-gateway",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,7 +8,7 @@
     "coverage": "LOGGER_LEVEL=fatal jest --coverage --runInBand",
     "lint": "npm run prettier && npm run tslint",
     "test": "npm run lint && npm run build && npm run jest",
-    "jest": "LOGGER_LEVEL=fatal jest --runInBand",
+    "jest": "LOGGER_LEVEL=fatal jest --runInBand --detectOpenHandles",
     "prettier": "prettier -l '{src,test,docs}/**/*.{ts,yml,yaml,json,md}'",
     "prettier:write": "prettier --write '{src,test,docs}/**/*.{ts,yml,yaml,json,md}'",
     "start:dev": "nodemon build/src/processes/web/index.js | bunyan",
