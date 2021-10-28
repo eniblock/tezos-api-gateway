@@ -58,7 +58,7 @@ describe('[lib/smart-contracts] Index', () => {
     beforeEach(() => {
       method = jest.fn().mockImplementation(() => testContractMethod);
 
-      contract = ({
+      contract = {
         entrypoints: {
           entrypoints: {
             transfer: {
@@ -117,7 +117,7 @@ describe('[lib/smart-contracts] Index', () => {
           transfer_2: method,
           transfer_3: method,
         },
-      } as unknown) as ContractAbstraction<ContractProvider>;
+      } as unknown as ContractAbstraction<ContractProvider>;
 
       jest.spyOn(testContractMethod, 'schema', 'get').mockReturnValue({
         tokens: 'nat',
@@ -197,7 +197,7 @@ describe('[lib/smart-contracts] Index', () => {
       expect(() =>
         getContractMethod(
           logger,
-          (contract as unknown) as ContractAbstraction<ContractProvider>,
+          contract as unknown as ContractAbstraction<ContractProvider>,
           'transfer',
           {
             destination: 'fake_destination',

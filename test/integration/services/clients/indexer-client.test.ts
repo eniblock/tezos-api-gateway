@@ -148,9 +148,9 @@ describe('[services/clients] Indexer Client', () => {
     });
 
     it('should return false when difference between current block and operation block us not bigger than number of confirmation', async () => {
-      const blockHeader: BlockResponse = ({
+      const blockHeader: BlockResponse = {
         header: { level: 109646 },
-      } as unknown) as BlockResponse;
+      } as unknown as BlockResponse;
       const getLatestBlockSpy = jest
         .spyOn(tezosService, 'getLatestBlock')
         .mockResolvedValue(blockHeader);

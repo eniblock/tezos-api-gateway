@@ -25,10 +25,8 @@ function compileAndDeployContract(
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const {
-        secureKeyName,
-        smartContractCode,
-      }: DeployContractParams = req.body;
+      const { secureKeyName, smartContractCode }: DeployContractParams =
+        req.body;
 
       logger.info(
         { secureKeyName, smartContractCode },

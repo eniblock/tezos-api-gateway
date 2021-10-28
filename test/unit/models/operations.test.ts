@@ -203,23 +203,22 @@ describe('[models/operations]', () => {
 
   describe('#insertTransactionWithParametersJson', () => {
     it('should correctly insert the data', async () => {
-      const {
-        rows: insertedResult,
-      } = await insertTransactionWithParametersJson(postgreService.pool, {
-        destination: 'destination',
-        source: 'source',
-        parameters_json: {
-          entrypoint: 'transfer',
-          value: {
-            transfer: {
-              destination: testAccount2,
-              tokens: '5',
+      const { rows: insertedResult } =
+        await insertTransactionWithParametersJson(postgreService.pool, {
+          destination: 'destination',
+          source: 'source',
+          parameters_json: {
+            entrypoint: 'transfer',
+            value: {
+              transfer: {
+                destination: testAccount2,
+                tokens: '5',
+              },
             },
           },
-        },
-        jobId: insertedJob.id,
-        callerId: 'myCaller',
-      });
+          jobId: insertedJob.id,
+          callerId: 'myCaller',
+        });
 
       await expect(
         selectData(postgreService.pool, {
