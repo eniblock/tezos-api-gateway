@@ -112,10 +112,10 @@ export default {
                     status: {
                       type: 'string',
                     },
-                    bakerFee: {
+                    baker_fee: {
                       type: 'number',
                     },
-                    storageFee: {
+                    storage_fee: {
                       type: 'number',
                     },
                     storage_limit: {
