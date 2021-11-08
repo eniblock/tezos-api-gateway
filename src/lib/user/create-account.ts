@@ -8,22 +8,20 @@ import { CreateUserParams } from '../../const/interfaces/user/create/create-user
 import { Signer } from '@taquito/taquito';
 
 /**
- * create, save and reveal a user Account
+ * Create user accounts based on a user list in Vault
+ * Save these accounts in database
  *
- * @param {string} userIdList                               - id of the account to be created
- * @param {string} secureKeyName                       - the secure key name
- * @param {object} tezosService                        - the tezos service
+ * @param {string} userIdList           - id of the account to be created
  *
  * @return Promise<object> the created job
  */
 export async function createAccounts(
-  { userIdList, secureKeyName }: CreateUserParams,
-  tezosService: TezosService,
+  userIdList: string[],
 ): Promise<CreateUserResult[]> {
   try {
     logger.info(
       { userIdList },
-      '[lib/user/createAccounts] Going to accounts for this following users',
+      '[lib/user/createAccounts] Creating accounts for the following users',
     );
 
     const vaultClient = new VaultClient(vaultClientConfig, logger);
@@ -31,19 +29,6 @@ export async function createAccounts(
     logger.info(
       { userIdList },
       '[lib/user/createAccounts] Created vault keys for ',
-    );
-
-    const vaultSigner = new VaultSigner(
-      vaultClientConfig,
-      secureKeyName,
-      logger,
-    );
-
-    await createTezosAccountsByVaultKeys(tezosService, vaultSigner, userIdList);
-
-    logger.info(
-      { secureKeyName },
-      '[lib/user/createAccounts] Revealed accounts by transferring some XTZ from the account ',
     );
 
     const result = await Promise.all(
@@ -57,11 +42,6 @@ export async function createAccounts(
           ).publicKeyHash(),
         };
       }),
-    );
-
-    logger.info(
-      result,
-      '[lib/user/createAccounts] Created and activated accounts for the following users ',
     );
 
     await saveUserIdByAddresses(vaultClient, result);
@@ -139,14 +119,14 @@ export const saveUserIdByAddresses = (
  * otherwise it is not possible to skip the blockchain call.
  * reference: https://github.com/facebook/jest/issues/936#issuecomment-545080082
  */
-export const createTezosAccountsByVaultKeys = async (
+export const activateAndRevealAccounts = async (
   tezosService: TezosService,
   signer: Signer,
-  vaultKeys: string[],
+  { userIdList, secureKeyName }: CreateUserParams,
 ) => {
   const activatorAccountPKH = await signer.publicKeyHash();
 
-  for (const vaultKey of vaultKeys) {
+  for (const vaultKey of userIdList) {
     tezosService.setSigner(signer);
     const vaultSigner = new VaultSigner(vaultClientConfig, vaultKey, logger);
 
@@ -161,7 +141,10 @@ export const createTezosAccountsByVaultKeys = async (
       amount: transferAmount,
     });
 
-    logger.info({ hash: transactionOperation.hash }, 'ACTIVATE ACCOUNT');
+    logger.info(
+      { hash: transactionOperation.hash },
+      '[lib/user/createAccounts] Activated account, waiting for confirmation',
+    );
 
     // Wait for the transaction to be confirmed
     await transactionOperation.confirmation(1);
@@ -174,6 +157,11 @@ export const createTezosAccountsByVaultKeys = async (
       to: activatorAccountPKH,
       amount: 1,
     });
-    logger.info({ operationHash }, 'REVEAL ACCOUNT');
+
+    logger.info(
+      '[lib/user/createAccounts] Revealed accounts by transferring some XTZ from the account %s with operation hash %s',
+      secureKeyName,
+      operationHash,
+    );
   }
 };
