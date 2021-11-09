@@ -71,7 +71,7 @@ describe('[processes/web/api/user] Create user controller', () => {
       jest.spyOn(userLib, 'createVaultKeys').mockImplementation();
 
       const vaultNock = nock('http://localhost:8300')
-        .get(`/v1/transit/keys/nonExistingKey`)
+        .get(`/v1/transit/keys/key1`)
         .reply(404, {
           errors: 'NOT FOUND',
         });
@@ -85,7 +85,6 @@ describe('[processes/web/api/user] Create user controller', () => {
 
       expect(status).toEqual(404);
       expect(body).toEqual({
-        message: '{"errors":"NOT FOUND"}',
         status: 404,
       });
     });
@@ -174,9 +173,7 @@ describe('[processes/web/api/user] Create user controller', () => {
             warnings: null,
           });
 
-        jest
-          .spyOn(userLib, 'createTezosAccountsByVaultKeys')
-          .mockImplementation();
+        jest.spyOn(userLib, 'activateAndRevealAccounts').mockImplementation();
 
         jest.spyOn(userLib, 'createVaultKeys').mockImplementation();
 

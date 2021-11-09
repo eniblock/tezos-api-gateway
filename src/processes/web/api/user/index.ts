@@ -24,6 +24,11 @@ export default function registerUserRoutes(
 ): Router {
   router.get('/user', getUserController.getUser() as Application);
 
+  router.post(
+    '/user',
+    createUserController.createUser(gatewayPool, false) as Application,
+  );
+
   router.get(
     '/user/address',
     getUserByAddressController.getUser() as Application,
@@ -31,7 +36,7 @@ export default function registerUserRoutes(
 
   router.post(
     '/user/create',
-    createUserController.createUser(gatewayPool) as Application,
+    createUserController.createUser(gatewayPool, true) as Application,
   );
 
   router.get(
