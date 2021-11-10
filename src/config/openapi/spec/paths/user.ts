@@ -3,6 +3,7 @@ import { error } from '../components/errors';
 export default {
   '/user/create': {
     post: {
+      deprecated: true,
       summary: 'Create user accounts',
       description:
         'Create vault keys for userId, activate the accounts on the blockchain network, and return the Tezos address, these are delegated accounts because Vault will be able to sign operations on your behalf since it generates public/private keys and stores them',
@@ -112,6 +113,62 @@ export default {
                       type: 'string',
                       nullable: true,
                       description: 'public key hash of the user account',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        400: error[400],
+        404: error[404],
+        500: error.default,
+      },
+    },
+    post: {
+      summary: 'Create user accounts',
+      description:
+        'Create vault keys for userId and return the Tezos address, these are delegated accounts because Vault will be able to sign operations on your behalf since it generates public/private keys and stores them',
+      requestBody: {
+        description: 'List of the identifiers of the users to be created',
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['userIdList'],
+              properties: {
+                userIdList: {
+                  type: 'array',
+                  items: {
+                    type: 'string',
+                    description: 'user accounts identifier',
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description: 'the details of the created account',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  description: 'user account by id',
+                  properties: {
+                    userId: {
+                      type: 'string',
+                      description: 'account identifier',
+                    },
+                    account: {
+                      type: 'string',
+                      description: 'public key hash of the created account',
                     },
                   },
                 },

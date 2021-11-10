@@ -23,32 +23,6 @@ describe('[lib/user-create-account] create Tezos accounts', () => {
       nock.cleanAll();
     });
 
-    it('should return 404 when vault signer return 404', async () => {
-      const createKeysSpy = jest
-        .spyOn(userLib, 'createVaultKeys')
-        .mockImplementation();
-
-      const vaultNock = nock('http://localhost:8300')
-        .get(`/v1/transit/keys/nonExistingKey`)
-        .reply(404, {
-          errors: 'NOT FOUND',
-        });
-
-      await expect(
-        userLib.createAccounts(
-          {
-            secureKeyName: 'nonExistingKey',
-            userIdList: ['key1', 'key2'],
-          },
-          tezosService,
-        ),
-      ).rejects.toThrow(Error('{"errors":"NOT FOUND"}'));
-
-      expect(createKeysSpy).toHaveBeenCalledTimes(1);
-
-      vaultNock.done();
-    });
-
     it('should correctly create accounts and return the corresponding addresses', async () => {
       const vaultNock1 = nock('http://localhost:8300')
         .get(`/v1/transit/keys/key1`)
@@ -115,9 +89,7 @@ describe('[lib/user-create-account] create Tezos accounts', () => {
           warnings: null,
         });
 
-      jest
-        .spyOn(userLib, 'createTezosAccountsByVaultKeys')
-        .mockImplementation();
+      jest.spyOn(userLib, 'activateAndRevealAccounts').mockImplementation();
 
       const createKeysSpy = jest
         .spyOn(userLib, 'createVaultKeys')
@@ -127,13 +99,7 @@ describe('[lib/user-create-account] create Tezos accounts', () => {
         .spyOn(userLib, 'saveUserIdByAddresses')
         .mockImplementation();
 
-      const accounts = await userLib.createAccounts(
-        {
-          userIdList: ['key1', 'key2'],
-          secureKeyName: 'toto',
-        },
-        tezosService,
-      );
+      const accounts = await userLib.createAccounts(['key1', 'key2']);
 
       vaultNock1.done();
       vaultNock2.done();
@@ -252,11 +218,10 @@ describe('[lib/user-create-account] create Tezos accounts', () => {
           warnings: null,
         });
 
-      await userLib.createTezosAccountsByVaultKeys(
-        tezosService,
-        inMemorySigner,
-        ['key1', 'key2'],
-      );
+      await userLib.activateAndRevealAccounts(tezosService, inMemorySigner, {
+        userIdList: ['key1', 'key2'],
+        secureKeyName: 'test',
+      });
 
       vaultNock1.done();
       vaultNock2.done();

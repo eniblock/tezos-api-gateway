@@ -1,14 +1,18 @@
 import { NextFunction, Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { createAccounts } from '../../../../lib/user/create-account';
+import {
+  activateAndRevealAccounts,
+  createAccounts,
+} from '../../../../lib/user/create-account';
 import { GatewayPool } from '../../../../services/gateway-pool';
 import { logger } from '../../../../services/logger';
 import { CreateUserParams } from '../../../../const/interfaces/user/create/create-user-params';
+import { VaultSigner } from '../../../../services/signers/vault';
+import { vaultClientConfig } from '../../../../config';
 
-function createUser(gatewayPool: GatewayPool) {
+function createUser(gatewayPool: GatewayPool, activateAndReveal: boolean) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      // Declaration of request parameters
       const { userIdList, secureKeyName }: CreateUserParams = req.body;
       logger.info(
         {
@@ -27,13 +31,29 @@ function createUser(gatewayPool: GatewayPool) {
         '[user/create-user-controller] Using this tezos node',
       );
 
-      const result = await createAccounts(
-        {
+      const result = await createAccounts(userIdList);
+
+      logger.info(
+        result,
+        '[user/create-user-controller] Created accounts for the following users ',
+      );
+
+      if (activateAndReveal) {
+        const signer = new VaultSigner(
+          vaultClientConfig,
+          secureKeyName,
+          logger,
+        );
+        await activateAndRevealAccounts(tezosService, signer, {
           userIdList,
           secureKeyName,
-        },
-        tezosService,
-      );
+        });
+
+        logger.info(
+          result,
+          '[user/create-user-controller] Activated and revealed accounts for the following users ',
+        );
+      }
 
       return res.status(StatusCodes.CREATED).json(result);
     } catch (err) {
