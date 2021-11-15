@@ -2332,7 +2332,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src/processes/web/api/user/get-user-controller.ts
+SF:src/processes/web/api/user/user-controller.ts
 FN:6,getUser
 FN:7,(anonymous_1)
 FNF:2

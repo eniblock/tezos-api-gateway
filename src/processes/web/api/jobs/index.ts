@@ -1,6 +1,7 @@
 import { Application, Router } from 'express';
 
 import forgeJobController from './forge-job-controller';
+import forgeRevealJobController from './forge-reveal-job-controller';
 import injectJobController from './inject-job-controller';
 import sendJobController from './send-job-controller';
 import { PostgreService } from '../../../../services/postgre';
@@ -26,6 +27,14 @@ export default function registerJobsRoutes(
   router.post(
     '/forge/jobs',
     forgeJobController.forgeOperationAndCreateJob(
+      gatewayPool,
+      postgreService,
+    ) as Application,
+  );
+
+  router.post(
+    '/forge/reveal',
+    forgeRevealJobController.forgeRevealOperationAndCreateJob(
       gatewayPool,
       postgreService,
     ) as Application,

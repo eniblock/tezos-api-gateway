@@ -4,6 +4,7 @@ import { OriginationOperation } from '@taquito/taquito/dist/types/operations/ori
 
 import { ForgeOperationResult } from '../const/interfaces/forge-operation-result';
 import cacheLocal from '../services/cache-local';
+import { OperationContentsReveal } from '@taquito/rpc/dist/types/types';
 
 export class TezosService {
   private _tezos: TezosToolkit;
@@ -50,7 +51,7 @@ export class TezosService {
   }
 
   public async forgeOperations(
-    forgeParams: OperationContentsTransaction[],
+    forgeParams: OperationContentsTransaction[] | OperationContentsReveal[],
   ): Promise<ForgeOperationResult> {
     const { hash: branch } = await this.rpcClient.getBlockHeader();
     const forgedOperation = await this.rpcClient.forgeOperations({

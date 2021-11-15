@@ -215,7 +215,7 @@ async function getOperationContentsTransactionWithParametersJson(
     '[lib/jobs/forge-operation/#getOperationContentsTransactionWithParametersJson] Form a parameters as Michelson type list',
   );
 
-  const signerToGetPKH = new FakeSigner(sourceAddress);
+  const signerToGetPKH = new FakeSigner(sourceAddress, '');
 
   tezosService.setSigner(signerToGetPKH);
 
