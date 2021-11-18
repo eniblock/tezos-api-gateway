@@ -22,9 +22,9 @@ import { ForgeOperationParams } from '../../../../src/const/interfaces/forge-ope
 import { Jobs } from '../../../../src/const/interfaces/jobs';
 import { injectOperation } from '../../../../src/lib/jobs/inject-operation';
 import * as jobModel from '../../../../src/models/jobs';
-import { selectTransaction } from '../../../../src/models/transactions';
+import { selectTransaction } from '../../../../src/models/operations';
 import { JobIdNotFoundError } from '../../../../src/const/errors/job-id-not-found-error';
-import { Transaction } from '../../../../src/const/interfaces/transaction';
+import { Operation } from '../../../../src/const/interfaces/transaction';
 import { forgeOperation } from '../../../../src/lib/jobs/forge-operation';
 import { GatewayPool } from '../../../../src/services/gateway-pool';
 
@@ -38,7 +38,7 @@ describe('[lib/jobs/inject-operation]', () => {
   });
 
   beforeEach(async () => {
-    await resetTable(postgreService.pool, PostgreTables.TRANSACTION);
+    await resetTable(postgreService.pool, PostgreTables.OPERATIONS);
     await resetTable(postgreService.pool, PostgreTables.JOBS);
 
     jest.spyOn(gatewayPool, 'getTezosService').mockResolvedValue(tezosService);
@@ -110,7 +110,7 @@ describe('[lib/jobs/inject-operation]', () => {
     });
 
     it('should throw JobIdNotFoundError with correct message when there is no corresponding job id in forge parameters table', async () => {
-      await resetTable(postgreService.pool, PostgreTables.TRANSACTION);
+      await resetTable(postgreService.pool, PostgreTables.OPERATIONS);
       await expect(
         injectOperation(
           { gatewayPool, postgreService },
@@ -134,7 +134,7 @@ describe('[lib/jobs/inject-operation]', () => {
     });
 
     it('should throw JobIdNotFoundError with correct message when there is no job with this job id', async () => {
-      const transactions: Transaction[] = await selectTransaction(
+      const transactions: Operation[] = await selectTransaction(
         postgreService.pool,
         '*',
         `job_id = ${insertedJob.id}`,
@@ -204,7 +204,7 @@ describe('[lib/jobs/inject-operation]', () => {
     });
 
     it('should correctly update the database and inject the operation', async () => {
-      const transactions: Transaction[] = await selectTransaction(
+      const transactions: Operation[] = await selectTransaction(
         postgreService.pool,
         '*',
         `job_id = ${insertedJob.id}`,

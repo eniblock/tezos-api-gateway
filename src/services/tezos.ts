@@ -64,7 +64,7 @@ export class TezosService {
 
   public async preapplyOperations(
     branch: string,
-    forgeParams: OperationContentsTransaction[],
+    forgeParams: (OperationContentsTransaction | OperationContentsReveal)[],
     signature: string,
   ) {
     const protocol = (await this._tezos.rpc.getBlockMetadata()).next_protocol;

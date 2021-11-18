@@ -53,8 +53,14 @@ const components = {
     tezos_address: {
       type: 'string',
       pattern: '^[0-9a-zA-Z]{36}$',
-      description: 'An tezos address (contract or account)',
+      description: 'An tezos address account',
       example: testAccount,
+    },
+    tezos_public_key: {
+      type: 'string',
+      pattern: '^edpk+[0-9a-zA-Z]{50}$',
+      description: 'An tezos public key',
+      example: 'edpkuJpbmRrKVbXHWmJAU5v9YKiA1PCiy1xo1UyAKeUjpSvkXM5wfe',
     },
     tezos_contract_address: {
       type: 'string',

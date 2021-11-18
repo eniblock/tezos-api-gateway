@@ -18,7 +18,7 @@ import { checkOperationStatus } from '../../../../../src/processes/workers/check
 import { IndexerPool } from '../../../../../src/services/indexer-pool';
 import { nbOfConfirmation, nbOfRetry } from '../../../../../src/config';
 import { AmqpService } from '../../../../../src/services/amqp';
-import { insertTransactionWithParametersJson } from '../../../../../src/models/transactions';
+import { insertTransactionWithParametersJson } from '../../../../../src/models/operations';
 import { selectJobs } from '../../../../../src/models/jobs';
 import { Jobs } from '../../../../../src/const/interfaces/jobs';
 
@@ -34,7 +34,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
   });
 
   beforeEach(async () => {
-    await resetTable(postgreService.pool, PostgreTables.TRANSACTION);
+    await resetTable(postgreService.pool, PostgreTables.OPERATIONS);
     await resetTable(postgreService.pool, PostgreTables.JOBS);
   });
 

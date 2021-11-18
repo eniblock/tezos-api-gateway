@@ -1,7 +1,6 @@
 import { EntryPointParams } from './forge-operation-params';
 import { OperationContentsTransaction } from '@taquito/rpc';
 import { TransactionParametersJson } from './transaction-parameters-json';
-import { OperationContentsReveal } from '@taquito/rpc/dist/types/types';
 
 export interface TransactionDetails {
   contractAddress: string;
@@ -19,10 +18,6 @@ export interface SendTransactionsParams {
 export type SendTransactionsToQueueParams = SendTransactionsParams & {
   jobId: number;
   callerId?: string;
-};
-
-export type OperationContentsRevealWithParametersJson = OperationContentsReveal & {
-  parametersJson: TransactionParametersJson;
 };
 
 export type OperationContentsTransactionWithParametersJson = OperationContentsTransaction & {

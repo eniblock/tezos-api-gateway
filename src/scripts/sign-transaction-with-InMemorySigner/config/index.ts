@@ -1,7 +1,5 @@
 export const tezosPrivateKey =
   process.env.TEZOS_PRIVATE_KEY ||
-  'edskRhAsRYpJM5Kzo9aofUVsQ3DAHSNxVM5gaN77za3UM6nwDzwfkRvpmfbFSokzehbiZGd4KxSSFoP81XDJsPQ7ddxRyTAZqq';
+  'edskRp4HS1SHZAi7hyj3PtwXHZWzf5Hb3XqrTPRzfX5JtjM5YvMiPsRRzzyc15pTmJRdE9t8p4NLu4agQ3izTRjuoy2HMZmWSL';
 
-export const forgeOperation =
-  process.env.FORGE_OPERATION ||
-  'f982b83335522ef5ccdea989a1ae40eae82bbeed9656390f43c9ca6c0cab057d6b006feadb567c6937f3a4ab4557efdf8d8fef0feb4ff60200cc0800000b25eafb475d89867fbc89ba2d829e893504bef996a05bdaa3a3933c99fd2e3d';
+export const forgeOperation = process.env.FORGE_OPERATION || '';

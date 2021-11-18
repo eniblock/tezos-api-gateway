@@ -11,7 +11,7 @@ import { nbOfConfirmation, nbOfRetry } from '../../../../config';
 import { JobStatus } from '../../../../const/job-status';
 import { OperationNotFoundError } from '../../../../const/errors/indexer-error';
 import { AmqpService } from '../../../../services/amqp';
-import { selectTransaction } from '../../../../models/transactions';
+import { selectTransaction } from '../../../../models/operations';
 import { TransactionParametersJson } from '../../../../const/interfaces/transaction-parameters-json';
 import { publishEventWhenTransactionsConfirmed } from './publish-confirmed-transaction-event';
 
@@ -74,7 +74,7 @@ export async function checkOperationStatus(
           await Promise.all(
             transactions.map(async (transaction) => {
               const parameters = JSON.parse(
-                transaction.parameters_json,
+                transaction.parameters_json as string,
               ) as TransactionParametersJson;
 
               await publishEventWhenTransactionsConfirmed(

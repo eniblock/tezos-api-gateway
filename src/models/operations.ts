@@ -3,8 +3,14 @@ import { Pool } from 'pg';
 import { PostgreTables } from '../const/postgre/postgre-tables';
 import { TransactionParametersJson } from '../const/interfaces/transaction-parameters-json';
 import { OperationContentsTransactionWithParametersJson } from '../const/interfaces/send-transactions-params';
+import { OpKind } from '@taquito/rpc';
+import {
+  OperationContentsReveal,
+  // OperationContentsTransaction,
+} from '@taquito/rpc/dist/types/types';
+import { Operation } from '../const/interfaces/transaction';
 
-const TABLE_NAME = PostgreTables.TRANSACTION;
+const TABLE_NAME = PostgreTables.OPERATIONS;
 
 /**
  * Insert all the parameters that are used to forge a batch of operations (parameters related to a batch transaction)
@@ -15,40 +21,70 @@ const TABLE_NAME = PostgreTables.TRANSACTION;
  * @param {string} jobId               - the corresponding job id
  *
  */
-export function insertTransactions(
+export function insertOperations(
   pool: Pool,
-  operationContents: OperationContentsTransactionWithParametersJson[],
+  operationContents:
+    | OperationContentsTransactionWithParametersJson[]
+    | OperationContentsReveal[],
   branch: string,
   jobId: number,
   callerId: string,
 ) {
   const valuesString = operationContents.map(
-    ({
-      destination,
-      parameters,
-      parametersJson,
-      amount,
-      fee,
-      source,
-      storage_limit,
-      gas_limit,
-      counter,
-    }) =>
-      `('${destination}', '${JSON.stringify(parameters)}', '${JSON.stringify(
-        parametersJson,
-      )}', ${parseInt(amount, 10)},  ${parseInt(
-        fee,
-        10,
-      )},  '${source}', ${parseInt(storage_limit, 10)},  ${parseInt(
-        gas_limit,
-        10,
-      )}, ${parseInt(counter, 10)}, '${branch}', ${jobId}, '${callerId}')`,
+    (
+      op:
+        | OperationContentsTransactionWithParametersJson
+        | OperationContentsReveal,
+    ) => {
+      if (isOperationAReveal(op)) {
+        return mapRevealValues(op, branch, jobId);
+      }
+      return mapTransactionValues(op, branch, jobId, callerId);
+    },
   );
 
   return pool.query(
-    `INSERT INTO ${TABLE_NAME} (destination, parameters, parameters_json, amount, fee, source, storage_limit, gas_limit, counter, branch, job_id, caller_id) 
+    `INSERT INTO ${TABLE_NAME} (destination, parameters, parameters_json, amount, fee, source, storage_limit, gas_limit, counter, branch, job_id, caller_id, kind, public_key) 
     VALUES ${valuesString.join(',')} RETURNING *`,
   );
+}
+
+function mapRevealValues(
+  operationContent: OperationContentsReveal,
+  branch: string,
+  jobId: number,
+) {
+  return `('', NULL, NULL, NULL, ${parseInt(operationContent.fee, 10)},  '${
+    operationContent.source
+  }', ${parseInt(operationContent.storage_limit, 10)}, ${parseInt(
+    operationContent.gas_limit,
+    10,
+  )}, ${parseInt(
+    operationContent.counter,
+    10,
+  )}, '${branch}', ${jobId}, NULL, '${operationContent.kind}', '${
+    operationContent.public_key
+  }')`;
+}
+
+function mapTransactionValues(
+  tx: OperationContentsTransactionWithParametersJson,
+  branch: string,
+  jobId: number,
+  callerId: string,
+) {
+  return `('${tx.destination}', '${JSON.stringify(
+    tx.parameters,
+  )}', '${JSON.stringify(tx.parametersJson)}', ${parseInt(
+    tx.amount,
+    10,
+  )},  ${parseInt(tx.fee, 10)},  '${tx.source}', ${parseInt(
+    tx.storage_limit,
+    10,
+  )},  ${parseInt(tx.gas_limit, 10)}, ${parseInt(
+    tx.counter,
+    10,
+  )}, '${branch}', ${jobId}, '${callerId}', '${tx.kind}', NULL)`;
 }
 
 /**
@@ -79,10 +115,10 @@ export async function insertTransactionWithParametersJson(
   },
 ) {
   return pool.query(
-    `INSERT INTO ${TABLE_NAME} (destination, source, parameters_json, job_id, caller_id)
+    `INSERT INTO ${TABLE_NAME} (destination, source, parameters_json, job_id, caller_id, kind)
         VALUES('${destination}', '${source}','${JSON.stringify(
       parameters_json,
-    )}', ${jobId}, '${callerId}') RETURNING *`,
+    )}', ${jobId}, '${callerId}', '${OpKind.TRANSACTION}') RETURNING *`,
   );
 }
 
@@ -99,10 +135,23 @@ export async function selectTransaction(
   pool: Pool,
   selectFields: string,
   conditionFields?: string,
-) {
+): Promise<Operation[]> {
   const condition = conditionFields ? `WHERE ${conditionFields}` : '';
 
   return (
     await pool.query(`SELECT ${selectFields} FROM ${TABLE_NAME} ${condition}`)
   ).rows;
+}
+
+/**
+ * Type guard to determine if an operation is a reveal
+ *
+ * @param {object} operation  - the operation to identify
+ *
+ * @return {boolean}  wether the operation is a reveal or not
+ */
+function isOperationAReveal(
+  operation: any,
+): operation is OperationContentsReveal {
+  return operation.kind === OpKind.REVEAL;
 }

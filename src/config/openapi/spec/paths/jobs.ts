@@ -108,7 +108,7 @@ export default {
     post: {
       summary: 'Reveal an address',
       description:
-        'Returns the reveal operation for a given public key, to be used in a self-custody context',
+        'Returns the reveal operation for a given address and public key, to be used in a self-custody context',
       requestBody: {
         description: 'Necessary information to forge a reveal operation',
         required: true,
@@ -117,10 +117,13 @@ export default {
             schema: {
               type: 'object',
               additionalProperties: false,
-              required: ['address'],
+              required: ['address', 'publicKey'],
               properties: {
                 address: {
                   $ref: '#/components/schemas/tezos_address',
+                },
+                publicKey: {
+                  $ref: '#/components/schemas/tezos_public_key',
                 },
               },
             },

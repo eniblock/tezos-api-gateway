@@ -32,7 +32,7 @@ describe('[lib/jobs/forge-operation]', () => {
   });
 
   beforeEach(async () => {
-    await resetTable(postgreService.pool, PostgreTables.TRANSACTION);
+    await resetTable(postgreService.pool, PostgreTables.OPERATIONS);
     await resetTable(postgreService.pool, PostgreTables.JOBS);
   });
 
@@ -86,7 +86,7 @@ describe('[lib/jobs/forge-operation]', () => {
 
       await expect(
         selectData(postgreService.pool, {
-          tableName: PostgreTables.TRANSACTION,
+          tableName: PostgreTables.OPERATIONS,
           selectFields: '*',
         }),
       ).resolves.toEqual([]);
@@ -122,7 +122,7 @@ describe('[lib/jobs/forge-operation]', () => {
 
       await expect(
         selectData(postgreService.pool, {
-          tableName: PostgreTables.TRANSACTION,
+          tableName: PostgreTables.OPERATIONS,
           selectFields: '*',
         }),
       ).resolves.toEqual([]);
@@ -163,7 +163,7 @@ describe('[lib/jobs/forge-operation]', () => {
 
       await expect(
         selectData(postgreService.pool, {
-          tableName: PostgreTables.TRANSACTION,
+          tableName: PostgreTables.OPERATIONS,
           selectFields: '*',
         }),
       ).resolves.toEqual([]);
@@ -199,7 +199,7 @@ describe('[lib/jobs/forge-operation]', () => {
 
       await expect(
         selectData(postgreService.pool, {
-          tableName: PostgreTables.TRANSACTION,
+          tableName: PostgreTables.OPERATIONS,
           selectFields: '*',
         }),
       ).resolves.toEqual([]);
@@ -220,7 +220,7 @@ describe('[lib/jobs/forge-operation]', () => {
       ).resolves.toEqual([createdJob]);
 
       const insertedForgeParameters = await selectData(postgreService.pool, {
-        tableName: PostgreTables.TRANSACTION,
+        tableName: PostgreTables.OPERATIONS,
         selectFields:
           'destination, parameters, parameters_json, amount, fee, source, storage_limit, gas_limit, counter, branch, job_id',
       });

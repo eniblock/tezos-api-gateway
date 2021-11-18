@@ -34,7 +34,7 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
   });
 
   beforeEach(async () => {
-    await resetTable(postgreService.pool, PostgreTables.TRANSACTION);
+    await resetTable(postgreService.pool, PostgreTables.OPERATIONS);
     await resetTable(postgreService.pool, PostgreTables.JOBS);
 
     jest
@@ -178,7 +178,7 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
       ).resolves.toEqual([body]);
 
       const insertedForgeParameters = await selectData(postgreService.pool, {
-        tableName: PostgreTables.TRANSACTION,
+        tableName: PostgreTables.OPERATIONS,
         selectFields:
           'destination, parameters, parameters_json, amount, fee, source, storage_limit, gas_limit, counter, branch, job_id',
       });

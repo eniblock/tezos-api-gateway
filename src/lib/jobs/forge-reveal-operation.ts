@@ -9,68 +9,107 @@ import { OperationContentsReveal } from '@taquito/rpc/dist/types/types';
 import { OpKind } from '@taquito/rpc';
 import { insertJob } from '../../models/jobs';
 import { JobStatus } from '../../const/job-status';
+import { insertOperations } from '../../models/operations';
+import { AddressNotFoundError } from '../../const/errors/address-not-found-error';
+import { RevealEstimateError } from '../../const/errors/reveal-estimate-error';
 
 export async function forgeRevealOperation(
   gatewayPool: GatewayPool,
   postgreService: PostgreService,
   address: string,
+  publicKey: string,
 ): Promise<Jobs> {
-  try {
-    const tezosService = await gatewayPool.getTezosService();
+  const tezosService = await gatewayPool.getTezosService();
 
-    logger.info(
-      {
-        tezosNode: tezosService.tezos.rpc.getRpcUrl(),
-        address,
-      },
-      '[lib/jobs/forge-reveal-operation] Using this tezos node',
-    );
-
-    const signerToGetPKH = new FakeSigner(
+  logger.info(
+    {
+      tezosNode: tezosService.tezos.rpc.getRpcUrl(),
       address,
-      'edpktj8hay78sAuA3aAHf5VmTppnA4WUpnSUnfhUECqfSw7guSkKma',
-    );
+    },
+    '[lib/jobs/forge-reveal-operation] Using this tezos node',
+  );
 
-    tezosService.setSigner(signerToGetPKH);
+  const signerToGetPKH = new FakeSigner(address, publicKey);
 
-    const estimation:
-      | Estimate
-      | undefined = await tezosService.tezos.estimate.reveal();
+  tezosService.setSigner(signerToGetPKH);
 
-    if (estimation === undefined)
-      throw new AddressAlreadyRevealedError(address);
-
-    logger.info(
-      estimation,
-      '[lib/jobs/forge-reveal-operation] Estimate of the operation',
-    );
-
-    const revealOperation: OperationContentsReveal = {
-      kind: OpKind.REVEAL,
-      source: await signerToGetPKH.publicKeyHash(),
-      fee: estimation.suggestedFeeMutez.toString(),
-      counter: '0',
-      gas_limit: estimation.gasLimit.toString(),
-      storage_limit: estimation.storageLimit.toString(),
-      public_key: await signerToGetPKH.publicKey(),
-    };
-
-    const { forgedOperation } = await tezosService.forgeOperations([
-      revealOperation,
-    ]);
-
-    const result = await insertJob(postgreService.pool, {
-      rawTransaction: forgedOperation,
-      status: JobStatus.CREATED,
-    });
-
-    return result.rows[0] as Jobs;
-  } catch (err) {
+  let estimation: Estimate | undefined;
+  try {
+    estimation = await tezosService.tezos.estimate.reveal();
+  } catch (e) {
+    logger.error({ error: e.message });
     logger.error(
-      { error: err.message },
-      '[lib/jobs/forge-reveal-operation] Unexpected error happened',
+      '[lib/jobs/forge-reveal-operation] Error when trying to estimate the reveal of address %s',
+      address,
     );
-
-    throw err;
+    throw new RevealEstimateError(address, publicKey);
   }
+
+  if (estimation === undefined) {
+    logger.error(
+      '[lib/jobs/forge-reveal-operation] Address %s is already revealed',
+      address,
+    );
+    throw new AddressAlreadyRevealedError(address);
+  }
+
+  logger.info(
+    estimation,
+    '[lib/jobs/forge-reveal-operation] Estimate of the operation',
+  );
+
+  const { counter: counterAsString } = await tezosService.getContractResponse(
+    address,
+  );
+
+  if (!counterAsString) {
+    throw new AddressNotFoundError(address);
+  }
+
+  let counter = parseInt(counterAsString, 10);
+
+  logger.info(
+    { counter },
+    '[lib/jobs/forge-operation/#getOperationContentsTransactionWithParametersJson] Find counter',
+  );
+
+  const revealOperation: OperationContentsReveal = {
+    kind: OpKind.REVEAL,
+    source: await signerToGetPKH.publicKeyHash(),
+    fee: estimation.suggestedFeeMutez.toString(),
+    counter: (++counter).toString(),
+    gas_limit: estimation.gasLimit.toString(),
+    storage_limit: estimation.storageLimit.toString(),
+    public_key: await signerToGetPKH.publicKey(),
+  };
+
+  const { branch, forgedOperation } = await tezosService.forgeOperations([
+    revealOperation,
+  ]);
+
+  const result = await insertJob(postgreService.pool, {
+    rawTransaction: forgedOperation,
+    status: JobStatus.CREATED,
+  });
+
+  const jobId = (result.rows[0] as Jobs).id;
+
+  logger.info(
+    { result: result.rows, jobId },
+    '[lib/jobs/forge-reveal-operation] Successfully create a job after forging operation',
+  );
+
+  await insertOperations(
+    postgreService.pool,
+    [revealOperation],
+    branch,
+    jobId,
+    '',
+  );
+
+  logger.info(
+    '[lib/jobs/forgeOperation] Successfully saved parameters of forge function',
+  );
+
+  return result.rows[0] as Jobs;
 }

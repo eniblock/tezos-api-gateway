@@ -10,10 +10,11 @@ import {
   updateJobStatusAndErrorMessage,
   updateOperationHash,
 } from '../../models/jobs';
-import { selectTransaction } from '../../models/transactions';
-import { Transaction } from '../../const/interfaces/transaction';
+import { selectTransaction } from '../../models/operations';
+import { Operation } from '../../const/interfaces/transaction';
 import { JobStatus } from '../../const/job-status';
 import { GatewayPool } from '../../services/gateway-pool';
+import { OperationContentsReveal } from '@taquito/rpc/dist/types/types';
 
 const INJECT_OPERATION_KNOWN_ERRORS = ['JobIdNotFoundError'];
 
@@ -50,41 +51,30 @@ export async function injectOperation(
       '[lib/jobs/inject-operation/#injectOperation] Using this tezos node',
     );
 
-    const transactionsList: Transaction[] = await selectTransaction(
+    const operationsList: Operation[] = await selectTransaction(
       postgreService.pool,
       '*',
       `job_id = ${jobId}`,
     );
 
-    if (_.isEmpty(transactionsList)) {
+    if (_.isEmpty(operationsList)) {
       throw new JobIdNotFoundError(
         `Could not find the forge parameter with this job id: ${jobId}`,
       );
     }
 
-    const params: OperationContentsTransaction[] = transactionsList.map(
-      (transaction) => {
-        return {
-          kind: OpKind.TRANSACTION,
-          destination: transaction.destination,
-          parameters: JSON.parse(transaction.parameters!),
-          amount: transaction.amount!.toString(),
-          fee: transaction.fee!.toString(),
-          source: transaction.source,
-          storage_limit: transaction.storage_limit!.toString(),
-          gas_limit: transaction.gas_limit!.toString(),
-          counter: transaction.counter!.toString(),
-        };
-      },
-    );
+    const params: (
+      | OperationContentsTransaction
+      | OperationContentsReveal
+    )[] = mapOperations(operationsList);
 
     logger.info(
-      { params, branch: transactionsList[0].branch },
+      { params, branch: operationsList[0].branch },
       '[lib/jobs/inject-operation/#injectOperation] Form the parameters to preapply operation',
     );
 
     await tezosService.preapplyOperations(
-      transactionsList[0].branch!,
+      operationsList[0].branch!,
       params,
       signature,
     );
@@ -136,4 +126,33 @@ export async function injectOperation(
 
     throw err;
   }
+}
+
+function mapOperations(
+  transactionsList: Operation[],
+): (OperationContentsTransaction | OperationContentsReveal)[] {
+  return transactionsList.map((transaction) => {
+    if (transaction.kind === OpKind.REVEAL)
+      return {
+        kind: transaction.kind,
+        source: transaction.source,
+        fee: transaction.fee!.toString(),
+        counter: transaction.counter!.toString(),
+        gas_limit: transaction.gas_limit!.toString(),
+        storage_limit: transaction.storage_limit!.toString(),
+        public_key: transaction.public_key!,
+      };
+
+    return {
+      kind: transaction.kind,
+      destination: transaction.destination,
+      parameters: JSON.parse(transaction.parameters!),
+      amount: transaction.amount!.toString(),
+      fee: transaction.fee!.toString(),
+      source: transaction.source,
+      storage_limit: transaction.storage_limit!.toString(),
+      gas_limit: transaction.gas_limit!.toString(),
+      counter: transaction.counter!.toString(),
+    };
+  });
 }
