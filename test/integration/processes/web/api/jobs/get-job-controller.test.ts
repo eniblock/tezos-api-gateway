@@ -27,7 +27,7 @@ describe('[processes/web/api/jobs] Get job controller', () => {
   );
 
   beforeAll(async () => {
-    await resetTable(postgreService.pool, PostgreTables.TRANSACTION);
+    await resetTable(postgreService.pool, PostgreTables.OPERATIONS);
     await resetTable(postgreService.pool, PostgreTables.JOBS);
 
     await webProcess.start();

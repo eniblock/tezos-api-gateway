@@ -5,16 +5,16 @@ import { resetTable, selectData } from '../../__utils__/postgre';
 import { PostgreService } from '../../../src/services/postgre';
 import { insertJob } from '../../../src/models/jobs';
 import {
-  insertTransactions,
+  insertOperations,
   insertTransactionWithParametersJson,
   selectTransaction,
-} from '../../../src/models/transactions';
+} from '../../../src/models/operations';
 import { PostgreTables } from '../../../src/const/postgre/postgre-tables';
 import { Jobs } from '../../../src/const/interfaces/jobs';
 import { JobStatus } from '../../../src/const/job-status';
 import { testAccount2 } from '../../__fixtures__/smart-contract';
 
-describe('[models/transaction]', () => {
+describe('[models/operations]', () => {
   const postgreService = new PostgreService(postgreConfig);
   let insertedJob: Jobs;
 
@@ -34,12 +34,12 @@ describe('[models/transaction]', () => {
   });
 
   beforeEach(async () => {
-    await resetTable(postgreService.pool, PostgreTables.TRANSACTION);
+    await resetTable(postgreService.pool, PostgreTables.OPERATIONS);
   });
 
   describe('#insertTransaction', () => {
     it('should correctly insert the data', async () => {
-      const { rows: insertedResult } = await insertTransactions(
+      const { rows: insertedResult } = await insertOperations(
         postgreService.pool,
         [
           {
@@ -102,7 +102,7 @@ describe('[models/transaction]', () => {
 
       await expect(
         selectData(postgreService.pool, {
-          tableName: PostgreTables.TRANSACTION,
+          tableName: PostgreTables.OPERATIONS,
           selectFields: '*',
         }),
       ).resolves.toEqual([
@@ -126,6 +126,8 @@ describe('[models/transaction]', () => {
           job_id: insertedJob.id,
           branch: 'branch_address',
           caller_id: 'myCaller',
+          kind: OpKind.TRANSACTION,
+          public_key: null,
         },
         {
           id: insertedResult[1].id,
@@ -147,6 +149,8 @@ describe('[models/transaction]', () => {
           job_id: insertedJob.id,
           branch: 'branch_address',
           caller_id: 'myCaller',
+          kind: OpKind.TRANSACTION,
+          public_key: null,
         },
       ]);
     });
@@ -154,7 +158,7 @@ describe('[models/transaction]', () => {
     it('should throw error when job id does not exist', async () => {
       const fakeId = insertedJob.id + 1;
       await expect(
-        insertTransactions(
+        insertOperations(
           postgreService.pool,
           [
             {
@@ -190,7 +194,7 @@ describe('[models/transaction]', () => {
         ),
       ).rejects.toThrowError(
         Error(
-          'insert or update on table "transaction" violates foreign key constraint "fk_job"',
+          'insert or update on table "operations" violates foreign key constraint "fk_job"',
         ),
       );
     });
@@ -218,7 +222,7 @@ describe('[models/transaction]', () => {
 
       await expect(
         selectData(postgreService.pool, {
-          tableName: PostgreTables.TRANSACTION,
+          tableName: PostgreTables.OPERATIONS,
           selectFields: '*',
         }),
       ).resolves.toEqual([
@@ -239,6 +243,8 @@ describe('[models/transaction]', () => {
           job_id: insertedJob.id,
           branch: null,
           caller_id: 'myCaller',
+          kind: OpKind.TRANSACTION,
+          public_key: null,
         },
       ]);
     });
@@ -263,7 +269,7 @@ describe('[models/transaction]', () => {
         }),
       ).rejects.toThrowError(
         Error(
-          'insert or update on table "transaction" violates foreign key constraint "fk_job"',
+          'insert or update on table "operations" violates foreign key constraint "fk_job"',
         ),
       );
     });
@@ -282,7 +288,7 @@ describe('[models/transaction]', () => {
     });
 
     beforeEach(async () => {
-      await insertTransactions(
+      await insertOperations(
         postgreService.pool,
         [
           {
@@ -317,7 +323,7 @@ describe('[models/transaction]', () => {
         'myCaller',
       );
 
-      await insertTransactions(
+      await insertOperations(
         postgreService.pool,
         [
           {
@@ -376,6 +382,8 @@ describe('[models/transaction]', () => {
           job_id: insertedJob.id,
           branch: 'branch_address',
           caller_id: 'myCaller',
+          kind: OpKind.TRANSACTION,
+          public_key: null,
         },
         {
           id: result[1].id,
@@ -397,6 +405,8 @@ describe('[models/transaction]', () => {
           job_id: anotherJob.id,
           branch: 'branch_address_2',
           caller_id: 'myCaller',
+          kind: OpKind.TRANSACTION,
+          public_key: null,
         },
       ]);
     });

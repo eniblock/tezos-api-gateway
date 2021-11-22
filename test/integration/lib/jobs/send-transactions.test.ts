@@ -51,7 +51,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
   });
 
   beforeEach(async () => {
-    await resetTable(postgreService.pool, PostgreTables.TRANSACTION);
+    await resetTable(postgreService.pool, PostgreTables.OPERATIONS);
     await resetTable(postgreService.pool, PostgreTables.JOBS);
   });
 
@@ -294,7 +294,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
 
       await expect(
         selectData(postgreService.pool, {
-          tableName: PostgreTables.TRANSACTION,
+          tableName: PostgreTables.OPERATIONS,
           selectFields:
             'job_id, destination, source, parameters, parameters_json, amount, fee, storage_limit, gas_limit, counter, branch',
           conditionFields: `job_id=${insertedJob.id}`,
@@ -415,7 +415,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
 
       await expect(
         selectData(postgreService.pool, {
-          tableName: PostgreTables.TRANSACTION,
+          tableName: PostgreTables.OPERATIONS,
           selectFields:
             'job_id, destination, source, parameters, parameters_json, amount, fee, storage_limit, gas_limit, counter, branch',
           conditionFields: `job_id=${insertedJob.id}`,

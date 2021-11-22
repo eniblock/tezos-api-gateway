@@ -20,7 +20,7 @@ import { JobStatus } from '../../const/job-status';
 import { AmqpService } from '../../services/amqp';
 import { sendToSendTransactionQueue } from '../amqp/send-to-send-transaction-queue';
 import { vaultClientConfig } from '../../config';
-import { insertTransactionWithParametersJson } from '../../models/transactions';
+import { insertTransactionWithParametersJson } from '../../models/operations';
 import { JobIdNotFoundError } from '../../const/errors/job-id-not-found-error';
 import { GatewayPool } from '../../services/gateway-pool';
 

@@ -104,6 +104,92 @@ export default {
       },
     },
   },
+  '/forge/reveal': {
+    post: {
+      summary: 'Reveal an address',
+      description:
+        'Returns the reveal operation for a given address and public key, to be used in a self-custody context',
+      requestBody: {
+        description: 'Necessary information to forge a reveal operation',
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['address', 'publicKey'],
+              properties: {
+                address: {
+                  $ref: '#/components/schemas/tezos_address',
+                },
+                publicKey: {
+                  $ref: '#/components/schemas/tezos_public_key',
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description:
+            'Successfully forged the reveal operation and created a job',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  id: {
+                    type: 'number',
+                    description: 'The id of the new job',
+                  },
+                  status: {
+                    type: 'string',
+                    description:
+                      'The status of the operation corresponding to the job',
+                    example: 'CREATED',
+                  },
+                  raw_transaction: {
+                    type: 'string',
+                    nullable: true,
+                    description: 'The raw transaction corresponding to the job',
+                  },
+                  operation_hash: {
+                    type: 'string',
+                    nullable: true,
+                    description: 'The operation hash corresponding to the job',
+                  },
+                },
+              },
+            },
+          },
+        },
+        409: {
+          description: 'Conflict error, address is already revealed',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  message: {
+                    type: 'string',
+                    example: 'Address *** is already revealed',
+                  },
+                  status: {
+                    type: 'number',
+                    example: 409,
+                  },
+                },
+              },
+            },
+          },
+        },
+        400: error[400],
+        404: error[404],
+        500: error.default,
+      },
+    },
+  },
   '/inject/jobs': {
     patch: {
       summary: 'Request to patch a job',
