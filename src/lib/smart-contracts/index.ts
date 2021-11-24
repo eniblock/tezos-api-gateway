@@ -11,10 +11,21 @@ import {
   GenericObject,
 } from '../../const/interfaces/forge-operation-params';
 import {
-  InvalidEntryPointParams,
+  // InvalidEntryPointParams,
   InvalidMapStructureParams,
 } from '../../const/errors/invalid-entry-point-params';
 import { MapObject } from '../../const/interfaces/contract-storage-response';
+
+// tslint:disable-next-line:no-var-requires
+const createToken = require('@taquito/michelson-encoder/dist/lib/tokens/createToken');
+// tslint:disable-next-line:no-var-requires
+const or = require('@taquito/michelson-encoder/dist/lib/tokens/or');
+// tslint:disable-next-line:no-var-requires
+const map = require('@taquito/michelson-encoder/dist/lib/tokens/map');
+// tslint:disable-next-line:no-var-requires
+const list = require('@taquito/michelson-encoder/dist/lib/tokens/list');
+// tslint:disable-next-line:no-var-requires
+const pair = require('@taquito/michelson-encoder/dist/lib/tokens/pair');
 
 /**
  * Get the contract method
@@ -35,25 +46,28 @@ export function getContractMethod(
     return contract.methods[`${entryPoint}`](0);
   }
 
-  if (typeof params !== 'object' || Array.isArray(params)) {
+  if (!(typeof params === 'object' || Array.isArray(params))) {
     return contract.methods[`${entryPoint}`](params);
   }
 
-  const paramsValues = Object.values(params);
-
-  const schema = contract.methods[`${entryPoint}`].apply(null, paramsValues)
-    .schema;
+  // const paramsValues = Object.values(params);
+  // const schema = contract.methods[`${entryPoint}`].apply(null, paramsValues)
+  // const schema1 = contract.methods[`${entryPoint}`].apply(null, [params]) .schema;
+  const schema = contract.parameterSchema.ExtractSchema()[`${entryPoint}`];
+  const michelsonSchema = contract.entrypoints.entrypoints[`${entryPoint}`];
 
   logger.info(
     { schema },
     '[lib/smart-contracts/#getContractMethod] Get the schema',
   );
 
-  const entryPointArgs = computeEntryPointArgs(params, schema);
+  const entryPointArgs = computeEntryPointArgs(params, schema, michelsonSchema);
 
-  if (entryPointArgs.length !== paramsValues.length) {
+  // TODO useless?!
+  // const paramsValues = Object.values(params);
+  /*if (entryPointArgs.length !== paramsValues.length) {
     throw new InvalidEntryPointParams(schema, params);
-  }
+  }*/
 
   return contract.methods[`${entryPoint}`].apply(null, entryPointArgs);
 }
@@ -106,24 +120,41 @@ export function getTransferToParams(
  * @return {unknown[]} an array of arguments that need to be sent to Tezos blockchain
  */
 function computeEntryPointArgs(
-  params: GenericObject,
+  params: EntryPointParams,
   schema: GenericObject,
+  mickelsonSchema: object,
 ): unknown[] {
   const result: unknown[] = [];
 
-  Object.keys(schema)
-    .filter((argName) => params[`${argName}`] !== undefined)
-    .forEach((argName) => {
-      const type = schema[`${argName}`];
+  if (!(typeof params === 'object' || Array.isArray(params))) {
+    return [params];
+  }
 
-      result.push(
-        typeof type === 'object'
-          ? convertParameterToMap(params[`${argName}`] as MapObject[], argName)
-          : params[`${argName}`],
-      );
-    });
+  // TODO
+  //  Dont forget to try the upgrade of Taquito version
 
-  return result;
+  const token = createToken.createToken(mickelsonSchema, 0);
+  if (Array.isArray(params)) {
+    if (token instanceof map.MapToken) {
+      return [convertParameterToMap(params as MapObject[])];
+    } else if (token instanceof list.ListToken) {
+      return [params];
+    }
+  } else {
+    if (token instanceof or.OrToken) {
+      // TODO verify that is a single entry
+      return Object.entries(params)[0];
+    } else if (token instanceof pair.PairToken) {
+      Object.keys(schema)
+        .filter((argName) => params[`${argName}`] !== undefined)
+        .forEach((argName) => {
+          result.push(params[`${argName}`]);
+        });
+      return result;
+    }
+  }
+
+  return result; // TODO delete replace by throwing an error
 }
 
 /**
@@ -133,16 +164,16 @@ function computeEntryPointArgs(
  *
  * @return {MichelsonMap} the corresponding Michelson Map
  */
-function convertParameterToMap(mapParameter: MapObject[], mapName: string) {
+function convertParameterToMap(mapParameter: MapObject[]) {
   if (!Array.isArray(mapParameter)) {
-    throw new InvalidMapStructureParams(mapName);
+    throw new InvalidMapStructureParams();
   }
 
   const result = new MichelsonMap();
 
   mapParameter.forEach((param) => {
     if (!_.isEqual(Object.keys(param), ['key', 'value'])) {
-      throw new InvalidMapStructureParams(mapName);
+      throw new InvalidMapStructureParams();
     }
 
     result.set(param.key, param.value);

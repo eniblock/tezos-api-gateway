@@ -11,8 +11,10 @@ export class InvalidEntryPointParams extends Error {
 }
 
 export class InvalidMapStructureParams extends Error {
-  constructor(parameterName: string) {
-    super(`"${parameterName}" does not match the structure of a map`);
+  constructor() {
+    super(
+      `Invalid map structure, map have to respect the type: {"key": <key>, "value": <value>}[]`,
+    );
   }
 }
 
