@@ -48,7 +48,7 @@ export function getContractMethod(
   params?: EntryPointParams,
 ) {
   if (!params) {
-    return contract.methods[`${entryPoint}`](0);
+    return contract.methods[`${entryPoint}`].apply(null, []);
   }
 
   if (!(typeof params === 'object' || Array.isArray(params))) {
@@ -57,17 +57,26 @@ export function getContractMethod(
 
   const schema = contract.parameterSchema.ExtractSchema()[`${entryPoint}`];
   const mickelsonSchema = contract.entrypoints.entrypoints[`${entryPoint}`];
-
-  logger.info(
-    { schema },
-    '[lib/smart-contracts/#getContractMethod] Get the schema',
-  );
-
   const token = createToken.createToken(mickelsonSchema, 0);
 
-  const entryPointArgs = formatEntryPointParameters(params, token);
+  logger.info(
+    token.ExtractSignature(),
+    '[lib/smart-contracts/#getContractMethod] Get the parameters signature',
+  );
 
-  return contract.methods[`${entryPoint}`].apply(null, entryPointArgs);
+  const entryPointParameters = formatEntryPointParameters(
+    params,
+    token,
+    false,
+    schema,
+  );
+
+  logger.info(
+    entryPointParameters,
+    '[lib/smart-contracts/#getContractMethod] Get the formatted parameters',
+  );
+
+  return contract.methods[`${entryPoint}`].apply(null, entryPointParameters);
 }
 
 /**
@@ -120,6 +129,8 @@ export function getTransferToParams(
 function formatEntryPointParameters(
   params: EntryPointParams,
   token: any,
+  onlyFormatMaps: boolean,
+  schema?: GenericObject,
 ): unknown[] {
   if (token instanceof opt.OptionToken) {
     if (params === null) {
@@ -128,33 +139,45 @@ function formatEntryPointParameters(
       return formatEntryPointParameters(
         params,
         token.createToken(token.val.args[0], 0),
+        onlyFormatMaps,
+        schema,
       );
     }
-  } else {
-    if (Array.isArray(params)) {
-      if (token instanceof map.MapToken) {
-        return formatMapParameter(params as MapObject[], token);
-      } else if (token instanceof list.ListToken) {
-        return formatListParameter(params, token);
-      } else {
-        throw new UnKnownParameterType(typeof token);
-      }
-    } else if (typeof params === 'object') {
-      if (token instanceof or.OrToken) {
-        return formatVariantParameter(params, token);
-      } else if (token instanceof pair.PairToken) {
-        return formatRecordParameter(params, token);
-      } else {
-        throw new UnKnownParameterType(typeof token);
-      }
+  }
+
+  if (Array.isArray(params)) {
+    if (token instanceof map.MapToken) {
+      return formatMapParameter(
+        params as MapObject[],
+        token,
+        onlyFormatMaps,
+        schema,
+      );
+    } else if (token instanceof list.ListToken) {
+      return formatListParameter(params, token);
     } else {
-      // simple parameter: number, string, address, bytes, bool...
-      return [params];
+      throw new UnKnownParameterType(typeof token);
     }
+  } else if (typeof params === 'object') {
+    if (token instanceof or.OrToken) {
+      return formatVariantParameter(params, token, onlyFormatMaps, schema);
+    } else if (token instanceof pair.PairToken) {
+      return formatRecordParameter(params, token, onlyFormatMaps, schema);
+    } else {
+      throw new UnKnownParameterType(typeof token);
+    }
+  } else {
+    // simple parameter: number, string, address, bytes, bool...
+    return [params];
   }
 }
 
-function formatVariantParameter(params: GenericObject, token: any) {
+function formatVariantParameter(
+  params: GenericObject,
+  token: any,
+  onlyFormatMaps: boolean,
+  schema?: GenericObject,
+) {
   if (Object.keys(params).length !== 1) {
     throw new InvalidVariantObject(Object.keys(params).length);
   }
@@ -168,12 +191,25 @@ function formatVariantParameter(params: GenericObject, token: any) {
   if (!variantToken) {
     throw new InvalidParameterName(variantName);
   }
+  if (onlyFormatMaps) {
+    return [
+      {
+        [variantName]: formatEntryPointParameters(
+          params[variantName] as EntryPointParams,
+          variantToken,
+          onlyFormatMaps,
+        )[0],
+      },
+    ];
+  }
 
   return [
     variantName,
     ...formatEntryPointParameters(
       params[variantName] as EntryPointParams,
       variantToken,
+      onlyFormatMaps,
+      schema!![variantName] as GenericObject,
     ),
   ];
 }
@@ -184,7 +220,7 @@ function formatListParameter(params: unknown[], token: any) {
   params.forEach((elt) => {
     result = [
       ...result,
-      ...formatEntryPointParameters(elt as EntryPointParams, childToken),
+      ...formatEntryPointParameters(elt as EntryPointParams, childToken, true),
     ];
   });
   return [result];
@@ -193,9 +229,36 @@ function formatListParameter(params: unknown[], token: any) {
 /*function formatOptionParameter(params: GenericObject, token: any) {
 }*/
 
-function formatRecordParameter(params: GenericObject, token: any) {
+function formatRecordParameter(
+  params: GenericObject,
+  token: any,
+  onlyFormatMaps: boolean,
+  schema?: GenericObject,
+) {
+  if (onlyFormatMaps) {
+    const resultObj: GenericObject = {};
+    Object.keys(params)
+      .filter((argName) => params[`${argName}`] !== undefined)
+      .forEach((argName) => {
+        const childToken = findChildTokenByAnnotation(
+          token,
+          argName,
+          pair.PairToken,
+        );
+        if (!childToken) {
+          throw new InvalidParameterName(argName);
+        }
+        resultObj[argName] = formatEntryPointParameters(
+          params[`${argName}`] as EntryPointParams,
+          childToken,
+          onlyFormatMaps,
+        )[0];
+      });
+    return [resultObj];
+  }
+
   let result: unknown[] = [];
-  Object.keys(params)
+  Object.keys(schema!!)
     .filter((argName) => params[`${argName}`] !== undefined)
     .forEach((argName) => {
       const childToken = findChildTokenByAnnotation(
@@ -211,6 +274,8 @@ function formatRecordParameter(params: GenericObject, token: any) {
         ...formatEntryPointParameters(
           params[`${argName}`] as EntryPointParams,
           childToken,
+          onlyFormatMaps,
+          schema!![argName] as GenericObject,
         ),
       ];
     });
@@ -225,11 +290,12 @@ function formatRecordParameter(params: GenericObject, token: any) {
  * @param token
  * @return {MichelsonMap} the corresponding Michelson Map
  */
-function formatMapParameter(mapParameter: MapObject[], token: any) {
-  if (!Array.isArray(mapParameter)) {
-    throw new InvalidMapStructureParams();
-  }
-
+function formatMapParameter(
+  mapParameter: MapObject[],
+  token: any,
+  onlyFormatMaps: boolean,
+  schema?: GenericObject,
+) {
   const result = new MichelsonMap();
 
   mapParameter.forEach((param) => {
@@ -240,8 +306,20 @@ function formatMapParameter(mapParameter: MapObject[], token: any) {
     const valueToken = token.createToken(token.val.args[1], 0);
 
     result.set(
-      formatEntryPointParameters(param.key as EntryPointParams, keyToken),
-      formatEntryPointParameters(param.value as EntryPointParams, valueToken),
+      formatEntryPointParameters(
+        param.key as EntryPointParams,
+        keyToken,
+        onlyFormatMaps,
+        // @ts-ignore @TODO
+        schema ? (schema.map.value as GenericObject) : undefined,
+      )[0] as any,
+      formatEntryPointParameters(
+        param.value as EntryPointParams,
+        valueToken,
+        onlyFormatMaps,
+        // @ts-ignore @TODO
+        schema ? (schema.map.value as GenericObject) : undefined,
+      )[0],
     );
   });
 

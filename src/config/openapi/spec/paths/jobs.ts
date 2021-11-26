@@ -54,7 +54,7 @@ export default {
                       },
                       entryPointParams: {
                         oneOf: [
-                          { type: 'object' },
+                          { nullable: true, type: 'object' },
                           { type: 'string' },
                           { type: 'array' },
                           { type: 'number' },
@@ -304,7 +304,7 @@ export default {
                       },
                       entryPointParams: {
                         oneOf: [
-                          { type: 'object' },
+                          { nullable: true, type: 'object' },
                           { type: 'string' },
                           { type: 'array' },
                           { type: 'number' },
@@ -389,7 +389,7 @@ export default {
                       },
                       entryPointParams: {
                         oneOf: [
-                          { type: 'object' },
+                          { nullable: true, type: 'object' },
                           { type: 'string' },
                           { type: 'array' },
                           { type: 'number' },
