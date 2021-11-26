@@ -31,7 +31,7 @@ describe('[processes/web/api/contract] Contract controller', () => {
   });
 
   beforeEach(async () => {
-    await resetTable(postgreService.pool, PostgreTables.TRANSACTION);
+    await resetTable(postgreService.pool, PostgreTables.OPERATIONS);
     await resetTable(postgreService.pool, PostgreTables.JOBS);
   });
 

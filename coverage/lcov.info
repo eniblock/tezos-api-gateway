@@ -488,7 +488,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src/helpers/generate-transactions.ts
+SF:src/helpers/generate-operations.ts
 FN:13,generateTransactionDetails
 FNF:1
 FNH:1
@@ -815,7 +815,7 @@ BRF:8
 BRH:6
 end_of_record
 TN:
-SF:src/lib/jobs/send-transactions.ts
+SF:src/lib/jobs/send-operations.ts
 FN:44,sendTransactionsToQueue
 FN:100,sendTransactions
 FN:208,getOperationHashFromTezos
@@ -1349,7 +1349,7 @@ BRF:6
 BRH:5
 end_of_record
 TN:
-SF:src/models/transactions.ts
+SF:src/models/operations.ts
 FN:18,insertTransactions
 FN:26,(anonymous_1)
 FN:65,insertTransactionWithParametersJson
@@ -2332,7 +2332,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src/processes/web/api/user/get-user-controller.ts
+SF:src/processes/web/api/user/user-controller.ts
 FN:6,getUser
 FN:7,(anonymous_1)
 FNF:2

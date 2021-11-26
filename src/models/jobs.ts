@@ -20,15 +20,23 @@ export function insertJob(
   pool: Pool,
   {
     status,
-    rawTransaction,
-    operationHash,
-  }: { status: JobStatus; rawTransaction?: string; operationHash?: string },
+    forged_operation,
+    operation_hash,
+    operation_kind,
+  }: {
+    status: JobStatus;
+    forged_operation?: string;
+    operation_hash?: string;
+    operation_kind?: string;
+  },
 ) {
   return pool.query(
-    `INSERT INTO ${TABLE_NAME} (status,raw_transaction,operation_hash)
+    `INSERT INTO ${TABLE_NAME} (status,forged_operation,operation_hash,operation_kind)
         VALUES('${status}', ${
-      rawTransaction ? "'" + rawTransaction + "'" : null
-    }, ${operationHash ? "'" + operationHash + "'" : null}) RETURNING *`,
+      forged_operation ? "'" + forged_operation + "'" : null
+    }, ${operation_hash ? "'" + operation_hash + "'" : null}, ${
+      operation_kind ? "'" + operation_kind + "'" : null
+    }) RETURNING *`,
   );
 }
 

@@ -2,7 +2,7 @@ import { Application, Router } from 'express';
 
 import { GatewayPool } from '../../../../services/gateway-pool';
 import createUserController from './create-user-controller';
-import getUserController from './get-user-controller';
+import userController from './user-controller';
 import getUserByAddressController from './get-user-by-address-controller';
 import getUserInfoController from './get-user-info-controller';
 import userMetadataController from './user-metadata-controller';
@@ -22,7 +22,7 @@ export default function registerUserRoutes(
   gatewayPool: GatewayPool,
   indexerPool: IndexerPool,
 ): Router {
-  router.get('/user', getUserController.getUser() as Application);
+  router.get('/user', userController.getUser() as Application);
 
   router.post(
     '/user',

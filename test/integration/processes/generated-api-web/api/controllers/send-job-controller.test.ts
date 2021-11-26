@@ -19,6 +19,7 @@ import {
   testAccount,
   testAccount2,
 } from '../../../../../__fixtures__/smart-contract';
+import { OpKind } from '@taquito/rpc';
 
 describe('[processes/generated-api-web/api/controllers] Send job controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -37,7 +38,7 @@ describe('[processes/generated-api-web/api/controllers] Send job controller', ()
   });
 
   beforeEach(async () => {
-    await resetTable(postgreService.pool, PostgreTables.TRANSACTION);
+    await resetTable(postgreService.pool, PostgreTables.OPERATIONS);
     await resetTable(postgreService.pool, PostgreTables.JOBS);
   });
 
@@ -238,7 +239,8 @@ describe('[processes/generated-api-web/api/controllers] Send job controller', ()
           body: {
             id: body.id,
             operation_hash: null,
-            raw_transaction: null,
+            forged_operation: null,
+            operation_kind: OpKind.TRANSACTION,
             status: 'created',
             error_message: null,
           },

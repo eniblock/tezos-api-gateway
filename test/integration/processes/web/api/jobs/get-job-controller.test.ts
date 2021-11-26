@@ -13,6 +13,7 @@ import {
   tezosNodeGranadaUrl,
 } from '../../../../../__fixtures__/config';
 import { resetTable } from '../../../../../__utils__/postgre';
+import { OpKind } from '@taquito/rpc';
 
 describe('[processes/web/api/jobs] Get job controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -27,14 +28,15 @@ describe('[processes/web/api/jobs] Get job controller', () => {
   );
 
   beforeAll(async () => {
-    await resetTable(postgreService.pool, PostgreTables.TRANSACTION);
+    await resetTable(postgreService.pool, PostgreTables.OPERATIONS);
     await resetTable(postgreService.pool, PostgreTables.JOBS);
 
     await webProcess.start();
     [job] = (
       await insertJob(postgreService.pool, {
         status: JobStatus.CREATED,
-        rawTransaction: 'raw_transaction',
+        forged_operation: 'forged_operation',
+        operation_kind: OpKind.TRANSACTION,
       })
     ).rows;
   });

@@ -6,18 +6,20 @@ import { Signer } from '@taquito/taquito';
  * This class DOES NOT PERFORM ANY SIGNING ACTION
  */
 export class FakeSigner implements Signer {
-  private pkh: string;
+  private readonly _pkh: string;
+  private readonly _publicKey: string;
 
-  constructor(pkh: string) {
-    this.pkh = pkh;
+  constructor(pkh: string, publicKey: string) {
+    this._pkh = pkh;
+    this._publicKey = publicKey;
   }
 
   publicKey(): Promise<string> {
-    return Promise.resolve('');
+    return Promise.resolve(this._publicKey);
   }
 
   publicKeyHash(): Promise<string> {
-    return Promise.resolve(this.pkh);
+    return Promise.resolve(this._pkh);
   }
 
   secretKey(): Promise<string | undefined> {

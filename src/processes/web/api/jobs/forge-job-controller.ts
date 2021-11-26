@@ -41,7 +41,7 @@ function forgeOperationAndCreateJob(
         {
           tezosNode: tezosService.tezos.rpc.getRpcUrl(),
         },
-        '[storage/forge-job-controller] Using this tezos node',
+        '[jobs/forge-job-controller] Using this tezos node',
       );
 
       const job = await forgeOperation(
@@ -70,5 +70,4 @@ function forgeOperationAndCreateJob(
     }
   };
 }
-
 export default { forgeOperationAndCreateJob };

@@ -17,6 +17,7 @@ import {
   testAccount,
   testAccount2,
 } from '../../../../../__fixtures__/smart-contract';
+import { OpKind } from '@taquito/rpc';
 
 describe('[processes/generated-api-web/api/controllers] Forge job controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -34,7 +35,7 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
   });
 
   beforeEach(async () => {
-    await resetTable(postgreService.pool, PostgreTables.TRANSACTION);
+    await resetTable(postgreService.pool, PostgreTables.OPERATIONS);
     await resetTable(postgreService.pool, PostgreTables.JOBS);
 
     jest
@@ -163,8 +164,9 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
         status: 201,
         body: {
           id: body.id,
-          raw_transaction: body.raw_transaction,
+          forged_operation: body.forged_operation,
           operation_hash: null,
+          operation_kind: OpKind.TRANSACTION,
           status: 'created',
           error_message: null,
         },
@@ -178,7 +180,7 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
       ).resolves.toEqual([body]);
 
       const insertedForgeParameters = await selectData(postgreService.pool, {
-        tableName: PostgreTables.TRANSACTION,
+        tableName: PostgreTables.OPERATIONS,
         selectFields:
           'destination, parameters, parameters_json, amount, fee, source, storage_limit, gas_limit, counter, branch, job_id',
       });

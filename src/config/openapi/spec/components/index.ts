@@ -53,8 +53,14 @@ const components = {
     tezos_address: {
       type: 'string',
       pattern: '^[0-9a-zA-Z]{36}$',
-      description: 'An tezos address (contract or account)',
+      description: 'An tezos address account',
       example: testAccount,
+    },
+    tezos_public_key: {
+      type: 'string',
+      pattern: '^edpk+[0-9a-zA-Z]{50}$',
+      description: 'An tezos public key',
+      example: 'edpkuJpbmRrKVbXHWmJAU5v9YKiA1PCiy1xo1UyAKeUjpSvkXM5wfe',
     },
     tezos_contract_address: {
       type: 'string',
@@ -77,6 +83,36 @@ const components = {
       pattern: '^\\basc\\b|\\bdesc\\b$',
       default: 'asc',
       enum: ['asc', 'desc'],
+    },
+    job: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'number',
+          description: 'The id of the new job',
+        },
+        status: {
+          type: 'string',
+          description: 'the status of the operation corresponding to the job',
+          example: 'forged',
+        },
+        forged_operation: {
+          type: 'string',
+          nullable: true,
+          description: 'the raw forged operation corresponding to the job',
+        },
+        operation_hash: {
+          type: 'string',
+          nullable: true,
+          description: 'the operation hash corresponding to the job',
+        },
+        operation_kind: {
+          type: 'string',
+          nullable: false,
+          description: 'the operation type',
+          enum: ['transaction', 'reveal'],
+        },
+      },
     },
   },
   parameters: {

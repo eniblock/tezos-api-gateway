@@ -19,6 +19,7 @@ import { PostgreTables } from '../../../../../../src/const/postgre/postgre-table
 import { PostgreService } from '../../../../../../src/services/postgre';
 import { TezosService } from '../../../../../../src/services/tezos';
 import { ForgeOperationBodyParams } from '../../../../../../src/const/interfaces/forge-operation-params';
+import { OpKind } from '@taquito/rpc';
 
 describe('[processes/web/api/jobs] Forge job controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -36,7 +37,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
   });
 
   beforeEach(async () => {
-    await resetTable(postgreService.pool, PostgreTables.TRANSACTION);
+    await resetTable(postgreService.pool, PostgreTables.OPERATIONS);
     await resetTable(postgreService.pool, PostgreTables.JOBS);
 
     jest
@@ -222,10 +223,11 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
         status: 201,
         body: {
           id: body.id,
-          raw_transaction: body.raw_transaction,
+          forged_operation: body.forged_operation,
           operation_hash: null,
           status: 'created',
           error_message: null,
+          operation_kind: OpKind.TRANSACTION,
         },
       });
 
@@ -237,7 +239,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
       ).resolves.toEqual([body]);
 
       const insertedForgeParameters = await selectData(postgreService.pool, {
-        tableName: PostgreTables.TRANSACTION,
+        tableName: PostgreTables.OPERATIONS,
         selectFields:
           'destination, parameters, parameters_json, amount, fee, source, storage_limit, gas_limit, counter, branch, job_id, caller_id',
       });
