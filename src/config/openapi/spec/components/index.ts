@@ -84,6 +84,36 @@ const components = {
       default: 'asc',
       enum: ['asc', 'desc'],
     },
+    job: {
+      type: 'object',
+      properties: {
+        id: {
+          type: 'number',
+          description: 'The id of the new job',
+        },
+        status: {
+          type: 'string',
+          description: 'the status of the operation corresponding to the job',
+          example: 'forged',
+        },
+        forged_operation: {
+          type: 'string',
+          nullable: true,
+          description: 'the raw forged operation corresponding to the job',
+        },
+        operation_hash: {
+          type: 'string',
+          nullable: true,
+          description: 'the operation hash corresponding to the job',
+        },
+        operation_kind: {
+          type: 'string',
+          nullable: false,
+          description: 'the operation type',
+          enum: ['transaction', 'reveal'],
+        },
+      },
+    },
   },
   parameters: {
     page: {

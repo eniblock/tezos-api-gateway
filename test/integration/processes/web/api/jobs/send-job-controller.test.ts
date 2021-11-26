@@ -19,6 +19,7 @@ import {
   testAccount,
   testAccount2,
 } from '../../../../../__fixtures__/smart-contract';
+import { OpKind } from '@taquito/rpc';
 
 describe('[processes/web/api/jobs] Send job controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -223,7 +224,8 @@ describe('[processes/web/api/jobs] Send job controller', () => {
           body: {
             id: body.id,
             operation_hash: null,
-            raw_transaction: null,
+            forged_operation: null,
+            operation_kind: OpKind.TRANSACTION,
             status: 'created',
             error_message: null,
           },

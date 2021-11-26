@@ -11,9 +11,15 @@ import { nbOfConfirmation, nbOfRetry } from '../../../../config';
 import { JobStatus } from '../../../../const/job-status';
 import { OperationNotFoundError } from '../../../../const/errors/indexer-error';
 import { AmqpService } from '../../../../services/amqp';
-import { selectTransaction } from '../../../../models/operations';
+import {
+  isOperationAReveal,
+  selectOperation,
+} from '../../../../models/operations';
 import { TransactionParametersJson } from '../../../../const/interfaces/transaction-parameters-json';
-import { publishEventWhenTransactionsConfirmed } from './publish-confirmed-transaction-event';
+import {
+  publishEventWhenRevealConfirmed,
+  publishEventWhenTransactionsConfirmed,
+} from './publish-confirmed-transaction-event';
 
 /**
  * Check the operations (of all the jobs that has status "submitted" and operation hash) has been confirmed
@@ -60,39 +66,53 @@ export async function checkOperationStatus(
             '[lib/checkOperationStatus] Successfully update the job',
           );
 
-          const transactions = await selectTransaction(
+          const operations = await selectOperation(
             postgreService.pool,
-            'destination,parameters_json,caller_id',
+            'destination,parameters_json,caller_id,kind,source,public_key',
             `job_id=${job.id}`,
           );
 
           logger.info(
-            { jobId: job.id, transactionsParameters: transactions },
+            { jobId: job.id, transactionsParameters: operations },
             '[lib/checkOperationStatus] Get all the transactions parameters related to this job id',
           );
 
           await Promise.all(
-            transactions.map(async (transaction) => {
-              const parameters = JSON.parse(
-                transaction.parameters_json as string,
-              ) as TransactionParametersJson;
+            operations.map(async (operation) => {
+              if (isOperationAReveal(operation)) {
+                await publishEventWhenRevealConfirmed(
+                  amqpService,
+                  {
+                    address: operation.source,
+                    public_key: operation.public_key,
+                  },
+                  {
+                    callerId: operation.caller_id,
+                  },
+                );
+              } else {
+                const parameters = JSON.parse(
+                  operation.parameters_json as string,
+                ) as TransactionParametersJson;
 
-              await publishEventWhenTransactionsConfirmed(
-                amqpService,
-                {
-                  contractAddress: transaction.destination,
-                  entrypoint: parameters.entrypoint,
-                  jobId: job.id,
-                  parameters,
-                },
-                {
-                  entrypoint: parameters.entrypoint,
-                  contractAddress: transaction.destination,
-                  callerId: transaction.caller_id,
-                },
-              );
+                await publishEventWhenTransactionsConfirmed(
+                  amqpService,
+                  {
+                    contractAddress: operation.destination,
+                    entrypoint: parameters.entrypoint,
+                    jobId: job.id,
+                    parameters,
+                  },
+                  {
+                    entrypoint: parameters.entrypoint,
+                    contractAddress: operation.destination,
+                    callerId: operation.caller_id,
+                  },
+                );
+              }
+
               logger.info(
-                { transaction },
+                { operation },
                 '[lib/checkOperationStatus] Successfully publish the message to RabbitMq',
               );
             }),
@@ -108,4 +128,5 @@ export async function checkOperationStatus(
       }
     }),
   );
+  logger.info('✔ Check operation status is done successfully');
 }

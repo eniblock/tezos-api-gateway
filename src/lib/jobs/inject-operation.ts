@@ -10,7 +10,7 @@ import {
   updateJobStatusAndErrorMessage,
   updateOperationHash,
 } from '../../models/jobs';
-import { selectTransaction } from '../../models/operations';
+import { selectOperation } from '../../models/operations';
 import { Operation } from '../../const/interfaces/transaction';
 import { JobStatus } from '../../const/job-status';
 import { GatewayPool } from '../../services/gateway-pool';
@@ -51,7 +51,7 @@ export async function injectOperation(
       '[lib/jobs/inject-operation/#injectOperation] Using this tezos node',
     );
 
-    const operationsList: Operation[] = await selectTransaction(
+    const operationsList: Operation[] = await selectOperation(
       postgreService.pool,
       '*',
       `job_id = ${jobId}`,

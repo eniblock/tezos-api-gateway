@@ -18,6 +18,7 @@ export async function forgeRevealOperation(
   postgreService: PostgreService,
   address: string,
   publicKey: string,
+  callerId: string,
 ): Promise<Jobs> {
   const tezosService = await gatewayPool.getTezosService();
 
@@ -88,8 +89,9 @@ export async function forgeRevealOperation(
   ]);
 
   const result = await insertJob(postgreService.pool, {
-    rawTransaction: forgedOperation,
+    forged_operation: forgedOperation,
     status: JobStatus.CREATED,
+    operation_kind: OpKind.REVEAL,
   });
 
   const jobId = (result.rows[0] as Jobs).id;
@@ -104,7 +106,7 @@ export async function forgeRevealOperation(
     [revealOperation],
     branch,
     jobId,
-    '',
+    callerId,
   );
 
   logger.info(

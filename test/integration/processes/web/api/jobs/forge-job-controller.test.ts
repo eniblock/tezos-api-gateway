@@ -19,6 +19,7 @@ import { PostgreTables } from '../../../../../../src/const/postgre/postgre-table
 import { PostgreService } from '../../../../../../src/services/postgre';
 import { TezosService } from '../../../../../../src/services/tezos';
 import { ForgeOperationBodyParams } from '../../../../../../src/const/interfaces/forge-operation-params';
+import { OpKind } from '@taquito/rpc';
 
 describe('[processes/web/api/jobs] Forge job controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -222,10 +223,11 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
         status: 201,
         body: {
           id: body.id,
-          raw_transaction: body.raw_transaction,
+          forged_operation: body.forged_operation,
           operation_hash: null,
           status: 'created',
           error_message: null,
+          operation_kind: OpKind.TRANSACTION,
         },
       });
 

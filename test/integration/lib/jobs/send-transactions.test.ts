@@ -39,6 +39,7 @@ import {
 } from '../../../../src/const/errors/invalid-entry-point-params';
 import { AmqpService } from '../../../../src/services/amqp';
 import { GatewayPool } from '../../../../src/services/gateway-pool';
+import { OpKind } from '@taquito/rpc';
 
 describe('[lib/jobs/send-transactions] Send Transactions', () => {
   const postgreService = new PostgreService(postgreConfig);
@@ -108,7 +109,8 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
       expect(insertJobs).toEqual([
         {
           id: insertJobs[0].id,
-          raw_transaction: null,
+          forged_operation: null,
+          operation_kind: OpKind.TRANSACTION,
           operation_hash: null,
           status: 'created',
           error_message: null,
@@ -167,7 +169,8 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
       expect(insertJobs).toEqual([
         {
           id: insertJobs[0].id,
-          raw_transaction: null,
+          forged_operation: null,
+          operation_kind: OpKind.TRANSACTION,
           operation_hash: null,
           status: 'created',
           error_message: null,
@@ -206,7 +209,8 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
         rows: [result],
       } = await insertJob(postgreService.pool, {
         status: JobStatus.CREATED,
-        rawTransaction: 'raw_transaction',
+        forged_operation: 'raw_transaction',
+        operation_kind: OpKind.TRANSACTION,
       });
 
       insertedJob = result;
@@ -285,7 +289,8 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
       ).resolves.toEqual([
         {
           id: insertedJob.id,
-          raw_transaction: 'raw_transaction',
+          forged_operation: 'raw_transaction',
+          operation_kind: OpKind.TRANSACTION,
           operation_hash: 'hashValue',
           status: 'published',
           error_message: null,
@@ -406,7 +411,8 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
       ).resolves.toEqual([
         {
           id: insertedJob.id,
-          raw_transaction: 'raw_transaction',
+          forged_operation: 'raw_transaction',
+          operation_kind: OpKind.TRANSACTION,
           operation_hash: 'hashValue',
           status: 'published',
           error_message: null,
@@ -489,7 +495,8 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
       ).resolves.toEqual([
         {
           id: insertedJob.id,
-          raw_transaction: 'raw_transaction',
+          forged_operation: 'raw_transaction',
+          operation_kind: OpKind.TRANSACTION,
           operation_hash: null,
           status: 'error',
           error_message:
@@ -543,7 +550,8 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
       ).resolves.toEqual([
         {
           id: insertedJob.id,
-          raw_transaction: 'raw_transaction',
+          forged_operation: 'raw_transaction',
+          operation_kind: OpKind.TRANSACTION,
           operation_hash: null,
           status: 'error',
           error_message: '"metadata" does not match the structure of a map',
@@ -596,7 +604,8 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
       ).resolves.toEqual([
         {
           id: insertedJob.id,
-          raw_transaction: 'raw_transaction',
+          forged_operation: 'raw_transaction',
+          operation_kind: OpKind.TRANSACTION,
           operation_hash: null,
           status: 'error',
           error_message: 'Unexpected error',

@@ -72,29 +72,7 @@ export default {
           content: {
             'application/json': {
               schema: {
-                type: 'object',
-                properties: {
-                  id: {
-                    type: 'number',
-                    description: 'The id of the new job',
-                  },
-                  status: {
-                    type: 'string',
-                    description:
-                      'the status of the operation corresponding to the job',
-                    example: 'forged',
-                  },
-                  raw_transaction: {
-                    type: 'string',
-                    nullable: true,
-                    description: 'the raw transaction corresponding to the job',
-                  },
-                  operation_hash: {
-                    type: 'string',
-                    nullable: true,
-                    description: 'the operation hash corresponding to the job',
-                  },
-                },
+                $ref: '#/components/schemas/job',
               },
             },
           },
@@ -117,13 +95,17 @@ export default {
             schema: {
               type: 'object',
               additionalProperties: false,
-              required: ['address', 'publicKey'],
+              required: ['address', 'publicKey', 'callerId'],
               properties: {
                 address: {
                   $ref: '#/components/schemas/tezos_address',
                 },
                 publicKey: {
                   $ref: '#/components/schemas/tezos_public_key',
+                },
+                callerId: {
+                  type: 'string',
+                  description: 'The identifier of the calling application',
                 },
               },
             },
@@ -137,29 +119,7 @@ export default {
           content: {
             'application/json': {
               schema: {
-                type: 'object',
-                properties: {
-                  id: {
-                    type: 'number',
-                    description: 'The id of the new job',
-                  },
-                  status: {
-                    type: 'string',
-                    description:
-                      'The status of the operation corresponding to the job',
-                    example: 'CREATED',
-                  },
-                  raw_transaction: {
-                    type: 'string',
-                    nullable: true,
-                    description: 'The raw transaction corresponding to the job',
-                  },
-                  operation_hash: {
-                    type: 'string',
-                    nullable: true,
-                    description: 'The operation hash corresponding to the job',
-                  },
-                },
+                $ref: '#/components/schemas/job',
               },
             },
           },
@@ -229,29 +189,7 @@ export default {
           content: {
             'application/json': {
               schema: {
-                type: 'object',
-                properties: {
-                  id: {
-                    type: 'number',
-                    description: 'The id of the new job',
-                  },
-                  status: {
-                    type: 'string',
-                    description:
-                      'the status of the operation corresponding to the job',
-                    example: 'forged',
-                  },
-                  raw_transaction: {
-                    type: 'string',
-                    nullable: true,
-                    description: 'the raw transaction corresponding to the job',
-                  },
-                  operation_hash: {
-                    type: 'string',
-                    nullable: true,
-                    description: 'the operation hash corresponding to the job',
-                  },
-                },
+                $ref: '#/components/schemas/job',
               },
             },
           },
@@ -300,29 +238,7 @@ export default {
           content: {
             'application/json': {
               schema: {
-                type: 'object',
-                properties: {
-                  id: {
-                    type: 'number',
-                    description: 'The id of the new job',
-                  },
-                  status: {
-                    type: 'string',
-                    description:
-                      'the status of the operation corresponding to the job',
-                    example: 'forged',
-                  },
-                  raw_transaction: {
-                    type: 'string',
-                    nullable: true,
-                    description: 'the raw transaction corresponding to the job',
-                  },
-                  operation_hash: {
-                    type: 'string',
-                    nullable: true,
-                    description: 'the operation hash corresponding to the job',
-                  },
-                },
+                $ref: '#/components/schemas/job',
               },
             },
           },
@@ -406,29 +322,7 @@ export default {
           content: {
             'application/json': {
               schema: {
-                type: 'object',
-                properties: {
-                  id: {
-                    type: 'number',
-                    description: 'The id of the new job',
-                  },
-                  status: {
-                    type: 'string',
-                    description:
-                      'the status of the operation corresponding to the job',
-                    example: 'forged',
-                  },
-                  raw_transaction: {
-                    type: 'string',
-                    nullable: true,
-                    description: 'the raw transaction corresponding to the job',
-                  },
-                  operation_hash: {
-                    type: 'string',
-                    nullable: true,
-                    description: 'the operation hash corresponding to the job',
-                  },
-                },
+                $ref: '#/components/schemas/job',
               },
             },
           },
@@ -513,29 +407,7 @@ export default {
           content: {
             'application/json': {
               schema: {
-                type: 'object',
-                properties: {
-                  id: {
-                    type: 'number',
-                    description: 'The id of the new job',
-                  },
-                  status: {
-                    type: 'string',
-                    description:
-                      'the status of the operation corresponding to the job',
-                    example: 'forged',
-                  },
-                  raw_transaction: {
-                    type: 'string',
-                    nullable: true,
-                    description: 'the raw transaction corresponding to the job',
-                  },
-                  operation_hash: {
-                    type: 'string',
-                    nullable: true,
-                    description: 'the operation hash corresponding to the job',
-                  },
-                },
+                $ref: '#/components/schemas/job',
               },
             },
           },
@@ -567,29 +439,7 @@ export default {
           content: {
             'application/json': {
               schema: {
-                type: 'object',
-                properties: {
-                  id: {
-                    type: 'number',
-                    description: 'The id of the new job',
-                  },
-                  status: {
-                    type: 'string',
-                    description:
-                      'the status of the operation corresponding to the job',
-                    example: 'forged',
-                  },
-                  raw_transaction: {
-                    type: 'string',
-                    nullable: true,
-                    description: 'the raw transaction corresponding to the job',
-                  },
-                  operation_hash: {
-                    type: 'string',
-                    nullable: true,
-                    description: 'the operation hash corresponding to the job',
-                  },
-                },
+                $ref: '#/components/schemas/job',
               },
             },
           },

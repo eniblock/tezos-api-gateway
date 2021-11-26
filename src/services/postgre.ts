@@ -71,7 +71,20 @@ export class PostgreService {
         ALTER TABLE ${PostgreTables.OPERATIONS} ADD COLUMN IF NOT EXISTS kind VARCHAR(100);
         ALTER TABLE ${PostgreTables.OPERATIONS} ADD COLUMN IF NOT EXISTS public_key TEXT;
         UPDATE ${PostgreTables.OPERATIONS} SET kind = '${OpKind.TRANSACTION}' WHERE kind IS NULL;
+        ALTER TABLE ${PostgreTables.JOBS} ADD COLUMN IF NOT EXISTS operation_kind TEXT;
       `);
+
+    // IF EXIST to rename a column isn't supported by PostgreSQL, we have to do it manually
+    // See https://www.codingvila.com/2021/05/rename-column-only-if-exists-in-postgresql.html
+    const result = await this._pool.query(`
+        SELECT * FROM information_schema.columns WHERE table_name='${PostgreTables.JOBS}' and column_name='raw_transaction'`);
+
+    if (result.rows.length === 1) {
+      await this._pool.query(`
+        ALTER TABLE ${PostgreTables.JOBS} RENAME COLUMN raw_transaction TO forged_operation;
+        UPDATE ${PostgreTables.JOBS} SET operation_kind = '${OpKind.TRANSACTION}' WHERE operation_kind IS NULL;
+      `);
+    }
   }
 
   private async checkIfTypeExist(typeName: string) {

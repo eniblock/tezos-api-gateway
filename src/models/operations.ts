@@ -4,10 +4,7 @@ import { PostgreTables } from '../const/postgre/postgre-tables';
 import { TransactionParametersJson } from '../const/interfaces/transaction-parameters-json';
 import { OperationContentsTransactionWithParametersJson } from '../const/interfaces/send-transactions-params';
 import { OpKind } from '@taquito/rpc';
-import {
-  OperationContentsReveal,
-  // OperationContentsTransaction,
-} from '@taquito/rpc/dist/types/types';
+import { OperationContentsReveal } from '@taquito/rpc/dist/types/types';
 import { Operation } from '../const/interfaces/transaction';
 
 const TABLE_NAME = PostgreTables.OPERATIONS;
@@ -36,10 +33,7 @@ export function insertOperations(
         | OperationContentsTransactionWithParametersJson
         | OperationContentsReveal,
     ) => {
-      if (isOperationAReveal(op)) {
-        return mapRevealValues(op, branch, jobId);
-      }
-      return mapTransactionValues(op, branch, jobId, callerId);
+      return mapOperationValues(op, branch, jobId, callerId);
     },
   );
 
@@ -49,42 +43,35 @@ export function insertOperations(
   );
 }
 
-function mapRevealValues(
-  operationContent: OperationContentsReveal,
-  branch: string,
-  jobId: number,
-) {
-  return `('', NULL, NULL, NULL, ${parseInt(operationContent.fee, 10)},  '${
-    operationContent.source
-  }', ${parseInt(operationContent.storage_limit, 10)}, ${parseInt(
-    operationContent.gas_limit,
-    10,
-  )}, ${parseInt(
-    operationContent.counter,
-    10,
-  )}, '${branch}', ${jobId}, NULL, '${operationContent.kind}', '${
-    operationContent.public_key
-  }')`;
-}
-
-function mapTransactionValues(
-  tx: OperationContentsTransactionWithParametersJson,
+function mapOperationValues(
+  op: OperationContentsTransactionWithParametersJson | OperationContentsReveal,
   branch: string,
   jobId: number,
   callerId: string,
-) {
-  return `('${tx.destination}', '${JSON.stringify(
-    tx.parameters,
-  )}', '${JSON.stringify(tx.parametersJson)}', ${parseInt(
-    tx.amount,
+): string {
+  if (isOperationAReveal(op)) {
+    return `('', NULL, NULL, NULL, ${parseInt(op.fee, 10)},  '${
+      op.source
+    }', ${parseInt(op.storage_limit, 10)}, ${parseInt(
+      op.gas_limit,
+      10,
+    )}, ${parseInt(op.counter, 10)}, '${branch}', ${jobId}, '${callerId}', '${
+      op.kind
+    }', '${op.public_key}')`;
+  }
+
+  return `('${op.destination}', '${JSON.stringify(
+    op.parameters,
+  )}', '${JSON.stringify(op.parametersJson)}', ${parseInt(
+    op.amount,
     10,
-  )},  ${parseInt(tx.fee, 10)},  '${tx.source}', ${parseInt(
-    tx.storage_limit,
+  )},  ${parseInt(op.fee, 10)},  '${op.source}', ${parseInt(
+    op.storage_limit,
     10,
-  )},  ${parseInt(tx.gas_limit, 10)}, ${parseInt(
-    tx.counter,
+  )},  ${parseInt(op.gas_limit, 10)}, ${parseInt(
+    op.counter,
     10,
-  )}, '${branch}', ${jobId}, '${callerId}', '${tx.kind}', NULL)`;
+  )}, '${branch}', ${jobId}, '${callerId}', '${op.kind}', NULL)`;
 }
 
 /**
@@ -123,7 +110,7 @@ export async function insertTransactionWithParametersJson(
 }
 
 /**
- * Select the specific data from transaction table
+ * Select the specific data from operations table
  *
  * @param {object} pool                - the postgre pool used to insert
  * @param {string} selectFields        - the data fields selected
@@ -131,7 +118,7 @@ export async function insertTransactionWithParametersJson(
  *
  * @return Promise<ForgeParameters[]>  the select result
  */
-export async function selectTransaction(
+export async function selectOperation(
   pool: Pool,
   selectFields: string,
   conditionFields?: string,
@@ -150,7 +137,7 @@ export async function selectTransaction(
  *
  * @return {boolean}  wether the operation is a reveal or not
  */
-function isOperationAReveal(
+export function isOperationAReveal(
   operation: any,
 ): operation is OperationContentsReveal {
   return operation.kind === OpKind.REVEAL;

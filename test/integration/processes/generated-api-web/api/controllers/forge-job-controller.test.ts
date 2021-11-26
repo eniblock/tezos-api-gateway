@@ -17,6 +17,7 @@ import {
   testAccount,
   testAccount2,
 } from '../../../../../__fixtures__/smart-contract';
+import { OpKind } from '@taquito/rpc';
 
 describe('[processes/generated-api-web/api/controllers] Forge job controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -163,8 +164,9 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
         status: 201,
         body: {
           id: body.id,
-          raw_transaction: body.raw_transaction,
+          forged_operation: body.forged_operation,
           operation_hash: null,
+          operation_kind: OpKind.TRANSACTION,
           status: 'created',
           error_message: null,
         },

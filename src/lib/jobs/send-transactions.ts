@@ -23,6 +23,7 @@ import { vaultClientConfig } from '../../config';
 import { insertTransactionWithParametersJson } from '../../models/operations';
 import { JobIdNotFoundError } from '../../const/errors/job-id-not-found-error';
 import { GatewayPool } from '../../services/gateway-pool';
+import { OpKind } from '@taquito/rpc';
 
 const SEND_TRANSACTIONS_KNOWN_ERRORS = [
   'InvalidEntryPointParams',
@@ -52,6 +53,7 @@ export async function sendTransactionsAsync(
       rows: [insertedJob],
     } = await insertJob(postgreService.pool, {
       status: JobStatus.CREATED,
+      operation_kind: OpKind.TRANSACTION,
     });
 
     const jobId = insertedJob.id;

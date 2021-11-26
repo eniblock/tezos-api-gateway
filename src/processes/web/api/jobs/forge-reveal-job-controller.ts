@@ -14,9 +14,10 @@ function forgeRevealOperationAndCreateJob(
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { address, publicKey } = req.body;
+      const { address, publicKey, callerId } = req.body;
       logger.info(
-        '[jobs/forge-reveal-job-controller] Reveal the address %s with the public key %s',
+        '[jobs/forge-reveal-job-controller] %s wants to reveal the address %s with the public key %s',
+        callerId,
         address,
         publicKey,
       );
@@ -26,6 +27,7 @@ function forgeRevealOperationAndCreateJob(
         postgreService,
         address,
         publicKey,
+        callerId,
       );
 
       return res.status(StatusCodes.CREATED).json(accounts);

@@ -77,8 +77,9 @@ export async function forgeOperation(
     );
 
     const result = await insertJob(postgreService.pool, {
-      rawTransaction: forgedOperation,
+      forged_operation: forgedOperation,
       status: JobStatus.CREATED,
+      operation_kind: OpKind.TRANSACTION,
     });
     const jobId = (result.rows[0] as Jobs).id;
 

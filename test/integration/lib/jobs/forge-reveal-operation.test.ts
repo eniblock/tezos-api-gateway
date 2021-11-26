@@ -41,6 +41,10 @@ describe('[lib/jobs/forge-operation]', () => {
       address: 'tz1YqMAEcChYsD8tVCJY7gTEEMqbtbSZPUsG',
       publicKey: 'edpkuuzYpzP54bqH67uCSwPWEU1sY8TqsPD38tDCNS8azmCwSJm62T',
     };
+    const activatedAccount = {
+      address: 'tz1Z6MUWfJrsM2NLbLw9oWgxBeySULH8Lvhn',
+      publicKey: 'edpkuiyNHQLQXY8RNids8LGp2S4FQmtBkNApbn2a9Yy88HbgDgz5ov',
+    };
 
     it('should throw AddressAlreadyRevealedError when the address is already revealed', async () => {
       await expect(
@@ -49,6 +53,7 @@ describe('[lib/jobs/forge-operation]', () => {
           postgreService,
           revealedAccount.address,
           revealedAccount.publicKey,
+          'callerId',
         ),
       ).rejects.toThrowError(AddressAlreadyRevealedError);
 
@@ -74,6 +79,7 @@ describe('[lib/jobs/forge-operation]', () => {
           postgreService,
           unActivatedAccount.address,
           unActivatedAccount.publicKey,
+          'callerId',
         ),
       ).rejects.toThrowError(RevealEstimateError);
 
@@ -99,6 +105,7 @@ describe('[lib/jobs/forge-operation]', () => {
           postgreService,
           unActivatedAccount.address,
           revealedAccount.publicKey,
+          'callerId',
         ),
       ).rejects.toThrowError(RevealEstimateError);
 
@@ -116,5 +123,43 @@ describe('[lib/jobs/forge-operation]', () => {
         }),
       ).resolves.toEqual([]);
     });
+
+    it('should correctly create a job and insert data to jobs table', async () => {
+      const job = await forgeRevealOperation(
+        gatewayPool,
+        postgreService,
+        activatedAccount.address,
+        activatedAccount.publicKey,
+        'callerId',
+      );
+
+      await expect(
+        selectData(postgreService.pool, {
+          tableName: PostgreTables.JOBS,
+          selectFields: '*',
+        }),
+      ).resolves.toEqual([job]);
+
+      const operation = await selectData(postgreService.pool, {
+        tableName: PostgreTables.OPERATIONS,
+        selectFields:
+          'fee, source, storage_limit, gas_limit, counter, branch, job_id, public_key, kind, caller_id',
+      });
+
+      expect(operation).toEqual([
+        {
+          fee: 374,
+          source: activatedAccount.address,
+          storage_limit: 0,
+          gas_limit: 1100,
+          branch: operation[0].branch,
+          counter: operation[0].counter,
+          job_id: job.id,
+          public_key: activatedAccount.publicKey,
+          kind: 'reveal',
+          caller_id: 'callerId',
+        },
+      ]);
+    }, 10000);
   });
 });

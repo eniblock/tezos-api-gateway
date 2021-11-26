@@ -22,7 +22,7 @@ import { ForgeOperationParams } from '../../../../src/const/interfaces/forge-ope
 import { Jobs } from '../../../../src/const/interfaces/jobs';
 import { injectOperation } from '../../../../src/lib/jobs/inject-operation';
 import * as jobModel from '../../../../src/models/jobs';
-import { selectTransaction } from '../../../../src/models/operations';
+import { selectOperation } from '../../../../src/models/operations';
 import { JobIdNotFoundError } from '../../../../src/const/errors/job-id-not-found-error';
 import { Operation } from '../../../../src/const/interfaces/transaction';
 import { forgeOperation } from '../../../../src/lib/jobs/forge-operation';
@@ -134,7 +134,7 @@ describe('[lib/jobs/inject-operation]', () => {
     });
 
     it('should throw JobIdNotFoundError with correct message when there is no job with this job id', async () => {
-      const transactions: Operation[] = await selectTransaction(
+      const transactions: Operation[] = await selectOperation(
         postgreService.pool,
         '*',
         `job_id = ${insertedJob.id}`,
@@ -204,7 +204,7 @@ describe('[lib/jobs/inject-operation]', () => {
     });
 
     it('should correctly update the database and inject the operation', async () => {
-      const transactions: Operation[] = await selectTransaction(
+      const transactions: Operation[] = await selectOperation(
         postgreService.pool,
         '*',
         `job_id = ${insertedJob.id}`,

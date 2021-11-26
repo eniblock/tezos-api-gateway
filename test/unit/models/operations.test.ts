@@ -7,7 +7,7 @@ import { insertJob } from '../../../src/models/jobs';
 import {
   insertOperations,
   insertTransactionWithParametersJson,
-  selectTransaction,
+  selectOperation,
 } from '../../../src/models/operations';
 import { PostgreTables } from '../../../src/const/postgre/postgre-tables';
 import { Jobs } from '../../../src/const/interfaces/jobs';
@@ -23,7 +23,8 @@ describe('[models/operations]', () => {
 
     const { rows: result } = await insertJob(postgreService.pool, {
       status: JobStatus.CREATED,
-      rawTransaction: 'raw_transaction',
+      forged_operation: 'forged_operation',
+      operation_kind: OpKind.TRANSACTION,
     });
 
     insertedJob = result[0];
@@ -275,13 +276,14 @@ describe('[models/operations]', () => {
     });
   });
 
-  describe('#selectTransaction', () => {
+  describe('#selectOperation', () => {
     let anotherJob: Jobs;
 
     beforeAll(async () => {
       const { rows: result } = await insertJob(postgreService.pool, {
         status: JobStatus.CREATED,
-        rawTransaction: 'raw_transaction_2',
+        forged_operation: 'forged_operation_2',
+        operation_kind: OpKind.TRANSACTION,
       });
 
       anotherJob = result[0];
@@ -360,7 +362,7 @@ describe('[models/operations]', () => {
     });
 
     it('should correctly return all data in the database', async () => {
-      const result = await selectTransaction(postgreService.pool, '*');
+      const result = await selectOperation(postgreService.pool, '*');
       expect(result).toEqual([
         {
           id: result[0].id,
@@ -412,7 +414,7 @@ describe('[models/operations]', () => {
     });
 
     it('should correctly work with select fields', async () => {
-      const result = await selectTransaction(
+      const result = await selectOperation(
         postgreService.pool,
         'destination, amount, job_id',
       );
@@ -431,7 +433,7 @@ describe('[models/operations]', () => {
     });
 
     it('should correctly work with condition fields', async () => {
-      const result = await selectTransaction(
+      const result = await selectOperation(
         postgreService.pool,
         'destination, amount, job_id',
         `job_id = ${insertedJob.id}`,
