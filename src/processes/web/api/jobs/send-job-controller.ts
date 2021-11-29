@@ -16,6 +16,7 @@ import { MetricPrometheusService } from '../../../../services/metric-prometheus'
 import { insertJob } from '../../../../models/jobs';
 import { JobStatus } from '../../../../const/job-status';
 import { GatewayPool } from '../../../../services/gateway-pool';
+import { OpKind } from '@taquito/rpc';
 
 type ReqQuery = { cache: boolean };
 
@@ -121,6 +122,7 @@ function sendTransactionsAndCreateJob(
         rows: [insertedJob],
       } = await insertJob(postgreClient.pool, {
         status: JobStatus.CREATED,
+        operation_kind: OpKind.TRANSACTION,
       });
 
       const jobId = insertedJob.id;

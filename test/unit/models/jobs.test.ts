@@ -14,6 +14,7 @@ import {
 import { PostgreTables } from '../../../src/const/postgre/postgre-tables';
 import { Jobs } from '../../../src/const/interfaces/jobs';
 import { JobStatus } from '../../../src/const/job-status';
+import { OpKind } from '@taquito/rpc';
 
 describe('[models/jobs]', () => {
   const postgreService = new PostgreService(postgreConfig);
@@ -27,7 +28,7 @@ describe('[models/jobs]', () => {
   });
 
   beforeEach(async () => {
-    await resetTable(postgreService.pool, PostgreTables.TRANSACTION);
+    await resetTable(postgreService.pool, PostgreTables.OPERATIONS);
     await resetTable(postgreService.pool, PostgreTables.JOBS);
   });
 
@@ -35,7 +36,8 @@ describe('[models/jobs]', () => {
     it('should correctly insert the data when create a job', async () => {
       const { rows: insertedResult } = await insertJob(postgreService.pool, {
         status: JobStatus.CREATED,
-        rawTransaction: 'raw_transaction',
+        forged_operation: 'forged_operation',
+        operation_kind: OpKind.TRANSACTION,
       });
 
       await expect(
@@ -46,10 +48,11 @@ describe('[models/jobs]', () => {
       ).resolves.toEqual([
         {
           id: insertedResult[0].id,
-          raw_transaction: 'raw_transaction',
+          forged_operation: 'forged_operation',
           operation_hash: null,
           status: 'created',
           error_message: null,
+          operation_kind: OpKind.TRANSACTION,
         },
       ]);
     });
@@ -62,14 +65,16 @@ describe('[models/jobs]', () => {
       [job] = (
         await insertJob(postgreService.pool, {
           status: JobStatus.CREATED,
-          rawTransaction: 'raw_transaction',
+          forged_operation: 'forged_operation',
+          operation_kind: OpKind.TRANSACTION,
         })
       ).rows;
 
       [anotherJob] = (
         await insertJob(postgreService.pool, {
           status: JobStatus.CREATED,
-          rawTransaction: 'raw_transaction_2',
+          forged_operation: 'forged_operation_2',
+          operation_kind: OpKind.TRANSACTION,
         })
       ).rows;
     });
@@ -80,16 +85,18 @@ describe('[models/jobs]', () => {
         {
           id: job.id,
           status: 'created',
-          raw_transaction: 'raw_transaction',
+          forged_operation: 'forged_operation',
           operation_hash: null,
           error_message: null,
+          operation_kind: OpKind.TRANSACTION,
         },
         {
           id: anotherJob.id,
           status: 'created',
-          raw_transaction: 'raw_transaction_2',
+          forged_operation: 'forged_operation_2',
           operation_hash: null,
           error_message: null,
+          operation_kind: OpKind.TRANSACTION,
         },
       ]);
     });
@@ -97,16 +104,16 @@ describe('[models/jobs]', () => {
     it('should correctly work with select fields', async () => {
       const result = await selectJobs(
         postgreService.pool,
-        'status, raw_transaction',
+        'status, forged_operation',
       );
       expect(result).toEqual([
         {
           status: 'created',
-          raw_transaction: 'raw_transaction',
+          forged_operation: 'forged_operation',
         },
         {
           status: 'created',
-          raw_transaction: 'raw_transaction_2',
+          forged_operation: 'forged_operation_2',
         },
       ]);
     });
@@ -114,13 +121,13 @@ describe('[models/jobs]', () => {
     it('should correctly work with condition fields', async () => {
       const result = await selectJobs(
         postgreService.pool,
-        'status, raw_transaction',
+        'status, forged_operation',
         `id = ${job.id}`,
       );
       expect(result).toEqual([
         {
           status: 'created',
-          raw_transaction: 'raw_transaction',
+          forged_operation: 'forged_operation',
         },
       ]);
     });
@@ -128,7 +135,7 @@ describe('[models/jobs]', () => {
     it('should return empty array if no jobs match the condition', async () => {
       const result = await selectJobs(
         postgreService.pool,
-        'status, raw_transaction',
+        'status, forged_operation',
         'id = -1',
       );
       expect(result).toEqual([]);
@@ -142,7 +149,8 @@ describe('[models/jobs]', () => {
         rows: [result],
       } = await insertJob(postgreService.pool, {
         status: JobStatus.CREATED,
-        rawTransaction: 'raw_transaction',
+        forged_operation: 'forged_operation',
+        operation_kind: OpKind.TRANSACTION,
       });
 
       insertedJob = result;
@@ -158,10 +166,11 @@ describe('[models/jobs]', () => {
       ).resolves.toEqual([
         {
           id: insertedJob.id,
-          raw_transaction: 'raw_transaction',
+          forged_operation: 'forged_operation',
           operation_hash: 'operation_hash',
           status: 'published',
           error_message: null,
+          operation_kind: OpKind.TRANSACTION,
         },
       ]);
     });
@@ -179,10 +188,11 @@ describe('[models/jobs]', () => {
       ).resolves.toEqual([
         {
           id: insertedJob.id,
-          raw_transaction: 'raw_transaction',
+          forged_operation: 'forged_operation',
           operation_hash: null,
           status: 'created',
           error_message: null,
+          operation_kind: OpKind.TRANSACTION,
         },
       ]);
     });
@@ -195,7 +205,8 @@ describe('[models/jobs]', () => {
         rows: [result],
       } = await insertJob(postgreService.pool, {
         status: JobStatus.CREATED,
-        rawTransaction: 'raw_transaction',
+        forged_operation: 'forged_operation',
+        operation_kind: OpKind.TRANSACTION,
       });
 
       insertedJob = result;
@@ -211,10 +222,11 @@ describe('[models/jobs]', () => {
       ).resolves.toEqual([
         {
           id: insertedJob.id,
-          raw_transaction: 'raw_transaction',
+          forged_operation: 'forged_operation',
           operation_hash: null,
           status: 'published',
           error_message: null,
+          operation_kind: OpKind.TRANSACTION,
         },
       ]);
     });
@@ -232,10 +244,11 @@ describe('[models/jobs]', () => {
       ).resolves.toEqual([
         {
           id: insertedJob.id,
-          raw_transaction: 'raw_transaction',
+          forged_operation: 'forged_operation',
           operation_hash: null,
           status: 'created',
           error_message: null,
+          operation_kind: OpKind.TRANSACTION,
         },
       ]);
     });
@@ -248,7 +261,8 @@ describe('[models/jobs]', () => {
         rows: [result],
       } = await insertJob(postgreService.pool, {
         status: JobStatus.CREATED,
-        rawTransaction: 'raw_transaction',
+        forged_operation: 'forged_operation',
+        operation_kind: OpKind.TRANSACTION,
       });
 
       insertedJob = result;
@@ -265,10 +279,11 @@ describe('[models/jobs]', () => {
       ).resolves.toEqual([
         {
           id: insertedJob.id,
-          raw_transaction: 'raw_transaction',
+          forged_operation: 'forged_operation',
           operation_hash: 'operation_hash',
           status: 'published',
           error_message: null,
+          operation_kind: OpKind.TRANSACTION,
         },
       ]);
     });
@@ -291,10 +306,11 @@ describe('[models/jobs]', () => {
       ).resolves.toEqual([
         {
           id: insertedJob.id,
-          raw_transaction: 'raw_transaction',
+          forged_operation: 'forged_operation',
           operation_hash: null,
           status: 'created',
           error_message: null,
+          operation_kind: OpKind.TRANSACTION,
         },
       ]);
     });
@@ -307,7 +323,8 @@ describe('[models/jobs]', () => {
         rows: [result],
       } = await insertJob(postgreService.pool, {
         status: JobStatus.CREATED,
-        rawTransaction: 'raw_transaction',
+        forged_operation: 'forged_operation',
+        operation_kind: OpKind.TRANSACTION,
       });
 
       insertedJob = result;
@@ -324,10 +341,11 @@ describe('[models/jobs]', () => {
       ).resolves.toEqual([
         {
           id: insertedJob.id,
-          raw_transaction: 'raw_transaction',
+          forged_operation: 'forged_operation',
           operation_hash: null,
           status: 'published',
           error_message: 'error',
+          operation_kind: OpKind.TRANSACTION,
         },
       ]);
     });
@@ -350,10 +368,11 @@ describe('[models/jobs]', () => {
       ).resolves.toEqual([
         {
           id: insertedJob.id,
-          raw_transaction: 'raw_transaction',
+          forged_operation: 'forged_operation',
           operation_hash: null,
           status: 'created',
           error_message: null,
+          operation_kind: OpKind.TRANSACTION,
         },
       ]);
     });
@@ -364,10 +383,10 @@ describe('[models/jobs]', () => {
     beforeEach(async () => {
       [, forgedJobWithOperationHash] = (
         await postgreService.pool.query(
-          `INSERT INTO ${PostgreTables.JOBS} (status,raw_transaction,operation_hash)
-        VALUES('${JobStatus.PUBLISHED}', 'raw_transaction', NULL),
-        ('${JobStatus.PUBLISHED}', 'raw_transaction_2', 'operation_hash'),
-        ('${JobStatus.DONE}', 'raw_transaction_3', 'operation_hash') RETURNING *`,
+          `INSERT INTO ${PostgreTables.JOBS} (status,forged_operation,operation_hash,operation_kind)
+        VALUES('${JobStatus.PUBLISHED}', 'raw_transaction', NULL, '${OpKind.TRANSACTION}'),
+        ('${JobStatus.PUBLISHED}', 'raw_transaction_2', 'operation_hash', '${OpKind.TRANSACTION}'),
+        ('${JobStatus.DONE}', 'raw_transaction_3', 'operation_hash', '${OpKind.TRANSACTION}') RETURNING *`,
         )
       ).rows;
     });
@@ -380,9 +399,10 @@ describe('[models/jobs]', () => {
         {
           id: forgedJobWithOperationHash.id,
           status: 'published',
-          raw_transaction: 'raw_transaction_2',
+          forged_operation: 'raw_transaction_2',
           operation_hash: 'operation_hash',
           error_message: null,
+          operation_kind: OpKind.TRANSACTION,
         },
       ]);
     });

@@ -18,9 +18,10 @@ import { checkOperationStatus } from '../../../../../src/processes/workers/check
 import { IndexerPool } from '../../../../../src/services/indexer-pool';
 import { nbOfConfirmation, nbOfRetry } from '../../../../../src/config';
 import { AmqpService } from '../../../../../src/services/amqp';
-import { insertTransactionWithParametersJson } from '../../../../../src/models/transactions';
+import { insertTransactionWithParametersJson } from '../../../../../src/models/operations';
 import { selectJobs } from '../../../../../src/models/jobs';
 import { Jobs } from '../../../../../src/const/interfaces/jobs';
+import { OpKind } from '@taquito/rpc';
 
 describe('[check-operation-status/lib/check-operation-status]', () => {
   const postgreService = new PostgreService(postgreConfig);
@@ -34,7 +35,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
   });
 
   beforeEach(async () => {
-    await resetTable(postgreService.pool, PostgreTables.TRANSACTION);
+    await resetTable(postgreService.pool, PostgreTables.OPERATIONS);
     await resetTable(postgreService.pool, PostgreTables.JOBS);
   });
 
@@ -50,17 +51,17 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
     const loggerErrorSpy = jest.spyOn(logger, 'error');
     beforeEach(async () => {
       await postgreService.pool.query(
-        `INSERT INTO ${PostgreTables.JOBS} (status,raw_transaction,operation_hash)
-        VALUES('${JobStatus.CREATED}', 'raw_transaction', NULL),
-        ('${JobStatus.PUBLISHED}', 'raw_transaction_2', '${operationHash}'),
-        ('${JobStatus.CREATED}', 'raw_transaction_3', '${operationHash}')`,
+        `INSERT INTO ${PostgreTables.JOBS} (status,forged_operation,operation_hash,operation_kind)
+        VALUES('${JobStatus.CREATED}', 'raw_transaction', NULL, '${OpKind.TRANSACTION}'),
+        ('${JobStatus.PUBLISHED}', 'raw_transaction_2', '${operationHash}', '${OpKind.TRANSACTION}'),
+        ('${JobStatus.CREATED}', 'raw_transaction_3', '${operationHash}', '${OpKind.TRANSACTION}')`,
       );
     });
 
     it('should correctly update the job with the correct operation hash and status', async () => {
       await postgreService.pool.query(
-        `INSERT INTO ${PostgreTables.JOBS} (status,raw_transaction,operation_hash)
-        VALUES ('${JobStatus.PUBLISHED}', 'raw_transaction_4', '${notFoundOperationHash}')`,
+        `INSERT INTO ${PostgreTables.JOBS} (status,forged_operation,operation_hash,operation_kind)
+        VALUES ('${JobStatus.PUBLISHED}', 'raw_transaction_4', '${notFoundOperationHash}', '${OpKind.TRANSACTION}')`,
       );
       await checkOperationStatus(
         { postgreService, tezosService, amqpService, indexerPool },
@@ -70,28 +71,28 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
       await expect(
         selectData(postgreService.pool, {
           tableName: PostgreTables.JOBS,
-          selectFields: 'status, operation_hash, raw_transaction',
-          orderBy: 'raw_transaction ASC',
+          selectFields: 'status, operation_hash, forged_operation',
+          orderBy: 'forged_operation ASC',
         }),
       ).resolves.toEqual([
         {
           status: 'created',
-          raw_transaction: 'raw_transaction',
+          forged_operation: 'raw_transaction',
           operation_hash: null,
         },
         {
           status: 'done',
-          raw_transaction: 'raw_transaction_2',
+          forged_operation: 'raw_transaction_2',
           operation_hash: operationHash,
         },
         {
           status: 'created',
-          raw_transaction: 'raw_transaction_3',
+          forged_operation: 'raw_transaction_3',
           operation_hash: operationHash,
         },
         {
           status: 'published',
-          raw_transaction: 'raw_transaction_4',
+          forged_operation: 'raw_transaction_4',
           operation_hash: notFoundOperationHash,
         },
       ]);
@@ -194,22 +195,22 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
       await expect(
         selectData(postgreService.pool, {
           tableName: PostgreTables.JOBS,
-          selectFields: 'status, operation_hash, raw_transaction',
+          selectFields: 'status, operation_hash, forged_operation',
         }),
       ).resolves.toEqual([
         {
           status: 'created',
-          raw_transaction: 'raw_transaction',
+          forged_operation: 'raw_transaction',
           operation_hash: null,
         },
         {
           status: 'published',
-          raw_transaction: 'raw_transaction_2',
+          forged_operation: 'raw_transaction_2',
           operation_hash: operationHash,
         },
         {
           status: 'created',
-          raw_transaction: 'raw_transaction_3',
+          forged_operation: 'raw_transaction_3',
           operation_hash: operationHash,
         },
       ]);

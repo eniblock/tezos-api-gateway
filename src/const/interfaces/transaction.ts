@@ -1,6 +1,7 @@
 import { IndexerEnum } from './indexer';
+import { OpKind } from '@taquito/rpc';
 
-export interface Transaction {
+export interface Operation {
   id: number;
   destination: string;
   source: string;
@@ -14,6 +15,8 @@ export interface Transaction {
   counter?: number;
   branch?: string;
   caller_id: string;
+  kind: OpKind.REVEAL | OpKind.TRANSACTION;
+  public_key?: string;
 }
 
 export interface IndexerTransaction {

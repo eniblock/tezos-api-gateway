@@ -6,6 +6,8 @@ import {
   getUserAccounts,
 } from '../../../../lib/user/get-user-account';
 
+export default { getUser };
+
 function getUser() {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -16,7 +18,7 @@ function getUser() {
           users,
           isDelegated,
         },
-        '[user/get-user-controller] Get accounts for the following users',
+        '[user/user-controller#getUser] Get accounts for the following users',
       );
 
       let accounts;
@@ -30,5 +32,3 @@ function getUser() {
     }
   };
 }
-
-export default { getUser };

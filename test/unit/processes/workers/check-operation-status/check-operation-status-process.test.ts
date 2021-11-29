@@ -29,7 +29,7 @@ describe('[processes/workers/check-operation-status] Check Operation Status Proc
       await checkOperationStatusProcess.stop();
     });
 
-    it('should correctly start the injection worker', async () => {
+    it('should correctly start the check-operation-status worker', async () => {
       await expect(checkOperationStatusProcess.start()).resolves.toEqual(true);
 
       expect(checkOperationStatusProcess.indexerPool.indexers.length).toEqual(
@@ -61,7 +61,7 @@ describe('[processes/workers/check-operation-status] Check Operation Status Proc
       .spyOn(checkOperationStatusProcess.postgreService, 'disconnect')
       .mockImplementation();
 
-    it('should correctly start the injection worker', async () => {
+    it('should correctly start the check-operation-status worker', async () => {
       await checkOperationStatusProcess.start();
 
       await expect(checkOperationStatusProcess.stop()).resolves.toEqual(true);

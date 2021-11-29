@@ -10,7 +10,7 @@ import { Jobs } from '../../const/interfaces/jobs';
 import { AddressNotFoundError } from '../../const/errors/address-not-found-error';
 import { TezosService } from '../../services/tezos';
 import { insertJob } from '../../models/jobs';
-import { insertTransactions } from '../../models/transactions';
+import { insertOperations } from '../../models/operations';
 import { JobStatus } from '../../const/job-status';
 import { FakeSigner } from '../../services/signers/fake-signer';
 import {
@@ -71,15 +71,15 @@ export async function forgeOperation(
     const { branch, forgedOperation } = await tezosService.forgeOperations(
       params.map((param) => _.omit(param, 'parametersJson')),
     );
-
     logger.info(
       { forgedOperation },
       '[lib/jobs/forgeOperation] Successfully forged the operation',
     );
 
     const result = await insertJob(postgreService.pool, {
-      rawTransaction: forgedOperation,
+      forged_operation: forgedOperation,
       status: JobStatus.CREATED,
+      operation_kind: OpKind.TRANSACTION,
     });
     const jobId = (result.rows[0] as Jobs).id;
 
@@ -88,7 +88,7 @@ export async function forgeOperation(
       '[lib/jobs/forgeOperation] Successfully create a job after forging operation',
     );
 
-    await insertTransactions(
+    await insertOperations(
       postgreService.pool,
       params,
       branch,
@@ -215,7 +215,7 @@ async function getOperationContentsTransactionWithParametersJson(
     '[lib/jobs/forge-operation/#getOperationContentsTransactionWithParametersJson] Form a parameters as Michelson type list',
   );
 
-  const signerToGetPKH = new FakeSigner(sourceAddress);
+  const signerToGetPKH = new FakeSigner(sourceAddress, '');
 
   tezosService.setSigner(signerToGetPKH);
 

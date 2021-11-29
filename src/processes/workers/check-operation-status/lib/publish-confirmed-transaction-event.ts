@@ -5,11 +5,16 @@ import { GenericObject } from '../../../../const/interfaces/forge-operation-para
 
 const { exchange } = amqpConfig;
 
-export interface EventMessage {
+interface TransactionEventMessage {
   contractAddress: string;
   entrypoint: string;
   jobId: number;
   parameters: TransactionParametersJson;
+}
+
+interface OperationEventMessage {
+  address: string;
+  public_key: string;
 }
 
 /**
@@ -21,14 +26,38 @@ export interface EventMessage {
  */
 export async function publishEventWhenTransactionsConfirmed(
   amqpService: AmqpService,
-  message: EventMessage,
+  message: TransactionEventMessage,
   headers: GenericObject,
 ) {
   if (!exchange) {
     throw new Error('Exchange is not set');
   }
 
-  amqpService.publishMessage<EventMessage>(exchange.name, '', message, {
-    headers,
-  });
+  amqpService.publishMessage<TransactionEventMessage>(
+    exchange.name,
+    '',
+    message,
+    {
+      headers,
+    },
+  );
+}
+
+export async function publishEventWhenRevealConfirmed(
+  amqpService: AmqpService,
+  message: OperationEventMessage,
+  headers: GenericObject,
+) {
+  if (!exchange) {
+    throw new Error('Exchange is not set');
+  }
+
+  amqpService.publishMessage<OperationEventMessage>(
+    exchange.name,
+    '',
+    message,
+    {
+      headers,
+    },
+  );
 }

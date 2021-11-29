@@ -14,7 +14,7 @@ describe('[processes/web/api/storage] Deploy Contract Controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
   const tezosService = new TezosService(tezosNodeGranadaUrl);
   const postgreService = new PostgreService(postgreConfig);
-  const fakeSigner = new FakeSigner('pkh');
+  const fakeSigner = new FakeSigner('pkh', '');
   const signerFactory = new SignerFactory();
 
   webProcess.postgreService = postgreService;

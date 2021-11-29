@@ -33,7 +33,7 @@ describe('[services/postgre]', () => {
       await postgreService.initializeDatabase();
 
       expect(await checkIfTableExist(pool, 'jobs')).toEqual(true);
-      expect(await checkIfTableExist(pool, 'transaction')).toEqual(true);
+      expect(await checkIfTableExist(pool, 'operations')).toEqual(true);
       expect(await checkIfTypeExist(pool, 'job_status')).toEqual(true);
 
       await postgreService.disconnect();
@@ -49,7 +49,7 @@ describe('[services/postgre]', () => {
       await postgreService.initializeDatabase();
 
       expect(await checkIfTableExist(pool, 'jobs')).toEqual(true);
-      expect(await checkIfTableExist(pool, 'transaction')).toEqual(true);
+      expect(await checkIfTableExist(pool, 'operations')).toEqual(true);
 
       await postgreService.disconnect();
     });
