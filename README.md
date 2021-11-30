@@ -187,12 +187,12 @@ Finally to install everything.
 clk k8s flow
 ```
 
-##### Side note in case you are using the k3s distribution
-In case you explicitly asked for having a k3s local Kubernetes stack instead of
-kind, the default one (using `clk k8s --distribution k3s flow` for
+##### Side note in case you are using the k3d distribution
+In case you explicitly asked for having a k3d local Kubernetes stack instead of
+kind, the default one (using `clk k8s --distribution k3d flow` for
 example). Here are some troubles you might get into.
 
-:exclamation: :no_entry: **Be careful** if `clk k8s --distribution k3s flow`
+:exclamation: :no_entry: **Be careful** if `clk k8s --distribution k3d flow`
 never ends do not close the *clk* process and open a new terminal.  You probably
 have a restarting container.  To verify it you can use **'docker ps'**.  Then
 look at the status of **rancher/k3s** image.  So if the status is
