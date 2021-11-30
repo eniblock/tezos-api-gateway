@@ -27,6 +27,8 @@ const map = require('@taquito/michelson-encoder/dist/lib/tokens/map');
 // tslint:disable-next-line:no-var-requires
 const list = require('@taquito/michelson-encoder/dist/lib/tokens/list');
 // tslint:disable-next-line:no-var-requires
+const set = require('@taquito/michelson-encoder/dist/lib/tokens/set');
+// tslint:disable-next-line:no-var-requires
 const pair = require('@taquito/michelson-encoder/dist/lib/tokens/pair');
 // tslint:disable-next-line:no-var-requires
 const opt = require('@taquito/michelson-encoder/dist/lib/tokens/option');
@@ -126,7 +128,7 @@ export function getTransferToParams(
  *
  * @return {unknown[]} an array of arguments that need to be sent to Tezos blockchain
  */
-function formatEntryPointParameters(
+export function formatEntryPointParameters(
   params: EntryPointParams,
   token: any,
   onlyFormatMaps: boolean,
@@ -154,7 +156,9 @@ function formatEntryPointParameters(
         schema,
       );
     } else if (token instanceof list.ListToken) {
-      return formatListParameter(params, token);
+      return formatListOrSetParameter(params, token);
+    } else if (token instanceof set.SetToken) {
+      return formatListOrSetParameter(params, token);
     } else {
       throw new UnKnownParameterType(typeof token);
     }
@@ -214,7 +218,7 @@ function formatVariantParameter(
   ];
 }
 
-function formatListParameter(params: unknown[], token: any) {
+function formatListOrSetParameter(params: unknown[], token: any) {
   let result: unknown[] = [];
   const childToken = token.createToken(token.val.args[0], 0);
   params.forEach((elt) => {
@@ -225,9 +229,6 @@ function formatListParameter(params: unknown[], token: any) {
   });
   return [result];
 }
-
-/*function formatOptionParameter(params: GenericObject, token: any) {
-}*/
 
 function formatRecordParameter(
   params: GenericObject,
