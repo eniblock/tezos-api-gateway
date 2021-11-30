@@ -217,7 +217,7 @@ eg. ***k3d cluster delete && k3d registry delete --all***. Then you can redo the
 Before going any further, make sure that kubernetes is enabled in docker desktop preferences.
 You need to install some dependencies
 ```shell
-# install k3d 4.4.4 for compatibility with click-project k8s recipe
+# install k3d 4.4.4 for compatibility with click-project k8s extension
 curl -s https://raw.githubusercontent.com/rancher/k3d/main/install.sh | TAG=v4.4.4 bash
 brew install helm
 brew install kubectl
@@ -225,11 +225,11 @@ brew install tilt-dev/tap/tilt
 python3 -m pip install click-project --user
 ```
 
-Then you need to fetch a "recipe" called k8s.
+Then you need to fetch a "extension" called k8s.
 ```shell
 # Ensure the path ~/.local/bin is in you env PATH
 # eg. export PATH=$PATH:/home/$USER/.local/bin
-clk recipe install k8s
+clk extension install k8s
 ```
 
 Finally to install everything.
@@ -244,7 +244,7 @@ clk k8s install-cert-manager
 Error Loading request extension section v3_req
 ```
 You can fix it by modifying the install-cert-manage config.
-For me the config was downloaded at "/Users/$USER/Library/Application Support/clk/recipes/k8s/python/k8s.py"
+For me the config was downloaded at "/Users/$USER/Library/Application Support/clk/extensions/k8s/python/k8s.py"
 open it and go at the line number 293 and add this line:
 '-config', '/usr/local/etc/openssl@1.1/openssl.cnf'
 generally, alternative version of openssl configs are installed via homebrew, check if the openssl.cnf exist.
