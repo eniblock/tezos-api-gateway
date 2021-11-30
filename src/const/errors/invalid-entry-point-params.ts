@@ -15,3 +15,9 @@ export class InvalidMapStructureParams extends Error {
     super(`"${parameterName}" does not match the structure of a map`);
   }
 }
+
+export class PublicKeyUndefined extends Error {
+  constructor() {
+    super(`publicKey should be defined when reveal is true`);
+  }
+}

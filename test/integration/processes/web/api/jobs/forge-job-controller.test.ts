@@ -7,9 +7,11 @@ import {
 } from '../../../../../__fixtures__/config';
 import { resetTable, selectData } from '../../../../../__utils__/postgre';
 import {
+  activatedAccount,
   FA2Contract,
   FA2Contract7,
   flexibleTokenContract,
+  revealedAccount,
   testAccount,
   testAccount2,
 } from '../../../../../__fixtures__/smart-contract';
@@ -170,6 +172,68 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
       expect(status).toEqual(400);
       expect(body).toEqual({
         message: '"metadata" does not match the structure of a map',
+        status: 400,
+      });
+    });
+
+    it('should return 400 when reveal is true and the address is already revealed', async () => {
+      const { body, status } = await request
+        .post('/api/forge/jobs?reveal=true')
+        .send({
+          ...requestBodyParam,
+          publicKey: revealedAccount.publicKey,
+        });
+
+      expect(status).toEqual(400);
+      expect(body).toEqual({
+        message:
+          'Address tz1WWJAgu1orxZqzDsakADEoHk3zg4nRP5Va is already revealed',
+        status: 400,
+      });
+    });
+
+    it('should return 400 when reveal is false and the address is not revealed', async () => {
+      const { body, status } = await request
+        .post('/api/forge/jobs?reveal=false')
+        .send({
+          ...requestBodyParam,
+          sourceAddress: activatedAccount.address,
+        });
+
+      expect(status).toEqual(400);
+      expect(body).toEqual({
+        message: 'Address tz1Z6MUWfJrsM2NLbLw9oWgxBeySULH8Lvhn is not revealed',
+        status: 400,
+      });
+    });
+
+    it("should return 400 when reveal is true and the address isn't related to the publicKey", async () => {
+      const { body, status } = await request
+        .post('/api/forge/jobs?reveal=true')
+        .send({
+          ...requestBodyParam,
+          sourceAddress: activatedAccount.address,
+          publicKey: revealedAccount.publicKey,
+        });
+
+      expect(status).toEqual(400);
+      expect(body).toEqual({
+        message:
+          'Ensure that the address tz1Z6MUWfJrsM2NLbLw9oWgxBeySULH8Lvhn is activated and is related to the public key edpkuJpbmRrKVbXHWmJAU5v9YKiA1PCiy1xo1UyAKeUjpSvkXM5wfe',
+        status: 400,
+      });
+    });
+
+    it('should throw PublicKeyUndefined when publicKey is undefined when reveal is true', async () => {
+      const { body, status } = await request
+        .post('/api/forge/jobs?reveal=true')
+        .send({
+          ...requestBodyParam,
+        });
+
+      expect(status).toEqual(400);
+      expect(body).toEqual({
+        message: 'publicKey should be defined when reveal is true',
         status: 400,
       });
     });

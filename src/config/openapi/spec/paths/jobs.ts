@@ -14,8 +14,18 @@ export default {
             default: true,
           },
           required: false,
+          description: 'Uses the cache to retrieve the contract information',
+        },
+        {
+          name: 'reveal',
+          in: 'query',
+          schema: {
+            type: 'boolean',
+            default: false,
+          },
+          required: false,
           description:
-            'Specifies if the cache should be used to retrieve the contract',
+            'Adds a reveal operation if the tezos address is not revealed. Note that this will take a slot in the operation batch and use the first of the 5 maximum operations allowed at a time',
         },
       ],
       requestBody: {
@@ -60,6 +70,9 @@ export default {
                 },
                 sourceAddress: {
                   $ref: '#/components/schemas/tezos_address',
+                },
+                publicKey: {
+                  $ref: '#/components/schemas/tezos_public_key',
                 },
               },
             },

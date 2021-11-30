@@ -5,13 +5,17 @@ import { AddressNotFoundError } from '../../../../const/errors/address-not-found
 import {
   InvalidEntryPointParams,
   InvalidMapStructureParams,
+  PublicKeyUndefined,
 } from '../../../../const/errors/invalid-entry-point-params';
 import { forgeOperation } from '../../../../lib/jobs/forge-operation';
 import { GatewayPool } from '../../../../services/gateway-pool';
 import { logger } from '../../../../services/logger';
 import { PostgreService } from '../../../../services/postgre';
+import { AddressNotRevealedError } from '../../../../const/errors/address-not-revealed';
+import { RevealEstimateError } from '../../../../const/errors/reveal-estimate-error';
+import { AddressAlreadyRevealedError } from '../../../../const/errors/address-already-revealed';
 
-type ReqQuery = { useCache: boolean };
+type ReqQuery = { useCache: boolean; reveal: boolean };
 
 function forgeOperationAndCreateJob(
   gatewayPool: GatewayPool,
@@ -23,8 +27,10 @@ function forgeOperationAndCreateJob(
     next: NextFunction,
   ) => {
     try {
-      const { transactions, sourceAddress, callerId } = req.body;
-      const { useCache } = req.query;
+      const { transactions, sourceAddress, callerId, publicKey } = req.body;
+      const { useCache, reveal } = req.query;
+
+      if (reveal && publicKey === undefined) throw new PublicKeyUndefined();
 
       logger.info(
         {
@@ -49,7 +55,9 @@ function forgeOperationAndCreateJob(
           transactions,
           sourceAddress,
           callerId,
+          publicKey,
           useCache,
+          reveal,
         },
         tezosService,
         postgreClient,
@@ -61,7 +69,11 @@ function forgeOperationAndCreateJob(
         return next(createHttpError(StatusCodes.NOT_FOUND, err.message));
       } else if (
         err instanceof InvalidEntryPointParams ||
-        err instanceof InvalidMapStructureParams
+        err instanceof InvalidMapStructureParams ||
+        err instanceof PublicKeyUndefined ||
+        err instanceof AddressNotRevealedError ||
+        err instanceof RevealEstimateError ||
+        err instanceof AddressAlreadyRevealedError
       ) {
         return next(createHttpError(StatusCodes.BAD_REQUEST, err.message));
       }

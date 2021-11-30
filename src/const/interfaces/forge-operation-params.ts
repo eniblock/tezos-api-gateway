@@ -10,10 +10,12 @@ export interface ForgeOperationBodyParams {
   transactions: TransactionDetails[];
   sourceAddress: string;
   callerId?: string;
+  publicKey?: string;
 }
 
 export interface ForgeOperationQueryParams {
   useCache: boolean;
+  reveal: boolean;
 }
 
 export interface ForgeOperationParams

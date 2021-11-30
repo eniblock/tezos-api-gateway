@@ -69,8 +69,10 @@ describe('[lib/jobs/inject-operation]', () => {
         },
       ],
       callerId: 'myCaller',
+      publicKey: '',
       sourceAddress: testAccount,
       useCache: true,
+      reveal: false,
     };
 
     let insertedJob: Jobs;
