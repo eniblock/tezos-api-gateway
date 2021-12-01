@@ -56,16 +56,17 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
   });
 
   describe('#forgeOperationAndCreateJob', () => {
+    const transaction = {
+      contractAddress: flexibleTokenContract,
+      entryPoint: 'transfer',
+      entryPointParams: {
+        tokens: 1,
+        destination: testAccount2,
+      },
+    };
     const requestBodyParam: ForgeOperationBodyParams = {
       transactions: [
-        {
-          contractAddress: flexibleTokenContract,
-          entryPoint: 'transfer',
-          entryPointParams: {
-            tokens: 1,
-            destination: testAccount2,
-          },
-        },
+        transaction,
         {
           contractAddress: flexibleTokenContract,
           entryPoint: 'lock',
@@ -224,7 +225,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
       });
     });
 
-    it('should throw PublicKeyUndefined when publicKey is undefined when reveal is true', async () => {
+    it('should return 400 when publicKey is undefined when reveal is true', async () => {
       const { body, status } = await request
         .post('/api/forge/jobs?reveal=true')
         .send({
@@ -234,6 +235,50 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
       expect(status).toEqual(400);
       expect(body).toEqual({
         message: 'publicKey should be defined when reveal is true',
+        status: 400,
+      });
+    });
+
+    it('should return 400 when number of transactions exceeds 5 with no reveal', async () => {
+      const { body, status } = await request.post('/api/forge/jobs').send({
+        transactions: [
+          transaction,
+          transaction,
+          transaction,
+          transaction,
+          transaction,
+          transaction,
+        ],
+        callerId: 'myCaller',
+        sourceAddress: testAccount,
+      });
+
+      expect(status).toEqual(400);
+      expect(body).toEqual({
+        message: 'Exceeded maximum number of operations authorized (5)',
+        status: 400,
+      });
+    });
+
+    it('should return 400 when number of transactions exceeds 5 with reveal', async () => {
+      const { body, status } = await request
+        .post('/api/forge/jobs?reveal=true')
+        .send({
+          transactions: [
+            transaction,
+            transaction,
+            transaction,
+            transaction,
+            transaction,
+          ],
+          callerId: 'myCaller',
+          sourceAddress: testAccount,
+          publicKey: revealedAccount.publicKey,
+        });
+
+      expect(status).toEqual(400);
+      expect(body).toEqual({
+        message: 'Exceeded maximum number of operations authorized (5)',
         status: 400,
       });
     });

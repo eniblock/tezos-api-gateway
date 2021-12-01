@@ -22,11 +22,11 @@ import {
 } from '../../const/interfaces/send-transactions-params';
 import { Estimate } from '@taquito/taquito/dist/types/contract/estimate';
 import { ParamsWithKind } from '@taquito/taquito/dist/types/operations/types';
-import { buildRevealOperation } from './forge-reveal-operation';
+import { estimateAndBuildRevealOperation } from './forge-reveal-operation';
 import { AddressNotRevealedError } from '../../const/errors/address-not-revealed';
-import { RevealEstimateError } from '../../const/errors/reveal-estimate-error';
 
 const FORGE_OPERATION_KNOWN_ERRORS = [
+  'AddressAlreadyRevealedError',
   'AddressNotFoundError',
   'InvalidEntryPointParams',
   'InvalidMapStructureParams',
@@ -66,38 +66,25 @@ export async function forgeOperation(
       '[lib/jobs/forgeOperation] Going to forge operation with the following parameters',
     );
 
+    let { operationsToForge, operationsToInsert } = await addRevealOpIfNeeded(
+      tezosService,
+      forgeOperationParams,
+    );
+
     const params: OperationContentsTransactionWithParametersJson[] = await getOperationContentsTransactionWithParametersJson(
       tezosService,
       forgeOperationParams,
     );
 
-    const operationsToInsert: (
-      | OperationContentsTransactionWithParametersJson
-      | OperationContentsReveal
-    )[] = params;
+    operationsToInsert = operationsToInsert.concat(params);
+    operationsToForge = operationsToForge.concat(
+      params.map((param) => _.omit(param, 'parametersJson')),
+    );
 
     logger.info(
       { params },
       '[lib/jobs/forgeOperation] Form parameters to forge the operation',
     );
-
-    const operationsToForge: (
-      | OperationContentsTransaction
-      | OperationContentsReveal
-    )[] = params.map((param) => _.omit(param, 'parametersJson'));
-
-    if (
-      forgeOperationParams.reveal &&
-      forgeOperationParams.publicKey !== undefined
-    ) {
-      const revealOp = await buildRevealOperation(
-        tezosService,
-        forgeOperationParams.sourceAddress,
-        forgeOperationParams.publicKey,
-      );
-      operationsToForge.unshift(revealOp);
-      operationsToInsert.unshift(revealOp);
-    }
 
     const { branch, forgedOperation } = await tezosService.forgeOperations(
       operationsToForge,
@@ -253,6 +240,8 @@ async function getOperationContentsTransactionWithParametersJson(
     '[lib/jobs/forge-operation/#getOperationContentsTransactionWithParametersJson] Form a parameters as Michelson type list',
   );
 
+  // getEstimationForNode() requires the publicKey if a reveal is needed
+  // but fails if the publicKey is set when a reveal is not needed.
   if (!reveal) publicKey = '';
 
   const signerToGetPKH = new FakeSigner(sourceAddress, publicKey!);
@@ -267,12 +256,11 @@ async function getOperationContentsTransactionWithParametersJson(
       { error: err },
       '[lib/jobs/forgeOperation#getOperationContentsTransactionWithParametersJson] Unexpected error happened during estimation',
     );
-    if (reveal) throw new RevealEstimateError(sourceAddress, publicKey!);
-    else throw new AddressNotRevealedError(sourceAddress);
+    throw new AddressNotRevealedError(sourceAddress);
   }
 
-  // taquito automatically adds the reveal estimation
-  if (reveal) {
+  // Taquito automatically adds the reveal estimation but we don't need it here
+  if (reveal && estimations.length > transactions.length) {
     counter++;
     estimations.shift();
   }
@@ -313,4 +301,39 @@ async function getATransactionParameters(
     : await tezosService.getContract(contractAddress);
 
   return getTransferToParams(logger, contract, entryPoint, entryPointParams);
+}
+
+async function addRevealOpIfNeeded(
+  tezosService: TezosService,
+  forgeOperationParams: ForgeOperationParams,
+) {
+  const operationsToForge: (
+    | OperationContentsTransaction
+    | OperationContentsReveal
+  )[] = [];
+
+  const operationsToInsert: (
+    | OperationContentsTransactionWithParametersJson
+    | OperationContentsReveal
+  )[] = [];
+
+  if (
+    forgeOperationParams.reveal &&
+    forgeOperationParams.publicKey !== undefined
+  ) {
+    const signerToGetPKH = new FakeSigner(
+      forgeOperationParams.sourceAddress,
+      forgeOperationParams.publicKey,
+    );
+    tezosService.setSigner(signerToGetPKH);
+    const revealOp = await estimateAndBuildRevealOperation(
+      tezosService,
+      forgeOperationParams.sourceAddress,
+      forgeOperationParams.publicKey,
+    );
+    operationsToForge.push(revealOp);
+    operationsToInsert.push(revealOp);
+  }
+
+  return { operationsToForge, operationsToInsert };
 }

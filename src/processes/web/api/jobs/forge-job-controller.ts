@@ -14,6 +14,7 @@ import { PostgreService } from '../../../../services/postgre';
 import { AddressNotRevealedError } from '../../../../const/errors/address-not-revealed';
 import { RevealEstimateError } from '../../../../const/errors/reveal-estimate-error';
 import { AddressAlreadyRevealedError } from '../../../../const/errors/address-already-revealed';
+import { MaximumNumberOperationsExceededError } from '../../../../const/errors/maximum-number-operations-exceeded-error';
 
 type ReqQuery = { useCache: boolean; reveal: boolean };
 
@@ -29,9 +30,14 @@ function forgeOperationAndCreateJob(
     try {
       const { transactions, sourceAddress, callerId, publicKey } = req.body;
       const { useCache, reveal } = req.query;
+      let maxOpAuthorized = 5;
 
-      if (reveal && publicKey === undefined) throw new PublicKeyUndefined();
-
+      if (reveal) {
+        if (publicKey === undefined) throw new PublicKeyUndefined();
+        maxOpAuthorized = 4;
+      }
+      if (transactions.length > maxOpAuthorized)
+        throw new MaximumNumberOperationsExceededError();
       logger.info(
         {
           transactions,
@@ -73,7 +79,8 @@ function forgeOperationAndCreateJob(
         err instanceof PublicKeyUndefined ||
         err instanceof AddressNotRevealedError ||
         err instanceof RevealEstimateError ||
-        err instanceof AddressAlreadyRevealedError
+        err instanceof AddressAlreadyRevealedError ||
+        err instanceof MaximumNumberOperationsExceededError
       ) {
         return next(createHttpError(StatusCodes.BAD_REQUEST, err.message));
       }
