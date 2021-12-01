@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import {
   ContractAbstraction,
+  ContractMethod,
   ContractProvider,
   MichelsonMap,
 } from '@taquito/taquito';
@@ -38,6 +39,7 @@ const opt = require('@taquito/michelson-encoder/dist/lib/tokens/option');
 /**
  * Get the contract method
  *
+ * @param logger
  * @param {object} contract     - the smart contract containing the entry point
  * @param {string} entryPoint   - the entry point's name
  * @param {object | string | number } params    - (optional) the entry point parameter given by the API
@@ -49,7 +51,7 @@ export function getContractMethod(
   contract: ContractAbstraction<ContractProvider>,
   entryPoint: string,
   params?: EntryPointParams,
-) {
+): ContractMethod<ContractProvider> {
   if (!params) {
     if (params === null) {
       return contract.methods[`${entryPoint}`].apply(null, []);
@@ -89,6 +91,7 @@ export function getContractMethod(
 /**
  * Get the transfer parameters of the given entry point
  *
+ * @param logger
  * @param {object} contract                     - the smart contract containing the entry point
  * @param {string} entryPoint                   - the entry point's name
  * @param {object | string | number } params    - (optional) the entry point parameter given by the API
@@ -128,9 +131,31 @@ export function getTransferToParams(
  *
  * => result = [12, 'source', 'destination']
  *
- * @param {object} params    - the entry point parameters given by the API
- * @param token
+ * In the case of list the object is passed as it is and only maps are formatted
  *
+ * For example:
+ * params = [
+ *  {
+ *     destination: 'destination',
+ *     token: 12,
+ *     source: 'source'
+ *  }
+ * ]
+ *
+ * schema = "list"
+ *
+ * result = [
+ *  {
+ *     destination: 'destination',
+ *     token: 12,
+ *     source: 'source'
+ *  }
+ * ]
+ *
+ * @param {object} params    - the entry point parameters given by the API
+ * @param token              - Taquito typed representation of parameters
+ * @param onlyFormatMaps     - set to true when the root object is a list
+ * @param schema             - parameters json schema
  * @return {unknown[]} an array of arguments that need to be sent to Tezos blockchain
  */
 export function formatEntryPointParameters(
@@ -181,6 +206,16 @@ export function formatEntryPointParameters(
   }
 }
 
+/**
+ * Format variant parameters by prefixing the parameters with the variant name
+ *
+ *
+ * @param params     - Record object
+ * @param token
+ * @param onlyFormatMaps
+ * @param schema
+ * @return {MichelsonMap} the corresponding Michelson Map
+ */
 function formatVariantParameter(
   params: GenericObject,
   token: any,
@@ -223,6 +258,14 @@ function formatVariantParameter(
   ];
 }
 
+/**
+ * Format list parameters
+ *
+ *
+ * @param params     - Record object
+ * @param token
+ * @return {MichelsonMap} the corresponding Michelson Map
+ */
 function formatListOrSetParameter(params: unknown[], token: any) {
   let result: unknown[] = [];
   const childToken = token.createToken(token.val.args[0], 0);
@@ -235,6 +278,16 @@ function formatListOrSetParameter(params: unknown[], token: any) {
   return [result];
 }
 
+/**
+ * Format record parameters to a list of values
+ *
+ *
+ * @param params     - Record object
+ * @param token
+ * @param onlyFormatMaps
+ * @param schema
+ * @return {MichelsonMap} the corresponding Michelson Map
+ */
 function formatRecordParameter(
   params: GenericObject,
   token: any,
@@ -290,6 +343,8 @@ function formatRecordParameter(
  * @param {object[]} mapParameter   - the map parameter that need to be converted
  *
  * @param token
+ * @param onlyFormatMaps
+ * @param schema
  * @return {MichelsonMap} the corresponding Michelson Map
  */
 function formatMapParameter(
@@ -328,6 +383,14 @@ function formatMapParameter(
   return [result];
 }
 
+/**
+ * return a child object from the root by its name (annotation)
+ *
+ *
+ * @param token
+ * @param paramName
+ * @param tokenType
+ */
 function findChildTokenByAnnotation(
   token: any,
   paramName: string,
