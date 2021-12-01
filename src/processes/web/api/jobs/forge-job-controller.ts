@@ -3,9 +3,12 @@ import createHttpError from 'http-errors';
 import { StatusCodes } from 'http-status-codes';
 import { AddressNotFoundError } from '../../../../const/errors/address-not-found-error';
 import {
-  InvalidEntryPointParams,
   InvalidMapStructureParams,
   PublicKeyUndefined,
+  InvalidParameterName,
+  InvalidVariantObject,
+  MissingParameter,
+  UnKnownParameterType,
 } from '../../../../const/errors/invalid-entry-point-params';
 import { forgeOperation } from '../../../../lib/jobs/forge-operation';
 import { GatewayPool } from '../../../../services/gateway-pool';
@@ -79,7 +82,12 @@ function forgeOperationAndCreateJob(
         err instanceof AddressNotRevealedError ||
         err instanceof RevealEstimateError ||
         err instanceof AddressAlreadyRevealedError ||
-        err instanceof MaxOperationsPerBatchError
+        err instanceof MaxOperationsPerBatchError ||
+        err instanceof InvalidMapStructureParams ||
+        err instanceof InvalidParameterName ||
+        err instanceof MissingParameter ||
+        err instanceof UnKnownParameterType ||
+        err instanceof InvalidVariantObject
       ) {
         return next(createHttpError(StatusCodes.BAD_REQUEST, err.message));
       }

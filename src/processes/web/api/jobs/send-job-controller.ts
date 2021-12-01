@@ -16,6 +16,13 @@ import { MetricPrometheusService } from '../../../../services/metric-prometheus'
 import { insertJob } from '../../../../models/jobs';
 import { JobStatus } from '../../../../const/job-status';
 import { GatewayPool } from '../../../../services/gateway-pool';
+import {
+  InvalidMapStructureParams,
+  InvalidParameterName,
+  InvalidVariantObject,
+  MissingParameter,
+  UnKnownParameterType,
+} from '../../../../const/errors/invalid-entry-point-params';
 import { OpKind } from '@taquito/rpc';
 
 type ReqQuery = { cache: boolean };
@@ -75,6 +82,14 @@ function sendTransactionsAndCreateJobAsync(
     } catch (err) {
       if (err instanceof ClientError) {
         return next(createHttpError(err.status, err.message));
+      } else if (
+        err instanceof InvalidMapStructureParams ||
+        err instanceof InvalidParameterName ||
+        err instanceof MissingParameter ||
+        err instanceof UnKnownParameterType ||
+        err instanceof InvalidVariantObject
+      ) {
+        return next(createHttpError(StatusCodes.BAD_REQUEST, err.message));
       }
 
       return next(err);

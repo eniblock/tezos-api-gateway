@@ -142,9 +142,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
       expect(status).toEqual(400);
       expect(body).toEqual({
         message:
-          'The given entry point params {"fakeParam":5,"destination":"' +
-          testAccount2 +
-          '"} does not match the schema: {"destination":"address","tokens":"nat"}',
+          'Missing parameter name, No child object has the name "tokens"',
         status: 400,
       });
     });
@@ -172,7 +170,8 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
 
       expect(status).toEqual(400);
       expect(body).toEqual({
-        message: '"metadata" does not match the structure of a map',
+        message:
+          'Invalid map structure, map have to respect the type: {"key": <key>, "value": <value>}[]',
         status: 400,
       });
     });

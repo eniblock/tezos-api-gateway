@@ -14,6 +14,7 @@ import {
   InvalidMapStructureParams,
   InvalidParameterName,
   InvalidVariantObject,
+  MissingParameter,
   UnKnownParameterType,
 } from '../../const/errors/invalid-entry-point-params';
 import { MapObject } from '../../const/interfaces/contract-storage-response';
@@ -50,7 +51,11 @@ export function getContractMethod(
   params?: EntryPointParams,
 ) {
   if (!params) {
-    return contract.methods[`${entryPoint}`].apply(null, []);
+    if (params === null) {
+      return contract.methods[`${entryPoint}`].apply(null, []);
+    } else {
+      return contract.methods[`${entryPoint}`].apply(null, [0]);
+    }
   }
 
   if (!(typeof params === 'object' || Array.isArray(params))) {
@@ -238,30 +243,7 @@ function formatRecordParameter(
 ) {
   if (onlyFormatMaps) {
     const resultObj: GenericObject = {};
-    Object.keys(params)
-      .filter((argName) => params[`${argName}`] !== undefined)
-      .forEach((argName) => {
-        const childToken = findChildTokenByAnnotation(
-          token,
-          argName,
-          pair.PairToken,
-        );
-        if (!childToken) {
-          throw new InvalidParameterName(argName);
-        }
-        resultObj[argName] = formatEntryPointParameters(
-          params[`${argName}`] as EntryPointParams,
-          childToken,
-          onlyFormatMaps,
-        )[0];
-      });
-    return [resultObj];
-  }
-
-  let result: unknown[] = [];
-  Object.keys(schema!!)
-    .filter((argName) => params[`${argName}`] !== undefined)
-    .forEach((argName) => {
+    Object.keys(params).forEach((argName) => {
       const childToken = findChildTokenByAnnotation(
         token,
         argName,
@@ -270,16 +252,35 @@ function formatRecordParameter(
       if (!childToken) {
         throw new InvalidParameterName(argName);
       }
-      result = [
-        ...result,
-        ...formatEntryPointParameters(
-          params[`${argName}`] as EntryPointParams,
-          childToken,
-          onlyFormatMaps,
-          schema!![argName] as GenericObject,
-        ),
-      ];
+      resultObj[argName] = formatEntryPointParameters(
+        params[`${argName}`] as EntryPointParams,
+        childToken,
+        onlyFormatMaps,
+      )[0];
     });
+    return [resultObj];
+  }
+
+  let result: unknown[] = [];
+  Object.keys(schema!!).forEach((argName) => {
+    const childToken = findChildTokenByAnnotation(
+      token,
+      argName,
+      pair.PairToken,
+    );
+    if (!params.hasOwnProperty(`${argName}`)) {
+      throw new MissingParameter(argName);
+    }
+    result = [
+      ...result,
+      ...formatEntryPointParameters(
+        params[`${argName}`] as EntryPointParams,
+        childToken,
+        onlyFormatMaps,
+        schema!![argName] as GenericObject,
+      ),
+    ];
+  });
   return result;
 }
 

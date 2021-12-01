@@ -7,8 +7,8 @@ import { TezosService } from '../../../../src/services/tezos';
 import { ForgeOperationParams } from '../../../../src/const/interfaces/forge-operation-params';
 import { AddressNotFoundError } from '../../../../src/const/errors/address-not-found-error';
 import {
-  InvalidEntryPointParams,
-  InvalidMapStructureParams,
+  MissingParameter,
+  UnKnownParameterType,
 } from '../../../../src/const/errors/invalid-entry-point-params';
 
 import {
@@ -101,7 +101,7 @@ describe('[lib/jobs/forge-operation]', () => {
       ).resolves.toEqual([]);
     });
 
-    it('should throw InvalidEntryPointParams when entry point parameters does not match entry schema', async () => {
+    it('should throw MissingParameter when an entry point parameter is missing', async () => {
       await expect(
         forgeOperation(
           {
@@ -120,7 +120,7 @@ describe('[lib/jobs/forge-operation]', () => {
           tezosService,
           postgreService,
         ),
-      ).rejects.toThrowError(InvalidEntryPointParams);
+      ).rejects.toThrowError(MissingParameter);
 
       await expect(
         selectData(postgreService.pool, {
@@ -137,7 +137,7 @@ describe('[lib/jobs/forge-operation]', () => {
       ).resolves.toEqual([]);
     });
 
-    it('should throw InvalidMapStructureParams when entry point parameters does not match entry schema', async () => {
+    it('should throw UnKnownParameterType when entry point parameters does not match entry schema', async () => {
       await expect(
         forgeOperation(
           {
@@ -161,7 +161,7 @@ describe('[lib/jobs/forge-operation]', () => {
           tezosService,
           postgreService,
         ),
-      ).rejects.toThrowError(InvalidMapStructureParams);
+      ).rejects.toThrowError(UnKnownParameterType);
 
       await expect(
         selectData(postgreService.pool, {

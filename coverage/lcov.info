@@ -8,7 +8,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src/config/index.test.ts
+SF:src/config/index.test.old.ts
 FNF:0
 FNH:0
 DA:4,37
@@ -89,7 +89,7 @@ BRF:52
 BRH:51
 end_of_record
 TN:
-SF:src/config/openapi/index.test.ts
+SF:src/config/openapi/index.test.old.ts
 FNF:0
 FNH:0
 DA:1,0
@@ -100,7 +100,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src/config/openapi/spec/index.test.ts
+SF:src/config/openapi/spec/index.test.old.ts
 FNF:0
 FNH:0
 DA:1,12
@@ -124,7 +124,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src/config/openapi/spec/components/index.test.ts
+SF:src/config/openapi/spec/components/index.test.old.ts
 FNF:0
 FNH:0
 DA:1,12
@@ -137,7 +137,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src/config/openapi/spec/info/index.test.ts
+SF:src/config/openapi/spec/info/index.test.old.ts
 FNF:0
 FNH:0
 DA:1,12
@@ -159,7 +159,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src/config/openapi/spec/paths/index.test.ts
+SF:src/config/openapi/spec/paths/index.test.old.ts
 FNF:0
 FNH:0
 DA:1,12
@@ -503,7 +503,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src/lib/ajv/index.test.ts
+SF:src/lib/ajv/index.test.old.ts
 FN:11,(anonymous_1)
 FN:7,(anonymous_2)
 FN:25,validateSchema
@@ -594,7 +594,7 @@ BRF:4
 BRH:4
 end_of_record
 TN:
-SF:src/lib/generate-path-object/index.test.ts
+SF:src/lib/generate-path-object/index.test.old.ts
 FN:48,(anonymous_1)
 FN:71,generatePathObject
 FN:93,(anonymous_3)
@@ -920,7 +920,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src/lib/smart-contracts/index.test.ts
+SF:src/lib/smart-contracts/index.test.old.ts
 FN:28,getContractMethod
 FN:70,getTransferToParams
 FN:108,computeEntryPointArgs
@@ -1458,7 +1458,7 @@ BRF:4
 BRH:0
 end_of_record
 TN:
-SF:src/processes/generated-api-web/index.test.ts
+SF:src/processes/generated-api-web/index.test.old.ts
 FNF:0
 FNH:0
 DA:1,0
@@ -1611,7 +1611,7 @@ BRF:6
 BRH:3
 end_of_record
 TN:
-SF:src/processes/generated-api-web/api/index.test.ts
+SF:src/processes/generated-api-web/api/index.test.old.ts
 FN:14,setupRoutes
 FNF:1
 FNH:1
@@ -1675,7 +1675,7 @@ BRF:6
 BRH:4
 end_of_record
 TN:
-SF:src/processes/generated-api-web/api/controllers/index.test.ts
+SF:src/processes/generated-api-web/api/controllers/index.test.old.ts
 FN:19,registerRoutes
 FN:31,(anonymous_2)
 FN:41,(anonymous_3)
@@ -1744,7 +1744,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:src/processes/web/index.test.ts
+SF:src/processes/web/index.test.old.ts
 FNF:0
 FNH:0
 DA:1,0
@@ -1889,7 +1889,7 @@ BRF:6
 BRH:3
 end_of_record
 TN:
-SF:src/processes/web/api/index.test.ts
+SF:src/processes/web/api/index.test.old.ts
 FN:13,setupRoutes
 FNF:1
 FNH:1
@@ -1913,7 +1913,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src/processes/web/api/entrypoints/index.test.ts
+SF:src/processes/web/api/entrypoints/index.test.old.ts
 FN:13,registerEntryPointsRoutes
 FNF:1
 FNH:1
@@ -2046,7 +2046,7 @@ BRF:12
 BRH:8
 end_of_record
 TN:
-SF:src/processes/web/api/jobs/index.test.ts
+SF:src/processes/web/api/jobs/index.test.old.ts
 FN:18,registerJobsRoutes
 FNF:1
 FNH:1
@@ -2227,7 +2227,7 @@ BRF:10
 BRH:7
 end_of_record
 TN:
-SF:src/processes/web/api/storage/index.test.ts
+SF:src/processes/web/api/storage/index.test.old.ts
 FN:15,registerStorageRoutes
 FNF:1
 FNH:1
@@ -2356,7 +2356,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src/processes/web/api/user/index.test.ts
+SF:src/processes/web/api/user/index.test.old.ts
 FN:15,registerUserRoutes
 FNF:1
 FNH:1
@@ -2462,7 +2462,7 @@ BRF:4
 BRH:4
 end_of_record
 TN:
-SF:src/processes/workers/check-operation-status/index.test.ts
+SF:src/processes/workers/check-operation-status/index.test.old.ts
 FN:24,(anonymous_6)
 FNF:1
 FNH:0
@@ -2489,7 +2489,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src/processes/workers/check-operation-status/config/index.test.ts
+SF:src/processes/workers/check-operation-status/config/index.test.old.ts
 FNF:0
 FNH:0
 DA:2,2
@@ -2577,7 +2577,7 @@ BRF:2
 BRH:0
 end_of_record
 TN:
-SF:src/processes/workers/injection/index.test.ts
+SF:src/processes/workers/injection/index.test.old.ts
 FNF:0
 FNH:0
 DA:1,0
@@ -2666,7 +2666,7 @@ BRF:4
 BRH:4
 end_of_record
 TN:
-SF:src/processes/workers/injection/config/index.test.ts
+SF:src/processes/workers/injection/config/index.test.old.ts
 FNF:0
 FNH:0
 DA:2,1
@@ -2701,7 +2701,7 @@ BRF:0
 BRH:0
 end_of_record
 TN:
-SF:src/processes/workers/send-transactions/index.test.ts
+SF:src/processes/workers/send-transactions/index.test.old.ts
 FNF:0
 FNH:0
 DA:1,0
@@ -2790,7 +2790,7 @@ BRF:4
 BRH:0
 end_of_record
 TN:
-SF:src/processes/workers/send-transactions/config/index.test.ts
+SF:src/processes/workers/send-transactions/config/index.test.old.ts
 FNF:0
 FNH:0
 DA:2,0
@@ -2864,7 +2864,7 @@ BRF:2
 BRH:0
 end_of_record
 TN:
-SF:src/scripts/activate-tezos-account/config/index.test.ts
+SF:src/scripts/activate-tezos-account/config/index.test.old.ts
 FNF:0
 FNH:0
 DA:1,1
@@ -2881,7 +2881,7 @@ BRF:4
 BRH:4
 end_of_record
 TN:
-SF:src/scripts/activate-tezos-account/lib/index.test.ts
+SF:src/scripts/activate-tezos-account/lib/index.test.old.ts
 FN:18,createVaultKeys
 FN:20,(anonymous_1)
 FN:36,createTezosAccountsByVaultKeys
@@ -2937,7 +2937,7 @@ BRF:2
 BRH:0
 end_of_record
 TN:
-SF:src/scripts/sign-transaction-with-InMemorySigner/config/index.test.ts
+SF:src/scripts/sign-transaction-with-InMemorySigner/config/index.test.old.ts
 FNF:0
 FNH:0
 DA:1,0
@@ -3666,7 +3666,7 @@ BRF:6
 BRH:6
 end_of_record
 TN:
-SF:src/utils/index.test.ts
+SF:src/utils/index.test.old.ts
 FN:6,generateRandomInt
 FNF:1
 FNH:1
