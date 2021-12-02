@@ -34,8 +34,6 @@ const set = require('@taquito/michelson-encoder/dist/lib/tokens/set');
 const pair = require('@taquito/michelson-encoder/dist/lib/tokens/pair');
 // tslint:disable-next-line:no-var-requires
 const opt = require('@taquito/michelson-encoder/dist/lib/tokens/option');
-// // tslint:disable-next-line:no-var-requires
-// const tok = require('@taquito/michelson-encoder/dist/lib/tokens/token');
 /**
  * Get the contract method
  *
@@ -185,12 +183,13 @@ export function formatEntryPointParameters(
         onlyFormatMaps,
         schema,
       );
-    } else if (token instanceof list.ListToken) {
-      return formatListOrSetParameter(params, token);
-    } else if (token instanceof set.SetToken) {
+    } else if (
+      token instanceof list.ListToken ||
+      token instanceof set.SetToken
+    ) {
       return formatListOrSetParameter(params, token);
     } else {
-      throw new UnKnownParameterType(typeof token);
+      throw new UnKnownParameterType(token.ExtractSchema());
     }
   } else if (typeof params === 'object') {
     if (token instanceof or.OrToken) {
@@ -198,7 +197,7 @@ export function formatEntryPointParameters(
     } else if (token instanceof pair.PairToken) {
       return formatRecordParameter(params, token, onlyFormatMaps, schema);
     } else {
-      throw new UnKnownParameterType(typeof token);
+      throw new UnKnownParameterType(token.ExtractSchema());
     }
   } else {
     // simple parameter: number, string, address, bytes, bool...
@@ -253,7 +252,7 @@ function formatVariantParameter(
       params[variantName] as EntryPointParams,
       variantToken,
       onlyFormatMaps,
-      schema!![variantName] as GenericObject,
+      schema![variantName] as GenericObject,
     ),
   ];
 }
@@ -315,7 +314,7 @@ function formatRecordParameter(
   }
 
   let result: unknown[] = [];
-  Object.keys(schema!!).forEach((argName) => {
+  Object.keys(schema!).forEach((argName) => {
     const childToken = findChildTokenByAnnotation(
       token,
       argName,
@@ -330,7 +329,7 @@ function formatRecordParameter(
         params[`${argName}`] as EntryPointParams,
         childToken,
         onlyFormatMaps,
-        schema!![argName] as GenericObject,
+        schema![argName] as GenericObject,
       ),
     ];
   });
@@ -367,15 +366,13 @@ function formatMapParameter(
         param.key as EntryPointParams,
         keyToken,
         onlyFormatMaps,
-        // @ts-ignore @TODO
-        schema ? (schema.map.value as GenericObject) : undefined,
+        schema ? ((schema as any).map.value as GenericObject) : undefined,
       )[0] as any,
       formatEntryPointParameters(
         param.value as EntryPointParams,
         valueToken,
         onlyFormatMaps,
-        // @ts-ignore @TODO
-        schema ? (schema.map.value as GenericObject) : undefined,
+        schema ? ((schema as any).map.value as GenericObject) : undefined,
       )[0],
     );
   });

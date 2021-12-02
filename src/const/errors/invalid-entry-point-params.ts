@@ -30,7 +30,7 @@ export class UnKnownParameterType extends Error {
 
 export class InvalidVariantObject extends Error {
   constructor(itemsNumber: number) {
-    super(`Invalid variant object, expected 1 item but got "${itemsNumber}"`);
+    super(`Invalid variant object, expected 1 item but got ${itemsNumber}`);
   }
 }
 
