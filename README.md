@@ -159,12 +159,9 @@ Also you need to have a local registry, a local cluster and a cert-manager.
 <br/>
 
 #### Ubuntu 20.04
-**Fortunately** we have a script that takes care of everything. To do so you
-need to install an open source project called
-[clk](https://github.com/clk-project/clk).
 
-clk (standing for command line kit) is a framework that helps us create awesome
-command line interfaces.
+**Fortunately**, there is a tool out there, called `clk k8s` that tries to make
+this task as lean as possible.
 
 If you are new to clk, simply run:
 
