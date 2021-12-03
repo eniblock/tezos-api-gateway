@@ -159,12 +159,9 @@ Also you need to have a local registry, a local cluster and a cert-manager.
 <br/>
 
 #### Ubuntu 20.04
-**Fortunately** we have a script that takes care of everything. To do so you
-need to install an open source project called
-[clk](https://github.com/clk-project/clk).
 
-clk (standing for command line kit) is a framework that helps us create awesome
-command line interfaces.
+**Fortunately**, there is a tool out there, called `clk k8s` that tries to make
+this task as lean as possible.
 
 If you are new to clk, simply run:
 
@@ -185,6 +182,53 @@ Finally to install everything.
 
 ```shell
 clk k8s flow
+```
+
+We heavily rely on this tool to have a running development cluster. Therefore,
+we trust in it to use suitable versions of the binaries to use.
+
+At the time [2021-12-03] of writing this documentation, the tool indicates that the binaries
+that are installed come from those locations.
+
+```shell
+$ clk k8s show-dependencies
+k3d https://github.com/rancher/k3d/releases/download/v4.4.4/k3d-linux-amd64
+kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
+helm https://get.helm.sh/helm-v3.6.3-linux-amd64.tar.gz
+kubectl https://dl.k8s.io/release/v1.21.2/bin/linux/amd64/kubectl
+kubectl_buildkit https://github.com/vmware-tanzu/buildkit-cli-for-kubectl/releases/download/v0.1.3/linux-v0.1.3.tgz
+tilt https://github.com/tilt-dev/tilt/releases/download/v0.22.7/tilt.0.22.7.linux.x86_64.tar.gz
+```
+
+Also, to get some insight of what is done behind the hood to setup the local
+cluster, here is what clk k8s tells us when run in dry run mode.
+
+```shell
+$ clk --dry-run k8s flow
+(dry-run) download kubectl from https://dl.k8s.io/release/v1.21.2/bin/linux/amd64/kubectl
+(dry-run) download kubectl_buildkit from https://github.com/vmware-tanzu/buildkit-cli-for-kubectl/releases/download/v0.1.3/linux-v0.1.3.tgz
+(dry-run) download helm from https://get.helm.sh/helm-v3.6.3-linux-amd64.tar.gz
+(dry-run) download tilt from https://github.com/tilt-dev/tilt/releases/download/v0.22.7/tilt.0.22.7.linux.x86_64.tar.gz
+(dry-run) download k3d from https://github.com/rancher/k3d/releases/download/v4.4.4/k3d-linux-amd64
+(dry-run) download kind from https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
+(dry-run) run: docker run -d --restart=always -p 5000:5000 --name kind-registry registry:2
+(dry-run) create a kind cluster. Here, there are many subtle hacks that are done before and after creating the cluster. Therefore I cannot describe it in dry-run mode. Please take a look at the code to find out what it does.
+(dry-run) run: helm repo add cilium https://helm.cilium.io/
+(dry-run) run: helm --kube-context kind-kind upgrade --install --wait cilium cilium/cilium --version 1.9.10 --namespace kube-system --set nodeinit.enabled=true --set kubeProxyReplacement=partial --set hostServices.enabled=false --set externalIPs.enabled=true --set nodePort.enabled=true --set hostPort.enabled=true --set bpf.masquerade=false --set image.pullPolicy=IfNotPresent --set ipam.mode=kubernetes --set operator.replicas=1
+(dry-run) run: helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+(dry-run) run: helm --kube-context kind-kind upgrade --install --create-namespace --wait ingress-nginx ingress-nginx/ingress-nginx --namespace ingress --version v3.35.0 --set rbac.create=true --set controller.service.type=NodePort --set controller.hostPort.enabled=true
+(dry-run) run: helm repo add jetstack https://charts.jetstack.io
+(dry-run) run: helm --kube-context kind-kind upgrade --install --create-namespace --wait cert-manager jetstack/cert-manager --namespace cert-manager --version v1.2.0 --set installCRDs=true --set ingressShim.defaultIssuerName=local --set ingressShim.defaultIssuerKind=ClusterIssuer
+(dry-run) generating a certificate authority. I cannot describe in short what is done there. Please take a look at the code if you want to know more.
+(dry-run) run: kubectl --context kind-kind apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.50.0/example/prometheus-operator-crd/monitoring.coreos.com_alertmanagerconfigs.yaml
+(dry-run) run: kubectl --context kind-kind apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.50.0/example/prometheus-operator-crd/monitoring.coreos.com_alertmanagers.yaml
+(dry-run) run: kubectl --context kind-kind apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.50.0/example/prometheus-operator-crd/monitoring.coreos.com_podmonitors.yaml
+(dry-run) run: kubectl --context kind-kind apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.50.0/example/prometheus-operator-crd/monitoring.coreos.com_probes.yaml
+(dry-run) run: kubectl --context kind-kind apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.50.0/example/prometheus-operator-crd/monitoring.coreos.com_prometheuses.yaml
+(dry-run) run: kubectl --context kind-kind apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.50.0/example/prometheus-operator-crd/monitoring.coreos.com_prometheusrules.yaml
+(dry-run) run: kubectl --context kind-kind apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.50.0/example/prometheus-operator-crd/monitoring.coreos.com_servicemonitors.yaml
+(dry-run) run: kubectl --context kind-kind apply -f https://raw.githubusercontent.com/prometheus-operator/prometheus-operator/v0.50.0/example/prometheus-operator-crd/monitoring.coreos.com_thanosrulers.yaml
+(dry-run) run kubectl apply to install some network policies.  Take a look at the code to understand what is installed exactly.
 ```
 
 ##### Side note in case you are using the k3d distribution
