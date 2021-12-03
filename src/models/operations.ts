@@ -20,9 +20,10 @@ const TABLE_NAME = PostgreTables.OPERATIONS;
  */
 export function insertOperations(
   pool: Pool,
-  operationContents:
-    | OperationContentsTransactionWithParametersJson[]
-    | OperationContentsReveal[],
+  operationContents: (
+    | OperationContentsTransactionWithParametersJson
+    | OperationContentsReveal
+  )[],
   branch: string,
   jobId: number,
   callerId: string,

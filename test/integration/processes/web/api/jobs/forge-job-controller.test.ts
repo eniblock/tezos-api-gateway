@@ -7,9 +7,11 @@ import {
 } from '../../../../../__fixtures__/config';
 import { resetTable, selectData } from '../../../../../__utils__/postgre';
 import {
+  activatedAccount,
   FA2Contract,
   FA2Contract7,
   flexibleTokenContract,
+  revealedAccount,
   testAccount,
   testAccount2,
 } from '../../../../../__fixtures__/smart-contract';
@@ -54,16 +56,17 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
   });
 
   describe('#forgeOperationAndCreateJob', () => {
+    const transaction = {
+      contractAddress: flexibleTokenContract,
+      entryPoint: 'transfer',
+      entryPointParams: {
+        tokens: 1,
+        destination: testAccount2,
+      },
+    };
     const requestBodyParam: ForgeOperationBodyParams = {
       transactions: [
-        {
-          contractAddress: flexibleTokenContract,
-          entryPoint: 'transfer',
-          entryPointParams: {
-            tokens: 1,
-            destination: testAccount2,
-          },
-        },
+        transaction,
         {
           contractAddress: flexibleTokenContract,
           entryPoint: 'lock',
@@ -174,6 +177,74 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
       });
     });
 
+    it('should return 400 when reveal is false and the address is not revealed', async () => {
+      const { body, status } = await request
+        .post('/api/forge/jobs?reveal=false')
+        .send({
+          ...requestBodyParam,
+          sourceAddress: activatedAccount.address,
+        });
+
+      expect(status).toEqual(400);
+      expect(body).toEqual({
+        message: 'Address tz1Z6MUWfJrsM2NLbLw9oWgxBeySULH8Lvhn is not revealed',
+        status: 400,
+      });
+    });
+
+    it("should return 400 when reveal is true and the address isn't related to the publicKey", async () => {
+      const { body, status } = await request
+        .post('/api/forge/jobs?reveal=true')
+        .send({
+          ...requestBodyParam,
+          sourceAddress: activatedAccount.address,
+          publicKey: revealedAccount.publicKey,
+        });
+
+      expect(status).toEqual(400);
+      expect(body).toEqual({
+        message:
+          'Ensure that the address tz1Z6MUWfJrsM2NLbLw9oWgxBeySULH8Lvhn is activated and is related to the public key edpkuJpbmRrKVbXHWmJAU5v9YKiA1PCiy1xo1UyAKeUjpSvkXM5wfe',
+        status: 400,
+      });
+    });
+
+    it('should return 400 when publicKey is undefined when reveal is true', async () => {
+      const { body, status } = await request
+        .post('/api/forge/jobs?reveal=true')
+        .send({
+          ...requestBodyParam,
+        });
+
+      expect(status).toEqual(400);
+      expect(body).toEqual({
+        message: 'publicKey should be defined when reveal is true',
+        status: 400,
+      });
+    });
+
+    it('should return 400 when number of transactions exceeds 5 with no reveal', async () => {
+      const { body, status } = await request.post('/api/forge/jobs').send({
+        transactions: [
+          transaction,
+          transaction,
+          transaction,
+          transaction,
+          transaction,
+          transaction,
+        ],
+        callerId: 'myCaller',
+        sourceAddress: testAccount,
+      });
+
+      expect(status).toEqual(400);
+      expect(body).toEqual({
+        message:
+          'Exceeded maximum number of operations per batch authorized (5)',
+        status: 400,
+      });
+    });
+
     it('should return 404 when could not find the address', async () => {
       const getContractResponseSpy = jest
         .spyOn(tezosService, 'getContractResponse')
@@ -211,6 +282,56 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
       expect(body).toEqual({
         message: 'Internal Server Error',
         status: 500,
+      });
+    });
+
+    it('should return 201 when number of transactions equals 5 and reveal=true, but with address already revealed', async () => {
+      const { body, status } = await request
+        .post('/api/forge/jobs?reveal=true')
+        .send({
+          transactions: [
+            transaction,
+            transaction,
+            transaction,
+            transaction,
+            transaction,
+          ],
+          callerId: 'myCaller',
+          sourceAddress: testAccount,
+          publicKey: revealedAccount.publicKey,
+        });
+
+      expect({ body, status }).toEqual({
+        status: 201,
+        body: {
+          id: body.id,
+          forged_operation: body.forged_operation,
+          operation_hash: null,
+          status: 'created',
+          error_message: null,
+          operation_kind: OpKind.TRANSACTION,
+        },
+      });
+    });
+
+    it('should return 201 when reveal is true and the address is already revealed', async () => {
+      const { body, status } = await request
+        .post('/api/forge/jobs?reveal=true')
+        .send({
+          ...requestBodyParam,
+          publicKey: revealedAccount.publicKey,
+        });
+
+      expect({ body, status }).toEqual({
+        status: 201,
+        body: {
+          id: body.id,
+          forged_operation: body.forged_operation,
+          operation_hash: null,
+          status: 'created',
+          error_message: null,
+          operation_kind: OpKind.TRANSACTION,
+        },
       });
     });
 

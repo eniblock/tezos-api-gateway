@@ -94,3 +94,5 @@ export const metricConfig: MetricConfig = {
   interval: 1000,
   meterName: 'prometheus-metrics',
 };
+
+export const maxOperationsPerBatch = 5;

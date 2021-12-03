@@ -10,6 +10,11 @@ import { logger } from '../../../__fixtures__/services/logger';
 import { forgeRevealOperation } from '../../../../src/lib/jobs/forge-reveal-operation';
 import { AddressAlreadyRevealedError } from '../../../../src/const/errors/address-already-revealed';
 import { RevealEstimateError } from '../../../../src/const/errors/reveal-estimate-error';
+import {
+  activatedAccount,
+  revealedAccount,
+  unActivatedAccount,
+} from '../../../__fixtures__/smart-contract';
 
 describe('[lib/jobs/forge-operation]', () => {
   const postgreService = new PostgreService(postgreConfig);
@@ -33,19 +38,6 @@ describe('[lib/jobs/forge-operation]', () => {
   });
 
   describe('#forgeRevealOperation', () => {
-    const revealedAccount = {
-      address: 'tz1ZVXhWWhj9CjviLDRyS8nbMGtm3StnMCaZ',
-      publicKey: 'edpkuJpbmRrKVbXHWmJAU5v9YKiA1PCiy1xo1UyAKeUjpSvkXM5wfe',
-    };
-    const unActivatedAccount = {
-      address: 'tz1YqMAEcChYsD8tVCJY7gTEEMqbtbSZPUsG',
-      publicKey: 'edpkuuzYpzP54bqH67uCSwPWEU1sY8TqsPD38tDCNS8azmCwSJm62T',
-    };
-    const activatedAccount = {
-      address: 'tz1Z6MUWfJrsM2NLbLw9oWgxBeySULH8Lvhn',
-      publicKey: 'edpkuiyNHQLQXY8RNids8LGp2S4FQmtBkNApbn2a9Yy88HbgDgz5ov',
-    };
-
     it('should throw AddressAlreadyRevealedError when the address is already revealed', async () => {
       await expect(
         forgeRevealOperation(
