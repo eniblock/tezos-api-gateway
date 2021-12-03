@@ -25,9 +25,9 @@ import {
   testAccount,
   testAccount2,
 } from '../../../__fixtures__/smart-contract';
-import { AddressAlreadyRevealedError } from '../../../../src/const/errors/address-already-revealed';
 import { AddressNotRevealedError } from '../../../../src/const/errors/address-not-revealed';
 import { RevealEstimateError } from '../../../../src/const/errors/reveal-estimate-error';
+import { MaxOperationsPerBatchError } from '../../../../src/const/errors/max-operations-per-batch-error';
 
 describe('[lib/jobs/forge-operation]', () => {
   const postgreService = new PostgreService(postgreConfig);
@@ -51,16 +51,17 @@ describe('[lib/jobs/forge-operation]', () => {
   });
 
   describe('#forgeOperation', () => {
+    const testTransaction = {
+      contractAddress: flexibleTokenContract,
+      entryPoint: 'transfer',
+      entryPointParams: {
+        tokens: 1,
+        destination: testAccount2,
+      },
+    };
     const testForgeOperation: ForgeOperationParams = {
       transactions: [
-        {
-          contractAddress: flexibleTokenContract,
-          entryPoint: 'transfer',
-          entryPointParams: {
-            tokens: 1,
-            destination: testAccount2,
-          },
-        },
+        testTransaction,
         {
           contractAddress: flexibleTokenContract,
           entryPoint: 'transfer',
@@ -177,30 +178,6 @@ describe('[lib/jobs/forge-operation]', () => {
       ).resolves.toEqual([]);
     });
 
-    it('should throw AddressAlreadyRevealedError when reveal is true and the address is already revealed', async () => {
-      await expect(
-        forgeOperation(
-          { ...testForgeOperation, reveal: true },
-          tezosService,
-          postgreService,
-        ),
-      ).rejects.toThrowError(AddressAlreadyRevealedError);
-
-      await expect(
-        selectData(postgreService.pool, {
-          tableName: PostgreTables.JOBS,
-          selectFields: '*',
-        }),
-      ).resolves.toEqual([]);
-
-      await expect(
-        selectData(postgreService.pool, {
-          tableName: PostgreTables.OPERATIONS,
-          selectFields: '*',
-        }),
-      ).resolves.toEqual([]);
-    });
-
     it('should throw AddressNotRevealedError when reveal is false and the address is not revealed', async () => {
       await expect(
         forgeOperation(
@@ -258,6 +235,42 @@ describe('[lib/jobs/forge-operation]', () => {
       ).resolves.toEqual([]);
     });
 
+    it('should throw MaxOperationsPerBatchError when number of transactions is 5 and reveal is needed', async () => {
+      await expect(
+        forgeOperation(
+          {
+            ...testForgeOperation,
+            transactions: [
+              testTransaction,
+              testTransaction,
+              testTransaction,
+              testTransaction,
+              testTransaction,
+            ],
+            sourceAddress: activatedAccount.address,
+            publicKey: activatedAccount.publicKey,
+            reveal: true,
+          },
+          tezosService,
+          postgreService,
+        ),
+      ).rejects.toThrowError(MaxOperationsPerBatchError);
+
+      await expect(
+        selectData(postgreService.pool, {
+          tableName: PostgreTables.JOBS,
+          selectFields: '*',
+        }),
+      ).resolves.toEqual([]);
+
+      await expect(
+        selectData(postgreService.pool, {
+          tableName: PostgreTables.OPERATIONS,
+          selectFields: '*',
+        }),
+      ).resolves.toEqual([]);
+    });
+
     it('should throw the error when the error happen', async () => {
       await expect(
         forgeOperation(
@@ -292,6 +305,74 @@ describe('[lib/jobs/forge-operation]', () => {
           selectFields: '*',
         }),
       ).resolves.toEqual([]);
+    });
+
+    it('should correctly create a job and insert data to jobs and operations table when reveal is true and the address is already revealed', async () => {
+      const createdJob = await forgeOperation(
+        { ...testForgeOperation, reveal: true },
+        tezosService,
+        postgreService,
+      );
+
+      await expect(
+        selectData(postgreService.pool, {
+          tableName: PostgreTables.JOBS,
+          selectFields: '*',
+        }),
+      ).resolves.toEqual([createdJob]);
+
+      const insertedForgeParameters = await selectData(postgreService.pool, {
+        tableName: PostgreTables.OPERATIONS,
+        selectFields:
+          'destination, parameters, parameters_json, amount, fee, source, storage_limit, gas_limit, counter, branch, job_id',
+      });
+
+      expect(insertedForgeParameters).toEqual([
+        {
+          destination: flexibleTokenContract,
+          parameters:
+            '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"' +
+            testAccount2 +
+            '"},{"int":"1"}]}}',
+          parameters_json:
+            '{"entrypoint":"transfer","value":{"transfer":{"tokens":1,"destination":"' +
+            testAccount2 +
+            '"}}}',
+          amount: 0,
+          fee: 824,
+          source: testAccount,
+          storage_limit: 67,
+          gas_limit: 4925,
+          branch: insertedForgeParameters[0].branch,
+          counter: insertedForgeParameters[0].counter,
+          job_id: createdJob.id,
+        },
+        {
+          destination: flexibleTokenContract,
+          parameters:
+            '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"' +
+            testAccount2 +
+            '"},{"int":"5"}]}}',
+          parameters_json:
+            '{"entrypoint":"transfer","value":{"transfer":{"tokens":5,"destination":"' +
+            testAccount2 +
+            '"}}}',
+          amount: 0,
+          fee: 870,
+          source: testAccount,
+          storage_limit: 0,
+          gas_limit: 5383,
+          branch: insertedForgeParameters[1].branch,
+          counter: insertedForgeParameters[1].counter,
+          job_id: createdJob.id,
+        },
+      ]);
+
+      expect(insertedForgeParameters[0].branch).not.toBeNull();
+      expect(insertedForgeParameters[0].counter).not.toBeNull();
+
+      expect(insertedForgeParameters[1].branch).not.toBeNull();
+      expect(insertedForgeParameters[1].counter).not.toBeNull();
     });
 
     it('should correctly create a job and insert data to jobs and operations table', async () => {

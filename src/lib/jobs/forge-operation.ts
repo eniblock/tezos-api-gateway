@@ -24,6 +24,9 @@ import { Estimate } from '@taquito/taquito/dist/types/contract/estimate';
 import { ParamsWithKind } from '@taquito/taquito/dist/types/operations/types';
 import { estimateAndBuildRevealOperation } from './forge-reveal-operation';
 import { AddressNotRevealedError } from '../../const/errors/address-not-revealed';
+import { AddressAlreadyRevealedError } from '../../const/errors/address-already-revealed';
+import { MaxOperationsPerBatchError } from '../../const/errors/max-operations-per-batch-error';
+import { maxOperationsPerBatch } from '../../config';
 
 const FORGE_OPERATION_KNOWN_ERRORS = [
   'AddressAlreadyRevealedError',
@@ -70,6 +73,12 @@ export async function forgeOperation(
       tezosService,
       forgeOperationParams,
     );
+
+    if (
+      forgeOperationParams.transactions.length === maxOperationsPerBatch &&
+      operationsToForge.length > 0
+    )
+      throw new MaxOperationsPerBatchError();
 
     const params: OperationContentsTransactionWithParametersJson[] = await getOperationContentsTransactionWithParametersJson(
       tezosService,
@@ -303,6 +312,15 @@ async function getATransactionParameters(
   return getTransferToParams(logger, contract, entryPoint, entryPointParams);
 }
 
+/**
+ * Prepare operations lists to be forged and inserted in DB
+ * Add the reveal operation if necessary
+ *
+ * @param {object} tezosService             - the tezos service
+ * @param {object} forgeOperationParams     - the params passed to forge the operations
+ *
+ * @return {object[], object[]} the list of operations to forge and insert
+ */
 async function addRevealOpIfNeeded(
   tezosService: TezosService,
   forgeOperationParams: ForgeOperationParams,
@@ -326,13 +344,22 @@ async function addRevealOpIfNeeded(
       forgeOperationParams.publicKey,
     );
     tezosService.setSigner(signerToGetPKH);
-    const revealOp = await estimateAndBuildRevealOperation(
-      tezosService,
-      forgeOperationParams.sourceAddress,
-      forgeOperationParams.publicKey,
-    );
-    operationsToForge.push(revealOp);
-    operationsToInsert.push(revealOp);
+
+    try {
+      const revealOp = await estimateAndBuildRevealOperation(
+        tezosService,
+        forgeOperationParams.sourceAddress,
+        forgeOperationParams.publicKey,
+      );
+
+      operationsToForge.push(revealOp);
+      operationsToInsert.push(revealOp);
+    } catch (err) {
+      // If address is already revealed we continue
+      if (!(err instanceof AddressAlreadyRevealedError)) {
+        throw err;
+      }
+    }
   }
 
   return { operationsToForge, operationsToInsert };

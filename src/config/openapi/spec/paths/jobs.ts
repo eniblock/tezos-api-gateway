@@ -25,7 +25,7 @@ export default {
           },
           required: false,
           description:
-            'Adds a reveal operation if the tezos address is not revealed. Note that this will take a slot in the operation batch and use the first of the 5 maximum operations allowed at a time',
+            'Adds a reveal operation if the tezos address is not revealed. Note that an error will be returned if the total number of operations (reveal + transactions) exceeds 5.',
         },
       ],
       requestBody: {

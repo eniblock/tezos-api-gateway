@@ -177,22 +177,6 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
       });
     });
 
-    it('should return 400 when reveal is true and the address is already revealed', async () => {
-      const { body, status } = await request
-        .post('/api/forge/jobs?reveal=true')
-        .send({
-          ...requestBodyParam,
-          publicKey: revealedAccount.publicKey,
-        });
-
-      expect(status).toEqual(400);
-      expect(body).toEqual({
-        message:
-          'Address tz1WWJAgu1orxZqzDsakADEoHk3zg4nRP5Va is already revealed',
-        status: 400,
-      });
-    });
-
     it('should return 400 when reveal is false and the address is not revealed', async () => {
       const { body, status } = await request
         .post('/api/forge/jobs?reveal=false')
@@ -255,30 +239,8 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
 
       expect(status).toEqual(400);
       expect(body).toEqual({
-        message: 'Exceeded maximum number of operations authorized (5)',
-        status: 400,
-      });
-    });
-
-    it('should return 400 when number of transactions exceeds 5 with reveal', async () => {
-      const { body, status } = await request
-        .post('/api/forge/jobs?reveal=true')
-        .send({
-          transactions: [
-            transaction,
-            transaction,
-            transaction,
-            transaction,
-            transaction,
-          ],
-          callerId: 'myCaller',
-          sourceAddress: testAccount,
-          publicKey: revealedAccount.publicKey,
-        });
-
-      expect(status).toEqual(400);
-      expect(body).toEqual({
-        message: 'Exceeded maximum number of operations authorized (5)',
+        message:
+          'Exceeded maximum number of operations per batch authorized (5)',
         status: 400,
       });
     });
@@ -320,6 +282,56 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
       expect(body).toEqual({
         message: 'Internal Server Error',
         status: 500,
+      });
+    });
+
+    it('should return 201 when number of transactions equals 5 and reveal=true, but with address already revealed', async () => {
+      const { body, status } = await request
+        .post('/api/forge/jobs?reveal=true')
+        .send({
+          transactions: [
+            transaction,
+            transaction,
+            transaction,
+            transaction,
+            transaction,
+          ],
+          callerId: 'myCaller',
+          sourceAddress: testAccount,
+          publicKey: revealedAccount.publicKey,
+        });
+
+      expect({ body, status }).toEqual({
+        status: 201,
+        body: {
+          id: body.id,
+          forged_operation: body.forged_operation,
+          operation_hash: null,
+          status: 'created',
+          error_message: null,
+          operation_kind: OpKind.TRANSACTION,
+        },
+      });
+    });
+
+    it('should return 201 when reveal is true and the address is already revealed', async () => {
+      const { body, status } = await request
+        .post('/api/forge/jobs?reveal=true')
+        .send({
+          ...requestBodyParam,
+          publicKey: revealedAccount.publicKey,
+        });
+
+      expect({ body, status }).toEqual({
+        status: 201,
+        body: {
+          id: body.id,
+          forged_operation: body.forged_operation,
+          operation_hash: null,
+          status: 'created',
+          error_message: null,
+          operation_kind: OpKind.TRANSACTION,
+        },
       });
     });
 
