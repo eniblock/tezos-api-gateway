@@ -14,6 +14,7 @@ export const FA2Contract4 = 'KT1PUfwatrm77YBegKx6JJEQ3cSeYiNb7P16'; // simpleMap
 export const FA2Contract5 = 'KT1938ykzsYS1FR3WAyTa2BUTuTadtV1M9v8'; // Nonexistent contract
 export const FA2Contract7 = 'Bad contract format                '; // Bad contract format
 export const FA2Contract8 = 'KT1Lpf9hv9ndt6feuwbiSqdCoY1bd7YVNd9q'; // Logical Pictures
+export const ProxyContract = 'KT1ELsN3WK52LUmRY3jjQt7xpdJUa3pVVxYa'; // template FA2
 
 export const testAccount = 'tz1WWJAgu1orxZqzDsakADEoHk3zg4nRP5Va';
 export const testAccount2 = 'tz1MPQBaR1r4hKveeCnNYPExnme5KBpbkWUP'; // Receiver account

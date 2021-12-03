@@ -31,8 +31,12 @@ import { maxOperationsPerBatch } from '../../config';
 const FORGE_OPERATION_KNOWN_ERRORS = [
   'AddressAlreadyRevealedError',
   'AddressNotFoundError',
-  'InvalidEntryPointParams',
   'InvalidMapStructureParams',
+  'InvalidParameterName',
+  'InvalidParameter',
+  'MissingParameter',
+  'UnSupportedParameterSchema',
+  'InvalidVariantObject',
   'AddressNotRevealedError',
   'RevealEstimateError',
 ];

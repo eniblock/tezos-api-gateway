@@ -3,9 +3,13 @@ import createHttpError from 'http-errors';
 import { StatusCodes } from 'http-status-codes';
 import { AddressNotFoundError } from '../../../../const/errors/address-not-found-error';
 import {
-  InvalidEntryPointParams,
   InvalidMapStructureParams,
   PublicKeyUndefined,
+  InvalidParameterName,
+  InvalidVariantObject,
+  MissingParameter,
+  UnSupportedParameterSchema,
+  InvalidParameter,
 } from '../../../../const/errors/invalid-entry-point-params';
 import { forgeOperation } from '../../../../lib/jobs/forge-operation';
 import { GatewayPool } from '../../../../services/gateway-pool';
@@ -73,13 +77,18 @@ function forgeOperationAndCreateJob(
       if (err instanceof AddressNotFoundError) {
         return next(createHttpError(StatusCodes.NOT_FOUND, err.message));
       } else if (
-        err instanceof InvalidEntryPointParams ||
         err instanceof InvalidMapStructureParams ||
         err instanceof PublicKeyUndefined ||
         err instanceof AddressNotRevealedError ||
         err instanceof RevealEstimateError ||
         err instanceof AddressAlreadyRevealedError ||
-        err instanceof MaxOperationsPerBatchError
+        err instanceof MaxOperationsPerBatchError ||
+        err instanceof InvalidMapStructureParams ||
+        err instanceof InvalidParameterName ||
+        err instanceof InvalidParameter ||
+        err instanceof MissingParameter ||
+        err instanceof UnSupportedParameterSchema ||
+        err instanceof InvalidVariantObject
       ) {
         return next(createHttpError(StatusCodes.BAD_REQUEST, err.message));
       }

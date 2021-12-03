@@ -34,8 +34,8 @@ import { Jobs } from '../../../../src/const/interfaces/jobs';
 import { insertJob } from '../../../../src/models/jobs';
 import { vaultClientConfig } from '../../../../src/config';
 import {
-  InvalidEntryPointParams,
   InvalidMapStructureParams,
+  MissingParameter,
 } from '../../../../src/const/errors/invalid-entry-point-params';
 import { AmqpService } from '../../../../src/services/amqp';
 import { GatewayPool } from '../../../../src/services/gateway-pool';
@@ -483,7 +483,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
           postgreService,
           logger,
         ),
-      ).rejects.toThrow(InvalidEntryPointParams);
+      ).rejects.toThrow(MissingParameter);
 
       expect(loggerErrorSpy).toHaveBeenCalledTimes(0);
 
@@ -500,9 +500,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
           operation_hash: null,
           status: 'error',
           error_message:
-            'The given entry point params {"fake_tokens":1,"destination":"' +
-            testAccount2 +
-            '"} does not match the schema: {"destination":"address","tokens":"nat"}',
+            'Missing parameter name, No child object has the name "tokens"',
         },
       ]);
     }, 20000);
@@ -554,7 +552,8 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
           operation_kind: OpKind.TRANSACTION,
           operation_hash: null,
           status: 'error',
-          error_message: '"metadata" does not match the structure of a map',
+          error_message:
+            'Invalid map structure, map have to respect the type: {"key": <key>, "value": <value>}[]',
         },
       ]);
     }, 20000);

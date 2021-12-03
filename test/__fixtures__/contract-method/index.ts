@@ -1,4 +1,4 @@
-import { ContractMethod } from '@taquito/taquito/dist/types/contract/contract';
+import { ContractMethod } from '@taquito/taquito';
 import { ContractProvider } from '@taquito/taquito/dist/types/contract/interface';
 
 export class TestContractMethod {
