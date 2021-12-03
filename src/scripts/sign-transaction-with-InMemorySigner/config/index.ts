@@ -1,5 +1,5 @@
 export const tezosPrivateKey =
   process.env.TEZOS_PRIVATE_KEY ||
-  'edskRp4HS1SHZAi7hyj3PtwXHZWzf5Hb3XqrTPRzfX5JtjM5YvMiPsRRzzyc15pTmJRdE9t8p4NLu4agQ3izTRjuoy2HMZmWSL';
+  'edskSB8EbPNkqmYaHZ2wNPAnJfD4ehrnzFtyXnZx24BUHFdQAwhnuJQCz7DsxTMHZZ3qUhUq8cC1EW4TT1wHSYCsHHr9PDgjR8';
 
 export const forgeOperation = process.env.FORGE_OPERATION || '';

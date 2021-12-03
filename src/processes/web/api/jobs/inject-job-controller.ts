@@ -45,7 +45,13 @@ function injectOperationAndUpdateJob(
         },
       );
 
-      return res.status(OK).json(job);
+      const [updatedJob] = await selectJobs(
+        postgreService.pool,
+        '*',
+        `id=${jobId}`,
+      );
+
+      return res.status(OK).json(updatedJob);
     } catch (err) {
       if (err instanceof JobIdNotFoundError) {
         return next(createHttpError(StatusCodes.NOT_FOUND, err.message));
