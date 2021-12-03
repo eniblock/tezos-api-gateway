@@ -17,9 +17,10 @@ import {
 import { logger } from '../../../__fixtures__/services/logger';
 import {
   InvalidMapStructureParams,
+  InvalidParameter,
+  InvalidParameterName,
   InvalidVariantObject,
   MissingParameter,
-  UnKnownParameterType,
 } from '../../../../src/const/errors/invalid-entry-point-params';
 import { TestContractMethod } from '../../../__fixtures__/contract-method';
 
@@ -155,6 +156,23 @@ describe('[lib/smart-contracts] Index', () => {
       expect(method.mock.calls).toEqual([[['toto']]]);
     });
 
+    it('should throw InvalidParameter when an object is passed instead of an array', () => {
+      expect(() =>
+        getContractMethod(logger, contract, 'transfer_2', { toto: 'toto' }),
+      ).toThrow(InvalidParameter);
+    });
+
+    it('should throw InvalidParameter when an array is passed instead of an object', () => {
+      expect(() =>
+        getContractMethod(logger, contract, 'transfer', [
+          {
+            destination: 'fake_destination',
+            tokens: 10,
+          },
+        ]),
+      ).toThrow(InvalidParameter);
+    });
+
     it('should correctly form a Michelson Map if there is a map in the schema', () => {
       expect(
         getContractMethod(logger, contract, 'transfer_3', [
@@ -167,7 +185,7 @@ describe('[lib/smart-contracts] Index', () => {
       expect(method).toHaveBeenNthCalledWith(1, map);
     });
 
-    it('should throw InvalidEntryPointParams when the entry point params does not match the entry point schema', () => {
+    it('should throw MissingParameter when the entry point params does not match the entry point schema', () => {
       expect(() =>
         getContractMethod(
           logger,
@@ -186,7 +204,7 @@ describe('[lib/smart-contracts] Index', () => {
         getContractMethod(logger, contract, 'transfer_3', {
           tokens: { key: 'toto', value: 'tata' },
         }),
-      ).toThrow(UnKnownParameterType);
+      ).toThrow(InvalidMapStructureParams);
     });
 
     it('should throw InvalidMapStructureParams when the parameter which should be a map does not match the map structure', () => {
@@ -272,7 +290,7 @@ describe('[lib/smart-contracts] Index', () => {
       expect(res).toEqual([params]);
     });
 
-    it('should throw an error when a variant object contains more then one field', async () => {
+    it('should throw InvalidVariantObject error when a variant object contains more then one field', async () => {
       const entryPoint = 'update_operators';
       const params = [
         {
@@ -297,6 +315,28 @@ describe('[lib/smart-contracts] Index', () => {
       expect(() =>
         formatEntryPointParameters(params, token, false, schema),
       ).toThrow(InvalidVariantObject);
+    });
+
+    it('should throw InvalidParameterName when variant name is invalid', async () => {
+      const entryPoint = 'update_operators';
+      const params = [
+        {
+          fake_variant: {
+            owner: 'tz1ZQYMDETodNBAc2XVbhZFGme8KniuPqrSw',
+            operator: 'tz1LzyfRfEhcWsP3x7dkAKeggpDgHgs7Xv8Q',
+            token_id: 0,
+          },
+        },
+      ];
+      const schema = fa2Contract.parameterSchema.ExtractSchema()[
+        `${entryPoint}`
+      ];
+      const mickelsonSchema =
+        fa2Contract.entrypoints.entrypoints[`${entryPoint}`];
+      const token = createToken.createToken(mickelsonSchema, 0);
+      expect(() =>
+        formatEntryPointParameters(params, token, false, schema),
+      ).toThrow(InvalidParameterName);
     });
 
     it('should correctly return the parameters list with correctly formatted FA2 transfer parameters', async () => {

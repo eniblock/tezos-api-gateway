@@ -22,7 +22,7 @@ export class MissingParameter extends Error {
   }
 }
 
-export class UnKnownParameterType extends Error {
+export class UnSupportedParameterSchema extends Error {
   constructor(parameterType: string) {
     super(`Unknown parameter type "${parameterType}"`);
   }
@@ -31,6 +31,14 @@ export class UnKnownParameterType extends Error {
 export class InvalidVariantObject extends Error {
   constructor(itemsNumber: number) {
     super(`Invalid variant object, expected 1 item but got ${itemsNumber}`);
+  }
+}
+
+export class InvalidParameter extends Error {
+  constructor(parameterType: string, expectedType: string) {
+    super(
+      `Invalid parameter , Expected an ${expectedType}, but got an ${parameterType}`,
+    );
   }
 }
 

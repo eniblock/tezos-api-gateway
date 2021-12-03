@@ -28,8 +28,9 @@ import { OpKind } from '@taquito/rpc';
 const SEND_TRANSACTIONS_KNOWN_ERRORS = [
   'InvalidMapStructureParams',
   'InvalidParameterName',
+  'InvalidParameter',
   'MissingParameter',
-  'UnKnownParameterType',
+  'UnSupportedParameterSchema',
   'InvalidVariantObject',
 ];
 

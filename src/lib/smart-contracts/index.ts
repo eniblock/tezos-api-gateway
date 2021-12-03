@@ -13,10 +13,11 @@ import {
 } from '../../const/interfaces/forge-operation-params';
 import {
   InvalidMapStructureParams,
+  InvalidParameter,
   InvalidParameterName,
   InvalidVariantObject,
   MissingParameter,
-  UnKnownParameterType,
+  UnSupportedParameterSchema,
 } from '../../const/errors/invalid-entry-point-params';
 import { MapObject } from '../../const/interfaces/contract-storage-response';
 
@@ -163,45 +164,62 @@ export function formatEntryPointParameters(
   schema?: GenericObject,
 ): unknown[] {
   if (token instanceof opt.OptionToken) {
-    if (params === null) {
-      return [params];
-    } else {
-      return formatEntryPointParameters(
-        params,
-        token.createToken(token.val.args[0], 0),
-        onlyFormatMaps,
-        schema,
-      );
-    }
+    return formatOptionParameter(params, token, onlyFormatMaps, schema);
   }
 
-  if (Array.isArray(params)) {
-    if (token instanceof map.MapToken) {
-      return formatMapParameter(
-        params as MapObject[],
-        token,
-        onlyFormatMaps,
-        schema,
-      );
-    } else if (
-      token instanceof list.ListToken ||
-      token instanceof set.SetToken
-    ) {
-      return formatListOrSetParameter(params, token);
-    } else {
-      throw new UnKnownParameterType(token.ExtractSchema());
-    }
-  } else if (typeof params === 'object') {
-    if (token instanceof or.OrToken) {
-      return formatVariantParameter(params, token, onlyFormatMaps, schema);
-    } else if (token instanceof pair.PairToken) {
-      return formatRecordParameter(params, token, onlyFormatMaps, schema);
-    } else {
-      throw new UnKnownParameterType(token.ExtractSchema());
-    }
-  } else {
-    // simple parameter: number, string, address, bytes, bool...
+  if (!Array.isArray(params) && typeof params !== 'object') {
     return [params];
+  }
+
+  if (token instanceof map.MapToken) {
+    return formatMapParameter(
+      params as MapObject[],
+      token,
+      onlyFormatMaps,
+      schema,
+    );
+  }
+
+  if (token instanceof list.ListToken || token instanceof set.SetToken) {
+    return formatListOrSetParameter(params, token);
+  }
+
+  if (token instanceof or.OrToken) {
+    return formatVariantParameter(params, token, onlyFormatMaps, schema);
+  }
+
+  if (token instanceof pair.PairToken) {
+    return formatRecordParameter(params, token, onlyFormatMaps, schema);
+  }
+
+  throw new UnSupportedParameterSchema(token.ExtractSchema());
+}
+
+/**
+ * Format option parameters
+ *
+ *
+ * @param params     - Record object
+ * @param token
+ * @param onlyFormatMaps
+ * @param schema
+ * @return {MichelsonMap} the corresponding Michelson Map
+ */
+function formatOptionParameter(
+  params: EntryPointParams,
+  token: any,
+  onlyFormatMaps: boolean,
+  schema?: GenericObject,
+) {
+  if (params === null) {
+    return [params];
+  } else {
+    return formatEntryPointParameters(
+      params,
+      token.createToken(token.val.args[0], 0),
+      onlyFormatMaps,
+      schema,
+    );
   }
 }
 
@@ -216,11 +234,15 @@ export function formatEntryPointParameters(
  * @return {MichelsonMap} the corresponding Michelson Map
  */
 function formatVariantParameter(
-  params: GenericObject,
+  params: EntryPointParams,
   token: any,
   onlyFormatMaps: boolean,
   schema?: GenericObject,
 ) {
+  if (Array.isArray(params)) {
+    throw new InvalidParameter('array', 'object');
+  }
+
   if (Object.keys(params).length !== 1) {
     throw new InvalidVariantObject(Object.keys(params).length);
   }
@@ -238,7 +260,7 @@ function formatVariantParameter(
     return [
       {
         [variantName]: formatEntryPointParameters(
-          params[variantName] as EntryPointParams,
+          (params as GenericObject)[variantName] as EntryPointParams,
           variantToken,
           onlyFormatMaps,
         )[0],
@@ -249,7 +271,7 @@ function formatVariantParameter(
   return [
     variantName,
     ...formatEntryPointParameters(
-      params[variantName] as EntryPointParams,
+      (params as GenericObject)[variantName] as EntryPointParams,
       variantToken,
       onlyFormatMaps,
       schema![variantName] as GenericObject,
@@ -265,7 +287,11 @@ function formatVariantParameter(
  * @param token
  * @return {MichelsonMap} the corresponding Michelson Map
  */
-function formatListOrSetParameter(params: unknown[], token: any) {
+function formatListOrSetParameter(params: EntryPointParams, token: any) {
+  if (!Array.isArray(params)) {
+    throw new InvalidParameter(typeof params, 'array');
+  }
+
   let result: unknown[] = [];
   const childToken = token.createToken(token.val.args[0], 0);
   params.forEach((elt) => {
@@ -288,11 +314,15 @@ function formatListOrSetParameter(params: unknown[], token: any) {
  * @return {MichelsonMap} the corresponding Michelson Map
  */
 function formatRecordParameter(
-  params: GenericObject,
+  params: EntryPointParams,
   token: any,
   onlyFormatMaps: boolean,
   schema?: GenericObject,
 ) {
+  if (Array.isArray(params)) {
+    throw new InvalidParameter('array', 'object');
+  }
+
   if (onlyFormatMaps) {
     const resultObj: GenericObject = {};
     Object.keys(params).forEach((argName) => {
@@ -305,7 +335,7 @@ function formatRecordParameter(
         throw new InvalidParameterName(argName);
       }
       resultObj[argName] = formatEntryPointParameters(
-        params[`${argName}`] as EntryPointParams,
+        (params as GenericObject)[`${argName}`] as EntryPointParams,
         childToken,
         onlyFormatMaps,
       )[0];
@@ -326,7 +356,7 @@ function formatRecordParameter(
     result = [
       ...result,
       ...formatEntryPointParameters(
-        params[`${argName}`] as EntryPointParams,
+        (params as GenericObject)[`${argName}`] as EntryPointParams,
         childToken,
         onlyFormatMaps,
         schema![argName] as GenericObject,
@@ -352,6 +382,10 @@ function formatMapParameter(
   onlyFormatMaps: boolean,
   schema?: GenericObject,
 ) {
+  if (!Array.isArray(mapParameter)) {
+    throw new InvalidMapStructureParams();
+  }
+
   const result = new MichelsonMap();
 
   mapParameter.forEach((param) => {

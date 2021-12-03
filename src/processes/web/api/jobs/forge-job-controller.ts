@@ -8,7 +8,8 @@ import {
   InvalidParameterName,
   InvalidVariantObject,
   MissingParameter,
-  UnKnownParameterType,
+  UnSupportedParameterSchema,
+  InvalidParameter,
 } from '../../../../const/errors/invalid-entry-point-params';
 import { forgeOperation } from '../../../../lib/jobs/forge-operation';
 import { GatewayPool } from '../../../../services/gateway-pool';
@@ -76,7 +77,6 @@ function forgeOperationAndCreateJob(
       if (err instanceof AddressNotFoundError) {
         return next(createHttpError(StatusCodes.NOT_FOUND, err.message));
       } else if (
-        err instanceof InvalidEntryPointParams ||
         err instanceof InvalidMapStructureParams ||
         err instanceof PublicKeyUndefined ||
         err instanceof AddressNotRevealedError ||
@@ -85,8 +85,9 @@ function forgeOperationAndCreateJob(
         err instanceof MaxOperationsPerBatchError ||
         err instanceof InvalidMapStructureParams ||
         err instanceof InvalidParameterName ||
+        err instanceof InvalidParameter ||
         err instanceof MissingParameter ||
-        err instanceof UnKnownParameterType ||
+        err instanceof UnSupportedParameterSchema ||
         err instanceof InvalidVariantObject
       ) {
         return next(createHttpError(StatusCodes.BAD_REQUEST, err.message));

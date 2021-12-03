@@ -18,10 +18,11 @@ import { JobStatus } from '../../../../const/job-status';
 import { GatewayPool } from '../../../../services/gateway-pool';
 import {
   InvalidMapStructureParams,
+  InvalidParameter,
   InvalidParameterName,
   InvalidVariantObject,
   MissingParameter,
-  UnKnownParameterType,
+  UnSupportedParameterSchema,
 } from '../../../../const/errors/invalid-entry-point-params';
 import { OpKind } from '@taquito/rpc';
 
@@ -85,8 +86,9 @@ function sendTransactionsAndCreateJobAsync(
       } else if (
         err instanceof InvalidMapStructureParams ||
         err instanceof InvalidParameterName ||
+        err instanceof InvalidParameter ||
         err instanceof MissingParameter ||
-        err instanceof UnKnownParameterType ||
+        err instanceof UnSupportedParameterSchema ||
         err instanceof InvalidVariantObject
       ) {
         return next(createHttpError(StatusCodes.BAD_REQUEST, err.message));
