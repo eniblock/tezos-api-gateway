@@ -1,18 +1,44 @@
-import { EntryPointParams } from '../interfaces/forge-operation-params';
-
-export class InvalidEntryPointParams extends Error {
-  constructor(schema: unknown, params: EntryPointParams) {
+export class InvalidMapStructureParams extends Error {
+  constructor() {
     super(
-      `The given entry point params ${JSON.stringify(
-        params,
-      )} does not match the schema: ${JSON.stringify(schema)}`,
+      `Invalid map structure, map have to respect the type: {"key": <key>, "value": <value>}[]`,
     );
   }
 }
 
-export class InvalidMapStructureParams extends Error {
+export class InvalidParameterName extends Error {
   constructor(parameterName: string) {
-    super(`"${parameterName}" does not match the structure of a map`);
+    super(
+      `Invalid parameter name, No child object has the name "${parameterName}"`,
+    );
+  }
+}
+
+export class MissingParameter extends Error {
+  constructor(parameterName: string) {
+    super(
+      `Missing parameter name, No child object has the name "${parameterName}"`,
+    );
+  }
+}
+
+export class UnSupportedParameterSchema extends Error {
+  constructor(parameterType: string) {
+    super(`Unknown parameter type "${parameterType}"`);
+  }
+}
+
+export class InvalidVariantObject extends Error {
+  constructor(itemsNumber: number) {
+    super(`Invalid variant object, expected 1 item but got ${itemsNumber}`);
+  }
+}
+
+export class InvalidParameter extends Error {
+  constructor(parameterType: string, expectedType: string) {
+    super(
+      `Invalid parameter , Expected an ${expectedType}, but got an ${parameterType}`,
+    );
   }
 }
 

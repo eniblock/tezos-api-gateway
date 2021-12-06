@@ -26,8 +26,12 @@ import { GatewayPool } from '../../services/gateway-pool';
 import { OpKind } from '@taquito/rpc';
 
 const SEND_TRANSACTIONS_KNOWN_ERRORS = [
-  'InvalidEntryPointParams',
   'InvalidMapStructureParams',
+  'InvalidParameterName',
+  'InvalidParameter',
+  'MissingParameter',
+  'UnSupportedParameterSchema',
+  'InvalidVariantObject',
 ];
 
 /**
