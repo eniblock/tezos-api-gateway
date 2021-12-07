@@ -8,20 +8,20 @@ import * as getContractStorageLib from '../../../../../../src/lib/storage/get-co
 import {
   postgreConfig,
   serverConfig,
-  tezosNodeGranadaUrl,
+  tezosNodeUrl,
 } from '../../../../../__fixtures__/config';
 import { PostgreService } from '../../../../../../src/services/postgre';
 import {
   FA2Contract3,
   FA2Contract5,
-  FA2Contract8,
+  flexibleTokenContract,
   testAccount,
   testAccount2,
 } from '../../../../../__fixtures__/smart-contract';
 
 describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
-  const tezosService = new TezosService(tezosNodeGranadaUrl);
+  const tezosService = new TezosService(tezosNodeUrl);
   const postgreService = new PostgreService(postgreConfig);
 
   webProcess.postgreService = postgreService;
@@ -130,7 +130,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
         body: {
           accessRequests: {
             type: 'big_map',
-            value: '16644',
+            value: '23037',
           },
           organizations: {
             type: 'map',
@@ -213,7 +213,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
         body: {
           accessRequests: {
             type: 'big_map',
-            value: '16644',
+            value: '23037',
           },
           name: {
             error: 'This data field does not exist in the contract storage',
@@ -319,12 +319,12 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
 
     it('should return 200 but with a proper error message when trying to access a NOT MAP data field with MAP ACCESS structure', async () => {
       const { body, status } = await request
-        .post('/api/tezos_node/storage/' + FA2Contract8)
+        .post('/api/tezos_node/storage/' + flexibleTokenContract)
         .set('Content-Type', 'application/json')
         .send({
           dataFields: [
             {
-              lastDivYear: [
+              decimals: [
                 {
                   key: {
                     address: testAccount,
@@ -338,7 +338,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
       expect({ status, body }).toEqual({
         status: 200,
         body: {
-          lastDivYear: {
+          decimals: {
             error:
               'This data field does not have type MichelsonMap or BigMap, use simple string to access to the properties',
           },
@@ -348,14 +348,14 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
 
     it('should return 200 and correctly access big map', async () => {
       const { body, status } = await request
-        .post('/api/tezos_node/storage/' + FA2Contract8)
+        .post('/api/tezos_node/storage/' + flexibleTokenContract)
         .set('Content-Type', 'application/json')
         .send({
           dataFields: [
             {
-              nav: [
+              balances: [
                 {
-                  key: '1614898800000',
+                  key: 'tz1hdQscorfqMzFqYxnrApuS5i6QSTuoAp3w',
                 },
               ],
             },
@@ -365,10 +365,10 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
       expect({ status, body }).toEqual({
         status: 200,
         body: {
-          nav: [
+          balances: [
             {
-              key: '1614898800000',
-              value: 11000,
+              key: 'tz1hdQscorfqMzFqYxnrApuS5i6QSTuoAp3w',
+              value: 40,
             },
           ],
         },

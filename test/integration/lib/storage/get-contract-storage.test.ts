@@ -5,16 +5,16 @@ import {
 import { ClientError } from '../../../../src/const/errors/client-error';
 import { TezosService } from '../../../../src/services/tezos';
 
-import { tezosNodeGranadaUrl } from '../../../__fixtures__/config';
+import { tezosNodeUrl } from '../../../__fixtures__/config';
 import {
   FA2Contract5,
   flexibleTokenContract,
-  testAccount,
+  flexibleTokenContractOwner,
 } from '../../../__fixtures__/smart-contract';
 import { logger } from '../../../__fixtures__/services/logger';
 
 describe('[lib/storage/get-contract-storage]', () => {
-  const tezosService = new TezosService(tezosNodeGranadaUrl);
+  const tezosService = new TezosService(tezosNodeUrl);
 
   afterEach(() => {
     jest.restoreAllMocks();
@@ -31,16 +31,16 @@ describe('[lib/storage/get-contract-storage]', () => {
       expect(storage).toBeDefined();
       expect(JSON.stringify(storage)).toEqual(
         '{' +
-          '"allowed":"16641",' +
-          '"balances":"16642",' +
+          '"allowed":"24360",' +
+          '"balances":"24361",' +
           '"decimals":"10",' +
           '"locked":false,' +
           '"name":"name",' +
           '"newOwner":"' +
-          testAccount +
+          flexibleTokenContractOwner +
           '",' +
           '"owner":"' +
-          testAccount +
+          flexibleTokenContractOwner +
           '",' +
           '"symbol":"symbol",' +
           '"totalSupply":"40"' +
@@ -137,17 +137,17 @@ describe('[lib/storage/get-contract-storage]', () => {
       expect(storage).toEqual({
         allowed: {
           type: 'big_map',
-          value: '16641',
+          value: '24360',
         },
         balances: {
           type: 'big_map',
-          value: '16642',
+          value: '24361',
         },
         decimals: 10,
         locked: false,
         name: 'name',
-        newOwner: testAccount,
-        owner: testAccount,
+        newOwner: flexibleTokenContractOwner,
+        owner: flexibleTokenContractOwner,
         symbol: 'symbol',
         totalSupply: 40,
       });
@@ -164,7 +164,7 @@ describe('[lib/storage/get-contract-storage]', () => {
       expect(storage).toEqual({
         allowed: {
           type: 'big_map',
-          value: '16641',
+          value: '24360',
         },
         age: {
           error: 'This data field does not exist in the contract storage',
@@ -185,7 +185,7 @@ describe('[lib/storage/get-contract-storage]', () => {
       expect(storage).toEqual({
         allowed: {
           type: 'big_map',
-          value: '16641',
+          value: '24360',
         },
         age: {
           error: 'This data field does not exist in the contract storage',

@@ -1,6 +1,6 @@
 import nock from 'nock';
 import {
-  tezosNodeGranadaUrl,
+  tezosNodeUrl,
   tezosPrivateKey,
   vaultClientConfig as vaultTestConfig,
 } from '../../../__fixtures__/config';
@@ -12,7 +12,7 @@ import { InMemorySigner } from '@taquito/signer';
 import { TezosToolkit } from '@taquito/taquito';
 
 describe('[lib/user-create-account] create Tezos accounts', () => {
-  const tezosService = new TezosService(tezosNodeGranadaUrl);
+  const tezosService = new TezosService(tezosNodeUrl);
 
   afterEach(() => {
     jest.restoreAllMocks();

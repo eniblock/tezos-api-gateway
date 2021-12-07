@@ -2,7 +2,7 @@ import { logger } from '../../../../__fixtures__/services/logger';
 import { CheckOperationStatusProcess } from '../../../../../src/processes/workers/check-operation-status/check-operation-status-process';
 import * as checkOperationStatusLib from '../../../../../src/processes/workers/check-operation-status/lib/check-operation-status';
 import { TezosService } from '../../../../../src/services/tezos';
-import { tezosNodeGranadaUrl } from '../../../../__fixtures__/config';
+import { tezosNodeUrl } from '../../../../__fixtures__/config';
 
 describe('[processes/workers/check-operation-status] Check Operation Status Process', () => {
   const checkOperationStatusProcess = new CheckOperationStatusProcess(logger);
@@ -11,7 +11,7 @@ describe('[processes/workers/check-operation-status] Check Operation Status Proc
     .spyOn(checkOperationStatusLib, 'checkOperationStatus')
     .mockImplementation();
 
-  const tezosService = new TezosService(tezosNodeGranadaUrl);
+  const tezosService = new TezosService(tezosNodeUrl);
   let getTezosServiceSpy: jest.SpyInstance;
 
   beforeEach(() => {

@@ -11,10 +11,7 @@ import {
   InvalidMapStructureParams,
 } from '../../../../src/const/errors/invalid-entry-point-params';
 
-import {
-  postgreConfig,
-  tezosNodeGranadaUrl,
-} from '../../../__fixtures__/config';
+import { postgreConfig, tezosNodeUrl } from '../../../__fixtures__/config';
 import { resetTable, selectData } from '../../../__utils__/postgre';
 import {
   FA2Contract,
@@ -25,7 +22,7 @@ import {
 
 describe('[lib/jobs/forge-operation]', () => {
   const postgreService = new PostgreService(postgreConfig);
-  const tezosService = new TezosService(tezosNodeGranadaUrl);
+  const tezosService = new TezosService(tezosNodeUrl);
 
   beforeAll(async () => {
     await postgreService.initializeDatabase();
@@ -237,10 +234,10 @@ describe('[lib/jobs/forge-operation]', () => {
             testAccount2 +
             '"}}}',
           amount: 0,
-          fee: 824,
+          fee: 471,
           source: testAccount,
-          storage_limit: 67,
-          gas_limit: 4925,
+          storage_limit: 0,
+          gas_limit: 1385,
           branch: insertedForgeParameters[0].branch,
           counter: insertedForgeParameters[0].counter,
           job_id: createdJob.id,
@@ -256,10 +253,10 @@ describe('[lib/jobs/forge-operation]', () => {
             testAccount2 +
             '"}}}',
           amount: 0,
-          fee: 870,
+          fee: 471,
           source: testAccount,
           storage_limit: 0,
-          gas_limit: 5383,
+          gas_limit: 1385,
           branch: insertedForgeParameters[1].branch,
           counter: insertedForgeParameters[1].counter,
           job_id: createdJob.id,

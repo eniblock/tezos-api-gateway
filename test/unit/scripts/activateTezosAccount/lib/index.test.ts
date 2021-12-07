@@ -5,7 +5,7 @@ import { TezosToolkit } from '@taquito/taquito';
 import { VaultClient } from '../../../../../src/services/clients/vault-client';
 import { vaultClientConfig } from '../../../../../src/config';
 import {
-  tezosNodeGranadaUrl,
+  tezosNodeUrl,
   vaultClientConfig as vaultTestConfig,
 } from '../../../../__fixtures__/config';
 import { logger } from '../../../../__fixtures__/services/logger';
@@ -41,7 +41,7 @@ describe('[scripts/activate-tezos-account/lib/index.ts]', () => {
 
   describe('#createTezosAccountsByVaultKeys', () => {
     const inMemorySigner = new InMemorySigner(tezosPrivateKey);
-    const tezosService = new TezosService(tezosNodeGranadaUrl);
+    const tezosService = new TezosService(tezosNodeUrl);
     const transferFn = jest.fn();
     const checkConfirmFn = jest.fn();
 

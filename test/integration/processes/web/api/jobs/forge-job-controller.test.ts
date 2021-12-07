@@ -3,7 +3,7 @@ import supertest from 'supertest';
 import {
   postgreConfig,
   serverConfig,
-  tezosNodeGranadaUrl,
+  tezosNodeUrl,
 } from '../../../../../__fixtures__/config';
 import { resetTable, selectData } from '../../../../../__utils__/postgre';
 import {
@@ -23,7 +23,7 @@ import { ForgeOperationBodyParams } from '../../../../../../src/const/interfaces
 describe('[processes/web/api/jobs] Forge job controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
   const postgreService = new PostgreService(postgreConfig);
-  const tezosService = new TezosService(tezosNodeGranadaUrl);
+  const tezosService = new TezosService(tezosNodeUrl);
 
   webProcess.postgreService = postgreService;
 
@@ -254,10 +254,10 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
             testAccount2 +
             '"}}}',
           amount: 0,
-          fee: 800,
+          fee: 447,
           source: testAccount,
-          storage_limit: 67,
-          gas_limit: 4925,
+          storage_limit: 0,
+          gas_limit: 1385,
           branch: insertedForgeParameters[0].branch,
           counter: insertedForgeParameters[0].counter,
           job_id: body.id,
@@ -268,10 +268,10 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
           parameters: '{"entrypoint":"lock","value":{"prim":"Unit"}}',
           parameters_json: '{"entrypoint":"lock","value":{"lock":0}}',
           amount: 0,
-          fee: 621,
+          fee: 442,
           source: testAccount,
           storage_limit: 0,
-          gas_limit: 3131,
+          gas_limit: 1331,
           branch: insertedForgeParameters[1].branch,
           counter: insertedForgeParameters[1].counter,
           job_id: body.id,

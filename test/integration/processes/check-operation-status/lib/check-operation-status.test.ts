@@ -1,7 +1,7 @@
 import {
   amqpConfig,
   postgreConfig,
-  tezosNodeGranadaUrl,
+  tezosNodeUrl,
 } from '../../../../__fixtures__/config';
 import { logger } from '../../../../__fixtures__/services/logger';
 import { resetTable, selectData } from '../../../../__utils__/postgre';
@@ -24,7 +24,7 @@ import { Jobs } from '../../../../../src/const/interfaces/jobs';
 
 describe('[check-operation-status/lib/check-operation-status]', () => {
   const postgreService = new PostgreService(postgreConfig);
-  const tezosService = new TezosService(tezosNodeGranadaUrl);
+  const tezosService = new TezosService(tezosNodeUrl);
   const amqpService = new AmqpService(amqpConfig, logger);
   const indexerPool = new IndexerPool(logger);
 
