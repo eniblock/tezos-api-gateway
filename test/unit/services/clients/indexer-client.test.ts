@@ -1,5 +1,5 @@
 import { logger } from '../../../__fixtures__/services/logger';
-import { flexibleTokenContract2 } from '../../../__fixtures__/smart-contract';
+import { flexibleTokenContract } from '../../../__fixtures__/smart-contract';
 import superagent from 'superagent';
 import { IndexerPool } from '../../../../src/services/indexer-pool';
 import { IndexerEnum } from '../../../../src/const/interfaces/indexer';
@@ -33,13 +33,10 @@ describe('[services/clients] Indexer client Service', () => {
         'buildURLForTransactionList',
       );
 
-      await indexerClientTZKT.getTransactionListOfSC(
-        flexibleTokenContract2,
-        {},
-      );
+      await indexerClientTZKT.getTransactionListOfSC(flexibleTokenContract, {});
 
       expect(superagentSpy).toHaveBeenCalled();
-      expect(buildURLSpy).toHaveBeenCalledWith(flexibleTokenContract2, {});
+      expect(buildURLSpy).toHaveBeenCalledWith(flexibleTokenContract, {});
     });
   });
 
@@ -48,7 +45,7 @@ describe('[services/clients] Indexer client Service', () => {
       const {
         domainAndPath,
         queryParams,
-      } = randomIndexer.buildURLForTransactionList(flexibleTokenContract2, {});
+      } = randomIndexer.buildURLForTransactionList(flexibleTokenContract, {});
 
       expect(domainAndPath).toBeDefined();
       expect(queryParams).toBeDefined();
@@ -56,7 +53,7 @@ describe('[services/clients] Indexer client Service', () => {
 
     test('that query params contains limit and offset with default values when params is empty', async () => {
       const { queryParams } = randomIndexer.buildURLForTransactionList(
-        flexibleTokenContract2,
+        flexibleTokenContract,
         {},
       );
 
@@ -69,7 +66,7 @@ describe('[services/clients] Indexer client Service', () => {
         entrypoint: 'entrypoint',
       };
       const { queryParams } = randomIndexer.buildURLForTransactionList(
-        flexibleTokenContract2,
+        flexibleTokenContract,
         params,
       );
 
@@ -83,7 +80,7 @@ describe('[services/clients] Indexer client Service', () => {
       };
 
       const { queryParams } = indexerClientTzstats.buildURLForTransactionList(
-        flexibleTokenContract2,
+        flexibleTokenContract,
         params,
       );
 
@@ -92,11 +89,11 @@ describe('[services/clients] Indexer client Service', () => {
 
     test('that domainAndPath contains the contract address when tzstats is used', () => {
       const { domainAndPath } = indexerClientTzstats.buildURLForTransactionList(
-        flexibleTokenContract2,
+        flexibleTokenContract,
         {},
       );
 
-      expect(domainAndPath).toMatch(new RegExp(`${flexibleTokenContract2}?`));
+      expect(domainAndPath).toMatch(new RegExp(`${flexibleTokenContract}?`));
     });
 
     test('that all passed params are built when tzstats is used', () => {
@@ -107,7 +104,7 @@ describe('[services/clients] Indexer client Service', () => {
         offset: 8,
       };
       const { queryParams } = indexerClientTzstats.buildURLForTransactionList(
-        flexibleTokenContract2,
+        flexibleTokenContract,
         params,
       );
 
@@ -121,7 +118,7 @@ describe('[services/clients] Indexer client Service', () => {
 
       const FUT = () =>
         indexerClientTzstats.buildURLForTransactionList(
-          flexibleTokenContract2,
+          flexibleTokenContract,
           params,
         );
 
@@ -140,15 +137,15 @@ describe('[services/clients] Indexer client Service', () => {
         domainAndPath,
         queryParams,
       } = indexerClientTZKT.buildURLForTransactionList(
-        flexibleTokenContract2,
+        flexibleTokenContract,
         params,
       );
 
       expect(domainAndPath).toEqual(
-        'https://api.granadanet.tzkt.io/v1/operations/transactions/',
+        'https://api.hangzhou2net.tzkt.io/v1/operations/transactions/',
       );
       expect(queryParams).toEqual(
-        'limit=5&offset=8&target.eq=KT1PC7JUBQQXawknSuZrkEvsphG7n55QNpEv&sort.asc=id&entrypoint.eq=name&parameter.as=*test',
+        'limit=5&offset=8&target.eq=KT1GYQn8mwSLypyHNPo8d9D151UC8tdo39xR&sort.asc=id&entrypoint.eq=name&parameter.as=*test',
       );
     });
   });

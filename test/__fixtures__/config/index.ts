@@ -14,12 +14,12 @@ export const serverConfig = {
   port: 5555,
 };
 
-export const tezosNodeGranadaUrl =
-  process.env.TEZOS_NODE_EDONET_TEST || 'https://granadanet.smartpy.io/';
+export const tezosNodeUrl =
+  process.env.TEZOS_NODE_EDONET_TEST || 'https://hangzhounet.smartpy.io/';
 
-export const tezosNodeGranadaUrls = (
+export const tezosNodeUrls = (
   process.env.TEZOS_NODE_EDONET_TEST_URLS ||
-  'https://api.tez.ie/rpc/granadanet,https://granadanet.smartpy.io/'
+  'https://hangzhounet.api.tez.ie,https://hangzhounet.smartpy.io/'
 ).split(',');
 
 export const amqpConfig: AmqpConfig = {

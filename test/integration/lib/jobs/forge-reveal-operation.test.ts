@@ -1,9 +1,6 @@
 import { PostgreService } from '../../../../src/services/postgre';
 import { PostgreTables } from '../../../../src/const/postgre/postgre-tables';
-import {
-  postgreConfig,
-  tezosNodeGranadaUrls,
-} from '../../../__fixtures__/config';
+import { postgreConfig, tezosNodeUrls } from '../../../__fixtures__/config';
 import { resetTable, selectData } from '../../../__utils__/postgre';
 import { GatewayPool } from '../../../../src/services/gateway-pool';
 import { logger } from '../../../__fixtures__/services/logger';
@@ -18,7 +15,7 @@ import {
 
 describe('[lib/jobs/forge-operation]', () => {
   const postgreService = new PostgreService(postgreConfig);
-  const gatewayPool = new GatewayPool(tezosNodeGranadaUrls, logger);
+  const gatewayPool = new GatewayPool(tezosNodeUrls, logger);
 
   beforeAll(async () => {
     await postgreService.initializeDatabase();

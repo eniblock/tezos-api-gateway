@@ -9,7 +9,7 @@ import { PostgreService } from '../../../../../../src/services/postgre';
 // import { logger } from '../../../../../__fixtures__/services/logger';
 import supertest from 'supertest';
 import nock from 'nock';
-import { flexibleTokenContract2 } from '../../../../../__fixtures__/smart-contract';
+import { flexibleTokenContract } from '../../../../../__fixtures__/smart-contract';
 import { resetTable } from '../../../../../__utils__/postgre';
 import { PostgreTables } from '../../../../../../src/const/postgre/postgre-tables';
 import { firstTx } from '../../../../../__fixtures__/transactions';
@@ -47,7 +47,7 @@ describe('[processes/web/api/contract] Contract controller', () => {
   describe('#getTransactionListOfSC', () => {
     it('should return 200 and the transactions list', async () => {
       const { body, status } = await request.get(
-        `/api/contract/${flexibleTokenContract2}/calls`,
+        `/api/contract/${flexibleTokenContract}/calls`,
       );
 
       expect(status).toEqual(200);
@@ -56,7 +56,7 @@ describe('[processes/web/api/contract] Contract controller', () => {
 
     it('should use TZKT indexer when parameter query param is set', async () => {
       const { body, status } = await request.get(
-        `/api/contract/${flexibleTokenContract2}/calls?parameter=*tz1MPQBaR1r4hKveeCnNYPExnme5KBpbkWUP*`,
+        `/api/contract/${flexibleTokenContract}/calls?parameter=*tz1VbHay2YPpiuPYs8SQHynuW3YvGtNuB29z*`,
       );
 
       expect(status).toEqual(200);

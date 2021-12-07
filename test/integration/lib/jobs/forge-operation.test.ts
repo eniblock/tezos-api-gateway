@@ -11,10 +11,7 @@ import {
   MissingParameter,
 } from '../../../../src/const/errors/invalid-entry-point-params';
 
-import {
-  postgreConfig,
-  tezosNodeGranadaUrl,
-} from '../../../__fixtures__/config';
+import { postgreConfig, tezosNodeUrl } from '../../../__fixtures__/config';
 import { resetTable, selectData } from '../../../__utils__/postgre';
 import {
   activatedAccount,
@@ -31,7 +28,7 @@ import { MaxOperationsPerBatchError } from '../../../../src/const/errors/max-ope
 
 describe('[lib/jobs/forge-operation]', () => {
   const postgreService = new PostgreService(postgreConfig);
-  const tezosService = new TezosService(tezosNodeGranadaUrl);
+  const tezosService = new TezosService(tezosNodeUrl);
 
   beforeAll(async () => {
     await postgreService.initializeDatabase();
@@ -339,10 +336,10 @@ describe('[lib/jobs/forge-operation]', () => {
             testAccount2 +
             '"}}}',
           amount: 0,
-          fee: 824,
+          fee: 471,
           source: testAccount,
-          storage_limit: 67,
-          gas_limit: 4925,
+          storage_limit: 0,
+          gas_limit: 1385,
           branch: insertedForgeParameters[0].branch,
           counter: insertedForgeParameters[0].counter,
           job_id: createdJob.id,
@@ -358,10 +355,10 @@ describe('[lib/jobs/forge-operation]', () => {
             testAccount2 +
             '"}}}',
           amount: 0,
-          fee: 870,
+          fee: 471,
           source: testAccount,
           storage_limit: 0,
-          gas_limit: 5383,
+          gas_limit: 1385,
           branch: insertedForgeParameters[1].branch,
           counter: insertedForgeParameters[1].counter,
           job_id: createdJob.id,
@@ -407,10 +404,10 @@ describe('[lib/jobs/forge-operation]', () => {
             testAccount2 +
             '"}}}',
           amount: 0,
-          fee: 824,
+          fee: 471,
           source: testAccount,
-          storage_limit: 67,
-          gas_limit: 4925,
+          storage_limit: 0,
+          gas_limit: 1385,
           branch: insertedForgeParameters[0].branch,
           counter: insertedForgeParameters[0].counter,
           job_id: createdJob.id,
@@ -426,10 +423,10 @@ describe('[lib/jobs/forge-operation]', () => {
             testAccount2 +
             '"}}}',
           amount: 0,
-          fee: 870,
+          fee: 471,
           source: testAccount,
           storage_limit: 0,
-          gas_limit: 5383,
+          gas_limit: 1385,
           branch: insertedForgeParameters[1].branch,
           counter: insertedForgeParameters[1].counter,
           job_id: createdJob.id,
@@ -506,10 +503,10 @@ describe('[lib/jobs/forge-operation]', () => {
           parameters: '{"entrypoint":"factorial","value":{"int":"5"}}',
           parameters_json: '{"entrypoint":"factorial","value":{"factorial":5}}',
           amount: 0,
-          fee: 566,
+          fee: 553,
           source: activatedAccount.address,
-          storage_limit: 0,
-          gas_limit: 2459,
+          storage_limit: 1,
+          gas_limit: 2297,
           branch: insertedTransactionsParameters[1].branch,
           counter: insertedTransactionsParameters[1].counter,
           job_id: createdJob.id,
@@ -523,10 +520,10 @@ describe('[lib/jobs/forge-operation]', () => {
           parameters_json:
             '{"entrypoint":"squareRoot","value":{"squareRoot":25}}',
           amount: 0,
-          fee: 566,
+          fee: 454,
           source: activatedAccount.address,
           storage_limit: 0,
-          gas_limit: 2459,
+          gas_limit: 1307,
           branch: insertedTransactionsParameters[2].branch,
           counter: insertedTransactionsParameters[2].counter,
           job_id: createdJob.id,

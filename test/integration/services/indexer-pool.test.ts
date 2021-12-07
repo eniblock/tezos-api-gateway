@@ -5,7 +5,7 @@ import { OperationNotFoundError } from '../../../src/const/errors/indexer-error'
 import { IndexerClient } from '../../../src/services/clients/indexer-client';
 import { IndexerPool } from '../../../src/services/indexer-pool';
 import { TezosService } from '../../../src/services/tezos';
-import { tezosNodeGranadaUrl } from '../../__fixtures__/config';
+import { tezosNodeUrl } from '../../__fixtures__/config';
 import {
   notFoundOperationHash,
   operationHash,
@@ -116,7 +116,7 @@ describe('[services/indexer-pool]', () => {
 
        await expect(
         indexerPool.getOperationBlockLevelByRandomIndexer(operationHash, 3),
-      ).resolves.toEqual(109636); 
+      ).resolves.toEqual(109636);
 
       indexerNock.done();
       expect(getRandomIndexerSpy).toHaveBeenCalledTimes(2);
@@ -131,7 +131,7 @@ describe('[services/indexer-pool]', () => {
 
   describe('#checkIfOperationIsConfirmedByRandomIndexer', () => {
     const indexerPool = new IndexerPool(logger);
-    const tezosService = new TezosService(tezosNodeGranadaUrl);
+    const tezosService = new TezosService(tezosNodeUrl);
 
     let loggerErrorSpy: jest.SpyInstance;
     let firstIndexer: IndexerClient;
@@ -237,7 +237,7 @@ describe('[services/indexer-pool]', () => {
           },
           3,
         ),
-      ).resolves.toEqual(true); 
+      ).resolves.toEqual(true);
 
       indexerNock.done();
       expect(getRandomIndexerSpy).toHaveBeenCalledTimes(2);
@@ -273,7 +273,7 @@ describe('[services/indexer-pool]', () => {
           },
           3,
         ),
-      ).resolves.toEqual(false); 
+      ).resolves.toEqual(false);
 
       expect(getLatestBlockSpy).toHaveBeenCalledTimes(1);
     }, 8000);  */

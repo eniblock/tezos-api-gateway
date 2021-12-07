@@ -5,14 +5,14 @@ import {
 import { TezosService } from '../../../../src/services/tezos';
 
 import { logger } from '../../../__fixtures__/services/logger';
-import { tezosNodeGranadaUrl } from '../../../__fixtures__/config';
+import { tezosNodeUrl } from '../../../__fixtures__/config';
 import {
   FA2Contract,
   flexibleTokenContract,
 } from '../../../__fixtures__/smart-contract';
 
 describe('[lib/generate-path-object] Index', () => {
-  const tezosService = new TezosService(tezosNodeGranadaUrl);
+  const tezosService = new TezosService(tezosNodeUrl);
 
   afterEach(() => {
     jest.restoreAllMocks();

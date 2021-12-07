@@ -5,7 +5,7 @@ import { convertStorage } from '../../../../src/lib/storage/convert-storage';
 import { getContractStorageFromTezosNode } from '../../../../src/lib/storage/get-contract-storage';
 import * as generateStorageResponseLib from '../../../../src/lib/storage/generate-storage-response';
 
-import { tezosNodeGranadaUrl } from '../../../__fixtures__/config';
+import { tezosNodeUrl } from '../../../__fixtures__/config';
 import { logger } from '../../../__fixtures__/services/logger';
 import {
   FA2Contract3,
@@ -15,7 +15,7 @@ import {
 } from '../../../__fixtures__/smart-contract';
 
 describe('[lib/storage/convert-storage]', () => {
-  const tezosService = new TezosService(tezosNodeGranadaUrl);
+  const tezosService = new TezosService(tezosNodeUrl);
 
   afterEach(() => {
     jest.restoreAllMocks();
