@@ -20,7 +20,7 @@ The problem here is that for security reasons, Vault doesn’t allow private key
 
 However, Vault offers a feature of backup/restore that we will use in this tutorial to import an account.
 
-###Key Importing Steps
+### Key Importing Steps
 The Tezos account that is going to be imported as an example:
 
 `{ "publicKey": "edpkunY3jsNhGnP3mkYnWmBTYxqjSii1pyY9oUSkNnix3pNHRTMaAc", "secretKey": "edskS6oof64x1Uj2ZdDRj8a5WVJmKxDX2VbiPmVJHoydxFQ3eZpLk8mhMvz1Lnozsw1KggcCjfMdYZYN6oPQJh3dRSmeaQ9MEG", "publicKeyHash": "tz1QdgwqsVV7SmpFPrWjs9B5oBNcj2brzqfG" }`
@@ -29,7 +29,7 @@ The account must have a non-null balance of Tez. It could be a faucet account in
 
 The public and private keys are in the Tezos prefixed base58 format. To be imported in Vault, they have to be encoded in base64.
 
-####Prerequisites
+#### Prerequisites
 
 - Environment: ubuntu 18.04
 - **_vault_** CLI tool
