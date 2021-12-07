@@ -5,29 +5,29 @@ export const signedTransaction =
 export const signature =
   'edsigtorku6MkHkh8X97m5KofrJjQ18xT94JxjGjsQDsG9xrQ5P2wqHmE9H3FNew7hKMVFBGm8qsdcbtVC8V6g6rhEDQSALZbiA';
 export const branch = 'BLGPF5StvDnNGBpAV9uYNJUiCdw2vz7HRCUwxNEmh61EYYCbGNH';
-export const flexibleTokenContract = 'KT193dYyEtaFMLVQEtgsSgyx8ukhk1LJVice'; // flexibleToken.py
-export const flexibleTokenContract2 = 'KT1PC7JUBQQXawknSuZrkEvsphG7n55QNpEv';
-export const simpleContract = 'KT1V1qpc4c7szm3cSaefk1JAHW8saWFDf8KH';
-export const FA2Contract = 'KT1RZmM8sCj25Sc8MzbUirh7trKe2oRRFqJT'; // template FA2
-export const FA2Contract3 = 'KT1LBCV9ScQS1sjgteTQva163Qepyn9aMpLz'; // smartContractWithComplexedMapAndBigMap.py
-export const FA2Contract4 = 'KT1PUfwatrm77YBegKx6JJEQ3cSeYiNb7P16'; // simpleMapKeyContract.py
+export const flexibleTokenContract = 'KT1GYQn8mwSLypyHNPo8d9D151UC8tdo39xR'; // flexibleToken.py
+export const simpleContract = 'KT1PhNVFsajnPvD32xGQrGpCNFE21Cj7aNSD'; // template simple examples calculator
+export const FA2Contract = 'KT1CZ3hoe2WCFn7J7VPe1yCdDPTkQmKbo3Tt'; // template FA2
+export const FA2Contract3 = 'KT1A6AqAjygCnuqR7QiSHfWVCNiwfiBDEUP5'; // smartContractWithComplexedMapAndBigMap.py
+export const FA2Contract4 = 'KT1LtjsjoRavziAgXHkLsMn2UHSdYCJj6mCx'; // simpleMapKeyContract.py
 export const FA2Contract5 = 'KT1938ykzsYS1FR3WAyTa2BUTuTadtV1M9v8'; // Nonexistent contract
 export const FA2Contract7 = 'Bad contract format                '; // Bad contract format
-export const FA2Contract8 = 'KT1Lpf9hv9ndt6feuwbiSqdCoY1bd7YVNd9q'; // Logical Pictures
-export const ProxyContract = 'KT1ELsN3WK52LUmRY3jjQt7xpdJUa3pVVxYa'; // template FA2
+export const ProxyContract = 'KT1C5k4LJ1mQEGG556yBvMGkAGGfoLEavysd'; // proxyTokenController.py
 
-export const testAccount = 'tz1WWJAgu1orxZqzDsakADEoHk3zg4nRP5Va';
-export const testAccount2 = 'tz1MPQBaR1r4hKveeCnNYPExnme5KBpbkWUP'; // Receiver account
+export const testAccount = 'tz1VbHay2YPpiuPYs8SQHynuW3YvGtNuB29z';
+export const testAccount2 = 'tz1Ric9o7YeBvbxXHnxhBMAjaMgKUnHUbYKB'; // Receiver account
+export const flexibleTokenContractOwner =
+  'tz1hdQscorfqMzFqYxnrApuS5i6QSTuoAp3w';
 
 export const revealedAccount = {
-  address: 'tz1ZVXhWWhj9CjviLDRyS8nbMGtm3StnMCaZ',
-  publicKey: 'edpkuJpbmRrKVbXHWmJAU5v9YKiA1PCiy1xo1UyAKeUjpSvkXM5wfe',
+  address: 'tz1PbGySK1WQMNMVkaLcwEzmNffG63goVoye',
+  publicKey: 'edpkukHceEkeLBRj1MyQkZYUZdffCYbQMA8UAedZt8NwtPUXiAgiBe',
 };
 export const unActivatedAccount = {
-  address: 'tz1YqMAEcChYsD8tVCJY7gTEEMqbtbSZPUsG',
-  publicKey: 'edpkuuzYpzP54bqH67uCSwPWEU1sY8TqsPD38tDCNS8azmCwSJm62T',
+  address: 'tz1QmniYtA8K7HqQgBXvrx3htyFf8Ls5r3Pp',
+  publicKey: 'edpkth2LES58yuhN7LkdnAjYDceaaP5XmqBf2tCXsu1sdoBHXgckoG',
 };
 export const activatedAccount = {
-  address: 'tz1Z6MUWfJrsM2NLbLw9oWgxBeySULH8Lvhn',
-  publicKey: 'edpkuiyNHQLQXY8RNids8LGp2S4FQmtBkNApbn2a9Yy88HbgDgz5ov',
+  address: 'tz1RhvdPbnfnjvrxcFmT6d55dnvh1sK1MBQR',
+  publicKey: 'edpkvWTUM8AD6d5H2Z5WhPbQJ6waHwi9gQGtdriUF9xte3EJxdGKJE',
 };

@@ -65,13 +65,13 @@ def test():
 
     scenario.table_of_contents()
     admin = sp.test_account("Administrator")
-    
+
     datasource1 = sp.map({
         'datasource1': 'value1',
         'datasource2': 'value2',
         'datasource3': 'value3',
     })
-    
+
     datasource2 = sp.map({
         'datasource4': 'value4',
         'datasource5': 'value5',
@@ -81,49 +81,49 @@ def test():
     organizations = sp.map(
             {
                 sp.record(
-                    address = 'tz1MPQBaR1r4hKveeCnNYPExnme5KBpbkWUP',
+                    address = 'tz1Ric9o7YeBvbxXHnxhBMAjaMgKUnHUbYKB',
                     jwtToken = 'jwt'
                     ): sp.record(
                                 name = 'toto',
-                                publicKeyHash = sp.address('tz1MPQBaR1r4hKveeCnNYPExnme5KBpbkWUP'),
+                                publicKeyHash = sp.address('tz1Ric9o7YeBvbxXHnxhBMAjaMgKUnHUbYKB'),
                                 publicKey = 'toto public key',
                                 datasources = datasource1
                             ),
                 sp.record(
-                    address = 'tz1WWJAgu1orxZqzDsakADEoHk3zg4nRP5Va',
+                    address = 'tz1VbHay2YPpiuPYs8SQHynuW3YvGtNuB29z',
                     jwtToken = 'jwt'
                     ): sp.record(
                                 name = 'tata',
-                                publicKeyHash = sp.address('tz1WWJAgu1orxZqzDsakADEoHk3zg4nRP5Va'),
+                                publicKeyHash = sp.address('tz1VbHay2YPpiuPYs8SQHynuW3YvGtNuB29z'),
                                 publicKey = 'tata public key',
                                 datasources = datasource2
                             )
             }
         )
-    
+
     accessRequest = sp.big_map(
         {
             sp.record(
                 scopeId='scope1',
                 status='status1'
             ): sp.record(
-                    
+
                     address = sp.record (
-                        requesterAddress = sp.address('tz1MPQBaR1r4hKveeCnNYPExnme5KBpbkWUP'),
-                        providerAddress = sp.address('tz1WWJAgu1orxZqzDsakADEoHk3zg4nRP5Va')
+                        requesterAddress = sp.address('tz1Ric9o7YeBvbxXHnxhBMAjaMgKUnHUbYKB'),
+                        providerAddress = sp.address('tz1VbHay2YPpiuPYs8SQHynuW3YvGtNuB29z')
                     ),
                     createdAt = sp.timestamp(1571761674),
                     jwtToken = sp.some('jwtToken')
                 ),
-                
+
             sp.record(
                 scopeId='scope2',
                 status='status2'
             ): sp.record(
-                    
+
                     address = sp.record (
-                        requesterAddress = sp.address('tz1WWJAgu1orxZqzDsakADEoHk3zg4nRP5Va'),
-                        providerAddress = sp.address('tz1MPQBaR1r4hKveeCnNYPExnme5KBpbkWUP')
+                        requesterAddress = sp.address('tz1VbHay2YPpiuPYs8SQHynuW3YvGtNuB29z'),
+                        providerAddress = sp.address('tz1Ric9o7YeBvbxXHnxhBMAjaMgKUnHUbYKB')
                     ),
                     createdAt = sp.timestamp(1571761690),
                     jwtToken = sp.none

@@ -7,18 +7,19 @@ import {
 import { getContractStorageFromTezosNode } from '../../../../src/lib/storage/get-contract-storage';
 import { TezosService } from '../../../../src/services/tezos';
 
-import { tezosNodeGranadaUrl } from '../../../__fixtures__/config';
+import { tezosNodeUrl } from '../../../__fixtures__/config';
 import {
   FA2Contract3,
   FA2Contract4,
   flexibleTokenContract,
+  flexibleTokenContractOwner,
   testAccount,
   testAccount2,
 } from '../../../__fixtures__/smart-contract';
 import { logger } from '../../../__fixtures__/services/logger';
 
 describe('[lib/storage/generateStorageResponse]', () => {
-  const tezosService = new TezosService(tezosNodeGranadaUrl);
+  const tezosService = new TezosService(tezosNodeUrl);
 
   afterEach(() => {
     jest.restoreAllMocks();
@@ -35,17 +36,17 @@ describe('[lib/storage/generateStorageResponse]', () => {
       expect(generateStorageResponse(storage!)).toEqual({
         allowed: {
           type: 'big_map',
-          value: '16641',
+          value: '24360',
         },
         balances: {
           type: 'big_map',
-          value: '16642',
+          value: '24361',
         },
         decimals: 10,
         locked: false,
         name: 'name',
-        newOwner: testAccount,
-        owner: testAccount,
+        newOwner: flexibleTokenContractOwner,
+        owner: flexibleTokenContractOwner,
         symbol: 'symbol',
         totalSupply: 40,
       });
@@ -61,7 +62,7 @@ describe('[lib/storage/generateStorageResponse]', () => {
       expect(generateStorageResponse(storage!)).toEqual({
         accessRequests: {
           type: 'big_map',
-          value: '16643',
+          value: '23036',
         },
         organizations: {
           type: 'map',
@@ -98,7 +99,7 @@ describe('[lib/storage/generateStorageResponse]', () => {
       expect(generateStorageResponse(storage!)).toEqual({
         accessRequests: {
           type: 'big_map',
-          value: '16644',
+          value: '23037',
         },
         organizations: {
           type: 'map',

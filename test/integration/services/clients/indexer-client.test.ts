@@ -6,13 +6,13 @@ import {
   operationHash,
 } from '../../../__fixtures__/operation';
 import { logger } from '../../../__fixtures__/services/logger';
-import { tezosNodeGranadaUrl } from '../../../__fixtures__/config';
+import { tezosNodeUrl } from '../../../__fixtures__/config';
 
 import { IndexerClient } from '../../../../src/services/clients/indexer-client';
 import { indexerConfigs } from '../../../../src/config';
 import { OperationNotFoundError } from '../../../../src/const/errors/indexer-error';
 import { TezosService } from '../../../../src/services/tezos';
-import { flexibleTokenContract2 } from '../../../__fixtures__/smart-contract';
+import { flexibleTokenContract } from '../../../__fixtures__/smart-contract';
 import { IndexerEnum } from '../../../../src/const/interfaces/indexer';
 import { firstTx, originationOp } from '../../../__fixtures__/transactions';
 
@@ -72,7 +72,7 @@ describe('[services/clients] Indexer Client', () => {
         indexerPromises.push(
           expect(
             indexer.getOperationBlockLevel(operationHash),
-          ).resolves.toEqual(265526),
+          ).resolves.toEqual(157141),
         );
       }
       await Promise.all(indexerPromises);
@@ -80,7 +80,7 @@ describe('[services/clients] Indexer Client', () => {
   });
 
   describe('#checkIfOperationIsConfirmed', () => {
-    const tezosService = new TezosService(tezosNodeGranadaUrl);
+    const tezosService = new TezosService(tezosNodeUrl);
     let loggerErrorSpy: jest.SpyInstance;
 
     beforeEach(() => {
@@ -186,16 +186,20 @@ describe('[services/clients] Indexer Client', () => {
         if (indexer.config.name === IndexerEnum.TZKT) {
           indexerPromises.push(
             expect(
-              indexer.getTransactionListOfSC(flexibleTokenContract2, {}),
+              indexer.getTransactionListOfSC(flexibleTokenContract, {}),
             ).resolves.toEqual([{ ...firstTx, indexer: IndexerEnum.TZKT }]),
           );
         } else if (indexer.config.name === IndexerEnum.TZSTATS) {
           indexerPromises.push(
             expect(
-              indexer.getTransactionListOfSC(flexibleTokenContract2, {}),
+              indexer.getTransactionListOfSC(flexibleTokenContract, {}),
             ).resolves.toEqual([
               originationOp,
-              { ...firstTx, indexer: IndexerEnum.TZSTATS },
+              {
+                ...firstTx,
+                storage_fee: undefined,
+                indexer: IndexerEnum.TZSTATS,
+              },
             ]),
           );
         }

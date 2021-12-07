@@ -5,8 +5,8 @@ import { resetTable, selectData } from '../../../__utils__/postgre';
 import {
   amqpConfig,
   postgreConfig,
-  tezosNodeGranadaUrl,
-  tezosNodeGranadaUrls,
+  tezosNodeUrl,
+  tezosNodeUrls,
 } from '../../../__fixtures__/config';
 import {
   TestContractMethod,
@@ -43,9 +43,9 @@ import { OpKind } from '@taquito/rpc';
 
 describe('[lib/jobs/send-transactions] Send Transactions', () => {
   const postgreService = new PostgreService(postgreConfig);
-  const tezosService = new TezosService(tezosNodeGranadaUrl);
+  const tezosService = new TezosService(tezosNodeUrl);
   const amqpService = new AmqpService(amqpConfig, logger);
-  const gatewayPool = new GatewayPool(tezosNodeGranadaUrls, logger);
+  const gatewayPool = new GatewayPool(tezosNodeUrls, logger);
 
   beforeAll(async () => {
     await postgreService.initializeDatabase();
@@ -458,7 +458,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
       ]);
     });
 
-    it('should throw InvalidEntryPointParams but not log error  when contract entry point parameters does not match', async () => {
+    it('should throw MissingParameter but not log error  when contract entry point parameters does not match', async () => {
       jest.restoreAllMocks();
       const loggerErrorSpy = jest.spyOn(logger, 'error');
 
