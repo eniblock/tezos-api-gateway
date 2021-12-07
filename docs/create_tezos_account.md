@@ -21,6 +21,7 @@ The problem here is that for security reasons, Vault doesn’t allow private key
 However, Vault offers a feature of backup/restore that we will use in this tutorial to import an account.
 
 ### Key Importing Steps
+
 The Tezos account that is going to be imported as an example:
 
 `{ "publicKey": "edpkunY3jsNhGnP3mkYnWmBTYxqjSii1pyY9oUSkNnix3pNHRTMaAc", "secretKey": "edskS6oof64x1Uj2ZdDRj8a5WVJmKxDX2VbiPmVJHoydxFQ3eZpLk8mhMvz1Lnozsw1KggcCjfMdYZYN6oPQJh3dRSmeaQ9MEG", "publicKeyHash": "tz1QdgwqsVV7SmpFPrWjs9B5oBNcj2brzqfG" }`
