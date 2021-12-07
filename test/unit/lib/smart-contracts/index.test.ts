@@ -1,5 +1,5 @@
 import { TezosService } from '../../../../src/services/tezos';
-import { tezosNodeGranadaUrl } from '../../../__fixtures__/config';
+import { tezosNodeUrl } from '../../../__fixtures__/config';
 import {
   FA2Contract,
   ProxyContract,
@@ -28,7 +28,7 @@ import { TestContractMethod } from '../../../__fixtures__/contract-method';
 const createToken = require('@taquito/michelson-encoder/dist/lib/tokens/createToken');
 
 describe('[lib/smart-contracts] Index', () => {
-  const tezosService = new TezosService(tezosNodeGranadaUrl);
+  const tezosService = new TezosService(tezosNodeUrl);
   let fa2Contract: ContractAbstraction<ContractProvider>;
   let proxyContract: ContractAbstraction<ContractProvider>;
 

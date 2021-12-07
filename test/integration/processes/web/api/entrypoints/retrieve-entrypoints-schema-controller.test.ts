@@ -8,7 +8,7 @@ import * as getEntrypointsSchemaLib from '../../../../../../src/lib/entrypoints/
 import {
   postgreConfig,
   serverConfig,
-  tezosNodeGranadaUrl,
+  tezosNodeUrl,
 } from '../../../../../__fixtures__/config';
 import { PostgreService } from '../../../../../../src/services/postgre';
 import {
@@ -18,7 +18,7 @@ import {
 
 describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
-  const tezosService = new TezosService(tezosNodeGranadaUrl);
+  const tezosService = new TezosService(tezosNodeUrl);
   const postgreService = new PostgreService(postgreConfig);
 
   webProcess.postgreService = postgreService;

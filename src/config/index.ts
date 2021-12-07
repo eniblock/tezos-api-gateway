@@ -24,7 +24,7 @@ export const serverConfig = {
 
 export const tezosNodeUrls = (
   process.env.TEZOS_NODE_URLS ||
-  'https://granadanet.smartpy.io,https://api.tez.ie/rpc/granadanet,https://rpc.granada.tzstats.com'
+  'https://hangzhounet.smartpy.io,https://hangzhounet.api.tez.ie,https://rpc.hangzhou.tzstats.com'
 ).split(',');
 
 export const amqpConfig: AmqpConfig = {
@@ -39,7 +39,7 @@ export const webProcessConfig: ProcessConfig = {
 
 const tzstatsIndexerConfig: IndexerConfig = {
   name: IndexerEnum.TZSTATS,
-  apiUrl: process.env.TZSTATS_URL || 'https://api.granada.tzstats.com/',
+  apiUrl: process.env.TZSTATS_URL || 'https://api.hangzhou.tzstats.com/',
   pathToOperation: 'explorer/op/',
   pathToUserInfo: 'explorer/account/',
   pathToContractCalls: 'explorer/contract/',
@@ -51,7 +51,7 @@ const tzstatsIndexerConfig: IndexerConfig = {
 
 const tzktIndexerConfig: IndexerConfig = {
   name: IndexerEnum.TZKT,
-  apiUrl: process.env.TZKT_URL || 'https://api.granadanet.tzkt.io/',
+  apiUrl: process.env.TZKT_URL || 'https://api.hangzhou2net.tzkt.io/',
   pathToOperation: 'v1/operations/',
   pathToContractCalls: 'v1/operations/transactions/',
   pathToUserInfo: 'v1/accounts/',
@@ -78,7 +78,7 @@ export const vaultClientConfig = {
 };
 
 export const contractAddress =
-  process.env.CONTRACT_ADDRESS || 'KT193dYyEtaFMLVQEtgsSgyx8ukhk1LJVice'; // flexibleToken.py
+  process.env.CONTRACT_ADDRESS || 'KT1GYQn8mwSLypyHNPo8d9D151UC8tdo39xR'; // flexibleToken.py
 
 export const transferAmount = parseInt(2, process.env.TRANSFER_AMOUNT);
 
