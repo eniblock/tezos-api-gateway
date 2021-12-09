@@ -110,7 +110,7 @@ npm run prettier:write
 | LOGGER_LEVEL                               | info                                                                                                       | The level of the logger                                      |
 | WEB_PROCESS_NAME                           | Tezos Api Gateway                                                                                          | The name of the process                                      |
 | WEB_PROCESS_TIMEOUT                        | 3000                                                                                                       | The process timeout in milliseconds                          |
-| TEZOS_NODE_URLS                            | https://granadanet.smartpy.io<br />https://api.tez.ie/rpc/granadanet<br />https://rpc.granada.tzstats.com  | List of Tezos Node URLs                                      |
+| TEZOS_NODE_URLS                            | https://hangzhounet.smartpy.io<br />https://hangzhounet.api.tez.ie<br />https://rpc.hangzhou.tzstats.com   | List of Tezos Node URLs                                      |
 | VAULT_URL                                  | http://localhost:8300/v1/                                                                                  | The vault server URL                                         |
 | VAULT_TOKEN                                | myroot                                                                                                     | The api token to access Vault server                         |
 
@@ -118,25 +118,25 @@ npm run prettier:write
 
 | Name                           | Default Value                                                                                        | Explanation                                                             |
 | ------------------------------ | ---------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| TZSTATS_URL                    | https://api.granada.tzstats.com/explorer/op/                                                        | The Tzstat API Url to retrieve information about an operation            |
+| TZSTATS_URL                    | https://api.hangzhou.tzstats.com/explorer/op/                                                        | The Tzstat API Url to retrieve information about an operation            |
 | TZSTATS_KEY_TO_OPERATION       | 0                                                                                                    | The object key or array index to get the the information of an operation |
 | TZSTATS_KEY_TO_BLOCK_LEVEL     | height                                                                                               | The object key representing the block level                              |
-| TZKT_URL                       | https://api.granadanet.tzkt.io/v1/operations/                                                       | The Tzkt API Url to retrieve information about an operation              |
+| TZKT_URL                       | https://api.hangzhou2net.tzkt.io/v1/operations/                                                      | The Tzkt API Url to retrieve information about an operation              |
 | TZKT_KEY_TO_OPERATION          | 0                                                                                                    | The object key or array index to get the the information of an operation |
 | TZKT_KEY_TO_BLOCK_LEVEL        | level                                                                                                | The object key representing the block level                              |
 
 **Test Environment Variables**
 
-| Name                        | Default Value                                                      | Explanation                                    |
-| --------------------------- | ------------------------------------------------------------------ | ----------------------------------------------- |
-| AMQP_URL                    | amqp://localhost                                                   | The url to link to rabbiMq server               |
-| DB_HOST_TEST                | localhost-service                                                  | The database host                               |
-| DB_NAME_TEST                | tezos_api_gateway                                                  | The database name                               |
-| DB_PORT_TEST                | 5432                                                               | The port to connect to database                 |
-| DB_PWD_TEST                 | randompwd                                                          | The password to connect to database             |
-| DB_USERNAME_TEST            | tezos-service                                                      | The user name to connect to database            |
-| TEZOS_NODE_EDONET_TEST      | https://api.tez.ie/rpc/granadanet                                 | A Tezos Node URL                                |
-| TEZOS_NODE_EDONET_TEST_URLS | https://api.tez.ie/rpc/granadanet,https://granadanet.smartpy.io/ | List of Tezos Node Urls, separated by comma `,` |
+| Name                 | Default Value                                                       | Explanation                                     |
+| -------------------- | ------------------------------------------------------------------- | ----------------------------------------------- |
+| AMQP_URL             | amqp://localhost                                                    | The url to link to rabbiMq server               |
+| DB_HOST_TEST         | localhost-service                                                   | The database host                               |
+| DB_NAME_TEST         | tezos_api_gateway                                                   | The database name                               |
+| DB_PORT_TEST         | 5432                                                                | The port to connect to database                 |
+| DB_PWD_TEST          | randompwd                                                           | The password to connect to database             |
+| DB_USERNAME_TEST     | tezos-service                                                       | The user name to connect to database            |
+| TEZOS_NODE_TEST      | https://hangzhounet.smartpy.io/                                     | A Tezos Node URL                                |
+| TEZOS_NODE_TEST_URLS | https://hangzhounet.api.tez.ie<br />https://hangzhounet.smartpy.io/ | List of Tezos Node Urls, separated by comma `,` |
 
 ## Kubernetes Installation
 ### Summary

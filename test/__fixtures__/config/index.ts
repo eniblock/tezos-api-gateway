@@ -15,10 +15,10 @@ export const serverConfig = {
 };
 
 export const tezosNodeUrl =
-  process.env.TEZOS_NODE_EDONET_TEST || 'https://hangzhounet.smartpy.io/';
+  process.env.TEZOS_NODE_TEST || 'https://hangzhounet.smartpy.io/';
 
 export const tezosNodeUrls = (
-  process.env.TEZOS_NODE_EDONET_TEST_URLS ||
+  process.env.TEZOS_NODE_TEST_URLS ||
   'https://hangzhounet.api.tez.ie,https://hangzhounet.smartpy.io/'
 ).split(',');
 

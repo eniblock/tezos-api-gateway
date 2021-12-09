@@ -117,7 +117,12 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
             {
               entryPoint: 'balance_of',
               schema: {
-                requests: 'list',
+                requests: {
+                  list: {
+                    owner: 'address',
+                    token_id: 'nat',
+                  },
+                },
                 callback: 'contract',
               },
               michelson: {
@@ -222,7 +227,18 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
             },
             {
               entryPoint: 'transfer',
-              schema: 'list',
+              schema: {
+                list: {
+                  from_: 'address',
+                  txs: {
+                    list: {
+                      amount: 'nat',
+                      to_: 'address',
+                      token_id: 'nat',
+                    },
+                  },
+                },
+              },
               michelson: {
                 prim: 'list',
                 args: [
@@ -251,7 +267,20 @@ describe('[processes/web/api/entrypoints] Retrieve Entrypoints Schema Controller
             },
             {
               entryPoint: 'update_operators',
-              schema: 'list',
+              schema: {
+                list: {
+                  add_operator: {
+                    operator: 'address',
+                    owner: 'address',
+                    token_id: 'nat',
+                  },
+                  remove_operator: {
+                    operator: 'address',
+                    owner: 'address',
+                    token_id: 'nat',
+                  },
+                },
+              },
               michelson: {
                 prim: 'list',
                 args: [

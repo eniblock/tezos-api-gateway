@@ -63,6 +63,10 @@ interface TezosMapSchema {
   };
 }
 
+interface TezosListSchema {
+  list: GenericObject;
+}
+
 interface OpenApiProperties {
   [name: string]: OpenAPIV3.ReferenceObject | OpenAPIV3.SchemaObject;
 }
@@ -246,6 +250,10 @@ function handleObjectCase(object: GenericObject): OpenAPIV3.SchemaObject {
     return handleMapCase((object as unknown) as TezosMapSchema);
   }
 
+  if (TezosDataType.LIST in object) {
+    return handleListCase((object as unknown) as TezosListSchema);
+  }
+
   const properties = _.fromPairs(
     Object.entries(object).map(([key, value]) => {
       return [key, generateSchemaObject(value)];
@@ -257,6 +265,20 @@ function handleObjectCase(object: GenericObject): OpenAPIV3.SchemaObject {
     additionalProperties: false,
     required: Object.keys(object),
     properties,
+  };
+}
+
+/**
+ * Return the OpenAPI schema object when the smart contract schema is map
+ *
+ * @param {object} mapSchema  - the smart contract schema
+ *
+ * @return {object} the schema object
+ */
+function handleListCase(listSchema: TezosListSchema): OpenAPIV3.SchemaObject {
+  return {
+    type: 'array',
+    items: generateSchemaObject(listSchema.list),
   };
 }
 
