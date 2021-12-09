@@ -53,11 +53,24 @@ describe('[lib/generate-path-object] Index', () => {
                         additionalProperties: false,
                         required: ['requests', 'callback'],
                         properties: {
-                          requests: {
-                            $ref: '#/components/schemas/flexible_array',
-                          },
                           callback: {
                             type: 'object',
+                          },
+                          requests: {
+                            type: 'array',
+                            items: {
+                              additionalProperties: false,
+                              properties: {
+                                owner: {
+                                  $ref: '#/components/schemas/tezos_address',
+                                },
+                                token_id: {
+                                  type: 'number',
+                                },
+                              },
+                              required: ['owner', 'token_id'],
+                              type: 'object',
+                            },
                           },
                         },
                       },
@@ -296,7 +309,36 @@ describe('[lib/generate-path-object] Index', () => {
                     required: ['sourceAddress', 'parameters'],
                     properties: {
                       parameters: {
-                        $ref: '#/components/schemas/flexible_array',
+                        items: {
+                          additionalProperties: false,
+                          properties: {
+                            from_: {
+                              $ref: '#/components/schemas/tezos_address',
+                            },
+                            txs: {
+                              items: {
+                                additionalProperties: false,
+                                properties: {
+                                  amount: {
+                                    type: 'number',
+                                  },
+                                  to_: {
+                                    $ref: '#/components/schemas/tezos_address',
+                                  },
+                                  token_id: {
+                                    type: 'number',
+                                  },
+                                },
+                                required: ['to_', 'token_id', 'amount'],
+                                type: 'object',
+                              },
+                              type: 'array',
+                            },
+                          },
+                          required: ['from_', 'txs'],
+                          type: 'object',
+                        },
+                        type: 'array',
                       },
                       sourceAddress: {
                         $ref: '#/components/schemas/tezos_address',
@@ -335,7 +377,46 @@ describe('[lib/generate-path-object] Index', () => {
                     required: ['sourceAddress', 'parameters'],
                     properties: {
                       parameters: {
-                        $ref: '#/components/schemas/flexible_array',
+                        items: {
+                          additionalProperties: false,
+                          properties: {
+                            add_operator: {
+                              additionalProperties: false,
+                              properties: {
+                                operator: {
+                                  $ref: '#/components/schemas/tezos_address',
+                                },
+                                owner: {
+                                  $ref: '#/components/schemas/tezos_address',
+                                },
+                                token_id: {
+                                  type: 'number',
+                                },
+                              },
+                              required: ['owner', 'operator', 'token_id'],
+                              type: 'object',
+                            },
+                            remove_operator: {
+                              additionalProperties: false,
+                              properties: {
+                                operator: {
+                                  $ref: '#/components/schemas/tezos_address',
+                                },
+                                owner: {
+                                  $ref: '#/components/schemas/tezos_address',
+                                },
+                                token_id: {
+                                  type: 'number',
+                                },
+                              },
+                              required: ['owner', 'operator', 'token_id'],
+                              type: 'object',
+                            },
+                          },
+                          required: ['add_operator', 'remove_operator'],
+                          type: 'object',
+                        },
+                        type: 'array',
                       },
                       sourceAddress: {
                         $ref: '#/components/schemas/tezos_address',
@@ -379,7 +460,20 @@ describe('[lib/generate-path-object] Index', () => {
                         required: ['requests', 'callback'],
                         properties: {
                           requests: {
-                            $ref: '#/components/schemas/flexible_array',
+                            items: {
+                              additionalProperties: false,
+                              properties: {
+                                owner: {
+                                  $ref: '#/components/schemas/tezos_address',
+                                },
+                                token_id: {
+                                  type: 'number',
+                                },
+                              },
+                              required: ['owner', 'token_id'],
+                              type: 'object',
+                            },
+                            type: 'array',
                           },
                           callback: {
                             type: 'object',
@@ -430,7 +524,20 @@ describe('[lib/generate-path-object] Index', () => {
                         required: ['requests', 'callback'],
                         properties: {
                           requests: {
-                            $ref: '#/components/schemas/flexible_array',
+                            items: {
+                              additionalProperties: false,
+                              properties: {
+                                owner: {
+                                  $ref: '#/components/schemas/tezos_address',
+                                },
+                                token_id: {
+                                  type: 'number',
+                                },
+                              },
+                              required: ['owner', 'token_id'],
+                              type: 'object',
+                            },
+                            type: 'array',
                           },
                           callback: {
                             type: 'object',
@@ -888,7 +995,36 @@ describe('[lib/generate-path-object] Index', () => {
                     required: ['secureKeyName', 'parameters'],
                     properties: {
                       parameters: {
-                        $ref: '#/components/schemas/flexible_array',
+                        items: {
+                          additionalProperties: false,
+                          properties: {
+                            from_: {
+                              $ref: '#/components/schemas/tezos_address',
+                            },
+                            txs: {
+                              items: {
+                                additionalProperties: false,
+                                properties: {
+                                  amount: {
+                                    type: 'number',
+                                  },
+                                  to_: {
+                                    $ref: '#/components/schemas/tezos_address',
+                                  },
+                                  token_id: {
+                                    type: 'number',
+                                  },
+                                },
+                                required: ['to_', 'token_id', 'amount'],
+                                type: 'object',
+                              },
+                              type: 'array',
+                            },
+                          },
+                          required: ['from_', 'txs'],
+                          type: 'object',
+                        },
+                        type: 'array',
                       },
                       secureKeyName: {
                         type: 'string',
@@ -929,7 +1065,36 @@ describe('[lib/generate-path-object] Index', () => {
                     required: ['secureKeyName', 'parameters'],
                     properties: {
                       parameters: {
-                        $ref: '#/components/schemas/flexible_array',
+                        items: {
+                          additionalProperties: false,
+                          properties: {
+                            from_: {
+                              $ref: '#/components/schemas/tezos_address',
+                            },
+                            txs: {
+                              items: {
+                                additionalProperties: false,
+                                properties: {
+                                  amount: {
+                                    type: 'number',
+                                  },
+                                  to_: {
+                                    $ref: '#/components/schemas/tezos_address',
+                                  },
+                                  token_id: {
+                                    type: 'number',
+                                  },
+                                },
+                                required: ['to_', 'token_id', 'amount'],
+                                type: 'object',
+                              },
+                              type: 'array',
+                            },
+                          },
+                          required: ['from_', 'txs'],
+                          type: 'object',
+                        },
+                        type: 'array',
                       },
                       secureKeyName: {
                         type: 'string',
@@ -970,7 +1135,46 @@ describe('[lib/generate-path-object] Index', () => {
                     required: ['secureKeyName', 'parameters'],
                     properties: {
                       parameters: {
-                        $ref: '#/components/schemas/flexible_array',
+                        items: {
+                          additionalProperties: false,
+                          properties: {
+                            add_operator: {
+                              additionalProperties: false,
+                              properties: {
+                                operator: {
+                                  $ref: '#/components/schemas/tezos_address',
+                                },
+                                owner: {
+                                  $ref: '#/components/schemas/tezos_address',
+                                },
+                                token_id: {
+                                  type: 'number',
+                                },
+                              },
+                              required: ['owner', 'operator', 'token_id'],
+                              type: 'object',
+                            },
+                            remove_operator: {
+                              additionalProperties: false,
+                              properties: {
+                                operator: {
+                                  $ref: '#/components/schemas/tezos_address',
+                                },
+                                owner: {
+                                  $ref: '#/components/schemas/tezos_address',
+                                },
+                                token_id: {
+                                  type: 'number',
+                                },
+                              },
+                              required: ['owner', 'operator', 'token_id'],
+                              type: 'object',
+                            },
+                          },
+                          required: ['add_operator', 'remove_operator'],
+                          type: 'object',
+                        },
+                        type: 'array',
                       },
                       secureKeyName: {
                         type: 'string',
@@ -1011,7 +1215,46 @@ describe('[lib/generate-path-object] Index', () => {
                     required: ['secureKeyName', 'parameters'],
                     properties: {
                       parameters: {
-                        $ref: '#/components/schemas/flexible_array',
+                        items: {
+                          additionalProperties: false,
+                          properties: {
+                            add_operator: {
+                              additionalProperties: false,
+                              properties: {
+                                operator: {
+                                  $ref: '#/components/schemas/tezos_address',
+                                },
+                                owner: {
+                                  $ref: '#/components/schemas/tezos_address',
+                                },
+                                token_id: {
+                                  type: 'number',
+                                },
+                              },
+                              required: ['owner', 'operator', 'token_id'],
+                              type: 'object',
+                            },
+                            remove_operator: {
+                              additionalProperties: false,
+                              properties: {
+                                operator: {
+                                  $ref: '#/components/schemas/tezos_address',
+                                },
+                                owner: {
+                                  $ref: '#/components/schemas/tezos_address',
+                                },
+                                token_id: {
+                                  type: 'number',
+                                },
+                              },
+                              required: ['owner', 'operator', 'token_id'],
+                              type: 'object',
+                            },
+                          },
+                          required: ['add_operator', 'remove_operator'],
+                          type: 'object',
+                        },
+                        type: 'array',
                       },
                       secureKeyName: {
                         type: 'string',
