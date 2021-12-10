@@ -311,7 +311,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
           operation_kind: OpKind.TRANSACTION,
         },
       });
-    });
+    }, 10000);
 
     it('should return 201 when reveal is true and the address is already revealed', async () => {
       const { body, status } = await request
@@ -332,7 +332,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
           operation_kind: OpKind.TRANSACTION,
         },
       });
-    });
+    }, 10000);
 
     it('should return 201 and correctly inserted data in the database', async () => {
       const { body, status } = await request
