@@ -28,7 +28,12 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
           {
             entryPoint: 'balance_of',
             schema: {
-              requests: 'list',
+              requests: {
+                list: {
+                  owner: 'address',
+                  token_id: 'nat',
+                },
+              },
               callback: 'contract',
             },
             michelson: {
@@ -133,7 +138,18 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
           },
           {
             entryPoint: 'transfer',
-            schema: 'list',
+            schema: {
+              list: {
+                from_: 'address',
+                txs: {
+                  list: {
+                    amount: 'nat',
+                    to_: 'address',
+                    token_id: 'nat',
+                  },
+                },
+              },
+            },
             michelson: {
               prim: 'list',
               args: [
@@ -162,7 +178,20 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
           },
           {
             entryPoint: 'update_operators',
-            schema: 'list',
+            schema: {
+              list: {
+                add_operator: {
+                  operator: 'address',
+                  owner: 'address',
+                  token_id: 'nat',
+                },
+                remove_operator: {
+                  operator: 'address',
+                  owner: 'address',
+                  token_id: 'nat',
+                },
+              },
+            },
             michelson: {
               prim: 'list',
               args: [
@@ -342,7 +371,20 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
           },
           {
             entryPoint: 'update_operators',
-            schema: 'list',
+            schema: {
+              list: {
+                add_operator: {
+                  operator: 'address',
+                  owner: 'address',
+                  token_id: 'nat',
+                },
+                remove_operator: {
+                  operator: 'address',
+                  owner: 'address',
+                  token_id: 'nat',
+                },
+              },
+            },
             michelson: {
               prim: 'list',
               args: [

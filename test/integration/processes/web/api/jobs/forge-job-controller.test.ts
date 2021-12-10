@@ -376,10 +376,10 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
             testAccount2 +
             '"}}}',
           amount: 0,
-          fee: 447,
+          fee: 610,
           source: testAccount,
           storage_limit: 0,
-          gas_limit: 1385,
+          gas_limit: 3015,
           branch: insertedForgeParameters[0].branch,
           counter: insertedForgeParameters[0].counter,
           job_id: body.id,
