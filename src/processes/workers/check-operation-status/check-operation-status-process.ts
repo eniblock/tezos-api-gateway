@@ -3,11 +3,12 @@ import Logger from 'bunyan';
 import { AbstractProcess } from '../../abstract-process';
 import { PostgreService } from '../../../services/postgre';
 import { tezosNodeUrls } from '../../../config';
-import { amqpConfig, checkOperationStatusProcess } from './config';
+import { amqpConfig, checkOperationStatusProcess, cronTime } from './config';
 import { GatewayPool } from '../../../services/gateway-pool';
 import { IndexerPool } from '../../../services/indexer-pool';
 import { checkOperationStatus } from './lib/check-operation-status';
 import { AmqpService } from '../../../services/amqp';
+import * as cron from 'cron';
 
 export class CheckOperationStatusProcess extends AbstractProcess {
   protected _isRunning: boolean = false;
@@ -66,7 +67,7 @@ export class CheckOperationStatusProcess extends AbstractProcess {
     }
 
     this._isRunning = true;
-    this.logger.info('✔ Check operation status is running');
+    this.logger.info('✔ Check operation status worker is starting');
     await this.indexerPool.initializeIndexers();
     await this.amqpService.start();
 
@@ -89,7 +90,21 @@ export class CheckOperationStatusProcess extends AbstractProcess {
       this.logger,
     );
 
-    this.logger.info('✔ Check operation status is done successfully');
+    const job = new cron.CronJob(cronTime, async () => {
+      await checkOperationStatus(
+        {
+          postgreService: this.postgreService,
+          tezosService,
+          amqpService: this.amqpService,
+          indexerPool: this.indexerPool,
+        },
+        this.logger,
+      );
+    });
+
+    job.start();
+
+    this.logger.info('✔ Check operation status worker started successfully');
     return true;
   }
 
