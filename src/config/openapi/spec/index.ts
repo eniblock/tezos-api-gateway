@@ -6,7 +6,7 @@ const spec = {
   openapi: '3.0.1',
   servers: [
     {
-      description: 'API Server',
+      description: 'TAG API Server',
       url: '/api',
     },
   ],
