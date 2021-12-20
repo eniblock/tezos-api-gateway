@@ -13,6 +13,7 @@ export const FA2Contract4 = 'KT1LtjsjoRavziAgXHkLsMn2UHSdYCJj6mCx'; // simpleMap
 export const FA2Contract5 = 'KT1938ykzsYS1FR3WAyTa2BUTuTadtV1M9v8'; // Nonexistent contract
 export const FA2Contract7 = 'Bad contract format                '; // Bad contract format
 export const ProxyContract = 'KT1C5k4LJ1mQEGG556yBvMGkAGGfoLEavysd'; // proxyTokenController.py
+export const SingleEntrypointContract = 'KT1BMBACEe8XXLR4XiL3qDdUDX7GxpwA53sU'; // proxyTokenController.py
 
 export const testAccount = 'tz1VbHay2YPpiuPYs8SQHynuW3YvGtNuB29z';
 export const testAccount2 = 'tz1Ric9o7YeBvbxXHnxhBMAjaMgKUnHUbYKB'; // Receiver account

@@ -53,19 +53,32 @@ export function getContractMethod(
 ): ContractMethod<ContractProvider> {
   if (!params) {
     if (params === null) {
+      // The params can have the type null for optional parameters type
       return contract.methods[`${entryPoint}`].apply(null, []);
     } else {
+      // When params are undefined the method have to return [0]
       return contract.methods[`${entryPoint}`].apply(null, [0]);
     }
   }
 
-  if (!(typeof params === 'object' || Array.isArray(params))) {
-    return contract.methods[`${entryPoint}`](params);
+  let token: any;
+  let schema: any;
+  if (Object.keys(contract.entrypoints.entrypoints).length > 1) {
+    const mickelsonSchema = contract.entrypoints.entrypoints[`${entryPoint}`];
+    token = createToken.createToken(mickelsonSchema, 0);
+    schema = contract.parameterSchema.ExtractSchema()[`${entryPoint}`];
+  } else {
+    // Make the single entrypoint contract accept both "default" and the entrypoint name
+    const mickelsonSchema =
+      entryPoint === 'default'
+        ? contract.entrypoints.entrypoints[
+            Object.keys(contract.entrypoints.entrypoints)[0]
+          ]
+        : contract.entrypoints.entrypoints[`${entryPoint}`];
+    token = createToken.createToken(mickelsonSchema, 0);
+    schema = contract.parameterSchema.ExtractSchema();
+    entryPoint = 'default';
   }
-
-  const schema = contract.parameterSchema.ExtractSchema()[`${entryPoint}`];
-  const mickelsonSchema = contract.entrypoints.entrypoints[`${entryPoint}`];
-  const token = createToken.createToken(mickelsonSchema, 0);
 
   logger.info(
     token.ExtractSignature(),

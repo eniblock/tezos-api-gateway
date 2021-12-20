@@ -3,6 +3,9 @@ import { tezosNodeUrl } from '../../../__fixtures__/config';
 import {
   FA2Contract,
   ProxyContract,
+  SingleEntrypointContract,
+  testAccount,
+  testAccount2,
 } from '../../../__fixtures__/smart-contract';
 import {
   formatEntryPointParameters,
@@ -30,10 +33,14 @@ const createToken = require('@taquito/michelson-encoder/dist/lib/tokens/createTo
 describe('[lib/smart-contracts] Index', () => {
   const tezosService = new TezosService(tezosNodeUrl);
   let fa2Contract: ContractAbstraction<ContractProvider>;
+  let singleEntrypointContract: ContractAbstraction<ContractProvider>;
   let proxyContract: ContractAbstraction<ContractProvider>;
 
   beforeAll(async () => {
     fa2Contract = await tezosService.getContract(FA2Contract);
+    singleEntrypointContract = await tezosService.getContract(
+      SingleEntrypointContract,
+    );
     proxyContract = await tezosService.getContract(ProxyContract);
   });
 
@@ -211,6 +218,68 @@ describe('[lib/smart-contracts] Index', () => {
       expect(() =>
         getContractMethod(logger, contract, 'transfer_3', [{ toto: 'tata' }]),
       ).toThrow(InvalidMapStructureParams);
+    });
+
+    it('should correctly accept both "default" and the real entrypoint name when the contract have a single entrypoint"  ', () => {
+      const operation = {
+        amount: 0,
+        mutez: false,
+        parameter: {
+          entrypoint: 'default',
+          value: [
+            {
+              args: [
+                {
+                  args: [
+                    {
+                      string: 'tz1VbHay2YPpiuPYs8SQHynuW3YvGtNuB29z',
+                    },
+                    {
+                      args: [
+                        {
+                          string: 'tz1Ric9o7YeBvbxXHnxhBMAjaMgKUnHUbYKB',
+                        },
+                        {
+                          int: '0',
+                        },
+                      ],
+                      prim: 'Pair',
+                    },
+                  ],
+                  prim: 'Pair',
+                },
+              ],
+              prim: 'Left',
+            },
+          ],
+        },
+        to: 'KT1BMBACEe8XXLR4XiL3qDdUDX7GxpwA53sU',
+      };
+      const params = [
+        {
+          add_operator: {
+            operator: testAccount,
+            owner: testAccount2,
+            token_id: 0,
+          },
+        },
+      ];
+
+      let contractMethod = getContractMethod(
+        logger,
+        singleEntrypointContract,
+        'single_entry',
+        params,
+      );
+      expect(contractMethod.toTransferParams()).toEqual(operation);
+
+      contractMethod = getContractMethod(
+        logger,
+        singleEntrypointContract,
+        'default',
+        params,
+      );
+      expect(contractMethod.toTransferParams()).toEqual(operation);
     });
   });
 
