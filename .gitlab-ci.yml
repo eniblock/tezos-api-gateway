@@ -22,7 +22,7 @@ test:
     AMQP_URL: amqp://rabbitmq
   before_script:
     - apk add curl bash python3
-    - wget -O - https://smartpy.io/cli/install.sh | sh -s local-install /usr/local/smartpy/
+    - curl -s https://smartpy.io/cli/install.sh | bash -s -- --yes --prefix /usr/local/smartpy/
     - npm i
   script:
     - npm test
