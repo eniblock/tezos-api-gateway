@@ -31,12 +31,25 @@ export class TezosService {
 
   public async getContract(contractAddress: string) {
     const contract = this._tezos.contract.at(contractAddress);
-    cacheLocal.set(contractAddress, contract);
+    let keyToCache = contractAddress;
+
+    if (this.tezos.signer) {
+      const pkh = await this.tezos.signer.publicKeyHash();
+      // As the signer is included in the contract object,
+      // we store the contract with the signer's pkh to retrieve the right contract instance
+      keyToCache = `${contractAddress}-${pkh}`;
+    }
+    cacheLocal.set(keyToCache, contract);
     return contract;
   }
 
   public async getContractFromCache(contractAddress: string) {
-    let contract = cacheLocal.get<any>(contractAddress);
+    let keyToCache = contractAddress;
+    if (this.tezos.signer) {
+      const pkh = await this.tezos.signer.publicKeyHash();
+      keyToCache = `${contractAddress}-${pkh}`;
+    }
+    let contract = cacheLocal.get<any>(keyToCache);
     if (contract === undefined)
       contract = await this.getContract(contractAddress);
     return contract;
