@@ -19,6 +19,7 @@ import {
 } from '@taquito/taquito';
 import { logger } from '../../../__fixtures__/services/logger';
 import {
+  InvalidBooleanParameter,
   InvalidMapStructureParams,
   InvalidParameter,
   InvalidParameterName,
@@ -295,7 +296,62 @@ describe('[lib/smart-contracts] Index', () => {
       const token = createToken.createToken(mickelsonSchema, 0);
 
       const res = formatEntryPointParameters(params, token, false, schema);
-      expect(res).toEqual(['True']);
+      expect(res).toEqual([true]);
+    });
+
+    it('should correctly format boolean parameters and accept also string booleans', async () => {
+      const entryPoint = 'set_pause';
+      const schema = fa2Contract.parameterSchema.ExtractSchema()[
+        `${entryPoint}`
+      ];
+      const mickelsonSchema =
+        fa2Contract.entrypoints.entrypoints[`${entryPoint}`];
+      const token = createToken.createToken(mickelsonSchema, 0);
+
+      let res = formatEntryPointParameters('True', token, false, schema);
+      expect(res).toEqual([true]);
+      res = formatEntryPointParameters('true', token, false, schema);
+      expect(res).toEqual([true]);
+      res = formatEntryPointParameters('TRUE', token, false, schema);
+      expect(res).toEqual([true]);
+      res = formatEntryPointParameters(true, token, false, schema);
+      expect(res).toEqual([true]);
+      res = formatEntryPointParameters('FALSE', token, false, schema);
+      expect(res).toEqual([false]);
+      res = formatEntryPointParameters('False', token, false, schema);
+      expect(res).toEqual([false]);
+      res = formatEntryPointParameters('false', token, false, schema);
+      expect(res).toEqual([false]);
+      res = formatEntryPointParameters(false, token, false, schema);
+      expect(res).toEqual([false]);
+    });
+
+    it('should throw InvalidBooleanParameter error for invalid boolean parameter type', async () => {
+      const entryPoint = 'set_pause';
+      const schema = fa2Contract.parameterSchema.ExtractSchema()[
+        `${entryPoint}`
+      ];
+      const mickelsonSchema =
+        fa2Contract.entrypoints.entrypoints[`${entryPoint}`];
+      const token = createToken.createToken(mickelsonSchema, 0);
+
+      expect(() => formatEntryPointParameters(2, token, false, schema)).toThrow(
+        InvalidBooleanParameter,
+      );
+      expect(() =>
+        formatEntryPointParameters({}, token, false, schema),
+      ).toThrow(InvalidBooleanParameter);
+      expect(() =>
+        formatEntryPointParameters([], token, false, schema),
+      ).toThrow(InvalidBooleanParameter);
+      expect(() =>
+        formatEntryPointParameters(
+          'Wrong boolean string',
+          token,
+          false,
+          schema,
+        ),
+      ).toThrow(InvalidBooleanParameter);
     });
 
     it('should correctly return the parameters list with correctly formatted FA2 mint parameters', async () => {
@@ -631,7 +687,7 @@ describe('[lib/smart-contracts] Index', () => {
         params.call_params.parameters.mint.mint_params.metadata[0];
       if (metadataValue) metadata.set(metadataValue.key, metadataValue.value);
       expect(res).toEqual([
-        'True',
+        true,
         'mint',
         'mint',
         'tz1LzyfRfEhcWsP3x7dkAKeggpDgHgs7Xv8Q',
@@ -686,7 +742,7 @@ describe('[lib/smart-contracts] Index', () => {
         params.call_params.parameters.mint.mint_params.metadata[0];
       if (metadataValue) metadata.set(metadataValue.key, metadataValue.value);
       expect(res).toEqual([
-        'True',
+        true,
         'mint',
         'mint',
         'tz1LzyfRfEhcWsP3x7dkAKeggpDgHgs7Xv8Q',
@@ -704,7 +760,7 @@ describe('[lib/smart-contracts] Index', () => {
   describe('#getTransferToParams', () => {
     it('should correctly return the operation object with correctly formatted bool parameter', async () => {
       const entryPoint = 'set_pause';
-      const params = 'True';
+      const params = 'false';
 
       const res = getTransferToParams(logger, fa2Contract, entryPoint, params);
       expect(res).toEqual({
@@ -715,7 +771,7 @@ describe('[lib/smart-contracts] Index', () => {
         parameter: {
           entrypoint: `${entryPoint}`,
           value: {
-            prim: 'True',
+            prim: 'False',
           },
         },
         source: undefined,

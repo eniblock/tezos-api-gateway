@@ -12,6 +12,7 @@ import {
   GenericObject,
 } from '../../const/interfaces/forge-operation-params';
 import {
+  InvalidBooleanParameter,
   InvalidMapStructureParams,
   InvalidParameter,
   InvalidParameterName,
@@ -35,6 +36,8 @@ const set = require('@taquito/michelson-encoder/dist/lib/tokens/set');
 const pair = require('@taquito/michelson-encoder/dist/lib/tokens/pair');
 // tslint:disable-next-line:no-var-requires
 const opt = require('@taquito/michelson-encoder/dist/lib/tokens/option');
+// tslint:disable-next-line:no-var-requires
+const bool = require('@taquito/michelson-encoder/dist/lib/tokens/comparable/bool');
 /**
  * Get the contract method
  *
@@ -51,7 +54,7 @@ export function getContractMethod(
   entryPoint: string,
   params?: EntryPointParams,
 ): ContractMethod<ContractProvider> {
-  if (!params) {
+  if (!params && !(typeof params === 'boolean')) {
     if (params === null) {
       // The params can have the type null for optional parameters type
       return contract.methods[`${entryPoint}`].apply(null, []);
@@ -180,6 +183,10 @@ export function formatEntryPointParameters(
     return formatOptionParameter(params, token, onlyFormatMaps, schema);
   }
 
+  if (token instanceof bool.BoolToken) {
+    return [formatBoolParameter(params)];
+  }
+
   if (!Array.isArray(params) && typeof params !== 'object') {
     return [params];
   }
@@ -209,14 +216,34 @@ export function formatEntryPointParameters(
 }
 
 /**
+ * Format boolean parameters
+ *
+ *
+ * @param params     - Boolean parameter
+ * @return {boolean} - boolean formatted parameter
+ */
+function formatBoolParameter(params: EntryPointParams): boolean {
+  if (typeof params === 'boolean') {
+    return params;
+  } else if (typeof params === 'string') {
+    if (params.toUpperCase() === 'TRUE') {
+      return true;
+    }
+    if (params.toUpperCase() === 'FALSE') {
+      return false;
+    }
+  }
+  throw new InvalidBooleanParameter(params);
+}
+
+/**
  * Format option parameters
  *
  *
- * @param params     - Record object
+ * @param params     - Option object
  * @param token
  * @param onlyFormatMaps
  * @param schema
- * @return {MichelsonMap} the corresponding Michelson Map
  */
 function formatOptionParameter(
   params: EntryPointParams,
@@ -240,11 +267,10 @@ function formatOptionParameter(
  * Format variant parameters by prefixing the parameters with the variant name
  *
  *
- * @param params     - Record object
+ * @param params     - Variant object
  * @param token
  * @param onlyFormatMaps
  * @param schema
- * @return {MichelsonMap} the corresponding Michelson Map
  */
 function formatVariantParameter(
   params: EntryPointParams,
@@ -296,9 +322,8 @@ function formatVariantParameter(
  * Format list parameters
  *
  *
- * @param params     - Record object
+ * @param params     - list object
  * @param token
- * @return {MichelsonMap} the corresponding Michelson Map
  */
 function formatListOrSetParameter(params: EntryPointParams, token: any) {
   if (!Array.isArray(params)) {
@@ -324,7 +349,6 @@ function formatListOrSetParameter(params: EntryPointParams, token: any) {
  * @param token
  * @param onlyFormatMaps
  * @param schema
- * @return {MichelsonMap} the corresponding Michelson Map
  */
 function formatRecordParameter(
   params: EntryPointParams,
