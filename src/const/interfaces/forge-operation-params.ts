@@ -4,7 +4,12 @@ export interface GenericObject {
   [key: string]: unknown;
 }
 
-export type EntryPointParams = GenericObject | string | number | unknown[];
+export type EntryPointParams =
+  | GenericObject
+  | boolean
+  | string
+  | number
+  | unknown[];
 
 export interface ForgeOperationBodyParams {
   transactions: TransactionDetails[];

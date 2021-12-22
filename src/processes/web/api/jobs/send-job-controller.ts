@@ -17,6 +17,7 @@ import { insertJob } from '../../../../models/jobs';
 import { JobStatus } from '../../../../const/job-status';
 import { GatewayPool } from '../../../../services/gateway-pool';
 import {
+  InvalidBooleanParameter,
   InvalidMapStructureParams,
   InvalidParameter,
   InvalidParameterName,
@@ -89,7 +90,8 @@ function sendTransactionsAndCreateJobAsync(
         err instanceof InvalidParameter ||
         err instanceof MissingParameter ||
         err instanceof UnSupportedParameterSchema ||
-        err instanceof InvalidVariantObject
+        err instanceof InvalidVariantObject ||
+        err instanceof InvalidBooleanParameter
       ) {
         return next(createHttpError(StatusCodes.BAD_REQUEST, err.message));
       }

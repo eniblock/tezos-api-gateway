@@ -10,6 +10,7 @@ import {
   MissingParameter,
   UnSupportedParameterSchema,
   InvalidParameter,
+  InvalidBooleanParameter,
 } from '../../../../const/errors/invalid-entry-point-params';
 import { forgeOperation } from '../../../../lib/jobs/forge-operation';
 import { GatewayPool } from '../../../../services/gateway-pool';
@@ -88,7 +89,8 @@ function forgeOperationAndCreateJob(
         err instanceof InvalidParameter ||
         err instanceof MissingParameter ||
         err instanceof UnSupportedParameterSchema ||
-        err instanceof InvalidVariantObject
+        err instanceof InvalidVariantObject ||
+        err instanceof InvalidBooleanParameter
       ) {
         return next(createHttpError(StatusCodes.BAD_REQUEST, err.message));
       }

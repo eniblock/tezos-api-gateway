@@ -32,6 +32,7 @@ const SEND_TRANSACTIONS_KNOWN_ERRORS = [
   'MissingParameter',
   'UnSupportedParameterSchema',
   'InvalidVariantObject',
+  'InvalidBooleanParameter',
 ];
 
 /**

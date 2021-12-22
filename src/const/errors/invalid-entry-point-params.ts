@@ -28,6 +28,14 @@ export class UnSupportedParameterSchema extends Error {
   }
 }
 
+export class InvalidBooleanParameter extends Error {
+  constructor(parameter: any) {
+    super(
+      `Invalid boolean parameter, expected boolean or a boolean string, but got ${parameter}`,
+    );
+  }
+}
+
 export class InvalidVariantObject extends Error {
   constructor(itemsNumber: number) {
     super(`Invalid variant object, expected 1 item but got ${itemsNumber}`);
