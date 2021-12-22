@@ -39,6 +39,7 @@ const FORGE_OPERATION_KNOWN_ERRORS = [
   'InvalidVariantObject',
   'AddressNotRevealedError',
   'RevealEstimateError',
+  'InvalidBooleanParameter',
 ];
 
 type TransactionsDetailsWithMichelsonParameters = Omit<

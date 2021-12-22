@@ -3,6 +3,9 @@ import { tezosNodeUrl } from '../../../__fixtures__/config';
 import {
   FA2Contract,
   ProxyContract,
+  SingleEntrypointContract,
+  testAccount,
+  testAccount2,
 } from '../../../__fixtures__/smart-contract';
 import {
   formatEntryPointParameters,
@@ -16,6 +19,7 @@ import {
 } from '@taquito/taquito';
 import { logger } from '../../../__fixtures__/services/logger';
 import {
+  InvalidBooleanParameter,
   InvalidMapStructureParams,
   InvalidParameter,
   InvalidParameterName,
@@ -30,10 +34,14 @@ const createToken = require('@taquito/michelson-encoder/dist/lib/tokens/createTo
 describe('[lib/smart-contracts] Index', () => {
   const tezosService = new TezosService(tezosNodeUrl);
   let fa2Contract: ContractAbstraction<ContractProvider>;
+  let singleEntrypointContract: ContractAbstraction<ContractProvider>;
   let proxyContract: ContractAbstraction<ContractProvider>;
 
   beforeAll(async () => {
     fa2Contract = await tezosService.getContract(FA2Contract);
+    singleEntrypointContract = await tezosService.getContract(
+      SingleEntrypointContract,
+    );
     proxyContract = await tezosService.getContract(ProxyContract);
   });
 
@@ -212,6 +220,68 @@ describe('[lib/smart-contracts] Index', () => {
         getContractMethod(logger, contract, 'transfer_3', [{ toto: 'tata' }]),
       ).toThrow(InvalidMapStructureParams);
     });
+
+    it('should correctly accept both "default" and the real entrypoint name when the contract have a single entrypoint"  ', () => {
+      const operation = {
+        amount: 0,
+        mutez: false,
+        parameter: {
+          entrypoint: 'default',
+          value: [
+            {
+              args: [
+                {
+                  args: [
+                    {
+                      string: 'tz1VbHay2YPpiuPYs8SQHynuW3YvGtNuB29z',
+                    },
+                    {
+                      args: [
+                        {
+                          string: 'tz1Ric9o7YeBvbxXHnxhBMAjaMgKUnHUbYKB',
+                        },
+                        {
+                          int: '0',
+                        },
+                      ],
+                      prim: 'Pair',
+                    },
+                  ],
+                  prim: 'Pair',
+                },
+              ],
+              prim: 'Left',
+            },
+          ],
+        },
+        to: 'KT1BMBACEe8XXLR4XiL3qDdUDX7GxpwA53sU',
+      };
+      const params = [
+        {
+          add_operator: {
+            operator: testAccount,
+            owner: testAccount2,
+            token_id: 0,
+          },
+        },
+      ];
+
+      let contractMethod = getContractMethod(
+        logger,
+        singleEntrypointContract,
+        'single_entry',
+        params,
+      );
+      expect(contractMethod.toTransferParams()).toEqual(operation);
+
+      contractMethod = getContractMethod(
+        logger,
+        singleEntrypointContract,
+        'default',
+        params,
+      );
+      expect(contractMethod.toTransferParams()).toEqual(operation);
+    });
   });
 
   describe('#formatEntryPointParameters', () => {
@@ -226,7 +296,62 @@ describe('[lib/smart-contracts] Index', () => {
       const token = createToken.createToken(mickelsonSchema, 0);
 
       const res = formatEntryPointParameters(params, token, false, schema);
-      expect(res).toEqual(['True']);
+      expect(res).toEqual([true]);
+    });
+
+    it('should correctly format boolean parameters and accept also string booleans', async () => {
+      const entryPoint = 'set_pause';
+      const schema = fa2Contract.parameterSchema.ExtractSchema()[
+        `${entryPoint}`
+      ];
+      const mickelsonSchema =
+        fa2Contract.entrypoints.entrypoints[`${entryPoint}`];
+      const token = createToken.createToken(mickelsonSchema, 0);
+
+      let res = formatEntryPointParameters('True', token, false, schema);
+      expect(res).toEqual([true]);
+      res = formatEntryPointParameters('true', token, false, schema);
+      expect(res).toEqual([true]);
+      res = formatEntryPointParameters('TRUE', token, false, schema);
+      expect(res).toEqual([true]);
+      res = formatEntryPointParameters(true, token, false, schema);
+      expect(res).toEqual([true]);
+      res = formatEntryPointParameters('FALSE', token, false, schema);
+      expect(res).toEqual([false]);
+      res = formatEntryPointParameters('False', token, false, schema);
+      expect(res).toEqual([false]);
+      res = formatEntryPointParameters('false', token, false, schema);
+      expect(res).toEqual([false]);
+      res = formatEntryPointParameters(false, token, false, schema);
+      expect(res).toEqual([false]);
+    });
+
+    it('should throw InvalidBooleanParameter error for invalid boolean parameter type', async () => {
+      const entryPoint = 'set_pause';
+      const schema = fa2Contract.parameterSchema.ExtractSchema()[
+        `${entryPoint}`
+      ];
+      const mickelsonSchema =
+        fa2Contract.entrypoints.entrypoints[`${entryPoint}`];
+      const token = createToken.createToken(mickelsonSchema, 0);
+
+      expect(() => formatEntryPointParameters(2, token, false, schema)).toThrow(
+        InvalidBooleanParameter,
+      );
+      expect(() =>
+        formatEntryPointParameters({}, token, false, schema),
+      ).toThrow(InvalidBooleanParameter);
+      expect(() =>
+        formatEntryPointParameters([], token, false, schema),
+      ).toThrow(InvalidBooleanParameter);
+      expect(() =>
+        formatEntryPointParameters(
+          'Wrong boolean string',
+          token,
+          false,
+          schema,
+        ),
+      ).toThrow(InvalidBooleanParameter);
     });
 
     it('should correctly return the parameters list with correctly formatted FA2 mint parameters', async () => {
@@ -562,7 +687,7 @@ describe('[lib/smart-contracts] Index', () => {
         params.call_params.parameters.mint.mint_params.metadata[0];
       if (metadataValue) metadata.set(metadataValue.key, metadataValue.value);
       expect(res).toEqual([
-        'True',
+        true,
         'mint',
         'mint',
         'tz1LzyfRfEhcWsP3x7dkAKeggpDgHgs7Xv8Q',
@@ -617,7 +742,7 @@ describe('[lib/smart-contracts] Index', () => {
         params.call_params.parameters.mint.mint_params.metadata[0];
       if (metadataValue) metadata.set(metadataValue.key, metadataValue.value);
       expect(res).toEqual([
-        'True',
+        true,
         'mint',
         'mint',
         'tz1LzyfRfEhcWsP3x7dkAKeggpDgHgs7Xv8Q',
@@ -635,7 +760,7 @@ describe('[lib/smart-contracts] Index', () => {
   describe('#getTransferToParams', () => {
     it('should correctly return the operation object with correctly formatted bool parameter', async () => {
       const entryPoint = 'set_pause';
-      const params = 'True';
+      const params = 'false';
 
       const res = getTransferToParams(logger, fa2Contract, entryPoint, params);
       expect(res).toEqual({
@@ -646,7 +771,7 @@ describe('[lib/smart-contracts] Index', () => {
         parameter: {
           entrypoint: `${entryPoint}`,
           value: {
-            prim: 'True',
+            prim: 'False',
           },
         },
         source: undefined,
