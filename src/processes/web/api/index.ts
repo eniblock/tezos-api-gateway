@@ -12,6 +12,8 @@ import registerConfRoutes from './conf';
 import { SignerFactory } from '../../../services/signer-factory';
 import { MetricPrometheusService } from '../../../services/metric-prometheus';
 import { IndexerPool } from '../../../services/indexer-pool';
+import { prod } from '../../../config';
+import registerTestRoutes from './test';
 
 export default function setupRoutes(
   app: ExpressApp,
@@ -36,6 +38,10 @@ export default function setupRoutes(
   registerUserRoutes(router, gatewayPool, indexerPool);
   registerContractRoutes(router, indexerPool);
   registerConfRoutes(router, indexerPool, gatewayPool);
+
+  if (!prod) {
+    registerTestRoutes(router);
+  }
 
   app.use('/api', router);
 

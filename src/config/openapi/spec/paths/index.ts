@@ -4,8 +4,10 @@ import storage from './storage';
 import entrypoints from './entrypoints';
 import contract from './contract';
 import conf from './conf';
+import test from './test';
+import { prod } from '../../../index';
 
-export const paths = {
+let paths = {
   ...jobs,
   ...storage,
   ...entrypoints,
@@ -13,5 +15,9 @@ export const paths = {
   ...contract,
   ...conf,
 };
+
+if (!prod) {
+  paths = { ...paths, ...test };
+}
 
 export default paths;

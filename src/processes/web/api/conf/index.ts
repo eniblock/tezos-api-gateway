@@ -9,6 +9,7 @@ import { GatewayPool } from '../../../../services/gateway-pool';
  *
  * @param   {Router} router       - The express router.
  * @param   {object} indexerPool  - The indexer pool
+ * @param   {object} gatewayPool  - The gateway pool
  * @returns {void}
  */
 export default function registerConfRoutes(
