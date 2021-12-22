@@ -74,6 +74,10 @@ export function convertStorageValueToStorageResponseValue(value: unknown) {
     return (value as BigNumber).toNumber();
   }
 
+  if (value && typeof value === 'object') {
+    return generateStorageResponse(value as GenericObject);
+  }
+
   return value;
 }
 
