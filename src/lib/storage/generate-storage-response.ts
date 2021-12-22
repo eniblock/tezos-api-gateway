@@ -52,7 +52,7 @@ export function convertMichelsonMapToArrayObject(
  *
  * @return {object | string | number} the storage response value regarding the value
  */
-export function convertStorageValueToStorageResponseValue(value: unknown) {
+export function convertStorageValueToStorageResponseValue(value: unknown): any {
   if (value instanceof MichelsonMap) {
     const map = value as MichelsonMap<MichelsonMapKey, unknown>;
 
@@ -72,6 +72,12 @@ export function convertStorageValueToStorageResponseValue(value: unknown) {
 
   if (value instanceof BigNumber) {
     return (value as BigNumber).toNumber();
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((elt) => {
+      return convertStorageValueToStorageResponseValue(elt);
+    });
   }
 
   if (value && typeof value === 'object') {
