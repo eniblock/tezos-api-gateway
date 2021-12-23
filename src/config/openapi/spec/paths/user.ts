@@ -237,7 +237,7 @@ export default {
     get: {
       summary: 'Get user information',
       description:
-        'Return information about user (i.e balance, reveal) as exposed by the indexer',
+        'Return information about user (i.e balance, reveal, activation) as exposed by the indexer',
       parameters: [
         {
           name: 'address',
@@ -270,6 +270,12 @@ export default {
                     type: 'boolean',
                     description:
                       "Public key revelation status. Unrevealed account can't send manager operation (transaction, origination etc.). If the returned value is null that means that we were not able to fetch data",
+                  },
+                  activated: {
+                    nullable: true,
+                    type: 'boolean',
+                    description:
+                      "Public key activation status. Unactivated accounts aren't known to indexers. If the returned value is null that means that we were not able to fetch data",
                   },
                 },
               },
