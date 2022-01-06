@@ -1,14 +1,4 @@
-## HOW TO CREATE A TEZOS ACCOUNT AND IMPORT AN EXISTING ONE TO ACTIVATE IT
-
-Use the API: `/api/user/create`
-with the following request body `{"userIdList": ["account_id_1", "account_id_2"...], "secureKeyName": "key_id"}`
-
-- **_userIdList_** contains the string identifiers of the accounts to be created
-- **_secureKeyName_** is the id of the Tezos account that will sign the accounts' activation transactions
-
-So how to import the **_secureKey_** key in Vault, the keystore database?
-
-### How to import an existing Tezos account in vault
+## IMPORT AN EXISTING TEZOS ACCOUNT
 
 ### Issue Description
 
@@ -18,7 +8,7 @@ Importing keys is an important feature in the scope of TezosApiGateway in order 
 
 The problem here is that for security reasons, Vault doesn’t allow private key importing.
 
-However, Vault offers a feature of backup/restore that we will use in this tutorial to import an account.
+However, Vault offers a feature of backup/restore that will be used in this tutorial to import an account.
 
 ### Key Importing Steps
 
