@@ -18,6 +18,7 @@ import { GatewayPool } from '../../services/gateway-pool';
 import { SignerFactory } from '../../services/signer-factory';
 import { MetricPrometheusService } from '../../services/metric-prometheus';
 import { IndexerPool } from '../../services/indexer-pool';
+import info from '../../config/openapi/spec/info';
 
 export interface WebConfig {
   server: {
@@ -141,7 +142,7 @@ export class WebProcess extends AbstractProcess {
     this._isRunning = true;
     this.logger.info(
       { port: this._webConfig.port, environment: process.env.NODE_ENV },
-      '✔ Server running',
+      `✔ Server running, version ${info.version}`,
     );
 
     return true;
