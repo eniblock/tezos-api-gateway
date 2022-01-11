@@ -5,6 +5,7 @@ import { OriginationOperation } from '@taquito/taquito/dist/types/operations/ori
 import { ForgeOperationResult } from '../const/interfaces/forge-operation-result';
 import cacheLocal from '../services/cache-local';
 import { OperationContentsReveal } from '@taquito/rpc/dist/types/types';
+import { VaultSigner } from './signers/vault';
 
 export class TezosService {
   private _tezos: TezosToolkit;
@@ -33,7 +34,7 @@ export class TezosService {
     const contract = this._tezos.contract.at(contractAddress);
     let keyToCache = contractAddress;
 
-    if (this.tezos.signer) {
+    if (this.tezos.signer instanceof VaultSigner) {
       const pkh = await this.tezos.signer.publicKeyHash();
       // As the signer is included in the contract object,
       // we store the contract with the signer's pkh to retrieve the right contract instance
@@ -45,7 +46,7 @@ export class TezosService {
 
   public async getContractFromCache(contractAddress: string) {
     let keyToCache = contractAddress;
-    if (this.tezos.signer) {
+    if (this.tezos.signer instanceof VaultSigner) {
       const pkh = await this.tezos.signer.publicKeyHash();
       keyToCache = `${contractAddress}-${pkh}`;
     }
