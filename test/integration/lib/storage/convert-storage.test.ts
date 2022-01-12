@@ -186,24 +186,20 @@ describe('[lib/storage/convert-storage]', () => {
               jwtToken: 'jwt',
             },
             value: {
-              datasources: {
-                type: 'map',
-                size: 3,
-                value: [
-                  {
-                    key: 'datasource1',
-                    value: 'value1',
-                  },
-                  {
-                    key: 'datasource2',
-                    value: 'value2',
-                  },
-                  {
-                    key: 'datasource3',
-                    value: 'value3',
-                  },
-                ],
-              },
+              datasources: [
+                {
+                  key: 'datasource1',
+                  value: 'value1',
+                },
+                {
+                  key: 'datasource2',
+                  value: 'value2',
+                },
+                {
+                  key: 'datasource3',
+                  value: 'value3',
+                },
+              ],
               name: 'toto',
               publicKey: 'toto public key',
               publicKeyHash: testAccount2,

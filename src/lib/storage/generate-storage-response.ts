@@ -56,11 +56,7 @@ export function convertStorageValueToStorageResponseValue(value: unknown): any {
   if (value instanceof MichelsonMap) {
     const map = value as MichelsonMap<MichelsonMapKey, unknown>;
 
-    return {
-      type: ContractStorageDataType.MAP,
-      size: map.size,
-      value: convertMichelsonMapToArrayObject(map),
-    };
+    return convertMichelsonMapToArrayObject(map);
   }
 
   if (value instanceof BigMapAbstraction) {
