@@ -205,12 +205,18 @@ export class IndexerClient extends AbstractClient {
           ? userInfo[keyToBalance]
           : userInfo.balance / 1000000,
         revealed: keyToReveal ? userInfo[keyToReveal] : null,
+        activated: true,
       };
     } catch (err) {
-      if (
-        err.status === StatusCodes.NOT_FOUND ||
-        err.status === StatusCodes.BAD_REQUEST
-      ) {
+      if (err.status === StatusCodes.NOT_FOUND) {
+        return {
+          account: userAddress,
+          balance: 0,
+          revealed: false,
+          activated: false,
+        };
+      }
+      if (err.status === StatusCodes.BAD_REQUEST) {
         throw new UserNotFoundError(userAddress);
       }
 
