@@ -269,9 +269,9 @@ function handleObjectCase(object: GenericObject): OpenAPIV3.SchemaObject {
 }
 
 /**
- * Return the OpenAPI schema object when the smart contract schema is map
+ * Return the OpenAPI schema object when the smart contract schema is a list
  *
- * @param {object} mapSchema  - the smart contract schema
+ * @param {object} listSchema  - the smart contract schema
  *
  * @return {object} the schema object
  */

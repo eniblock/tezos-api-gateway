@@ -1,7 +1,5 @@
-import * as cron from 'cron';
-
 import { createLogger } from '../../../services/logger';
-import { cronTime, loggerConfig } from './config';
+import { loggerConfig } from './config';
 import { CheckOperationStatusProcess } from './check-operation-status-process';
 import { PrometheusExporter } from '@opentelemetry/exporter-prometheus';
 import { MeterProvider } from '@opentelemetry/metrics';
@@ -21,12 +19,7 @@ const counter = meter.createCounter('metric_name', {
 });
 counter.bind({ pid: process.pid.toString() });
 
-const job = new cron.CronJob(cronTime, async () => {
-  const logger = createLogger(loggerConfig);
+const logger = createLogger(loggerConfig);
 
-  const checkOperationStatus = new CheckOperationStatusProcess(logger);
-
-  await checkOperationStatus.spawn();
-});
-
-job.start();
+const checkOperationStatus = new CheckOperationStatusProcess(logger);
+checkOperationStatus.spawn();

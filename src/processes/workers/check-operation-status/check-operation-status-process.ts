@@ -3,13 +3,15 @@ import Logger from 'bunyan';
 import { AbstractProcess } from '../../abstract-process';
 import { PostgreService } from '../../../services/postgre';
 import { tezosNodeUrls } from '../../../config';
-import { amqpConfig, checkOperationStatusProcess } from './config';
+import { amqpConfig, checkOperationStatusProcess, cronTime } from './config';
 import { GatewayPool } from '../../../services/gateway-pool';
 import { IndexerPool } from '../../../services/indexer-pool';
 import { checkOperationStatus } from './lib/check-operation-status';
 import { AmqpService } from '../../../services/amqp';
+import * as cron from 'cron';
 
 export class CheckOperationStatusProcess extends AbstractProcess {
+  private _cronJob: cron.CronJob | undefined;
   protected _isRunning: boolean = false;
 
   protected _postgreService: PostgreService;
@@ -53,6 +55,14 @@ export class CheckOperationStatusProcess extends AbstractProcess {
     return this._gatewayPool;
   }
 
+  public get cronJob(): cron.CronJob | undefined {
+    return this._cronJob;
+  }
+
+  public set cronJob(cronJob: cron.CronJob | undefined) {
+    this._cronJob = cronJob;
+  }
+
   /**
    * Start steps:
    *  - Check if the process is already running
@@ -66,7 +76,7 @@ export class CheckOperationStatusProcess extends AbstractProcess {
     }
 
     this._isRunning = true;
-    this.logger.info('✔ Check operation status is running');
+    this.logger.info('✔ Check operation status worker is starting');
     await this.indexerPool.initializeIndexers();
     await this.amqpService.start();
 
@@ -89,7 +99,21 @@ export class CheckOperationStatusProcess extends AbstractProcess {
       this.logger,
     );
 
-    this.logger.info('✔ Check operation status is done successfully');
+    this.cronJob = new cron.CronJob(cronTime, async () => {
+      await checkOperationStatus(
+        {
+          postgreService: this.postgreService,
+          tezosService,
+          amqpService: this.amqpService,
+          indexerPool: this.indexerPool,
+        },
+        this.logger,
+      );
+    });
+
+    this.cronJob.start();
+
+    this.logger.info('✔ Check operation status worker started successfully');
     return true;
   }
 
@@ -103,6 +127,7 @@ export class CheckOperationStatusProcess extends AbstractProcess {
       return false;
     }
 
+    if (this.cronJob) this.cronJob.stop();
     await this.postgreService.disconnect();
     await this.amqpService.stop();
 
