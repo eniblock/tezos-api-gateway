@@ -238,6 +238,14 @@ async function getOperationContentsTransactionWithParametersJson(
     '[lib/jobs/forge-operation/#getOperationContentsTransactionWithParametersJson] Find counter',
   );
 
+  // getEstimationForNode() requires the publicKey if a reveal is needed
+  // but fails if the publicKey is set when a reveal is not needed.
+  if (!reveal) publicKey = '';
+
+  const signerToGetPKH = new FakeSigner(sourceAddress, publicKey!);
+
+  tezosService.setSigner(signerToGetPKH);
+
   const parametersList: TransactionsDetailsWithMichelsonParameters[] = await Promise.all(
     transactions.map(async (transaction) => {
       const { parameter } = await getATransactionParameters(
@@ -253,14 +261,6 @@ async function getOperationContentsTransactionWithParametersJson(
     { parametersList },
     '[lib/jobs/forge-operation/#getOperationContentsTransactionWithParametersJson] Form a parameters as Michelson type list',
   );
-
-  // getEstimationForNode() requires the publicKey if a reveal is needed
-  // but fails if the publicKey is set when a reveal is not needed.
-  if (!reveal) publicKey = '';
-
-  const signerToGetPKH = new FakeSigner(sourceAddress, publicKey!);
-
-  tezosService.setSigner(signerToGetPKH);
   let estimations: Estimate[];
 
   try {

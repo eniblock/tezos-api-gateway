@@ -462,6 +462,45 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
       jest.restoreAllMocks();
       const loggerErrorSpy = jest.spyOn(logger, 'error');
 
+      const vaultNock = nock(vaultClientConfig.apiUrl)
+        .get(`/transit/keys/toto`)
+        .times(2)
+        .reply(200, {
+          request_id: '4e171bc2-6df7-7dab-b10b-d100efca7080',
+          lease_id: '',
+          lease_duration: 0,
+          renewable: false,
+          data: {
+            allow_plaintext_backup: false,
+            deletion_allowed: false,
+            derived: false,
+            exportable: true,
+            keys: {
+              '1': {
+                creation_time: '2021-02-01T10:01:29.097094+01:00',
+                name: 'ed25519',
+                public_key: 'ajwQQUHP/JZ74hoG3UoF+k/9EJPi33/ynxCxubcwYWM=',
+              },
+              '2': {
+                creation_time: '2021-02-02T10:01:29.097094+01:00',
+                name: 'ed25519',
+                public_key: 'L04JMAN9Lph+aSKZz0W/KzYPOa2tnBZhaZLvSwiNzMY=',
+              },
+            },
+            latest_version: 1,
+            min_available_version: 0,
+            min_decryption_version: 1,
+            min_encryption_version: 0,
+            name: 'toto',
+            supports_decryption: false,
+            supports_derivation: true,
+            supports_encryption: false,
+            supports_signing: true,
+            type: 'ed25519',
+          },
+          warnings: null,
+        });
+
       await expect(
         sendTransactions(
           {
@@ -484,6 +523,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
           logger,
         ),
       ).rejects.toThrow(MissingParameter);
+      vaultNock.done();
 
       expect(loggerErrorSpy).toHaveBeenCalledTimes(0);
 
@@ -508,6 +548,45 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
     it('should throw InvalidMapStructureParams but not log error  when contract entry point parameters does not match', async () => {
       jest.restoreAllMocks();
       const loggerErrorSpy = jest.spyOn(logger, 'error');
+
+      const vaultNock = nock(vaultClientConfig.apiUrl)
+        .get(`/transit/keys/toto`)
+        .times(2)
+        .reply(200, {
+          request_id: '4e171bc2-6df7-7dab-b10b-d100efca7080',
+          lease_id: '',
+          lease_duration: 0,
+          renewable: false,
+          data: {
+            allow_plaintext_backup: false,
+            deletion_allowed: false,
+            derived: false,
+            exportable: true,
+            keys: {
+              '1': {
+                creation_time: '2021-02-01T10:01:29.097094+01:00',
+                name: 'ed25519',
+                public_key: 'ajwQQUHP/JZ74hoG3UoF+k/9EJPi33/ynxCxubcwYWM=',
+              },
+              '2': {
+                creation_time: '2021-02-02T10:01:29.097094+01:00',
+                name: 'ed25519',
+                public_key: 'L04JMAN9Lph+aSKZz0W/KzYPOa2tnBZhaZLvSwiNzMY=',
+              },
+            },
+            latest_version: 1,
+            min_available_version: 0,
+            min_decryption_version: 1,
+            min_encryption_version: 0,
+            name: 'toto',
+            supports_decryption: false,
+            supports_derivation: true,
+            supports_encryption: false,
+            supports_signing: true,
+            type: 'ed25519',
+          },
+          warnings: null,
+        });
 
       await expect(
         sendTransactions(
@@ -537,6 +616,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
           logger,
         ),
       ).rejects.toThrow(InvalidMapStructureParams);
+      vaultNock.done();
 
       expect(loggerErrorSpy).toHaveBeenCalledTimes(0);
 
