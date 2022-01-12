@@ -132,70 +132,58 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
             type: 'big_map',
             value: '23037',
           },
-          organizations: {
-            type: 'map',
-            size: 2,
-            value: [
-              {
-                key: {
-                  address: testAccount2,
-                  jwtToken: 'jwt',
-                },
-                value: {
-                  name: 'toto',
-                  publicKey: 'toto public key',
-                  publicKeyHash: testAccount2,
-                  datasources: {
-                    type: 'map',
-                    size: 3,
-                    value: [
-                      {
-                        key: 'datasource1',
-                        value: 'value1',
-                      },
-                      {
-                        key: 'datasource2',
-                        value: 'value2',
-                      },
-                      {
-                        key: 'datasource3',
-                        value: 'value3',
-                      },
-                    ],
-                  },
-                },
+          organizations: [
+            {
+              key: {
+                address: testAccount2,
+                jwtToken: 'jwt',
               },
-              {
-                key: {
-                  address: testAccount,
-                  jwtToken: 'jwt',
-                },
-                value: {
-                  name: 'tata',
-                  publicKey: 'tata public key',
-                  publicKeyHash: testAccount,
-                  datasources: {
-                    type: 'map',
-                    size: 3,
-                    value: [
-                      {
-                        key: 'datasource4',
-                        value: 'value4',
-                      },
-                      {
-                        key: 'datasource5',
-                        value: 'value5',
-                      },
-                      {
-                        key: 'datasource6',
-                        value: 'value6',
-                      },
-                    ],
+              value: {
+                name: 'toto',
+                publicKey: 'toto public key',
+                publicKeyHash: testAccount2,
+                datasources: [
+                  {
+                    key: 'datasource1',
+                    value: 'value1',
                   },
-                },
+                  {
+                    key: 'datasource2',
+                    value: 'value2',
+                  },
+                  {
+                    key: 'datasource3',
+                    value: 'value3',
+                  },
+                ],
               },
-            ],
-          },
+            },
+            {
+              key: {
+                address: testAccount,
+                jwtToken: 'jwt',
+              },
+              value: {
+                name: 'tata',
+                publicKey: 'tata public key',
+                publicKeyHash: testAccount,
+                datasources: [
+                  {
+                    key: 'datasource4',
+                    value: 'value4',
+                  },
+                  {
+                    key: 'datasource5',
+                    value: 'value5',
+                  },
+                  {
+                    key: 'datasource6',
+                    value: 'value6',
+                  },
+                ],
+              },
+            },
+          ],
         },
       });
     });
@@ -254,24 +242,20 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
                 name: 'tata',
                 publicKey: 'tata public key',
                 publicKeyHash: testAccount,
-                datasources: {
-                  type: 'map',
-                  size: 3,
-                  value: [
-                    {
-                      key: 'datasource4',
-                      value: 'value4',
-                    },
-                    {
-                      key: 'datasource5',
-                      value: 'value5',
-                    },
-                    {
-                      key: 'datasource6',
-                      value: 'value6',
-                    },
-                  ],
-                },
+                datasources: [
+                  {
+                    key: 'datasource4',
+                    value: 'value4',
+                  },
+                  {
+                    key: 'datasource5',
+                    value: 'value5',
+                  },
+                  {
+                    key: 'datasource6',
+                    value: 'value6',
+                  },
+                ],
               },
             },
           ],
