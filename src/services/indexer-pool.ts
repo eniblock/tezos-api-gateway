@@ -3,10 +3,7 @@ import Logger from 'bunyan';
 import { IndexerClient } from './clients/indexer-client';
 import { indexerConfigs } from '../config';
 import { generateRandomInt } from '../utils';
-import {
-  OperationNotFoundError,
-  UserNotFoundError,
-} from '../const/errors/indexer-error';
+import { OperationNotFoundError } from '../const/errors/indexer-error';
 import { TezosService } from './tezos';
 import { IndexerEnum } from '../const/interfaces/indexer';
 
@@ -158,44 +155,28 @@ export class IndexerPool {
    * @param userAddress   - User address
    * @param nbOfRetry     - If a indexer fails the number of retry
    */
-  public async getUserInfoByRandomIndexer(
-    userAddress: string,
-    nbOfRetry: number,
-  ) {
+  public async getUserInfoByRandomIndexer(userAddress: string) {
     let currentIndexer: IndexerClient;
+    try {
+      currentIndexer = this.getRandomIndexer();
 
-    while (nbOfRetry > 0) {
-      try {
-        currentIndexer = this.getRandomIndexer();
+      this.logger.info(
+        {
+          currentIndexer: currentIndexer.config.name,
+        },
+        '[IndexerPool/getUserInfoByRandomIndexer] Using this indexer to get the user information',
+      );
 
-        this.logger.info(
-          {
-            currentIndexer: currentIndexer.config.name,
-          },
-          '[IndexerPool/getUserInfoByRandomIndexer] Using this indexer to get the user information',
-        );
+      const userInfo = await currentIndexer.getUserInfo(userAddress);
 
-        const userInfo = await currentIndexer.getUserInfo(userAddress);
+      return userInfo;
+    } catch (err) {
+      this.logger.error(
+        err,
+        '[IndexerPool/getUserInfoByRandomIndexer] An unexpected error happened',
+      );
 
-        if (!userInfo) {
-          nbOfRetry--;
-          continue;
-        }
-
-        return userInfo;
-      } catch (err) {
-        if (!(err instanceof UserNotFoundError)) {
-          this.logger.error(
-            err,
-            '[IndexerPool/getUserInfoByRandomIndexer] An unexpected error happened',
-          );
-          nbOfRetry--;
-          continue;
-        }
-
-        throw err;
-      }
+      throw err;
     }
-    return null;
   }
 }

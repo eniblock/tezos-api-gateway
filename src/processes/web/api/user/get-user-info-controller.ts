@@ -22,18 +22,7 @@ function getUserInfo(indexerPool: IndexerPool) {
         '[user/get-user-info-controller] Get user info for the following user',
       );
 
-      const nbOfRetry = 4;
-      const userInfo = await indexerPool.getUserInfoByRandomIndexer(
-        address,
-        nbOfRetry,
-      );
-
-      if (userInfo == null) {
-        throw createHttpError(
-          StatusCodes.NOT_FOUND,
-          `Could not perform task number of retry: ${nbOfRetry}`,
-        );
-      }
+      const userInfo = await indexerPool.getUserInfoByRandomIndexer(address);
 
       res.status(StatusCodes.OK).json(userInfo);
     } catch (err) {

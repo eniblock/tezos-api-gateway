@@ -8,7 +8,6 @@ import {
 import { WebProcess } from '../../../../../../src/processes/web/web-process';
 import { PostgreService } from '../../../../../../src/services/postgre';
 import { testAccount } from '../../../../../__fixtures__/smart-contract';
-import expectExtendFunctions from '../../../../../__utils__/expect-extend';
 
 describe('[processes/web/api/user] Create user controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -55,16 +54,17 @@ describe('[processes/web/api/user] Create user controller', () => {
       });
     });
 
-    it('Should return 400 when the address does not exist', async () => {
+    it('Should return 200 when the address does not exist', async () => {
       const { body, status } = await request.get(
         '/api/user/info/tz1hdQscorfqMzFqYxnrApuS5i6QSTuoAp3a',
       );
 
-      expect(status).toEqual(404);
+      expect(status).toEqual(200);
       expect(body).toEqual({
-        message:
-          'Could not find an user with this address: tz1hdQscorfqMzFqYxnrApuS5i6QSTuoAp3a',
-        status: 404,
+        account: 'tz1hdQscorfqMzFqYxnrApuS5i6QSTuoAp3a',
+        balance: 0,
+        revealed: false,
+        activated: false,
       });
     });
 
@@ -74,11 +74,11 @@ describe('[processes/web/api/user] Create user controller', () => {
       );
 
       expect(status).toEqual(200);
-      expect.extend(expectExtendFunctions());
-      expect(body).toMatchObject({
+      expect(body).toEqual({
         account: testAccount,
-        balance: expect.any(Number),
-        revealed: (expect as any).toBeTypeOrNull(Boolean),
+        balance: body.balance,
+        revealed: true,
+        activated: true,
       });
     });
   });
