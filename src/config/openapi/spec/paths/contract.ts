@@ -145,6 +145,9 @@ export default {
                           type: 'object',
                         },
                         {
+                          type: 'array',
+                        },
+                        {
                           type: 'string',
                         },
                       ],
