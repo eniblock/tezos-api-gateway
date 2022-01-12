@@ -11,6 +11,7 @@ import { AmqpService } from '../../../services/amqp';
 import * as cron from 'cron';
 
 export class CheckOperationStatusProcess extends AbstractProcess {
+  private _cronJob: cron.CronJob | undefined;
   protected _isRunning: boolean = false;
 
   protected _postgreService: PostgreService;
@@ -54,6 +55,14 @@ export class CheckOperationStatusProcess extends AbstractProcess {
     return this._gatewayPool;
   }
 
+  public get cronJob(): cron.CronJob | undefined {
+    return this._cronJob;
+  }
+
+  public set cronJob(cronJob: cron.CronJob | undefined) {
+    this._cronJob = cronJob;
+  }
+
   /**
    * Start steps:
    *  - Check if the process is already running
@@ -90,7 +99,7 @@ export class CheckOperationStatusProcess extends AbstractProcess {
       this.logger,
     );
 
-    const job = new cron.CronJob(cronTime, async () => {
+    this.cronJob = new cron.CronJob(cronTime, async () => {
       await checkOperationStatus(
         {
           postgreService: this.postgreService,
@@ -102,7 +111,7 @@ export class CheckOperationStatusProcess extends AbstractProcess {
       );
     });
 
-    job.start();
+    this.cronJob.start();
 
     this.logger.info('✔ Check operation status worker started successfully');
     return true;
@@ -118,6 +127,7 @@ export class CheckOperationStatusProcess extends AbstractProcess {
       return false;
     }
 
+    if (this.cronJob) this.cronJob.stop();
     await this.postgreService.disconnect();
     await this.amqpService.stop();
 
