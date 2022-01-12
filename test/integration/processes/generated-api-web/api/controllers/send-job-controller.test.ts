@@ -156,7 +156,67 @@ describe('[processes/generated-api-web/api/controllers] Send job controller', ()
     describe('the secure key is in vault list', () => {
       let vaultNock: nock.Scope;
 
-      beforeEach(() => {
+      it('should return 500 when unexpected error happen', async () => {
+        vaultNock = nock('http://localhost:8300')
+          .get('/v1/transit/keys/toto')
+          .times(7)
+          .reply(200, {
+            request_id: '4e171bc2-6df7-7dab-b10b-d100efca7080',
+            lease_id: '',
+            lease_duration: 0,
+            renewable: false,
+            data: {
+              allow_plaintext_backup: false,
+              deletion_allowed: false,
+              derived: false,
+              exportable: true,
+              keys: {
+                '1': {
+                  creation_time: '2021-02-01T10:01:29.097094+01:00',
+                  name: 'ed25519',
+                  public_key: 'ajwQQUHP/JZ74hoG3UoF+k/9EJPi33/ynxCxubcwYWM=',
+                },
+                '2': {
+                  creation_time: '2021-02-02T10:01:29.097094+01:00',
+                  name: 'ed25519',
+                  public_key: 'L04JMAN9Lph+aSKZz0W/KzYPOa2tnBZhaZLvSwiNzMY=',
+                },
+              },
+              latest_version: 1,
+              min_available_version: 0,
+              min_decryption_version: 1,
+              min_encryption_version: 0,
+              name: 'toto',
+              supports_decryption: false,
+              supports_derivation: true,
+              supports_encryption: false,
+              supports_signing: true,
+              type: 'ed25519',
+            },
+            warnings: null,
+          });
+        jest
+          .spyOn(jobsLib, 'sendTransactionsAsync')
+          .mockRejectedValue(new Error('Unexpected error'));
+
+        const { body, status } = await request.post('/api/send/transfer').send({
+          secureKeyName: 'toto',
+          parameters: {
+            tokens: 1,
+            destination: testAccount2,
+          },
+        });
+
+        vaultNock.done();
+
+        expect(status).toEqual(500);
+        expect(body).toEqual({
+          message: 'Internal Server Error',
+          status: 500,
+        });
+      });
+
+      it('should return 201 and the job with operation hash when', async () => {
         vaultNock = nock('http://localhost:8300')
           .get('/v1/transit/keys/toto')
           .reply(200, {
@@ -194,31 +254,6 @@ describe('[processes/generated-api-web/api/controllers] Send job controller', ()
             },
             warnings: null,
           });
-      });
-
-      it('should return 500 when unexpected error happen', async () => {
-        jest
-          .spyOn(jobsLib, 'sendTransactionsAsync')
-          .mockRejectedValue(new Error('Unexpected error'));
-
-        const { body, status } = await request.post('/api/send/transfer').send({
-          secureKeyName: 'toto',
-          parameters: {
-            tokens: 1,
-            destination: testAccount2,
-          },
-        });
-
-        vaultNock.done();
-
-        expect(status).toEqual(500);
-        expect(body).toEqual({
-          message: 'Internal Server Error',
-          status: 500,
-        });
-      });
-
-      it('should return 201 and the job with operation hash when', async () => {
         const publishMessageSpy = jest
           .spyOn(amqpService, 'sendToQueue')
           .mockImplementation();

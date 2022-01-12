@@ -8,7 +8,7 @@ class CacheLocal {
 
   private constructor() {
     this.cache = new NodeCache({
-      stdTTL: 0,
+      stdTTL: 3600,
       checkperiod: 0,
       useClones: false,
     });
