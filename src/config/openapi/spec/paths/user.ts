@@ -287,9 +287,9 @@ export default {
   },
   '/user/add': {
     post: {
-      summary: 'Associate an user id with a public key into Vault',
+      summary: 'Associate an user id with a public key hash into Vault',
       description:
-        'Associate an user id with a public key into Vault, this is a self managed account because Vault will only store your public key',
+        'Associate an user id with a public key hash into Vault, this is a self managed account because Vault will only store your public key',
       requestBody: {
         required: true,
         content: {
@@ -297,15 +297,14 @@ export default {
             schema: {
               type: 'object',
               additionalProperties: false,
-              required: ['userId', 'publicKey'],
+              required: ['userId', 'publicKeyHash'],
               properties: {
                 userId: {
                   type: 'string',
                   description: 'User account identifier',
                 },
-                publicKey: {
-                  type: 'string',
-                  description: 'public key hash of the created account',
+                publicKeyHash: {
+                  $ref: '#/components/schemas/tezos_address',
                 },
               },
             },

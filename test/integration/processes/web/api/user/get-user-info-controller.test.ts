@@ -49,7 +49,7 @@ describe('[processes/web/api/user] Create user controller', () => {
       expect(status).toEqual(400);
       expect(body).toEqual({
         message:
-          'request.params.address should match pattern "^[0-9a-zA-Z]{36}$"',
+          'request.params.address should match pattern "^tz+[0-9a-zA-Z]{34}$"',
         status: 400,
       });
     });

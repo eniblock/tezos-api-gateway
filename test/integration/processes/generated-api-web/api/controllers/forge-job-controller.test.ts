@@ -106,7 +106,7 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
       expect(status).toEqual(400);
       expect(body).toEqual({
         message:
-          'request.body.parameters.destination should match pattern "^[0-9a-zA-Z]{36}$"',
+          'request.body.parameters.destination should match pattern "^tz+[0-9a-zA-Z]{34}$"',
         status: 400,
       });
     });

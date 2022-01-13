@@ -1,18 +1,21 @@
 import { NextFunction, Request, Response } from 'express';
-import { AddUserWithPublicKeyParams } from '../../../../const/interfaces/user/add/add-user-with-public-key';
+import { addUserWithPublicKeyHashParams } from '../../../../const/interfaces/user/add/add-user-with-public-key';
 import { logger } from '../../../../services/logger';
 import { GatewayPool } from '../../../../services/gateway-pool';
 import { StatusCodes } from 'http-status-codes';
 import { VaultClient } from '../../../../services/clients/vault-client';
 import { vaultClientConfig } from '../../../../config';
 
-function addUserWithPublicKey(gatewayPool: GatewayPool) {
+function addUserWithPublicKeyHash(gatewayPool: GatewayPool) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { userId, publicKey }: AddUserWithPublicKeyParams = req.body;
+      const {
+        userId,
+        publicKeyHash,
+      }: addUserWithPublicKeyHashParams = req.body;
 
       logger.info(
-        { userId, publicKey },
+        { userId, publicKeyHash },
         '[user/add-user-by-public-key] Adding user with the following data',
       );
 
@@ -30,14 +33,14 @@ function addUserWithPublicKey(gatewayPool: GatewayPool) {
         'self-managed',
         userId,
         'publicKey',
-        publicKey,
+        publicKeyHash,
       );
 
-      return res.status(StatusCodes.CREATED).json({ userId, publicKey });
+      return res.status(StatusCodes.CREATED).json({ userId, publicKeyHash });
     } catch (err) {
       return next(err);
     }
   };
 }
 
-export default { addUserWithPublicKey };
+export default { addUserWithPublicKeyHash };

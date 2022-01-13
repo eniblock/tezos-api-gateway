@@ -52,8 +52,8 @@ const components = {
     },
     tezos_address: {
       type: 'string',
-      pattern: '^[0-9a-zA-Z]{36}$',
-      description: 'An tezos address account',
+      pattern: '^tz+[0-9a-zA-Z]{34}$',
+      description: 'A tezos address account (public key hash)',
       example: testAccount,
     },
     tezos_public_key: {

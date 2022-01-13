@@ -119,7 +119,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
       expect(status).toEqual(400);
       expect(body).toEqual({
         message:
-          'request.body.transactions[0].contractAddress should match pattern "^[0-9a-zA-Z]{36}$"',
+          'request.body.transactions[0].contractAddress should match pattern "^KT+[0-9a-zA-Z]{34}$"',
         status: 400,
       });
     });
