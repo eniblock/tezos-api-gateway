@@ -94,12 +94,8 @@ export async function getSelfManagedUserAccounts(users: string[]) {
           'publicKey',
         );
         if (publicKey === undefined) throw new UndefinedPublicKeyError(user);
-        let pkh = publicKey;
 
-        // We check if the public key isn't already hashed
-        if (!publicKey.match('^tz+[0-9a-zA-Z]{34}$')) {
-          pkh = await publicKeyHashed(publicKey);
-        }
+        const pkh = await publicKeyHashed(publicKey);
 
         logger.info(
           { publicKeyHash: pkh },
