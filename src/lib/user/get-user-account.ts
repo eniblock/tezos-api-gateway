@@ -88,23 +88,22 @@ export async function getSelfManagedUserAccounts(users: string[]) {
           };
         }
 
-        const publicKey = await vaultClient.getSecret(
+        const publicKeyHash = await vaultClient.getSecret(
           'self-managed',
           user,
           'publicKey',
         );
-        if (publicKey === undefined) throw new UndefinedPublicKeyError(user);
-
-        const pkh = await publicKeyHashed(publicKey);
+        if (publicKeyHash === undefined)
+          throw new UndefinedPublicKeyError(user);
 
         logger.info(
-          { publicKeyHash: pkh },
+          { publicKeyHash },
           '[VaultSigner/publicKeyHash] Retrieved public key hash',
         );
 
         return {
           userId: user,
-          account: pkh,
+          account: publicKeyHash,
         };
       }),
     );

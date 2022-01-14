@@ -9,6 +9,10 @@ import {
 } from '../../../../../__fixtures__/config';
 import { PostgreService } from '../../../../../../src/services/postgre';
 import nock from 'nock';
+import {
+  testAccount,
+  testAccount2,
+} from '../../../../../__fixtures__/smart-contract';
 
 describe('[processes/web/api/user] Get User Account Controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -203,7 +207,7 @@ describe('[processes/web/api/user] Get User Account Controller', () => {
         .reply(200, {
           data: {
             data: {
-              publicKey: 'werwqrwqerqwrwe',
+              publicKey: testAccount,
             },
           },
         });
@@ -212,7 +216,7 @@ describe('[processes/web/api/user] Get User Account Controller', () => {
         .reply(200, {
           data: {
             data: {
-              publicKey: 'zxcvxcvxzcvzxcvzxv',
+              publicKey: testAccount2,
             },
           },
         });
