@@ -31,7 +31,7 @@ describe('[processes/web/api/user] Create user controller', () => {
     await webProcess.stop();
   });
 
-  describe('#addUserWithPublicKey', () => {
+  describe('#addUserWithPublicKeyHash', () => {
     it('should return 400 when a required parameter is missing', async () => {
       const { body, status } = await request.post('/api/user/add').send({
         userId: 'toto',
@@ -39,7 +39,7 @@ describe('[processes/web/api/user] Create user controller', () => {
 
       expect(status).toEqual(400);
       expect(body).toEqual({
-        message: "request.body should have required property 'publicKey'",
+        message: "request.body should have required property 'publicKeyHash'",
         status: 400,
       });
     });
@@ -48,7 +48,7 @@ describe('[processes/web/api/user] Create user controller', () => {
   it('should return 400 when there is extra parameter', async () => {
     const { body, status } = await request.post('/api/user/add').send({
       userId: 'toto',
-      publicKey: testAccount,
+      publicKeyHash: testAccount,
       extra: 'extra',
     });
 
@@ -59,14 +59,14 @@ describe('[processes/web/api/user] Create user controller', () => {
     });
   });
 
-  it('should return 201 and give back userId, publicKey when the secret has been stored', async () => {
+  it('should return 201 and give back userId, publicKeyHash when the secret has been stored', async () => {
     const vaultNock = nock('http://localhost:8300')
       .post('/v1/secret/data/self-managed/toto')
       .reply(201);
 
     const { body, status } = await request.post('/api/user/add').send({
       userId: 'toto',
-      publicKey: testAccount,
+      publicKeyHash: testAccount,
     });
 
     vaultNock.done();
@@ -74,7 +74,7 @@ describe('[processes/web/api/user] Create user controller', () => {
     expect(status).toEqual(201);
     expect(body).toEqual({
       userId: 'toto',
-      publicKey: testAccount,
+      publicKeyHash: testAccount,
     });
   });
 });

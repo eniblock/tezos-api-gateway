@@ -6,7 +6,6 @@ import url from 'url';
 import {
   OperationNotFoundError,
   UnsupportedIndexerError,
-  UserNotFoundError,
 } from '../../const/errors/indexer-error';
 import { IndexerConfig, IndexerEnum } from '../../const/interfaces/indexer';
 import { TezosService } from '../tezos';
@@ -208,16 +207,16 @@ export class IndexerClient extends AbstractClient {
         activated: true,
       };
     } catch (err) {
-      if (err.status === StatusCodes.NOT_FOUND) {
+      if (
+        err.status === StatusCodes.NOT_FOUND ||
+        err.status === StatusCodes.BAD_REQUEST
+      ) {
         return {
           account: userAddress,
           balance: 0,
           revealed: false,
           activated: false,
         };
-      }
-      if (err.status === StatusCodes.BAD_REQUEST) {
-        throw new UserNotFoundError(userAddress);
       }
 
       this.handleError(err, { userAddress, indexerConfig: this.config });

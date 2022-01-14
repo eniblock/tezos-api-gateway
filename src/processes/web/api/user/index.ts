@@ -46,7 +46,7 @@ export default function registerUserRoutes(
 
   router.post(
     '/user/add',
-    addUserWithPublicKeyController.addUserWithPublicKey(
+    addUserWithPublicKeyController.addUserWithPublicKeyHash(
       gatewayPool,
     ) as Application,
   );
