@@ -46,7 +46,7 @@ export default {
                     required: ['contractAddress', 'entryPoint'],
                     properties: {
                       contractAddress: {
-                        $ref: '#/components/schemas/tezos_address',
+                        $ref: '#/components/schemas/tezos_contract_address',
                       },
                       entryPoint: {
                         type: 'string',
@@ -297,7 +297,7 @@ export default {
                     required: ['contractAddress', 'entryPoint'],
                     properties: {
                       contractAddress: {
-                        $ref: '#/components/schemas/tezos_address',
+                        $ref: '#/components/schemas/tezos_contract_address',
                       },
                       entryPoint: {
                         type: 'string',
@@ -383,7 +383,7 @@ export default {
                     required: ['contractAddress', 'entryPoint'],
                     properties: {
                       contractAddress: {
-                        $ref: '#/components/schemas/tezos_address',
+                        $ref: '#/components/schemas/tezos_contract_address',
                       },
                       entryPoint: {
                         type: 'string',

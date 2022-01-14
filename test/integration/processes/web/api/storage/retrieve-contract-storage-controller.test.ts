@@ -58,7 +58,7 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
       expect(status).toEqual(400);
       expect(body).toEqual({
         message:
-          'request.params.contract_address should match pattern "^[0-9a-zA-Z]{36}$"',
+          'request.params.contract_address should match pattern "^KT+[0-9a-zA-Z]{34}$"',
         status: 400,
       });
     });
