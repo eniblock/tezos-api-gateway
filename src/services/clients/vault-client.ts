@@ -119,9 +119,8 @@ export class VaultClient extends AbstractClient {
       return (signature as string).substring(9);
     } catch (err) {
       this.handleError(err, { keyName: key, forgedOperationHash });
+      return;
     }
-
-    return;
   }
 
   /**
@@ -168,9 +167,8 @@ export class VaultClient extends AbstractClient {
           message: err.message,
         });
       }
+      return;
     }
-
-    return;
   }
 
   /**
@@ -211,9 +209,8 @@ export class VaultClient extends AbstractClient {
           message: JSON.stringify(err.response?.body),
         });
       }
+      return;
     }
-
-    return;
   }
 
   /**

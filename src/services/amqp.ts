@@ -71,7 +71,7 @@ export class AmqpService {
         setup: (channel: ConfirmChannel) => {
           const assertQueuePromisesArray: Promise<Replies.AssertQueue>[] = [];
           if (this.config.queues) {
-            const queues = this.config.queues!.split(' ');
+            const queues = this.config.queues.split(' ');
             for (const q of queues) {
               assertQueuePromisesArray.push(
                 channel.assertQueue(q, {
@@ -100,6 +100,7 @@ export class AmqpService {
       });
       await this.channel.waitForConnect();
     } catch (error) {
+      this._logger.error('[AmqpService/start] An unexpected error occurred');
       throw error;
     }
 
@@ -115,6 +116,7 @@ export class AmqpService {
         await this.connection.close();
       }
     } catch (error) {
+      this._logger.error('[AmqpService/stop] An unexpected error occurred');
       throw error;
     }
 
@@ -245,7 +247,7 @@ export class AmqpService {
     }
 
     try {
-      await handler(validatedMessage as T);
+      await handler(validatedMessage);
     } catch (err) {
       this._logger.error(
         { err },

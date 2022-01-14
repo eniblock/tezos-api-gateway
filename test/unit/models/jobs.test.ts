@@ -142,7 +142,7 @@ describe('[models/jobs]', () => {
     });
   });
 
-  describe('#updateOperationHash', () => {
+  describe('updateOperationHashAndJobStatus', () => {
     let insertedJob: Jobs;
     beforeEach(async () => {
       const {
@@ -156,225 +156,161 @@ describe('[models/jobs]', () => {
       insertedJob = result;
     });
 
-    it('should correctly update the job', async () => {
-      await expect(
-        updateOperationHash(
-          postgreService.pool,
-          'operation_hash',
-          insertedJob.id,
-        ),
-      ).resolves.toEqual([
-        {
-          id: insertedJob.id,
-          forged_operation: 'forged_operation',
-          operation_hash: 'operation_hash',
-          status: 'published',
-          error_message: null,
-          operation_kind: OpKind.TRANSACTION,
-        },
-      ]);
-    });
-
-    it('should do nothing if the job id does not exist', async () => {
-      await expect(
-        updateOperationHash(postgreService.pool, 'operation_hash', 123456),
-      ).resolves.toEqual([]);
-
-      await expect(
-        selectData(postgreService.pool, {
-          tableName: PostgreTables.JOBS,
-          selectFields: '*',
-        }),
-      ).resolves.toEqual([
-        {
-          id: insertedJob.id,
-          forged_operation: 'forged_operation',
-          operation_hash: null,
-          status: 'created',
-          error_message: null,
-          operation_kind: OpKind.TRANSACTION,
-        },
-      ]);
-    });
-  });
-
-  describe('#updateJobStatus', () => {
-    let insertedJob: Jobs;
-    beforeEach(async () => {
-      const {
-        rows: [result],
-      } = await insertJob(postgreService.pool, {
-        status: JobStatus.CREATED,
-        forged_operation: 'forged_operation',
-        operation_kind: OpKind.TRANSACTION,
+    describe('#updateOperationHash', () => {
+      it('should correctly update the job', async () => {
+        await expect(
+          updateOperationHash(
+            postgreService.pool,
+            'operation_hash',
+            insertedJob.id,
+          ),
+        ).resolves.toEqual([
+          {
+            id: insertedJob.id,
+            forged_operation: 'forged_operation',
+            operation_hash: 'operation_hash',
+            status: 'published',
+            error_message: null,
+            operation_kind: OpKind.TRANSACTION,
+          },
+        ]);
       });
 
-      insertedJob = result;
+      it('should do nothing if the job id does not exist', async () => {
+        await expect(
+          updateOperationHash(postgreService.pool, 'operation_hash', 123456),
+        ).resolves.toEqual([]);
+
+        await expect(
+          selectData(postgreService.pool, {
+            tableName: PostgreTables.JOBS,
+            selectFields: '*',
+          }),
+        ).resolves.toEqual([
+          {
+            id: insertedJob.id,
+            forged_operation: 'forged_operation',
+            operation_hash: null,
+            status: 'created',
+            error_message: null,
+            operation_kind: OpKind.TRANSACTION,
+          },
+        ]);
+      });
     });
 
-    it('should correctly update the job', async () => {
-      await expect(
-        updateJobStatus(
-          postgreService.pool,
-          JobStatus.PUBLISHED,
-          insertedJob.id,
-        ),
-      ).resolves.toEqual([
-        {
-          id: insertedJob.id,
-          forged_operation: 'forged_operation',
-          operation_hash: null,
-          status: 'published',
-          error_message: null,
-          operation_kind: OpKind.TRANSACTION,
-        },
-      ]);
-    });
-
-    it('should do nothing if the job id does not exist', async () => {
-      await expect(
-        updateOperationHash(postgreService.pool, 'operation_hash', 123456),
-      ).resolves.toEqual([]);
-
-      await expect(
-        selectData(postgreService.pool, {
-          tableName: PostgreTables.JOBS,
-          selectFields: '*',
-        }),
-      ).resolves.toEqual([
-        {
-          id: insertedJob.id,
-          forged_operation: 'forged_operation',
-          operation_hash: null,
-          status: 'created',
-          error_message: null,
-          operation_kind: OpKind.TRANSACTION,
-        },
-      ]);
-    });
-  });
-
-  describe('#updateJobStatusAndOperationHash', () => {
-    let insertedJob: Jobs;
-    beforeEach(async () => {
-      const {
-        rows: [result],
-      } = await insertJob(postgreService.pool, {
-        status: JobStatus.CREATED,
-        forged_operation: 'forged_operation',
-        operation_kind: OpKind.TRANSACTION,
+    describe('#updateJobStatus', () => {
+      it('should correctly update the job', async () => {
+        await expect(
+          updateJobStatus(
+            postgreService.pool,
+            JobStatus.PUBLISHED,
+            insertedJob.id,
+          ),
+        ).resolves.toEqual([
+          {
+            id: insertedJob.id,
+            forged_operation: 'forged_operation',
+            operation_hash: null,
+            status: 'published',
+            error_message: null,
+            operation_kind: OpKind.TRANSACTION,
+          },
+        ]);
       });
 
-      insertedJob = result;
+      it('should do nothing if the job id does not exist', async () => {
+        await expect(
+          updateOperationHash(postgreService.pool, 'operation_hash', 123456),
+        ).resolves.toEqual([]);
+
+        await expect(
+          selectData(postgreService.pool, {
+            tableName: PostgreTables.JOBS,
+            selectFields: '*',
+          }),
+        ).resolves.toEqual([
+          {
+            id: insertedJob.id,
+            forged_operation: 'forged_operation',
+            operation_hash: null,
+            status: 'created',
+            error_message: null,
+            operation_kind: OpKind.TRANSACTION,
+          },
+        ]);
+      });
     });
 
-    it('should correctly update the job', async () => {
-      await expect(
-        updateJobStatusAndOperationHash(
-          postgreService.pool,
-          JobStatus.PUBLISHED,
-          'operation_hash',
-          insertedJob.id,
-        ),
-      ).resolves.toEqual([
-        {
-          id: insertedJob.id,
-          forged_operation: 'forged_operation',
-          operation_hash: 'operation_hash',
-          status: 'published',
-          error_message: null,
-          operation_kind: OpKind.TRANSACTION,
-        },
-      ]);
-    });
-
-    it('should do nothing if the job id does not exist', async () => {
-      await expect(
-        updateJobStatusAndOperationHash(
-          postgreService.pool,
-          JobStatus.DONE,
-          'operation_hash',
-          123456,
-        ),
-      ).resolves.toEqual([]);
-
-      await expect(
-        selectData(postgreService.pool, {
-          tableName: PostgreTables.JOBS,
-          selectFields: '*',
-        }),
-      ).resolves.toEqual([
-        {
-          id: insertedJob.id,
-          forged_operation: 'forged_operation',
-          operation_hash: null,
-          status: 'created',
-          error_message: null,
-          operation_kind: OpKind.TRANSACTION,
-        },
-      ]);
-    });
-  });
-
-  describe('#updateJobStatusAndErrorMessage', () => {
-    let insertedJob: Jobs;
-    beforeEach(async () => {
-      const {
-        rows: [result],
-      } = await insertJob(postgreService.pool, {
-        status: JobStatus.CREATED,
-        forged_operation: 'forged_operation',
-        operation_kind: OpKind.TRANSACTION,
+    describe('#updateJobStatusAndOperationHash', () => {
+      it('should correctly update the job', async () => {
+        await expect(
+          updateJobStatusAndOperationHash(
+            postgreService.pool,
+            JobStatus.PUBLISHED,
+            'operation_hash',
+            insertedJob.id,
+          ),
+        ).resolves.toEqual([
+          {
+            id: insertedJob.id,
+            forged_operation: 'forged_operation',
+            operation_hash: 'operation_hash',
+            status: 'published',
+            error_message: null,
+            operation_kind: OpKind.TRANSACTION,
+          },
+        ]);
       });
 
-      insertedJob = result;
+      it('should do nothing if the job id does not exist', async () => {
+        await expect(
+          updateJobStatusAndOperationHash(
+            postgreService.pool,
+            JobStatus.DONE,
+            'operation_hash',
+            123456,
+          ),
+        ).resolves.toEqual([]);
+
+        await expect(
+          selectData(postgreService.pool, {
+            tableName: PostgreTables.JOBS,
+            selectFields: '*',
+          }),
+        ).resolves.toEqual([
+          {
+            id: insertedJob.id,
+            forged_operation: 'forged_operation',
+            operation_hash: null,
+            status: 'created',
+            error_message: null,
+            operation_kind: OpKind.TRANSACTION,
+          },
+        ]);
+      });
     });
 
-    it('should correctly update the job', async () => {
-      await expect(
-        updateJobStatusAndErrorMessage(
-          postgreService.pool,
-          JobStatus.PUBLISHED,
-          'error',
-          insertedJob.id,
-        ),
-      ).resolves.toEqual([
-        {
-          id: insertedJob.id,
-          forged_operation: 'forged_operation',
-          operation_hash: null,
-          status: 'published',
-          error_message: 'error',
-          operation_kind: OpKind.TRANSACTION,
-        },
-      ]);
-    });
-
-    it('should do nothing if the job id does not exist', async () => {
-      await expect(
-        updateJobStatusAndOperationHash(
-          postgreService.pool,
-          JobStatus.DONE,
-          'operation_hash',
-          123456,
-        ),
-      ).resolves.toEqual([]);
-
-      await expect(
-        selectData(postgreService.pool, {
-          tableName: PostgreTables.JOBS,
-          selectFields: '*',
-        }),
-      ).resolves.toEqual([
-        {
-          id: insertedJob.id,
-          forged_operation: 'forged_operation',
-          operation_hash: null,
-          status: 'created',
-          error_message: null,
-          operation_kind: OpKind.TRANSACTION,
-        },
-      ]);
+    describe('#updateJobStatusAndErrorMessage', () => {
+      it('should correctly update the job', async () => {
+        await expect(
+          updateJobStatusAndErrorMessage(
+            postgreService.pool,
+            JobStatus.PUBLISHED,
+            'error',
+            insertedJob.id,
+          ),
+        ).resolves.toEqual([
+          {
+            id: insertedJob.id,
+            forged_operation: 'forged_operation',
+            operation_hash: null,
+            status: 'published',
+            error_message: 'error',
+            operation_kind: OpKind.TRANSACTION,
+          },
+        ]);
+      });
     });
   });
 

@@ -72,13 +72,7 @@ function sendTransactionsAndCreateJobAsync(
         logger,
       );
 
-      transactions.forEach(
-        ({ contractAddress, entryPoint }: TransactionDetails) => {
-          metricPrometheusService.entryPointCounter.add(1, {
-            [contractAddress]: entryPoint,
-          });
-        },
-      );
+      addTransactionsToMetric(metricPrometheusService, transactions);
 
       return res.status(StatusCodes.CREATED).json(job);
     } catch (err) {
@@ -158,13 +152,7 @@ function sendTransactionsAndCreateJob(
         logger,
       );
 
-      transactions.forEach(
-        ({ contractAddress, entryPoint }: TransactionDetails) => {
-          metricPrometheusService.entryPointCounter.add(1, {
-            [contractAddress]: entryPoint,
-          });
-        },
-      );
+      addTransactionsToMetric(metricPrometheusService, transactions);
 
       return res.status(StatusCodes.CREATED).json(job);
     } catch (err) {
@@ -175,6 +163,19 @@ function sendTransactionsAndCreateJob(
       return next(err);
     }
   };
+}
+
+function addTransactionsToMetric(
+  metricPrometheusService: MetricPrometheusService,
+  transactions: TransactionDetails[],
+): void {
+  transactions.forEach(
+    ({ contractAddress, entryPoint }: TransactionDetails) => {
+      metricPrometheusService.entryPointCounter.add(1, {
+        [contractAddress]: entryPoint,
+      });
+    },
+  );
 }
 
 export default {

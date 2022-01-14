@@ -11,6 +11,7 @@ import {
   operationHash,
 } from '../../__fixtures__/operation';
 import { logger } from '../../__fixtures__/services/logger';
+import { BlockResponse } from '@taquito/rpc';
 
 describe('[services/indexer-pool]', () => {
   afterEach(() => {
@@ -104,29 +105,29 @@ describe('[services/indexer-pool]', () => {
       expect(getRandomIndexerSpy).toHaveBeenCalledTimes(3);
     }, 8000);
 
-    /* it('if an indexer does not work, should change the indexer and return the result if the 2nd indexer works', async () => {
+    it('if an indexer does not work, should change the indexer and return the result if the 2nd indexer works', async () => {
       const getRandomIndexerSpy = jest
         .spyOn(indexerPool, 'getRandomIndexer')
         .mockReturnValueOnce(firstIndexer)
         .mockReturnValueOnce(indexerPool.indexers[1]);
 
       const indexerNock = nock(firstIndexer.config.apiUrl)
-        .get(`/${operationHash}`)
+        .get(`/${firstIndexer.config.pathToOperation}${operationHash}`)
         .reply(500);
 
-       await expect(
+      await expect(
         indexerPool.getOperationBlockLevelByRandomIndexer(operationHash, 3),
-      ).resolves.toEqual(109636);
+      ).resolves.toEqual(157141);
 
       indexerNock.done();
       expect(getRandomIndexerSpy).toHaveBeenCalledTimes(2);
-    }); */
+    });
 
-    /* it('should properly return the block level of the operation', async () => {
+    it('should properly return the block level of the operation', async () => {
       await expect(
         indexerPool.getOperationBlockLevelByRandomIndexer(operationHash, 3),
-      ).resolves.toEqual(109636);
-    }, 8000); */
+      ).resolves.toEqual(157141);
+    });
   });
 
   describe('#checkIfOperationIsConfirmedByRandomIndexer', () => {
@@ -218,17 +219,17 @@ describe('[services/indexer-pool]', () => {
       expect(getRandomIndexerSpy).toHaveBeenCalledTimes(3);
     }, 8000);
 
-    /* it('if an indexer does not work, should change the indexer and return the result if the 2nd indexer works', async () => {
+    it('if an indexer does not work, should change the indexer and return the result if the 2nd indexer works', async () => {
       const getRandomIndexerSpy = jest
         .spyOn(indexerPool, 'getRandomIndexer')
         .mockReturnValueOnce(firstIndexer)
         .mockReturnValueOnce(indexerPool.indexers[1]);
 
       const indexerNock = nock(firstIndexer.config.apiUrl)
-        .get(`/${operationHash}`)
+        .get(`/${firstIndexer.config.pathToOperation}${operationHash}`)
         .reply(500);
 
-       await expect(
+      await expect(
         indexerPool.checkIfOperationIsConfirmedByRandomIndexer(
           tezosService,
           {
@@ -241,9 +242,9 @@ describe('[services/indexer-pool]', () => {
 
       indexerNock.done();
       expect(getRandomIndexerSpy).toHaveBeenCalledTimes(2);
-    }); */
+    });
 
-    /* it('should properly return true if the operation is confirmed', async () => {
+    it('should properly return true if the operation is confirmed', async () => {
       await expect(
         indexerPool.checkIfOperationIsConfirmedByRandomIndexer(
           tezosService,
@@ -254,9 +255,9 @@ describe('[services/indexer-pool]', () => {
           3,
         ),
       ).resolves.toEqual(true);
-    }, 8000); */
+    });
 
-    /* it('should properly return false if the operation is not confirmed', async () => {
+    it('should properly return false if the operation is not confirmed', async () => {
       const blockHeader: BlockResponse = ({
         header: { level: 109646 },
       } as unknown) as BlockResponse;
@@ -264,7 +265,7 @@ describe('[services/indexer-pool]', () => {
         .spyOn(tezosService, 'getLatestBlock')
         .mockResolvedValue(blockHeader);
 
-       await expect(
+      await expect(
         indexerPool.checkIfOperationIsConfirmedByRandomIndexer(
           tezosService,
           {
@@ -276,6 +277,6 @@ describe('[services/indexer-pool]', () => {
       ).resolves.toEqual(false);
 
       expect(getLatestBlockSpy).toHaveBeenCalledTimes(1);
-    }, 8000);  */
+    });
   });
 });
