@@ -216,16 +216,13 @@ export function generateSchemaObject(
         type: 'boolean',
       };
     case TezosDataType.INTEGER:
+    case TezosDataType.NATURAL:
       return {
         type: 'number',
       };
     case TezosDataType.LIST:
       return {
         $ref: '#/components/schemas/flexible_array',
-      };
-    case TezosDataType.NATURAL:
-      return {
-        type: 'number',
       };
     case TezosDataType.STRING:
       return {

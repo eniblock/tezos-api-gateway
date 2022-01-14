@@ -54,7 +54,7 @@ export function getContractMethod(
   entryPoint: string,
   params?: EntryPointParams,
 ): ContractMethod<ContractProvider> {
-  if (!params && !(typeof params === 'boolean')) {
+  if (!params && typeof params !== 'boolean') {
     if (params === null) {
       // The params can have the type null for optional parameters type
       return contract.methods[`${entryPoint}`].apply(null, []);

@@ -26,8 +26,8 @@ export class TezosService {
     this._tezos.setSignerProvider(signer);
   }
 
-  public createBatch() {
-    return this._tezos.batch();
+  public async createBatch() {
+    return this._tezos.contract.batch();
   }
 
   public async getContract(contractAddress: string) {

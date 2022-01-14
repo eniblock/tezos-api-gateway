@@ -26,7 +26,7 @@ export async function getUserAccounts(
 
     const vaultClient = new VaultClient(vaultClientConfig, logger);
     return await Promise.all(
-      (users as string[]).map(async (user) => {
+      users.map(async (user: string) => {
         let publicKey;
         try {
           publicKey = await vaultClient.getPublicKey(user);
@@ -119,7 +119,7 @@ export async function getSelfManagedUserAccounts(users: string[]) {
 
 async function publicKeyHashed(publicKey: string) {
   await sodium.ready;
-  const bufferPublicKey = await Buffer.from(publicKey, 'base64');
+  const bufferPublicKey = Buffer.from(publicKey, 'base64');
 
   return b58cencode(
     sodium.crypto_generichash(20, new Uint8Array(bufferPublicKey)),

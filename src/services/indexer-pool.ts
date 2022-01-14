@@ -167,9 +167,7 @@ export class IndexerPool {
         '[IndexerPool/getUserInfoByRandomIndexer] Using this indexer to get the user information',
       );
 
-      const userInfo = await currentIndexer.getUserInfo(userAddress);
-
-      return userInfo;
+      return await currentIndexer.getUserInfo(userAddress);
     } catch (err) {
       this.logger.error(
         err,

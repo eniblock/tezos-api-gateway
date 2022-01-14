@@ -37,7 +37,6 @@ export class IndexerClient extends AbstractClient {
     const {
       name,
       apiUrl: indexerUrl,
-      apiKey,
       keyToOperation,
       keyToBlockLevel,
       pathToOperation,
@@ -57,11 +56,7 @@ export class IndexerClient extends AbstractClient {
     );
 
     try {
-      const { body: result } = apiKey
-        ? await superagent
-            .get(getOperationUrl)
-            .set({ apikey: this.config.apiKey })
-        : await superagent.get(getOperationUrl);
+      const { body: result } = await superagent.get(getOperationUrl);
 
       const operation = result[keyToOperation];
 
@@ -133,7 +128,6 @@ export class IndexerClient extends AbstractClient {
     const {
       name,
       apiUrl: indexerUrl,
-      apiKey,
       keyToBalance,
       pathToUserInfo,
       keyToReveal,
@@ -150,48 +144,17 @@ export class IndexerClient extends AbstractClient {
       indexerUrl,
       pathToUserInfo + userAddress,
     );
-    let getUserInfoUrlConseil = url.resolve(indexerUrl, pathToUserInfo);
 
     try {
       let userInfo;
 
-      if (apiKey) {
-        getUserInfoUrlConseil =
-          getUserInfoUrlConseil[getUserInfoUrlConseil.length - 1] === '/'
-            ? getUserInfoUrlConseil.substring(
-                0,
-                getUserInfoUrlConseil.length - 1,
-              )
-            : getUserInfoUrlConseil;
-        const { body: result } = await superagent
-          .post(getUserInfoUrlConseil)
-          .set({ apiKey })
-          .send({
-            predicates: [
-              {
-                field: 'account_id',
-                operation: 'eq',
-                set: [userAddress],
-              },
-            ],
-            output: 'json',
-            limit: 1,
-          });
+      const { body: result } = await superagent.get(getUserInfoUrl);
 
-        if (Array.isArray(result) && result.length === 0) {
-          throw createHttpError(StatusCodes.NOT_FOUND);
-        }
-
-        userInfo = result[0];
-      } else {
-        const { body: result } = await superagent.get(getUserInfoUrl);
-
-        if ('type' in result && result.type === 'empty') {
-          throw createHttpError(StatusCodes.NOT_FOUND);
-        }
-
-        userInfo = result;
+      if ('type' in result && result.type === 'empty') {
+        throw createHttpError(StatusCodes.NOT_FOUND);
       }
+
+      userInfo = result;
 
       this.logger.info(
         { userInfo },

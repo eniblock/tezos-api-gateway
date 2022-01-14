@@ -15,7 +15,7 @@ import { OpenAPIV3 } from 'express-openapi-validator/dist/framework/types';
 import { SignerFactory } from '../../../services/signer-factory';
 import { MetricPrometheusService } from '../../../services/metric-prometheus';
 import { extractForgeAndSendTransactionsPaths } from '../../../helpers/extract-arrays';
-import formatParametersToTransactionDetails from '../../web/middleware/format-parameters';
+import formatParametersToTransactionDetails from '../../web/middleware/format-parameters-to-transaction-details';
 import forgeJobController from '../../web/api/jobs/forge-job-controller';
 import sendJobController from '../../web/api/jobs/send-job-controller';
 import injectJobController from '../../web/api/jobs/inject-job-controller';

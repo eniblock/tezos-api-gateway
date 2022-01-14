@@ -83,9 +83,10 @@ function convertDeepLayerDataFieldToStorageResponseValue(
   return Promise.all(
     rootDataFields.map(async ({ key, dataFields }) => {
       let mapValue = null;
-      map instanceof MichelsonMap
-        ? (mapValue = map.get(key))
-        : (mapValue = await tryGetFromMap(logger, map, key, 3));
+      mapValue =
+        map instanceof MichelsonMap
+          ? map.get(key)
+          : await tryGetFromMap(logger, map, key, 3);
 
       if (!mapValue) {
         return { key, error: 'The current map does not contain this key' };
@@ -140,7 +141,7 @@ async function tryGetFromMap(
         '[lib/storage/convert-storage/#tryGetFromMap] Got a 502, retrying - Error : ' +
           err.message,
       );
-      return tryGetFromMap(logger, map, key, --remainingAttempts);
+      return tryGetFromMap(logger, map, key, remainingAttempts - 1);
     }
     logger.error('Key Not Found in Map - errorStatus : ' + err.status);
     throw err;

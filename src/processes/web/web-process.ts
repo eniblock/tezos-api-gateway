@@ -123,7 +123,7 @@ export class WebProcess extends AbstractProcess {
 
     await this._postgreService.initializeDatabase();
     await this._amqpService.start();
-    await this._metricPrometheusService.start();
+    this._metricPrometheusService.start();
     await this._indexerPool.initializeIndexers();
 
     setupRoutes(

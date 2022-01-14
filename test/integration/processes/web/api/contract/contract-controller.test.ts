@@ -1,12 +1,9 @@
 import { WebProcess } from '../../../../../../src/processes/web/web-process';
 import {
-  // amqpConfig,
   postgreConfig,
   serverConfig,
 } from '../../../../../__fixtures__/config';
 import { PostgreService } from '../../../../../../src/services/postgre';
-// import { AmqpService } from '../../../../../../src/services/amqp';
-// import { logger } from '../../../../../__fixtures__/services/logger';
 import supertest from 'supertest';
 import nock from 'nock';
 import { flexibleTokenContract } from '../../../../../__fixtures__/smart-contract';
