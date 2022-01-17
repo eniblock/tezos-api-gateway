@@ -33,7 +33,7 @@ describe('[lib/storage/generateStorageResponse]', () => {
         flexibleTokenContract,
       );
 
-      expect(generateStorageResponse(storage!)).toEqual({
+      expect(generateStorageResponse(storage)).toEqual({
         allowed: {
           type: 'big_map',
           value: '24360',
@@ -59,7 +59,7 @@ describe('[lib/storage/generateStorageResponse]', () => {
         FA2Contract4,
       );
 
-      expect(generateStorageResponse(storage!)).toEqual({
+      expect(generateStorageResponse(storage)).toEqual({
         accessRequests: {
           type: 'big_map',
           value: '23036',
@@ -92,7 +92,7 @@ describe('[lib/storage/generateStorageResponse]', () => {
         FA2Contract3,
       );
 
-      expect(generateStorageResponse(storage!)).toEqual({
+      expect(generateStorageResponse(storage)).toEqual({
         accessRequests: {
           type: 'big_map',
           value: '23037',

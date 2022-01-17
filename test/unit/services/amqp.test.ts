@@ -58,7 +58,7 @@ describe('[services/amqp] Amqp Service', () => {
 
     it('should properly stop the service', async () => {
       await amqpService.start();
-      const connectionSpy = jest.spyOn(amqpService.connection!, 'close');
+      const connectionSpy = jest.spyOn(amqpService.connection, 'close');
 
       await expect(amqpService.stop()).resolves.toEqual(true);
 
@@ -68,7 +68,7 @@ describe('[services/amqp] Amqp Service', () => {
     it('should throw when unexpected error happen', async () => {
       await amqpService.start();
       const connectionSpy = jest
-        .spyOn(amqpService.connection!, 'close')
+        .spyOn(amqpService.connection, 'close')
         .mockRejectedValueOnce(new Error('Unexpected Error'));
 
       await expect(amqpService.stop()).rejects.toThrowError(
@@ -77,7 +77,7 @@ describe('[services/amqp] Amqp Service', () => {
 
       expect(connectionSpy.mock.calls).toEqual([[]]);
 
-      await amqpService.connection!.close();
+      await amqpService.connection.close();
     });
   });
 

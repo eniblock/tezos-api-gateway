@@ -8,11 +8,11 @@ import { QueuesEnum } from '../../const/queues-enum';
  * @param {object} amqpService        - the amqp service helps to publish
  * @param {object} parameter          - all the parameters to patch job
  */
-export function sendToSendTransactionQueue(
+export async function sendToSendTransactionQueue(
   amqpService: AmqpService,
   parameter: SendTransactionsToQueueParams,
 ) {
-  amqpService.sendToQueue<SendTransactionsToQueueParams>(
+  await amqpService.sendToQueue<SendTransactionsToQueueParams>(
     parameter,
     QueuesEnum.SEND,
   );

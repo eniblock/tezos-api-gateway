@@ -111,7 +111,7 @@ export async function estimateAndBuildRevealOperation(
     throw new AddressNotFoundError(address);
   }
 
-  let counter = parseInt(counterAsString, 10);
+  const counter = parseInt(counterAsString, 10);
 
   logger.info(
     { counter },
@@ -122,7 +122,7 @@ export async function estimateAndBuildRevealOperation(
     kind: OpKind.REVEAL,
     source: address,
     fee: estimation.suggestedFeeMutez.toString(),
-    counter: (++counter).toString(),
+    counter: (counter + 1).toString(),
     gas_limit: estimation.gasLimit.toString(),
     storage_limit: estimation.storageLimit.toString(),
     public_key: publicKey,

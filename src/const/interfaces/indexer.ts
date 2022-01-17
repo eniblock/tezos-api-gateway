@@ -4,7 +4,6 @@ export interface IndexerConfig {
   pathToContractCalls: string;
   keyToOperation: number | string;
   keyToBlockLevel: string;
-  apiKey?: string;
   pathToOperation: string;
   pathToUserInfo: string;
   keyToBalance?: string;
