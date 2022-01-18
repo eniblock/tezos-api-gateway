@@ -258,9 +258,9 @@ describe('[services/indexer-pool]', () => {
     });
 
     it('should properly return false if the operation is not confirmed', async () => {
-      const blockHeader: BlockResponse = ({
+      const blockHeader: BlockResponse = {
         header: { level: 109646 },
-      } as unknown) as BlockResponse;
+      } as unknown as BlockResponse;
       const getLatestBlockSpy = jest
         .spyOn(tezosService, 'getLatestBlock')
         .mockResolvedValue(blockHeader);

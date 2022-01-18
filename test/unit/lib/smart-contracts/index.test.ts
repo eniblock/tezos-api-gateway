@@ -288,9 +288,8 @@ describe('[lib/smart-contracts] Index', () => {
     it('should correctly return a list that contains the parameter when the entrypoint requires one single parameter', async () => {
       const params = 'True';
       const entryPoint = 'set_pause';
-      const schema = fa2Contract.parameterSchema.ExtractSchema()[
-        `${entryPoint}`
-      ];
+      const schema =
+        fa2Contract.parameterSchema.ExtractSchema()[`${entryPoint}`];
       const mickelsonSchema =
         fa2Contract.entrypoints.entrypoints[`${entryPoint}`];
       const token = createToken.createToken(mickelsonSchema, 0);
@@ -301,9 +300,8 @@ describe('[lib/smart-contracts] Index', () => {
 
     it('should correctly format boolean parameters and accept also string booleans', async () => {
       const entryPoint = 'set_pause';
-      const schema = fa2Contract.parameterSchema.ExtractSchema()[
-        `${entryPoint}`
-      ];
+      const schema =
+        fa2Contract.parameterSchema.ExtractSchema()[`${entryPoint}`];
       const mickelsonSchema =
         fa2Contract.entrypoints.entrypoints[`${entryPoint}`];
       const token = createToken.createToken(mickelsonSchema, 0);
@@ -328,9 +326,8 @@ describe('[lib/smart-contracts] Index', () => {
 
     it('should throw InvalidBooleanParameter error for invalid boolean parameter type', async () => {
       const entryPoint = 'set_pause';
-      const schema = fa2Contract.parameterSchema.ExtractSchema()[
-        `${entryPoint}`
-      ];
+      const schema =
+        fa2Contract.parameterSchema.ExtractSchema()[`${entryPoint}`];
       const mickelsonSchema =
         fa2Contract.entrypoints.entrypoints[`${entryPoint}`];
       const token = createToken.createToken(mickelsonSchema, 0);
@@ -368,9 +365,8 @@ describe('[lib/smart-contracts] Index', () => {
         ],
         token_id: 0,
       };
-      const schema = fa2Contract.parameterSchema.ExtractSchema()[
-        `${entryPoint}`
-      ];
+      const schema =
+        fa2Contract.parameterSchema.ExtractSchema()[`${entryPoint}`];
       const mickelsonSchema =
         fa2Contract.entrypoints.entrypoints[`${entryPoint}`];
       const token = createToken.createToken(mickelsonSchema, 0);
@@ -404,9 +400,8 @@ describe('[lib/smart-contracts] Index', () => {
           },
         },
       ];
-      const schema = fa2Contract.parameterSchema.ExtractSchema()[
-        `${entryPoint}`
-      ];
+      const schema =
+        fa2Contract.parameterSchema.ExtractSchema()[`${entryPoint}`];
       const mickelsonSchema =
         fa2Contract.entrypoints.entrypoints[`${entryPoint}`];
       const token = createToken.createToken(mickelsonSchema, 0);
@@ -431,9 +426,8 @@ describe('[lib/smart-contracts] Index', () => {
           },
         },
       ];
-      const schema = fa2Contract.parameterSchema.ExtractSchema()[
-        `${entryPoint}`
-      ];
+      const schema =
+        fa2Contract.parameterSchema.ExtractSchema()[`${entryPoint}`];
       const mickelsonSchema =
         fa2Contract.entrypoints.entrypoints[`${entryPoint}`];
       const token = createToken.createToken(mickelsonSchema, 0);
@@ -453,9 +447,8 @@ describe('[lib/smart-contracts] Index', () => {
           },
         },
       ];
-      const schema = fa2Contract.parameterSchema.ExtractSchema()[
-        `${entryPoint}`
-      ];
+      const schema =
+        fa2Contract.parameterSchema.ExtractSchema()[`${entryPoint}`];
       const mickelsonSchema =
         fa2Contract.entrypoints.entrypoints[`${entryPoint}`];
       const token = createToken.createToken(mickelsonSchema, 0);
@@ -498,9 +491,8 @@ describe('[lib/smart-contracts] Index', () => {
           ],
         },
       ];
-      const schema = fa2Contract.parameterSchema.ExtractSchema()[
-        `${entryPoint}`
-      ];
+      const schema =
+        fa2Contract.parameterSchema.ExtractSchema()[`${entryPoint}`];
       const mickelsonSchema =
         fa2Contract.entrypoints.entrypoints[`${entryPoint}`];
       const token = createToken.createToken(mickelsonSchema, 0);
@@ -529,9 +521,8 @@ describe('[lib/smart-contracts] Index', () => {
           ],
         },
       ];
-      const schema = proxyContract.parameterSchema.ExtractSchema()[
-        `${entryPoint}`
-      ];
+      const schema =
+        proxyContract.parameterSchema.ExtractSchema()[`${entryPoint}`];
       const mickelsonSchema =
         proxyContract.entrypoints.entrypoints[`${entryPoint}`];
       const token = createToken.createToken(mickelsonSchema, 0);
@@ -581,9 +572,8 @@ describe('[lib/smart-contracts] Index', () => {
           remove: [2],
         },
       ];
-      const schema = proxyContract.parameterSchema.ExtractSchema()[
-        `${entryPoint}`
-      ];
+      const schema =
+        proxyContract.parameterSchema.ExtractSchema()[`${entryPoint}`];
       const mickelsonSchema =
         proxyContract.entrypoints.entrypoints[`${entryPoint}`];
       const token = createToken.createToken(mickelsonSchema, 0);
@@ -623,9 +613,8 @@ describe('[lib/smart-contracts] Index', () => {
           remove: ['batch_mint'],
         },
       ];
-      const schema = proxyContract.parameterSchema.ExtractSchema()[
-        `${entryPoint}`
-      ];
+      const schema =
+        proxyContract.parameterSchema.ExtractSchema()[`${entryPoint}`];
       const mickelsonSchema =
         proxyContract.entrypoints.entrypoints[`${entryPoint}`];
       const token = createToken.createToken(mickelsonSchema, 0);
@@ -674,9 +663,8 @@ describe('[lib/smart-contracts] Index', () => {
         multisig_id: '11225544',
         signers: [],
       };
-      const schema = proxyContract.parameterSchema.ExtractSchema()[
-        `${entryPoint}`
-      ];
+      const schema =
+        proxyContract.parameterSchema.ExtractSchema()[`${entryPoint}`];
       const mickelsonSchema =
         proxyContract.entrypoints.entrypoints[`${entryPoint}`];
       const token = createToken.createToken(mickelsonSchema, 0);
@@ -729,9 +717,8 @@ describe('[lib/smart-contracts] Index', () => {
         multisig_id: '11225544',
         signers: [],
       };
-      const schema = proxyContract.parameterSchema.ExtractSchema()[
-        `${entryPoint}`
-      ];
+      const schema =
+        proxyContract.parameterSchema.ExtractSchema()[`${entryPoint}`];
       const mickelsonSchema =
         proxyContract.entrypoints.entrypoints[`${entryPoint}`];
       const token = createToken.createToken(mickelsonSchema, 0);

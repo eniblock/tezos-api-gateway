@@ -248,16 +248,16 @@ async function getOperationContentsTransactionWithParametersJson(
   tezosService.setSigner(signerToGetPKH);
 
   const parametersList: TransactionsDetailsWithMichelsonParameters[] =
-      await Promise.all(
-          transactions.map(async (transaction) => {
-            const { parameter } = await getATransactionParameters(
-                tezosService,
-                transaction,
-                useCache,
-            );
-            return { ...transaction, parameter };
-          }),
-      );
+    await Promise.all(
+      transactions.map(async (transaction) => {
+        const { parameter } = await getATransactionParameters(
+          tezosService,
+          transaction,
+          useCache,
+        );
+        return { ...transaction, parameter };
+      }),
+    );
 
   logger.info(
     { parametersList },

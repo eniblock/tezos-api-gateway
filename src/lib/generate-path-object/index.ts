@@ -248,7 +248,7 @@ function handleObjectCase(object: GenericObject): OpenAPIV3.SchemaObject {
   }
 
   if (TezosDataType.LIST in object) {
-    return handleListCase((object as unknown) as TezosListSchema);
+    return handleListCase(object as unknown as TezosListSchema);
   }
 
   const properties = _.fromPairs(
