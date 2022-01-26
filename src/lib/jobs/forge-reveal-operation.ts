@@ -35,11 +35,8 @@ export async function forgeRevealOperation(
 
   tezosService.setSigner(signerToGetPKH);
 
-  const revealOperation: OperationContentsReveal = await estimateAndBuildRevealOperation(
-    tezosService,
-    address,
-    publicKey,
-  );
+  const revealOperation: OperationContentsReveal =
+    await estimateAndBuildRevealOperation(tezosService, address, publicKey);
 
   const { branch, forgedOperation } = await tezosService.forgeOperations([
     revealOperation,

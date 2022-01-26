@@ -40,11 +40,8 @@ function sendTransactionsAndCreateJobAsync(
     next: NextFunction,
   ) => {
     try {
-      const {
-        transactions,
-        secureKeyName,
-        callerId,
-      }: SendTransactionsParams = req.body;
+      const { transactions, secureKeyName, callerId }: SendTransactionsParams =
+        req.body;
       const { cache: useCache } = req.query;
 
       logger.info(
@@ -106,11 +103,8 @@ function sendTransactionsAndCreateJob(
     next: NextFunction,
   ) => {
     try {
-      const {
-        transactions,
-        secureKeyName,
-        callerId,
-      }: SendTransactionsParams = req.body;
+      const { transactions, secureKeyName, callerId }: SendTransactionsParams =
+        req.body;
       const { cache: useCache } = req.query;
 
       logger.info(

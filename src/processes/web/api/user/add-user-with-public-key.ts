@@ -9,10 +9,8 @@ import { vaultClientConfig } from '../../../../config';
 function addUserWithPublicKeyHash(gatewayPool: GatewayPool) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const {
-        userId,
-        publicKeyHash,
-      }: addUserWithPublicKeyHashParams = req.body;
+      const { userId, publicKeyHash }: addUserWithPublicKeyHashParams =
+        req.body;
 
       logger.info(
         { userId, publicKeyHash },
