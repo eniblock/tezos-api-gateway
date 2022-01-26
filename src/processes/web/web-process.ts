@@ -209,7 +209,7 @@ export class WebProcess extends AbstractProcess {
     this._app.use(
       '/api',
       OpenApiValidator.middleware({
-        apiSpec: (spec as unknown) as OpenAPIV3.Document,
+        apiSpec: spec as unknown as OpenAPIV3.Document,
         validateRequests: true,
         validateResponses: true,
       }),

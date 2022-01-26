@@ -63,10 +63,8 @@ export async function injectOperation(
       );
     }
 
-    const params: (
-      | OperationContentsTransaction
-      | OperationContentsReveal
-    )[] = mapOperations(operationsList);
+    const params: (OperationContentsTransaction | OperationContentsReveal)[] =
+      mapOperations(operationsList);
 
     logger.info(
       { params, branch: operationsList[0].branch },

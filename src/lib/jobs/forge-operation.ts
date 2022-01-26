@@ -85,10 +85,11 @@ export async function forgeOperation(
     )
       throw new MaxOperationsPerBatchError();
 
-    const params: OperationContentsTransactionWithParametersJson[] = await getOperationContentsTransactionWithParametersJson(
-      tezosService,
-      forgeOperationParams,
-    );
+    const params: OperationContentsTransactionWithParametersJson[] =
+      await getOperationContentsTransactionWithParametersJson(
+        tezosService,
+        forgeOperationParams,
+      );
 
     operationsToInsert = operationsToInsert.concat(params);
     operationsToForge = operationsToForge.concat(
@@ -246,16 +247,17 @@ async function getOperationContentsTransactionWithParametersJson(
 
   tezosService.setSigner(signerToGetPKH);
 
-  const parametersList: TransactionsDetailsWithMichelsonParameters[] = await Promise.all(
-    transactions.map(async (transaction) => {
-      const { parameter } = await getATransactionParameters(
-        tezosService,
-        transaction,
-        useCache,
-      );
-      return { ...transaction, parameter };
-    }),
-  );
+  const parametersList: TransactionsDetailsWithMichelsonParameters[] =
+    await Promise.all(
+      transactions.map(async (transaction) => {
+        const { parameter } = await getATransactionParameters(
+          tezosService,
+          transaction,
+          useCache,
+        );
+        return { ...transaction, parameter };
+      }),
+    );
 
   logger.info(
     { parametersList },

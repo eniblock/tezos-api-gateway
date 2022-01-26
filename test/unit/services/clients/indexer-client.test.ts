@@ -42,10 +42,8 @@ describe('[services/clients] Indexer client Service', () => {
 
   describe('#buildURLForTransactionList', () => {
     it('should return domain/path and query params', async () => {
-      const {
-        domainAndPath,
-        queryParams,
-      } = randomIndexer.buildURLForTransactionList(flexibleTokenContract, {});
+      const { domainAndPath, queryParams } =
+        randomIndexer.buildURLForTransactionList(flexibleTokenContract, {});
 
       expect(domainAndPath).toBeDefined();
       expect(queryParams).toBeDefined();
@@ -133,13 +131,11 @@ describe('[services/clients] Indexer client Service', () => {
         offset: 8,
         parameter: '*test',
       };
-      const {
-        domainAndPath,
-        queryParams,
-      } = indexerClientTZKT.buildURLForTransactionList(
-        flexibleTokenContract,
-        params,
-      );
+      const { domainAndPath, queryParams } =
+        indexerClientTZKT.buildURLForTransactionList(
+          flexibleTokenContract,
+          params,
+        );
 
       expect(domainAndPath).toEqual(
         'https://api.hangzhou2net.tzkt.io/v1/operations/transactions/',

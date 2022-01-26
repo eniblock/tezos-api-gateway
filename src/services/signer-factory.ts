@@ -39,6 +39,6 @@ export class SignerFactory {
   ): T {
     // @ts-ignore
     this._signer = new type(...args);
-    return (this._signer as unknown) as T;
+    return this._signer as unknown as T;
   }
 }

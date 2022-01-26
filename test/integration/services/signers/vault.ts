@@ -177,8 +177,7 @@ describe('[services/signers] Vault', () => {
           'aa0f73bccbe62ab8d075f94a4c03583d47c349c1cd5747676e093a70d524fa776c005df8ceced07a0074dc1c3b17de65e19bdb8ce70ca08d068feb4a80ea30d0860300010d6eb7444a321cbddc4787b6a1714ab1789e772d00ffff087472616e736665720000002d07070100000024747a315a51594d4445546f644e42416332585662685a46476d65384b6e697550717253770001fb1871b5cd69e99d541eb3649c59611a47ad0adc1fae56ba990ef797241b303e51a143afe30a978dedf7c36d71fef87647b367d714be4864425b87c3770d1c0c',
         prefixSig:
           'edsigu6f646JFgo5XGMevcTu7U6j15RWY3zJVVpf9zEMX36nvhzhnCVViftZ6gGWQqxNJkhsy91vV3RBvTmaj6rK9xHPh8yR5w6',
-        sig:
-          'sigvqcw35MQrtVDAfdUS3vWoSVJbRc5MRu88uRFtMY2kmyQAmBhbadaqKBdftckVBxKAQMDW98CoE9iyYXShyBmEKbEqkPUh',
+        sig: 'sigvqcw35MQrtVDAfdUS3vWoSVJbRc5MRu88uRFtMY2kmyQAmBhbadaqKBdftckVBxKAQMDW98CoE9iyYXShyBmEKbEqkPUh',
       });
       expect(payload).toEqual({
         input: 'jBdhzWHiibMj8MikNGxZZQjLt9U5ijSB698mI55Yn3M=',
@@ -216,8 +215,7 @@ describe('[services/signers] Vault', () => {
           'aa0f73bccbe62ab8d075f94a4c03583d47c349c1cd5747676e093a70d524fa776c005df8ceced07a0074dc1c3b17de65e19bdb8ce70ca08d068feb4a80ea30d0860300010d6eb7444a321cbddc4787b6a1714ab1789e772d00ffff087472616e736665720000002d07070100000024747a315a51594d4445546f644e42416332585662685a46476d65384b6e69755071725377000109eb2755379708080d2cc93fca0aebf7ae3cc48838da49b5a1e36b737cccc834f966f4c829c80641ef3f7bf22ca1763471fe6c3a69b8b9c733c80a432026b107',
         prefixSig:
           'edsigtZ72Qk9Qb8yhGcqjY4NTURWXquq6XajVwryQLHb5nS9x6bUbFRadKZbQEA19VST3RokaFSQqaZXzGqLdRbobs2TxgvDDsf',
-        sig:
-          'sigPHZHgvWKCnfDRrSQ2XGX8E255kAYwruaBDfbwb6n68znmXzkXfYEWMVBZPMPyGgzGGxKvdUjwaDY3JRmTTdfyPrkx6pgC',
+        sig: 'sigPHZHgvWKCnfDRrSQ2XGX8E255kAYwruaBDfbwb6n68znmXzkXfYEWMVBZPMPyGgzGGxKvdUjwaDY3JRmTTdfyPrkx6pgC',
       });
       expect(payload).toEqual({
         input: 'jt7NhCwiiJPStcAuMzYtoZ4aU+TW9bPMI5PPAkfSSGE=',

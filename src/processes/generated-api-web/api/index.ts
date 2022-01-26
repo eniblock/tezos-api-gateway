@@ -56,11 +56,8 @@ function registerRoutes(
   metricPrometheusService: MetricPrometheusService,
   forgeAndSendPathObject: OpenAPIV3.PathsObject,
 ): Router {
-  const {
-    forgePaths,
-    sendPaths,
-    asyncSendPaths,
-  } = extractForgeAndSendTransactionsPaths(forgeAndSendPathObject);
+  const { forgePaths, sendPaths, asyncSendPaths } =
+    extractForgeAndSendTransactionsPaths(forgeAndSendPathObject);
 
   forgePaths.forEach((path) => {
     router.post(
