@@ -1,6 +1,6 @@
-import { IndexerEnum } from '../interfaces/indexer';
-import { UnsupportedIndexerError } from '../errors/indexer-error';
-import { IndexerTransaction } from '../interfaces/transaction';
+import { IndexerEnum } from '../../const/interfaces/indexer';
+import { UnsupportedIndexerError } from '../../const/errors/indexer-error';
+import { IndexerTransaction } from '../../const/interfaces/transaction';
 
 /**
  * Convert the transaction returned by any indexer to our IndexerTransaction interface
