@@ -13,7 +13,7 @@ export const originationOp = {
   block: 'BMaSYNHvVFkPJTqJjv9fpDB8NPT5sX9BqYZSPTsx4XGvnN6tC7X',
   type: 'origination',
   height: 157089,
-  parameters: '',
+  parameters: {},
   entrypoint: undefined,
 };
 
