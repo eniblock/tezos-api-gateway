@@ -191,12 +191,12 @@ function getEstimationForNode(
 ): Promise<Estimate[]> {
   const paramsWithKind: ParamsWithKind[] = [];
 
-  for (const { contractAddress, parameter } of transactionDetails) {
+  for (const { contractAddress, parameter, amount } of transactionDetails) {
     paramsWithKind.push({
       kind: OpKind.TRANSACTION,
       to: contractAddress,
       parameter,
-      amount: 0,
+      amount: amount ? amount : 0,
     });
   }
 
@@ -287,7 +287,9 @@ async function getOperationContentsTransactionWithParametersJson(
       destination: transactions[index].contractAddress,
       parameters: parametersList[index].parameter,
       parametersJson: createParametersJson(transactions[index]),
-      amount: '0',
+      amount: parametersList[index].amount
+        ? `${parametersList[index].amount}`
+        : '0',
       source: sourceAddress,
       counter: (++counter).toString(),
       fee: estimation.suggestedFeeMutez.toString(),
@@ -309,14 +311,20 @@ async function getOperationContentsTransactionWithParametersJson(
  */
 async function getATransactionParameters(
   tezosService: TezosService,
-  { contractAddress, entryPoint, entryPointParams }: TransactionDetails,
+  { contractAddress, entryPoint, entryPointParams, amount }: TransactionDetails,
   useCache: boolean,
 ) {
   const contract = useCache
     ? await tezosService.getContractFromCache(contractAddress)
     : await tezosService.getContract(contractAddress);
 
-  return getTransferToParams(logger, contract, entryPoint, entryPointParams);
+  return getTransferToParams(
+    logger,
+    contract,
+    entryPoint,
+    entryPointParams,
+    amount,
+  );
 }
 
 /**
