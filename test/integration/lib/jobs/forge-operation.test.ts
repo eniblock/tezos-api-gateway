@@ -440,6 +440,32 @@ describe('[lib/jobs/forge-operation]', () => {
       expect(insertedForgeParameters[1].counter).not.toBeNull();
     }, 8000);
 
+    it('should correctly create a job and insert data to jobs and operations table, when amount is specified', async () => {
+      testForgeOperation.transactions[0].amount = 10;
+      testForgeOperation.transactions[1].amount = 100;
+      const createdJob = await forgeOperation(
+        testForgeOperation,
+        tezosService,
+        postgreService,
+      );
+
+      await expect(
+        selectData(postgreService.pool, {
+          tableName: PostgreTables.JOBS,
+          selectFields: '*',
+        }),
+      ).resolves.toEqual([createdJob]);
+
+      const insertedForgeParameters = await selectData(postgreService.pool, {
+        tableName: PostgreTables.OPERATIONS,
+        selectFields:
+          'destination, parameters, parameters_json, amount, fee, source, storage_limit, gas_limit, counter, branch, job_id',
+      });
+
+      expect(insertedForgeParameters[0].amount).toEqual(10);
+      expect(insertedForgeParameters[1].amount).toEqual(100);
+    }, 8000);
+
     it('should correctly create a job and insert data to jobs and operations table for the transaction and the reveal', async () => {
       const createdJob = await forgeOperation(
         {
