@@ -68,6 +68,13 @@ const components = {
       description: 'An tezos smart contract address',
       example: flexibleTokenContract,
     },
+    amount: {
+      type: 'integer',
+      default: 0,
+      minimum: 0,
+      description:
+        'Amount of XTZ tokens transferred to the contract along with the transaction, in mutez (1 XTZ = 10⁶ mutez)',
+    },
     page: {
       type: 'integer',
       default: 0,

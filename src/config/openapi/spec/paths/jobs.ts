@@ -62,9 +62,7 @@ export default {
                         ],
                       },
                       amount: {
-                        type: 'number',
-                        description:
-                          'Amount of XTZ tokens transferred to the contract along with the transaction, in mutez (1 XTZ = 10⁶ mutez)',
+                        $ref: '#/components/schemas/amount',
                       },
                     },
                   },
