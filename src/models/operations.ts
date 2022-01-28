@@ -1,4 +1,5 @@
 import { Pool } from 'pg';
+import format from 'pg-format';
 
 import { PostgreTables } from '../const/postgre/postgre-tables';
 import { TransactionParametersJson } from '../const/interfaces/transaction-parameters-json';
@@ -28,7 +29,7 @@ export function insertOperations(
   jobId: number,
   callerId: string,
 ) {
-  const valuesString = operationContents.map(
+  const values = operationContents.map(
     (
       op:
         | OperationContentsTransactionWithParametersJson
@@ -39,8 +40,12 @@ export function insertOperations(
   );
 
   return pool.query(
-    `INSERT INTO ${TABLE_NAME} (destination, parameters, parameters_json, amount, fee, source, storage_limit, gas_limit, counter, branch, job_id, caller_id, kind, public_key) 
-    VALUES ${valuesString.join(',')} RETURNING *`,
+    format(
+      `INSERT INTO %s (destination, parameters, parameters_json, amount, fee, source, storage_limit, gas_limit, counter, branch, job_id, caller_id, kind, public_key) 
+    VALUES %L RETURNING *`,
+      TABLE_NAME,
+      values,
+    ),
   );
 }
 
@@ -49,30 +54,42 @@ function mapOperationValues(
   branch: string,
   jobId: number,
   callerId: string,
-): string {
+): any[] {
   if (isOperationAReveal(op)) {
-    return `('', NULL, NULL, NULL, ${parseInt(op.fee, 10)},  '${
-      op.source
-    }', ${parseInt(op.storage_limit, 10)}, ${parseInt(
-      op.gas_limit,
-      10,
-    )}, ${parseInt(op.counter, 10)}, '${branch}', ${jobId}, '${callerId}', '${
-      op.kind
-    }', '${op.public_key}')`;
+    return [
+      '',
+      null,
+      null,
+      null,
+      parseInt(op.fee, 10),
+      op.source,
+      parseInt(op.storage_limit, 10),
+      parseInt(op.gas_limit, 10),
+      parseInt(op.counter, 10),
+      branch,
+      jobId,
+      callerId,
+      op.kind,
+      op.public_key,
+    ];
   }
 
-  return `('${op.destination}', '${JSON.stringify(
-    op.parameters,
-  )}', '${JSON.stringify(op.parametersJson)}', ${parseInt(
-    op.amount,
-    10,
-  )},  ${parseInt(op.fee, 10)},  '${op.source}', ${parseInt(
-    op.storage_limit,
-    10,
-  )},  ${parseInt(op.gas_limit, 10)}, ${parseInt(
-    op.counter,
-    10,
-  )}, '${branch}', ${jobId}, '${callerId}', '${op.kind}', NULL)`;
+  return [
+    op.destination,
+    JSON.stringify(op.parameters),
+    JSON.stringify(op.parametersJson),
+    parseInt(op.amount, 10),
+    parseInt(op.fee, 10),
+    op.source,
+    parseInt(op.storage_limit, 10),
+    parseInt(op.gas_limit, 10),
+    parseInt(op.counter, 10),
+    branch,
+    jobId,
+    callerId,
+    op.kind,
+    null,
+  ];
 }
 
 /**
@@ -102,11 +119,21 @@ export async function insertTransactionWithParametersJson(
     callerId: string;
   },
 ) {
+  const values = [
+    destination,
+    source,
+    JSON.stringify(parameters_json),
+    jobId,
+    callerId,
+    OpKind.TRANSACTION,
+  ];
   return pool.query(
-    `INSERT INTO ${TABLE_NAME} (destination, source, parameters_json, job_id, caller_id, kind)
-        VALUES('${destination}', '${source}','${JSON.stringify(
-      parameters_json,
-    )}', ${jobId}, '${callerId}', '${OpKind.TRANSACTION}') RETURNING *`,
+    format(
+      `INSERT INTO %s (destination, source, parameters_json, job_id, caller_id, kind)
+        VALUES (%L) RETURNING *`,
+      TABLE_NAME,
+      values,
+    ),
   );
 }
 
@@ -127,7 +154,9 @@ export async function selectOperation(
   const condition = conditionFields ? `WHERE ${conditionFields}` : '';
 
   return (
-    await pool.query(`SELECT ${selectFields} FROM ${TABLE_NAME} ${condition}`)
+    await pool.query(
+      format(`SELECT %s FROM %s %s`, selectFields, TABLE_NAME, condition),
+    )
   ).rows;
 }
 

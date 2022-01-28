@@ -1,4 +1,5 @@
 import { Pool } from 'pg';
+import format from 'pg-format';
 
 import { JobStatus } from '../const/job-status';
 import { PostgreTables } from '../const/postgre/postgre-tables';
@@ -30,13 +31,19 @@ export function insertJob(
     operation_kind?: string;
   },
 ) {
+  const values = [
+    status,
+    forged_operation ? forged_operation : null,
+    operation_hash ? operation_hash : null,
+    operation_kind ? operation_kind : null,
+  ];
   return pool.query(
-    `INSERT INTO ${TABLE_NAME} (status,forged_operation,operation_hash,operation_kind)
-        VALUES('${status}', ${
-      forged_operation ? "'" + forged_operation + "'" : null
-    }, ${operation_hash ? "'" + operation_hash + "'" : null}, ${
-      operation_kind ? "'" + operation_kind + "'" : null
-    }) RETURNING *`,
+    format(
+      `INSERT INTO %s (status,forged_operation,operation_hash,operation_kind)
+        VALUES (%L) RETURNING *`,
+      TABLE_NAME,
+      values,
+    ),
   );
 }
 

@@ -1,4 +1,5 @@
 import { Pool } from 'pg';
+import format from 'pg-format';
 
 import { PostgreTables } from '../../../src/const/postgre/postgre-tables';
 import { PostgreTypes } from '../../../src/const/postgre/postgre-types';
@@ -72,7 +73,13 @@ export async function selectData(
 
   return (
     await pool.query(
-      `SELECT ${selectFields} FROM ${tableName} ${condition} ${order}`,
+      format(
+        `SELECT %s FROM %s %s %s`,
+        selectFields,
+        tableName,
+        condition,
+        order,
+      ),
     )
   ).rows;
 }
