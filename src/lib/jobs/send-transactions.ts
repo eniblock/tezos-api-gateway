@@ -230,19 +230,23 @@ async function getOperationHashFromTezos(
         tezosService,
         logger,
       )
-    ).send();
+    ).send({ amount: transactions[0].amount });
   }
 
   const batch = await tezosService.createBatch();
 
   for (const transaction of transactions) {
-    batch.withContractCall(
-      await getContractMethodByTransactionDetails(
-        transaction,
-        useCache,
-        tezosService,
-        logger,
-      ),
+    batch.withTransfer(
+      (
+        await getContractMethodByTransactionDetails(
+          transaction,
+          useCache,
+          tezosService,
+          logger,
+        )
+      ).toTransferParams({
+        amount: transactions[0].amount,
+      }),
     );
   }
 

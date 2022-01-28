@@ -118,13 +118,14 @@ export function getTransferToParams(
   contract: ContractAbstraction<ContractProvider>,
   entryPoint: string,
   params?: EntryPointParams,
+  amount?: number,
 ) {
   return getContractMethod(
     logger,
     contract,
     entryPoint,
     params,
-  ).toTransferParams();
+  ).toTransferParams({ amount });
 }
 
 /**

@@ -6,6 +6,7 @@ export interface TransactionDetails {
   contractAddress: string;
   entryPoint: string;
   entryPointParams?: EntryPointParams;
+  amount?: number;
 }
 
 export interface SendTransactionsParams {
