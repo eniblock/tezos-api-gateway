@@ -8,7 +8,7 @@ export default {
         'Get the list of transactions of the specified smart contract.\n\n' +
         "Note that the TZKT indexer will return an empty array if it doesn't find any result (instead of an error). " +
         'This can happen in any of these cases : a non existent smart contract or entrypoint name, or a smart contract without any transaction yet.\n\n' +
-        "Also note that the TZKT indexer doesn't return the origination operation.",
+        'The origination operation is not included by default in the results, you can set the query parameter "indexer" to "tzstats" to include it.',
       parameters: [
         {
           name: 'contract_address',
@@ -44,7 +44,8 @@ export default {
           required: false,
           description:
             'Filter the transactions on the parameter passed when calling the smart contract. When this param is set the request will always be handled by TZKT. \n\n' +
-            'This query parameter supports wildcards. Use \\\\* as an escape symbol',
+            'This query parameter supports wildcards, use \\\\* as an escape symbol.' +
+            'If this query parameter is set, the indexer used will be TZKT.',
           schema: {
             type: 'string',
           },
@@ -57,6 +58,16 @@ export default {
               value: '*.csv*',
               summary: 'Query with only a portion of the parameters.',
             },
+          },
+        },
+        {
+          name: 'indexer',
+          in: 'query',
+          required: false,
+          description:
+            'Targets a specific indexer. Setting this query parameter to "tzstats" is the only way to include the origination operation.',
+          schema: {
+            $ref: '#/components/schemas/indexer',
           },
         },
         {

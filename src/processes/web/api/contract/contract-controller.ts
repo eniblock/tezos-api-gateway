@@ -9,6 +9,7 @@ import {
   OperationNotFoundError,
   UnsupportedIndexerError,
 } from '../../../../const/errors/indexer-error';
+import { ClientError } from '../../../../const/errors/client-error';
 
 export default { getTransactionListOfSC };
 
@@ -24,17 +25,35 @@ function getTransactionListOfSC(indexerPool: IndexerPool) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       const { contract_address: contractAddress } = req.params;
-      const params: ContractTransactionsParams = req.query;
+      const params: ContractTransactionsParams = req.query || {};
 
       logger.info(
         { contractAddress },
         '[contract/contract-controller] Requesting transactions made on this contract ',
       );
 
-      const currentIndexer =
-        params.parameter === undefined
-          ? indexerPool.getRandomIndexer()
-          : indexerPool.getSpecificIndexer(IndexerEnum.TZKT);
+      if (
+        params.indexer === IndexerEnum.TZSTATS &&
+        params.parameter !== undefined
+      ) {
+        throw new ClientError({
+          status: 400,
+          message:
+            'Query param "parameter" shouldn\'t be set when query param "indexer" equals "tzstats".\' +' +
+            'Either remove "parameter" to target Tzstats or remove "indexer" to automatically target TZKT',
+        });
+      }
+
+      let currentIndexer;
+
+      if (params.indexer === undefined) {
+        currentIndexer =
+          params.parameter === undefined
+            ? indexerPool.getRandomIndexer()
+            : indexerPool.getSpecificIndexer(IndexerEnum.TZKT);
+      } else {
+        currentIndexer = indexerPool.getSpecificIndexer(params.indexer);
+      }
 
       const transactionList = await currentIndexer.getTransactionListOfSC(
         contractAddress,
