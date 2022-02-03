@@ -14,7 +14,7 @@ export class TestContractMethod {
 }
 
 export class TestOperationBatch {
-  withContractCall(_params: ContractMethod<ContractProvider>) {
+  withTransfer(_params: ContractMethod<ContractProvider>) {
     return this;
   }
 

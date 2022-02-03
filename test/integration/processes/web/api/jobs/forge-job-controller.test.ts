@@ -407,5 +407,42 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
       expect(insertedForgeParameters[1].branch).not.toBeNull();
       expect(insertedForgeParameters[1].counter).not.toBeNull();
     }, 8000);
+
+    it('should return 201 and correctly insert data in the database when amount is specified', async () => {
+      requestBodyParam.transactions[0].amount = 10;
+      requestBodyParam.transactions[1].amount = 100;
+
+      const { body, status } = await request
+        .post('/api/forge/jobs')
+        .send(requestBodyParam);
+
+      expect({ body, status }).toEqual({
+        status: 201,
+        body: {
+          id: body.id,
+          forged_operation: body.forged_operation,
+          operation_hash: null,
+          status: 'created',
+          error_message: null,
+          operation_kind: OpKind.TRANSACTION,
+        },
+      });
+
+      await expect(
+        selectData(postgreService.pool, {
+          tableName: PostgreTables.JOBS,
+          selectFields: '*',
+        }),
+      ).resolves.toEqual([body]);
+
+      const insertedForgeParameters = await selectData(postgreService.pool, {
+        tableName: PostgreTables.OPERATIONS,
+        selectFields:
+          'destination, parameters, parameters_json, amount, fee, source, storage_limit, gas_limit, counter, branch, job_id, caller_id',
+      });
+
+      expect(insertedForgeParameters[0].amount).toEqual(10);
+      expect(insertedForgeParameters[1].amount).toEqual(100);
+    }, 8000);
   });
 });

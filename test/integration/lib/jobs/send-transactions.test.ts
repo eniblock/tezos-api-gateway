@@ -366,7 +366,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
       const createBatchSpy = jest
         .spyOn(tezosService, 'createBatch')
         .mockResolvedValue(batch as unknown as never);
-      const withContractCallSpy = jest.spyOn(batch, 'withContractCall');
+      const withTransferSpy = jest.spyOn(batch, 'withTransfer');
       await sendTransactions(
         {
           transactions: [
@@ -397,9 +397,9 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
         [logger, undefined, 'entrypoint', 'entryPointParams'],
       ]);
       expect(createBatchSpy).toHaveBeenCalledTimes(1);
-      expect(withContractCallSpy.mock.calls).toEqual([
-        [testContractMethod],
-        [testContractMethod],
+      expect(withTransferSpy.mock.calls).toEqual([
+        ['toTransferParams'],
+        ['toTransferParams'],
       ]);
       expect(setSignerSpy.mock.calls).toEqual([[vaultSigner]]);
 

@@ -61,6 +61,9 @@ export default {
                           { type: 'boolean' },
                         ],
                       },
+                      amount: {
+                        $ref: '#/components/schemas/amount',
+                      },
                     },
                   },
                 },
@@ -312,6 +315,11 @@ export default {
                           { type: 'boolean' },
                         ],
                       },
+                      amount: {
+                        type: 'number',
+                        description:
+                          'Amount of XTZ tokens transferred to the contract along with the transaction, in mutez (1 XTZ = 10⁶ mutez)',
+                      },
                     },
                   },
                 },
@@ -397,6 +405,11 @@ export default {
                           { type: 'number' },
                           { type: 'boolean' },
                         ],
+                      },
+                      amount: {
+                        type: 'number',
+                        description:
+                          'Amount of XTZ tokens transferred to the contract along with the transaction, in mutez (1 XTZ = 10⁶ mutez)',
                       },
                     },
                   },
