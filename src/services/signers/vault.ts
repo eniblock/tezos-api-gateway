@@ -106,7 +106,7 @@ export class VaultSigner implements Signer {
 
     const hex = hex2buf(forgedOperation);
 
-    const mergeBuf = mergebuf(magicByte ? magicByte : new Uint8Array([3]), hex);
+    const mergeBuf = magicByte ? mergebuf(magicByte, hex) : hex;
 
     const bytesHash = toBuffer(
       sodium.crypto_generichash(32, mergeBuf),

@@ -1,9 +1,27 @@
 /**
  * In memory signing params interface
  */
+import { GenericObject } from '../forge-operation-params';
+
 export interface InMemorySignerParams {
   privateKey: string;
-  forgedOperation: string;
+  bytesToSign: string;
+}
+
+/**
+ * vault signing params interface
+ */
+export interface VaultSignerParams {
+  secureKeyName: string;
+  bytesToSign: string;
+}
+
+/**
+ * packing data params interface
+ */
+export interface DataPackingParams {
+  data: GenericObject;
+  type: GenericObject;
 }
 
 /**

@@ -40,7 +40,7 @@ export default function setupRoutes(
   registerConfRoutes(router, indexerPool, gatewayPool);
 
   if (!prod) {
-    registerTestRoutes(router);
+    registerTestRoutes(router, gatewayPool);
   }
 
   app.use('/api', router);

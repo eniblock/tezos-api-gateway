@@ -1,23 +1,28 @@
 import { logger } from '../../services/logger';
-import { InMemorySigner } from '@taquito/signer';
 import { InMemorySignerResult } from '../../const/interfaces/test/sign-with-in-memory-signer';
+import { VaultSigner } from '../../services/signers/vault';
+import { vaultClientConfig } from '../../config';
 
 /**
- * @description    - Signs an operation with taquito's inMemorySigner
+ * @description    - Signs an operation with a vault key
  * @return  {Object}
  */
-export async function signWithInMemorySigner(
-  privateKey: string,
+export async function signWithVaultKey(
+  secureKeyName: string,
   forgedOperation: string,
   prefix?: boolean,
 ): Promise<InMemorySignerResult> {
   try {
-    const inMemorySigner = new InMemorySigner(privateKey);
+    const vaultSigner = new VaultSigner(
+      vaultClientConfig,
+      secureKeyName,
+      logger,
+    );
 
     const { sbytes, prefixSig } =
       prefix !== undefined && prefix
-        ? await inMemorySigner.sign(forgedOperation, new Uint8Array([3]))
-        : await inMemorySigner.sign(forgedOperation);
+        ? await vaultSigner.sign(forgedOperation, new Uint8Array([3]))
+        : await vaultSigner.sign(forgedOperation);
 
     logger.info(
       { signedOperation: sbytes, signature: prefixSig },
