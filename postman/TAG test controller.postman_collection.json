@@ -1,0 +1,176 @@
+{
+	"info": {
+		"_postman_id": "62336b14-6237-4b0b-b456-6b76705e23bf",
+		"name": "TAG test controller",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "sign with private key",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"privateKey\": \"edskSA4LxneaE17XrbuN8ehbQB2cTFSK2GwxMhxBXBmCqLnp6ZdFHdrW9gwF7BWb2xJ2TXGpePAo9iv3P1f6yCsDwNKcPfbWyM\",\n    \"bytesToSign\": \"0507070a00000016000072962502e07fb0735e918f3d84c996733c01be2e0707008bc1f1a70c0a000000160000974452a440a4cfe60d550ec6cbb880bbd21f6613\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3333/api/test/inMemorySigner?prefix=false",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3333",
+					"path": [
+						"api",
+						"test",
+						"inMemorySigner"
+					],
+					"query": [
+						{
+							"key": "prefix",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sign with vault key",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"secureKeyName\": \"master5\",\n    \"bytesToSign\": \"0507070a0000001601fcc8bfe353d8b099e0e6e675b4e2e4e925050ef1000707000107070002020000003e07040a0000001600007c38b4bb43c4340b9e33ab837130c63223aa9fd7000507040a000000160000e08b843540b7e1725f99ba5dc993af6fa7e9804a000a\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3333/api/test/vaultSigner?prefix=false",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3333",
+					"path": [
+						"api",
+						"test",
+						"vaultSigner"
+					],
+					"query": [
+						{
+							"key": "prefix",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "packData",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n    \"data\": { \n        \"string\": \"tz1W5ubDUJwpd9Gb94V2YKnZBHggAMMxtbBd\" \n    }, \n    \"type\": { \n        \"prim\": \"address\" \n    } \n}"
+				},
+				"url": {
+					"raw": "http://localhost:3333/api/test/packData",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3333",
+					"path": [
+						"api",
+						"test",
+						"packData"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "packData wallet",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n    \"data\": {\n        \"prim\": \"Pair\",\n        \"args\": [\n            { \n                \"string\": \"tz1W5ubDUJwpd9Gb94V2YKnZBHggAMMxtbBd\" \n            },\n            { \n                \"prim\": \"Pair\",\n                \"args\": [\n                    { \n                        \"int\": \"1652437067\" \n                    },\n                    { \n                        \"string\": \"tz1ZRraEmkupRpEhwaJwb58nysXTScXcvGYe\" \n                    } \n                ]            \n            } \n        ] \n    },\n    \"type\": { \n        \"prim\": \"pair\",\n        \"args\": [ \n            { \n                \"prim\": \"address\" \n            }, \n            { \n                \"prim\": \"pair\",\n                \"args\": [ \n                    { \n                        \"prim\": \"timestamp\" \n                    }, \n                    { \n                        \"prim\": \"address\" \n                    } \n                ] \n            } \n        ] \n    }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3333/api/test/packData",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3333",
+					"path": [
+						"api",
+						"test",
+						"packData"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "packData royalties",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n    \"data\": {\n      \"prim\": \"Pair\",\n      \"args\": [\n        { \"string\": \"KT1XdNLRwUhEnzYRJW8WZAUKcpupDFc7jerp\" },\n        {\n          \"prim\": \"Pair\",\n          \"args\": [\n            { \"int\": \"1\" },\n            {\n              \"prim\": \"Pair\",\n              \"args\": [\n                { \"int\": \"2\" },\n                [\n                  { \"prim\": \"Elt\", \"args\": [ { \"string\": \"tz1WxrQuZ4CK1MBUa2GqUWK1yJ4J6EtG1Gwi\" }, { \"int\": \"5\" } ] },\n                  { \"prim\": \"Elt\", \"args\": [ { \"string\": \"tz1g7KBruSWP7JERBRhKgJzezPqs4ZBDkR5B\" }, { \"int\": \"10\" } ] }\n                ]\n              ]\n            }\n          ]\n        }\n      ]\n    },\n    \"type\": {\n            \"prim\": \"pair\",\n            \"args\": [\n              { \"prim\": \"address\" },\n              {\n                \"prim\": \"pair\",\n                \"args\": [\n                  { \"prim\": \"int\" },\n                  {\n                    \"prim\": \"pair\",\n                    \"args\": [ { \"prim\": \"int\" }, { \"prim\": \"map\", \"args\": [ { \"prim\": \"address\" }, { \"prim\": \"int\" } ] } ]\n                  }\n                ]\n              }\n            ]\n          }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3333/api/test/packData",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3333",
+					"path": [
+						"api",
+						"test",
+						"packData"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
