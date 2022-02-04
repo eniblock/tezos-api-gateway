@@ -65,7 +65,7 @@ const components = {
     tezos_contract_address: {
       type: 'string',
       pattern: '^KT+[0-9a-zA-Z]{34}$',
-      description: 'An tezos smart contract address',
+      description: 'A tezos smart contract address',
       example: flexibleTokenContract,
     },
     amount: {
@@ -74,6 +74,12 @@ const components = {
       minimum: 0,
       description:
         'Amount of XTZ tokens transferred to the contract along with the transaction, in mutez (1 XTZ = 10⁶ mutez)',
+    },
+    indexer: {
+      type: 'string',
+      pattern: '^\\btzstats\\b|\\btzkt\\b$',
+      description: 'The indexer to target',
+      enum: ['tzstats', 'tzkt'],
     },
     page: {
       type: 'integer',

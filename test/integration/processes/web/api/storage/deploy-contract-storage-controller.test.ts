@@ -55,7 +55,7 @@ describe('[processes/web/api/storage] Deploy Contract Controller', () => {
 
       expect(status).toEqual(404);
       expect(body).toEqual({
-        message: 'Error while fetching publique key with the key name: nothing',
+        message: 'Error while fetching public key with the key name: nothing',
         status: 404,
       });
     });

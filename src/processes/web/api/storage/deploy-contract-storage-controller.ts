@@ -63,7 +63,7 @@ function compileAndDeployContract(
       } catch (e) {
         throw new ClientError({
           status: 404,
-          message: `Error while fetching publique key with the key name: ${secureKeyName}`,
+          message: `Error while fetching public key with the key name: ${secureKeyName}`,
         });
       }
 
