@@ -14,7 +14,7 @@ import { OperationNotFoundError } from '../../../../src/const/errors/indexer-err
 import { TezosService } from '../../../../src/services/tezos';
 import { flexibleTokenContract } from '../../../__fixtures__/smart-contract';
 import { IndexerEnum } from '../../../../src/const/interfaces/indexer';
-import { firstTx, originationOp } from '../../../__fixtures__/transactions';
+import { firstTx } from '../../../__fixtures__/transactions';
 
 describe('[services/clients] Indexer Client', () => {
   const indexerClient = new IndexerClient(indexerConfigs[0], logger);
@@ -194,10 +194,8 @@ describe('[services/clients] Indexer Client', () => {
             expect(
               indexer.getTransactionListOfSC(flexibleTokenContract, {}),
             ).resolves.toEqual([
-              originationOp,
               {
                 ...firstTx,
-                storage_fee: undefined,
                 indexer: IndexerEnum.TZSTATS,
               },
             ]),
