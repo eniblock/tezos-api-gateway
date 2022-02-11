@@ -9,13 +9,13 @@ import { InMemorySignerResult } from '../../const/interfaces/test/sign-with-in-m
 export async function signWithInMemorySigner(
   privateKey: string,
   forgedOperation: string,
-  prefix?: boolean,
+  operationPrefix?: boolean,
 ): Promise<InMemorySignerResult> {
   try {
     const inMemorySigner = new InMemorySigner(privateKey);
 
     const { sbytes, prefixSig } =
-      prefix !== undefined && prefix
+      operationPrefix !== undefined && operationPrefix
         ? await inMemorySigner.sign(forgedOperation, new Uint8Array([3]))
         : await inMemorySigner.sign(forgedOperation);
 

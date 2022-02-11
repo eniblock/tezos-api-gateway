@@ -9,7 +9,7 @@ export default {
         "Request to sign a forged operation or a packed object with taquito's in memory signer",
       parameters: [
         {
-          name: 'prefix',
+          name: 'operationPrefix',
           in: 'query',
           schema: {
             type: 'boolean',
@@ -78,7 +78,7 @@ export default {
         "Request to sign a forged operation or a packed object with taquito's in memory signer",
       parameters: [
         {
-          name: 'prefix',
+          name: 'operationPrefix',
           in: 'query',
           schema: {
             type: 'boolean',
@@ -131,6 +131,70 @@ export default {
                     type: 'string',
                   },
                 },
+              },
+            },
+          },
+        },
+        400: error[400],
+        500: error.default,
+      },
+    },
+  },
+  '/test/checkSignature': {
+    post: {
+      summary: 'Request to check the correctness of Ed25519 signatures',
+      description:
+        "Request to verify a cryptographic Ed25519 signatures given tha signed payload, the signer's public key, and the signature itself",
+      parameters: [
+        {
+          name: 'operationPrefix',
+          in: 'query',
+          schema: {
+            type: 'boolean',
+            default: false,
+          },
+          required: false,
+          description:
+            'add Tezos prefix to the payload to sign. It is mandatory when signing forged operation.',
+        },
+      ],
+      requestBody: {
+        description: 'Necessary information to sign an operation',
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['signature', 'publicKey', 'signedPayload'],
+              properties: {
+                publicKey: {
+                  type: 'string',
+                  description: 'The signer"s public key',
+                },
+                signedPayload: {
+                  type: 'string',
+                  description:
+                    'The hexadecimal string representation of the signed payload',
+                },
+                signature: {
+                  type: 'string',
+                  description: 'The payload signature coded in base58',
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: 'Successfully signed the operation',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'boolean',
+                description:
+                  'Return true if the signature is successfully verified',
               },
             },
           },

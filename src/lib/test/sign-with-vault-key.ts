@@ -10,7 +10,7 @@ import { vaultClientConfig } from '../../config';
 export async function signWithVaultKey(
   secureKeyName: string,
   forgedOperation: string,
-  prefix?: boolean,
+  operationPrefix?: boolean,
 ): Promise<InMemorySignerResult> {
   try {
     const vaultSigner = new VaultSigner(
@@ -20,7 +20,7 @@ export async function signWithVaultKey(
     );
 
     const { sbytes, prefixSig } =
-      prefix !== undefined && prefix
+      operationPrefix !== undefined && operationPrefix
         ? await vaultSigner.sign(forgedOperation, new Uint8Array([3]))
         : await vaultSigner.sign(forgedOperation);
 

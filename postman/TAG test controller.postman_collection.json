@@ -21,7 +21,7 @@
 					"raw": "{\n    \"privateKey\": \"edskSA4LxneaE17XrbuN8ehbQB2cTFSK2GwxMhxBXBmCqLnp6ZdFHdrW9gwF7BWb2xJ2TXGpePAo9iv3P1f6yCsDwNKcPfbWyM\",\n    \"bytesToSign\": \"0507070a00000016000072962502e07fb0735e918f3d84c996733c01be2e0707008bc1f1a70c0a000000160000974452a440a4cfe60d550ec6cbb880bbd21f6613\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:3333/api/test/inMemorySigner?prefix=false",
+					"raw": "http://localhost:3333/api/test/inMemorySigner?operationPrefix=true",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -34,8 +34,8 @@
 					],
 					"query": [
 						{
-							"key": "prefix",
-							"value": "false"
+							"key": "operationPrefix",
+							"value": "true"
 						}
 					]
 				}
@@ -58,7 +58,7 @@
 					"raw": "{\n    \"secureKeyName\": \"master5\",\n    \"bytesToSign\": \"0507070a0000001601fcc8bfe353d8b099e0e6e675b4e2e4e925050ef1000707000107070002020000003e07040a0000001600007c38b4bb43c4340b9e33ab837130c63223aa9fd7000507040a000000160000e08b843540b7e1725f99ba5dc993af6fa7e9804a000a\"\n}"
 				},
 				"url": {
-					"raw": "http://localhost:3333/api/test/vaultSigner?prefix=false",
+					"raw": "http://localhost:3333/api/test/vaultSigner?operationPrefix=false",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -71,7 +71,7 @@
 					],
 					"query": [
 						{
-							"key": "prefix",
+							"key": "operationPrefix",
 							"value": "false"
 						}
 					]
@@ -167,6 +167,74 @@
 						"api",
 						"test",
 						"packData"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "check signature",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"signature\": \"edsigtcTjLrTq1V2sLprMzxSZbkChaFnuUjiobQ5P7WQb3N2yjsTaomrA3pc9jnEfFmegcCBpQ3FUXXEJXNSebhaUjcS51KJRdw\",\n    \"publicKey\": \"edpkvYNexGW6PT5qxvwaahjsFJT72FTvynxMimTwXggTA3yw2ebpMU\",\n    \"signedPayload\": \"0507070a00000016000072962502e07fb0735e918f3d84c996733c01be2e0707008bc1f1a70c0a000000160000974452a440a4cfe60d550ec6cbb880bbd21f6613\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3333/api/test/checkSignature",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3333",
+					"path": [
+						"api",
+						"test",
+						"checkSignature"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "check operation signature",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"signature\": \"edsigteK42KWYdChLCTKidUQNts9sAru4zPGLrANAvbRuFkj6Va7DqTuGMUMqQS3QjN3qRyjCEZyouzRjkRbQvQdTAzjWNTkrUt\",\n    \"publicKey\": \"edpkvYNexGW6PT5qxvwaahjsFJT72FTvynxMimTwXggTA3yw2ebpMU\",\n    \"signedPayload\": \"0507070a00000016000072962502e07fb0735e918f3d84c996733c01be2e0707008bc1f1a70c0a000000160000974452a440a4cfe60d550ec6cbb880bbd21f6613\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3333/api/test/checkSignature?operationPrefix=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3333",
+					"path": [
+						"api",
+						"test",
+						"checkSignature"
+					],
+					"query": [
+						{
+							"key": "operationPrefix",
+							"value": "true"
+						}
 					]
 				}
 			},

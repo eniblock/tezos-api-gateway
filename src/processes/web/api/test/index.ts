@@ -15,6 +15,7 @@ export default function registerTestRoutes(
 ): Router {
   router.post('/test/inMemorySigner', testController.signInMemory());
   router.post('/test/vaultSigner', testController.signWithVault());
+  router.post('/test/checkSignature', testController.checkSignature());
   router.post('/test/packData', testController.packMichelsonData(gatewayPool));
 
   return router;

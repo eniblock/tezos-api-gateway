@@ -4,6 +4,7 @@ import { logger } from '../../../../services/logger';
 import { StatusCodes } from 'http-status-codes';
 import { signWithInMemorySigner } from '../../../../lib/test/sign-with-in-memory-signer';
 import {
+  CheckSignatureParams,
   DataPackingParams,
   InMemorySignerParams,
   VaultSignerParams,
@@ -11,10 +12,16 @@ import {
 import { signWithVaultKey } from '../../../../lib/test/sign-with-vault-key';
 import { pachData } from '../../../../lib/test/pach-data';
 import { GatewayPool } from '../../../../services/gateway-pool';
+import { checkEd25519Signature } from '../../../../lib/test/check-signature';
 
-export default { signInMemory, signWithVault, packMichelsonData };
+export default {
+  signInMemory,
+  signWithVault,
+  packMichelsonData,
+  checkSignature,
+};
 
-type ReqQuery = { prefix: boolean };
+type ReqQuery = { operationPrefix: boolean };
 
 function signInMemory() {
   return async (
@@ -24,7 +31,7 @@ function signInMemory() {
   ) => {
     try {
       const { privateKey, bytesToSign }: InMemorySignerParams = req.body;
-      const { prefix } = req.query;
+      const { operationPrefix } = req.query;
       logger.info(
         '[test/test-controller#signInMemory] Calling in memory signer',
       );
@@ -32,7 +39,7 @@ function signInMemory() {
       const { signedOperation, signature } = await signWithInMemorySigner(
         privateKey,
         bytesToSign,
-        prefix,
+        operationPrefix,
       );
 
       return res.status(StatusCodes.OK).json({ signedOperation, signature });
@@ -50,16 +57,42 @@ function signWithVault() {
   ) => {
     try {
       const { secureKeyName, bytesToSign }: VaultSignerParams = req.body;
-      const { prefix } = req.query;
+      const { operationPrefix } = req.query;
       logger.info('[test/test-controller#signWithVault] Calling vault signer');
 
       const { signedOperation, signature } = await signWithVaultKey(
         secureKeyName,
         bytesToSign,
-        prefix,
+        operationPrefix,
       );
 
       return res.status(StatusCodes.OK).json({ signedOperation, signature });
+    } catch (err) {
+      return next(err);
+    }
+  };
+}
+
+function checkSignature() {
+  return async (
+    req: Request<any, any, any, ReqQuery>,
+    res: Response,
+    next: NextFunction,
+  ) => {
+    try {
+      const { signature, publicKey, signedPayload }: CheckSignatureParams =
+        req.body;
+      const { operationPrefix } = req.query;
+      logger.info('[test/test-controller#signWithVault] Calling vault signer');
+
+      const verified = await checkEd25519Signature(
+        signature,
+        publicKey,
+        signedPayload,
+        operationPrefix,
+      );
+
+      return res.status(StatusCodes.OK).json(verified);
     } catch (err) {
       return next(err);
     }

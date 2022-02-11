@@ -17,6 +17,15 @@ export interface VaultSignerParams {
 }
 
 /**
+ * signature checking params interface
+ */
+export interface CheckSignatureParams {
+  signature: string;
+  publicKey: string;
+  signedPayload: string;
+}
+
+/**
  * packing data params interface
  */
 export interface DataPackingParams {
