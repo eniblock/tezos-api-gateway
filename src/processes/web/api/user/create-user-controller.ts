@@ -22,15 +22,6 @@ function createUser(gatewayPool: GatewayPool, activateAndReveal: boolean) {
         '[user/create-user-controller] User creation with the following data',
       );
 
-      const tezosService = await gatewayPool.getTezosService();
-
-      logger.info(
-        {
-          tezosNode: tezosService.tezos.rpc.getRpcUrl(),
-        },
-        '[user/create-user-controller] Using this tezos node',
-      );
-
       const result = await createAccounts(userIdList);
 
       logger.info(
@@ -39,11 +30,21 @@ function createUser(gatewayPool: GatewayPool, activateAndReveal: boolean) {
       );
 
       if (activateAndReveal) {
+        const tezosService = await gatewayPool.getTezosService();
+
+        logger.info(
+          {
+            tezosNode: tezosService.tezos.rpc.getRpcUrl(),
+          },
+          '[user/create-user-controller] Using this tezos node',
+        );
+
         const signer = new VaultSigner(
           vaultClientConfig,
           secureKeyName,
           logger,
         );
+
         await activateAndRevealAccounts(tezosService, signer, {
           userIdList,
           secureKeyName,
