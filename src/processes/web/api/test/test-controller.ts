@@ -10,7 +10,7 @@ import {
   VaultSignerParams,
 } from '../../../../const/interfaces/test/sign-with-in-memory-signer';
 import { signWithVaultKey } from '../../../../lib/test/sign-with-vault-key';
-import { pachData } from '../../../../lib/test/pach-data';
+import { packData } from '../../../../lib/test/pack-data';
 import { GatewayPool } from '../../../../services/gateway-pool';
 import { checkEd25519Signature } from '../../../../lib/test/check-signature';
 
@@ -118,7 +118,7 @@ function packMichelsonData(gatewayPool: GatewayPool) {
         '[jobs/forge-job-controller] Using this tezos node',
       );
 
-      const packed = await pachData(tezosService, {
+      const packed = await packData(tezosService, {
         data,
         type,
       });

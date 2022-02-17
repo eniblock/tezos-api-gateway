@@ -220,7 +220,13 @@ export default {
               required: ['data', 'type'],
               properties: {
                 data: {
-                  oneOf: [{ type: 'object' }, { type: 'array' }],
+                  oneOf: [
+                    { type: 'object' },
+                    { type: 'array' },
+                    { type: 'string' },
+                    { type: 'number' },
+                    { type: 'boolean' },
+                  ],
                   description: 'TODO',
                 },
                 type: {
