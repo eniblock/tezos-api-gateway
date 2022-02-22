@@ -1,0 +1,102 @@
+{
+	"info": {
+		"_postman_id": "59a823bc-8d5a-479d-b434-13fd56725d48",
+		"name": "TAG utils controller",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "packData string",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n    \"data\": \"tz1W5ubDUJwpd9Gb94V2YKnZBHggAMMxtbBd\", \n    \"type\": { \n        \"prim\": \"address\"\n    } \n}"
+				},
+				"url": {
+					"raw": "http://localhost:3333/api/utils/pack-data",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3333",
+					"path": [
+						"api",
+						"utils",
+						"pack-data"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "packData wallet",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n    \"data\": {\n        \"delegated_address\": \"tz1W5ubDUJwpd9Gb94V2YKnZBHggAMMxtbBd\",\n        \"expiration_date\": \"1652437067\",\n        \"paying_address\": \"tz1ZRraEmkupRpEhwaJwb58nysXTScXcvGYe\"\n    },\n    \"type\": {\n        \"prim\": \"pair\",\n        \"args\": [\n            { \"prim\": \"address\", \"annots\": [ \"%delegated_address\" ] },\n            { \"prim\": \"pair\", \"args\": [ { \"prim\": \"timestamp\", \"annots\": [ \"%expiration_date\" ] }, { \"prim\": \"address\", \"annots\": [ \"%paying_address\" ] } ] }\n        ]\n    }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3333/api/utils/pack-data",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3333",
+					"path": [
+						"api",
+						"utils",
+						"pack-data"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "packData royalties",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \n    \"data\": {\n        \"nft_contract_address\": \"KT1XdNLRwUhEnzYRJW8WZAUKcpupDFc7jerp\",\n        \"nft_id\": 1,\n        \"royalties\": {\n            \"decimals\": 2,\n            \"shares\": [\n                { \n                    \"key\": \"tz1WxrQuZ4CK1MBUa2GqUWK1yJ4J6EtG1Gwi\",\n                    \"value\": 5 \n                },\n                { \n                    \"key\": \"tz1g7KBruSWP7JERBRhKgJzezPqs4ZBDkR5B\", \n                    \"value\": 10 \n                } \n            ]\n        }\n    },\n    \"type\": {\n                \"prim\": \"pair\",\n                \"args\": [\n                  { \"prim\": \"address\", \"annots\": [ \"%nft_contract_address\" ] },\n                  {\n                    \"prim\": \"pair\",\n                    \"args\": [\n                      { \"prim\": \"int\", \"annots\": [ \"%nft_id\" ] },\n                      {\n                        \"prim\": \"pair\",\n                        \"args\": [ { \"prim\": \"int\", \"annots\": [ \"%decimals\" ] }, { \"prim\": \"map\", \"args\": [ { \"prim\": \"address\" }, { \"prim\": \"int\" } ], \"annots\": [ \"%shares\" ] } ],\n                        \"annots\": [ \"%royalties\" ]\n                      }\n                    ]\n                  }\n                ]\n              }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3333/api/utils/pack-data",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3333",
+					"path": [
+						"api",
+						"utils",
+						"pack-data"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
