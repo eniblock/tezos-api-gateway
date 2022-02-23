@@ -7,15 +7,23 @@ import { InMemorySignerParams } from '../../../../const/interfaces/test/sign-wit
 
 export default { sign };
 
+type ReqQuery = { operationPrefix: boolean };
+
 function sign() {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (
+    req: Request<any, any, any, ReqQuery>,
+    res: Response,
+    next: NextFunction,
+  ) => {
     try {
       const { privateKey, forgedOperation }: InMemorySignerParams = req.body;
+      const { operationPrefix } = req.query;
       logger.info('[test/test-controller#sign] Calling in memory signer');
 
       const { signedOperation, signature } = await signWithInMemorySigner(
         privateKey,
         forgedOperation,
+        operationPrefix,
       );
 
       return res.status(StatusCodes.OK).json({ signedOperation, signature });

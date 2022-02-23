@@ -3,9 +3,22 @@ import { error } from '../components/errors';
 export default {
   '/test/inMemorySigner': {
     post: {
-      summary: 'Request to sign an operation',
+      summary: 'Sign data with secret key',
       description:
-        "Request to sign a forged operation with taquito's in memory signer",
+        "Request to sign a forged operation or a packed object with taquito's in memory signer",
+      parameters: [
+        {
+          name: 'operationPrefix',
+          in: 'query',
+          schema: {
+            type: 'boolean',
+            default: true,
+          },
+          required: false,
+          description:
+            'add the operation Tezos prefix to the payload to sign. It is mandatory when signing forged operation.',
+        },
+      ],
       requestBody: {
         description: 'Necessary information to sign an operation',
         required: true,

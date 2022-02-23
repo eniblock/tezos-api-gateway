@@ -487,4 +487,76 @@ export default {
       },
     },
   },
+  '/user/{userId}/sign': {
+    post: {
+      summary: 'Sign data with a delegated account',
+      description:
+        "Request to sign a forged operation or a serialized object with user's delegated wallet",
+      parameters: [
+        {
+          name: 'userId',
+          in: 'path',
+          required: true,
+          schema: {
+            type: 'string',
+          },
+        },
+        {
+          name: 'operationPrefix',
+          in: 'query',
+          schema: {
+            type: 'boolean',
+            default: true,
+          },
+          required: false,
+          description:
+            'add the Tezos operation prefix to the payload to sign. It is mandatory when signing forged operations.',
+        },
+      ],
+      requestBody: {
+        description: 'Necessary information to sign an operation',
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['bytesToSign'],
+              properties: {
+                bytesToSign: {
+                  type: 'string',
+                  description:
+                    'The hexadecimal string representation of the payload to sign',
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: 'Successfully signed the operation',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                additionalProperties: false,
+                required: ['signedData', 'signature'],
+                properties: {
+                  signedData: {
+                    type: 'string',
+                  },
+                  signature: {
+                    type: 'string',
+                  },
+                },
+              },
+            },
+          },
+        },
+        400: error[400],
+        500: error.default,
+      },
+    },
+  },
 };

@@ -9,14 +9,15 @@ import { InMemorySignerResult } from '../../const/interfaces/test/sign-with-in-m
 export async function signWithInMemorySigner(
   privateKey: string,
   forgedOperation: string,
+  operationPrefix?: boolean,
 ): Promise<InMemorySignerResult> {
   try {
     const inMemorySigner = new InMemorySigner(privateKey);
 
-    const { sbytes, prefixSig } = await inMemorySigner.sign(
-      forgedOperation,
-      new Uint8Array([3]),
-    );
+    const { sbytes, prefixSig } =
+      operationPrefix !== undefined && operationPrefix
+        ? await inMemorySigner.sign(forgedOperation, new Uint8Array([3]))
+        : await inMemorySigner.sign(forgedOperation);
 
     logger.info(
       { signedOperation: sbytes, signature: prefixSig },
