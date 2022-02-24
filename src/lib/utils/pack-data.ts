@@ -49,7 +49,7 @@ function findMapAndConvertToMichelson(data: any, mapAnnot: string): any {
     data[mapAnnot] = convertMapToMichelson(data[mapAnnot]);
   } else {
     if (Array.isArray(data)) {
-      data.map((item) => {
+      data.forEach((item) => {
         return findMapAndConvertToMichelson(item, mapAnnot);
       });
     }
