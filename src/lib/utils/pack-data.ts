@@ -7,7 +7,7 @@ import _ from 'lodash';
 import { DataPackingParams } from '../../const/interfaces/utils/pack-data';
 
 /**
- * @description    - Signs an operation with a vault key
+ * @description    - Serialize Michelson data : convert JSON object to Michelson and pack data by calling the rpc client
  * @return  {Object}
  */
 export async function packData(
