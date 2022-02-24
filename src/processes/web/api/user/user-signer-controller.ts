@@ -6,6 +6,8 @@ import {
   SignDataParams,
   SignDataResult,
 } from '../../../../const/interfaces/user/sign/sign-data';
+import { VaultClient } from '../../../../services/clients/vault-client';
+import { vaultClientConfig } from '../../../../config';
 
 export default {
   signDataWithUserWallet,
@@ -24,6 +26,10 @@ function signDataWithUserWallet() {
       const { userId } = req.params;
       const { operationPrefix }: ReqQuery = req.query;
       logger.info('[test/test-controller#signWithVault] Calling vault signer');
+
+      // We check if the user exists
+      const vaultClient = new VaultClient(vaultClientConfig, logger);
+      await vaultClient.getTransitByName(userId);
 
       const { signedData, signature }: SignDataResult = await signData(
         userId,

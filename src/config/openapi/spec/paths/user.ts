@@ -506,7 +506,7 @@ export default {
           in: 'query',
           schema: {
             type: 'boolean',
-            default: true,
+            default: false,
           },
           required: false,
           description:
