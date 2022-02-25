@@ -18,5 +18,7 @@ export default function registerUtilsRoutes(
     utilsController.packMichelsonData(gatewayPool),
   );
 
+  router.post('/utils/check-signature', utilsController.checkSignature());
+
   return router;
 }
