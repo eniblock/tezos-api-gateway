@@ -14,10 +14,9 @@ export async function signWithInMemorySigner(
   try {
     const inMemorySigner = new InMemorySigner(privateKey);
 
-    const { sbytes, prefixSig } =
-      operationPrefix !== undefined && operationPrefix
-        ? await inMemorySigner.sign(forgedOperation, new Uint8Array([3]))
-        : await inMemorySigner.sign(forgedOperation);
+    const { sbytes, prefixSig } = operationPrefix
+      ? await inMemorySigner.sign(forgedOperation, new Uint8Array([3]))
+      : await inMemorySigner.sign(forgedOperation);
 
     logger.info(
       { signedOperation: sbytes, signature: prefixSig },

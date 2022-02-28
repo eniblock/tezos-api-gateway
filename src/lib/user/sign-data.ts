@@ -19,10 +19,9 @@ export async function signData(
       '[lib/user/signData] Signing data with user"s vault wallet',
     );
 
-    const { sbytes, prefixSig } =
-      operationPrefix !== undefined && operationPrefix
-        ? await vaultSigner.sign(bytesToSign, new Uint8Array([3]))
-        : await vaultSigner.sign(bytesToSign);
+    const { sbytes, prefixSig } = operationPrefix
+      ? await vaultSigner.sign(bytesToSign, new Uint8Array([3]))
+      : await vaultSigner.sign(bytesToSign);
 
     logger.info(
       { signedData: sbytes, signature: prefixSig },
