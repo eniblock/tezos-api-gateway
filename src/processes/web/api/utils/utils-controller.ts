@@ -67,7 +67,7 @@ function checkSignature() {
         '[utils/utils-controller#checkSignature] Calling checkTezosSignature',
       );
 
-      const result = checkTezosSignature(
+      const result = await checkTezosSignature(
         signature,
         publicKey,
         hexData,

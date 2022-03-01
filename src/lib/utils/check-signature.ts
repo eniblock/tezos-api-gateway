@@ -6,12 +6,12 @@ import { b58cdecode, hex2buf, mergebuf, prefix } from '@taquito/utils';
  * @description    - Check a signature validity
  * @return  {Object}
  */
-export function checkTezosSignature(
+export async function checkTezosSignature(
   signature: string,
   publicKey: string,
   hexData: string,
   operationPrefix?: boolean,
-): boolean {
+): Promise<boolean> {
   try {
     logger.info(
       {
@@ -26,6 +26,8 @@ export function checkTezosSignature(
     const bytes = operationPrefix
       ? mergebuf(new Uint8Array([3]), hex2buf(hexData))
       : hex2buf(hexData);
+
+    await sodium.ready;
 
     return sodium.crypto_sign_verify_detached(
       b58cdecode(signature, prefix.edsig),

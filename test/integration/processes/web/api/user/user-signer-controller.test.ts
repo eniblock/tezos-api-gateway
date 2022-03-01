@@ -48,7 +48,7 @@ describe('[processes/web/api/user] User signer controller', () => {
       const { body, status } = await request
         .post('/api/user/userId/sign')
         .send({
-          bytesToSign: 'test',
+          bytesToSign: '0x00',
           extra: 'extra',
         });
 
@@ -68,7 +68,7 @@ describe('[processes/web/api/user] User signer controller', () => {
 
       const { body, status } = await request
         .post('/api/user/userId/sign')
-        .send({ bytesToSign: 'test' });
+        .send({ bytesToSign: '0x00' });
 
       vaultNock.done();
 
@@ -87,22 +87,25 @@ describe('[processes/web/api/user] User signer controller', () => {
       const vaultSignerResponseSpy = jest
         .spyOn(UserSigner, 'signData')
         .mockResolvedValue({
-          signature: 'fake signature',
-          signedData: 'fake signed data',
+          signature:
+            'edsigtcTjLrTq1V2sLprMzxSZbkChaFnuUjiobQ5P7WQb3N2yjsTaomrA3pc9jnEfFmegcCBpQ3FUXXEJXNSebhaUjcS51KJRdw',
+          signedData: '001122334455',
         } as any);
 
       const { body, status } = await request
         .post('/api/user/userId/sign')
-        .send({ bytesToSign: 'fake bytes' });
+        .send({ bytesToSign: '0x00' });
 
       vaultNockGetUser.done();
       expect(vaultSignerResponseSpy.mock.calls).toEqual([
-        ['userId', 'fake bytes', false],
+        ['userId', '0x00', false],
       ]);
 
       expect(status).toEqual(200);
-      expect(body.signedData).toEqual('fake signed data');
-      expect(body.signature).toEqual('fake signature');
+      expect(body.signedData).toEqual('001122334455');
+      expect(body.signature).toEqual(
+        'edsigtcTjLrTq1V2sLprMzxSZbkChaFnuUjiobQ5P7WQb3N2yjsTaomrA3pc9jnEfFmegcCBpQ3FUXXEJXNSebhaUjcS51KJRdw',
+      );
     });
 
     it('should return 200, and sign the data appended with operation prefix when the parameter operationPrefix is true', async () => {
@@ -113,23 +116,26 @@ describe('[processes/web/api/user] User signer controller', () => {
       const vaultSignerResponseSpy = jest
         .spyOn(UserSigner, 'signData')
         .mockResolvedValue({
-          signature: 'fake signature',
-          signedData: 'fake signed data',
+          signature:
+            'edsigtcTjLrTq1V2sLprMzxSZbkChaFnuUjiobQ5P7WQb3N2yjsTaomrA3pc9jnEfFmegcCBpQ3FUXXEJXNSebhaUjcS51KJRdw',
+          signedData: '001122334455',
         } as any);
 
       const { body, status } = await request
         .post('/api/user/userId/sign')
         .query({ operationPrefix: true })
-        .send({ bytesToSign: 'fake bytes' });
+        .send({ bytesToSign: '0x00' });
 
       vaultNockGetUser.done();
       expect(vaultSignerResponseSpy.mock.calls).toEqual([
-        ['userId', 'fake bytes', true],
+        ['userId', '0x00', true],
       ]);
 
       expect(status).toEqual(200);
-      expect(body.signedData).toEqual('fake signed data');
-      expect(body.signature).toEqual('fake signature');
+      expect(body.signedData).toEqual('001122334455');
+      expect(body.signature).toEqual(
+        'edsigtcTjLrTq1V2sLprMzxSZbkChaFnuUjiobQ5P7WQb3N2yjsTaomrA3pc9jnEfFmegcCBpQ3FUXXEJXNSebhaUjcS51KJRdw',
+      );
     });
   });
 });
