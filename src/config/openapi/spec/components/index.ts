@@ -86,7 +86,12 @@ const components = {
       default: 0,
       minimum: 0,
       description:
-        'Amount of XTZ tokens transferred to the contract along with the transaction, in mutez (1 XTZ = 10⁶ mutez)',
+        'Amount of XTZ tokens transferred in the transaction, in mutez (1 XTZ = 10⁶ mutez)',
+    },
+    callerId: {
+      nullable: true,
+      type: 'string',
+      description: 'The identifier of the calling application',
     },
     indexer: {
       type: 'string',

@@ -103,33 +103,36 @@ function mapOperationValues(
  *
  * @return {Promise<object>} the new transaction inserted
  */
-export async function insertTransactionWithParametersJson(
+export async function insertTransaction(
   pool: Pool,
   {
     destination,
     source,
     parameters_json,
+    amount,
     jobId,
     callerId,
   }: {
     jobId: number;
-    parameters_json: TransactionParametersJson;
+    parameters_json?: TransactionParametersJson;
+    amount: number;
     destination: string;
     source: string;
-    callerId: string;
+    callerId?: string;
   },
 ) {
   const values = [
     destination,
     source,
     JSON.stringify(parameters_json),
+    amount,
     jobId,
     callerId,
     OpKind.TRANSACTION,
   ];
   return pool.query(
     format(
-      `INSERT INTO %s (destination, source, parameters_json, job_id, caller_id, kind)
+      `INSERT INTO %s (destination, source, parameters_json, amount, job_id, caller_id, kind)
         VALUES (%L) RETURNING *`,
       TABLE_NAME,
       values,

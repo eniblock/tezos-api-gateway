@@ -18,7 +18,7 @@ import { checkOperationStatus } from '../../../../../src/processes/workers/check
 import { IndexerPool } from '../../../../../src/services/indexer-pool';
 import { nbOfConfirmation, nbOfRetry } from '../../../../../src/config';
 import { AmqpService } from '../../../../../src/services/amqp';
-import { insertTransactionWithParametersJson } from '../../../../../src/models/operations';
+import { insertTransaction } from '../../../../../src/models/operations';
 import { selectJobs } from '../../../../../src/models/jobs';
 import { Jobs } from '../../../../../src/const/interfaces/jobs';
 import { OpKind } from '@taquito/rpc';
@@ -111,23 +111,25 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
         `status='${JobStatus.PUBLISHED}'`,
       )) as Jobs[];
 
-      await insertTransactionWithParametersJson(postgreService.pool, {
+      await insertTransaction(postgreService.pool, {
         destination: 'destination',
         source: 'source',
         parameters_json: {
           entrypoint: 'entrypoint',
           value: { entrypoint: { name: 'toto' } },
         },
+        amount: 0,
         callerId: 'myCaller',
         jobId: publishedJob.id,
       });
-      await insertTransactionWithParametersJson(postgreService.pool, {
+      await insertTransaction(postgreService.pool, {
         destination: 'destination2',
         source: 'source2',
         parameters_json: {
           entrypoint: 'entrypoint2',
           value: { entrypoint2: { name: 'tata' } },
         },
+        amount: 0,
         callerId: 'myCaller2',
         jobId: publishedJob.id,
       });

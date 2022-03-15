@@ -20,7 +20,7 @@ import { JobStatus } from '../../const/job-status';
 import { AmqpService } from '../../services/amqp';
 import { sendToSendTransactionQueue } from '../amqp/send-to-send-transaction-queue';
 import { vaultClientConfig } from '../../config';
-import { insertTransactionWithParametersJson } from '../../models/operations';
+import { insertTransaction } from '../../models/operations';
 import { JobIdNotFoundError } from '../../const/errors/job-id-not-found-error';
 import { GatewayPool } from '../../services/gateway-pool';
 import { OpKind } from '@taquito/rpc';
@@ -294,8 +294,8 @@ async function insertTransactions(
 ) {
   await Promise.all(
     transactions.map(
-      async ({ contractAddress, entryPoint, entryPointParams }) => {
-        await insertTransactionWithParametersJson(postgreService.pool, {
+      async ({ contractAddress, entryPoint, entryPointParams, amount }) => {
+        await insertTransaction(postgreService.pool, {
           destination: contractAddress,
           source: pkh,
           parameters_json: {
@@ -304,6 +304,7 @@ async function insertTransactions(
               [`${entryPoint}`]: entryPointParams ? entryPointParams : 0,
             },
           },
+          amount: amount ? amount : 0,
           jobId,
           callerId,
         });
