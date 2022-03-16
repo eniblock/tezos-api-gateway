@@ -10,6 +10,7 @@ import { insertJob } from '../../../../models/jobs';
 import { JobStatus } from '../../../../const/job-status';
 import { OpKind } from '@taquito/rpc';
 import { sendTransferTransactions } from '../../../../lib/jobs/send-transfer-transactions';
+import { VaultClient } from '../../../../services/clients/vault-client';
 
 export default {
   transferTokens,
@@ -33,6 +34,10 @@ function transferTokens(
         { userId, transactions },
         '[user/user-transfer-controller#transferTokens] Transferring Tezos tokens',
       );
+
+      // We check if the user exists
+      const vaultClient = new VaultClient(vaultClientConfig, logger);
+      await vaultClient.getTransitByName(userId);
 
       const vaultSigner = new VaultSigner(vaultClientConfig, userId, logger);
 

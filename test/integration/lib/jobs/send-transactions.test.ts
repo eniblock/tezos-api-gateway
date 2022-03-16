@@ -311,7 +311,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
           parameters: null,
           parameters_json:
             '{"entrypoint":"entrypoint","value":{"entrypoint":0}}',
-          amount: null,
+          amount: 0,
           fee: null,
           storage_limit: null,
           gas_limit: null,
@@ -433,7 +433,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
           parameters: null,
           parameters_json:
             '{"entrypoint":"entrypoint","value":{"entrypoint":0}}',
-          amount: null,
+          amount: 0,
           fee: null,
           storage_limit: null,
           gas_limit: null,
@@ -447,7 +447,7 @@ describe('[lib/jobs/send-transactions] Send Transactions', () => {
           parameters: null,
           parameters_json:
             '{"entrypoint":"entrypoint","value":{"entrypoint":"entryPointParams"}}',
-          amount: null,
+          amount: 0,
           fee: null,
           storage_limit: null,
           gas_limit: null,

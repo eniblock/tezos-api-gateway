@@ -232,7 +232,7 @@ describe('[models/operations]', () => {
         {
           id: insertedResult[0].id,
           destination: 'destination',
-          amount: null,
+          amount: 0,
           fee: null,
           storage_limit: null,
           gas_limit: null,
