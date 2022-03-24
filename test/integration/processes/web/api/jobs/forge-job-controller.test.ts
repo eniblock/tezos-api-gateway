@@ -186,7 +186,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
 
       expect(status).toEqual(400);
       expect(body).toEqual({
-        message: 'Address tz1RhvdPbnfnjvrxcFmT6d55dnvh1sK1MBQR is not revealed',
+        message: `Address ${activatedAccount.address} is not revealed`,
         status: 400,
       });
     });
@@ -202,8 +202,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
 
       expect(status).toEqual(400);
       expect(body).toEqual({
-        message:
-          'Ensure that the address tz1RhvdPbnfnjvrxcFmT6d55dnvh1sK1MBQR is activated and is related to the public key edpkukHceEkeLBRj1MyQkZYUZdffCYbQMA8UAedZt8NwtPUXiAgiBe',
+        message: `Ensure that the address ${activatedAccount.address} is activated and is related to the public key edpkukHceEkeLBRj1MyQkZYUZdffCYbQMA8UAedZt8NwtPUXiAgiBe`,
         status: 400,
       });
     });
