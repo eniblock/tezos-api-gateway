@@ -5,6 +5,7 @@ import entrypoints from './entrypoints';
 import contract from './contract';
 import conf from './conf';
 import test from './test';
+import utils from './utils';
 import { prod } from '../../../index';
 
 let paths = {
@@ -14,6 +15,7 @@ let paths = {
   ...users,
   ...contract,
   ...conf,
+  ...utils,
 };
 
 if (!prod) {

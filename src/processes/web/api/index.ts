@@ -14,6 +14,7 @@ import { MetricPrometheusService } from '../../../services/metric-prometheus';
 import { IndexerPool } from '../../../services/indexer-pool';
 import { prod } from '../../../config';
 import registerTestRoutes from './test';
+import registerUtilsRoutes from './utils';
 
 export default function setupRoutes(
   app: ExpressApp,
@@ -38,6 +39,7 @@ export default function setupRoutes(
   registerUserRoutes(router, gatewayPool, indexerPool);
   registerContractRoutes(router, indexerPool);
   registerConfRoutes(router, indexerPool, gatewayPool);
+  registerUtilsRoutes(router, gatewayPool);
 
   if (!prod) {
     registerTestRoutes(router);

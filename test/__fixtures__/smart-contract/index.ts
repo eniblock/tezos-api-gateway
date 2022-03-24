@@ -27,6 +27,6 @@ export const unActivatedAccount = {
   publicKey: 'edpkth2LES58yuhN7LkdnAjYDceaaP5XmqBf2tCXsu1sdoBHXgckoG',
 };
 export const activatedAccount = {
-  address: 'tz1RhvdPbnfnjvrxcFmT6d55dnvh1sK1MBQR',
-  publicKey: 'edpkvWTUM8AD6d5H2Z5WhPbQJ6waHwi9gQGtdriUF9xte3EJxdGKJE',
+  address: 'tz1fUaHg74CgrXsWY61dbJwpMsQvbf8KF8QS',
+  publicKey: 'edpkugJyHbD1t8zCUwBrzbDRY7scUmHZ3bfVWjS7d8gvRfBj3wFxSf',
 };
