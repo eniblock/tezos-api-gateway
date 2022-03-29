@@ -557,4 +557,59 @@ export default {
       },
     },
   },
+  '/user/{userId}/transfer': {
+    post: {
+      summary: 'Transfer XTZ',
+      description: 'Transfer an amount of Tezzies to a recipient address',
+      requestBody: {
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['transactions'],
+              properties: {
+                transactions: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    additionalProperties: false,
+                    required: ['to', 'amount'],
+                    properties: {
+                      to: {
+                        $ref: '#/components/schemas/tezos_address',
+                      },
+                      amount: {
+                        $ref: '#/components/schemas/amount',
+                      },
+                    },
+                  },
+                },
+                callerId: {
+                  $ref: '#/components/schemas/callerId',
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        201: {
+          description:
+            'successful created a job and send transactions to tezos',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/components/schemas/job',
+              },
+            },
+          },
+        },
+        400: error[400],
+        404: error[404],
+        500: error.default,
+      },
+    },
+  },
 };

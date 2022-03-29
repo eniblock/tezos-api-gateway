@@ -36,7 +36,7 @@ export default function setupRoutes(
   );
   registerStorageRoutes(router, gatewayPool, signerFactory);
   registerEntryPointsRoutes(router, gatewayPool);
-  registerUserRoutes(router, gatewayPool, indexerPool);
+  registerUserRoutes(router, gatewayPool, indexerPool, postgreService);
   registerContractRoutes(router, indexerPool);
   registerConfRoutes(router, indexerPool, gatewayPool);
   registerUtilsRoutes(router, gatewayPool);

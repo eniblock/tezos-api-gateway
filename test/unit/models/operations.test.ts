@@ -6,7 +6,7 @@ import { PostgreService } from '../../../src/services/postgre';
 import { insertJob } from '../../../src/models/jobs';
 import {
   insertOperations,
-  insertTransactionWithParametersJson,
+  insertTransaction,
   selectOperation,
 } from '../../../src/models/operations';
 import { PostgreTables } from '../../../src/const/postgre/postgre-tables';
@@ -203,8 +203,9 @@ describe('[models/operations]', () => {
 
   describe('#insertTransactionWithParametersJson', () => {
     it('should correctly insert the data', async () => {
-      const { rows: insertedResult } =
-        await insertTransactionWithParametersJson(postgreService.pool, {
+      const { rows: insertedResult } = await insertTransaction(
+        postgreService.pool,
+        {
           destination: 'destination',
           source: 'source',
           parameters_json: {
@@ -216,9 +217,11 @@ describe('[models/operations]', () => {
               },
             },
           },
+          amount: 0,
           jobId: insertedJob.id,
           callerId: 'myCaller',
-        });
+        },
+      );
 
       await expect(
         selectData(postgreService.pool, {
@@ -229,7 +232,7 @@ describe('[models/operations]', () => {
         {
           id: insertedResult[0].id,
           destination: 'destination',
-          amount: null,
+          amount: 0,
           fee: null,
           storage_limit: null,
           gas_limit: null,
@@ -252,7 +255,7 @@ describe('[models/operations]', () => {
     it('should throw error when job id does not exist', async () => {
       const fakeId = insertedJob.id + 1;
       await expect(
-        insertTransactionWithParametersJson(postgreService.pool, {
+        insertTransaction(postgreService.pool, {
           destination: 'destination',
           source: 'source',
           parameters_json: {
@@ -264,6 +267,7 @@ describe('[models/operations]', () => {
               },
             },
           },
+          amount: 0,
           jobId: fakeId,
           callerId: 'myCaller',
         }),

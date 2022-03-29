@@ -68,9 +68,7 @@ export default {
                   },
                 },
                 callerId: {
-                  type: 'string',
-                  nullable: true,
-                  description: 'The identifier of the calling application',
+                  $ref: '#/components/schemas/callerId',
                 },
                 sourceAddress: {
                   $ref: '#/components/schemas/tezos_address',
@@ -112,7 +110,7 @@ export default {
             schema: {
               type: 'object',
               additionalProperties: false,
-              required: ['address', 'publicKey', 'callerId'],
+              required: ['address', 'publicKey'],
               properties: {
                 address: {
                   $ref: '#/components/schemas/tezos_address',
@@ -121,8 +119,7 @@ export default {
                   $ref: '#/components/schemas/tezos_public_key',
                 },
                 callerId: {
-                  type: 'string',
-                  description: 'The identifier of the calling application',
+                  $ref: '#/components/schemas/callerId',
                 },
               },
             },
@@ -316,17 +313,13 @@ export default {
                         ],
                       },
                       amount: {
-                        type: 'number',
-                        description:
-                          'Amount of XTZ tokens transferred to the contract along with the transaction, in mutez (1 XTZ = 10⁶ mutez)',
+                        $ref: '#/components/schemas/amount',
                       },
                     },
                   },
                 },
                 callerId: {
-                  type: 'string',
-                  nullable: true,
-                  description: 'The identifier of the calling application',
+                  $ref: '#/components/schemas/callerId',
                 },
                 secureKeyName: {
                   type: 'string',
@@ -407,17 +400,13 @@ export default {
                         ],
                       },
                       amount: {
-                        type: 'number',
-                        description:
-                          'Amount of XTZ tokens transferred to the contract along with the transaction, in mutez (1 XTZ = 10⁶ mutez)',
+                        $ref: '#/components/schemas/amount',
                       },
                     },
                   },
                 },
                 callerId: {
-                  type: 'string',
-                  nullable: true,
-                  description: 'The identifier of the calling application',
+                  $ref: '#/components/schemas/callerId',
                 },
                 secureKeyName: {
                   type: 'string',
