@@ -5,7 +5,7 @@ import { parseInt } from '../utils/parse-int';
 import { IndexerConfig, IndexerEnum } from '../const/interfaces/indexer';
 import { MetricConfig } from '../const/interfaces/metric-config';
 
-export const prod: boolean = (process.env.PROD as unknown as boolean) || true;
+export const prod: boolean = (process.env.PROD + '').toUpperCase() !== 'FALSE';
 
 export const loggerConfig = {
   name: process.env.LOGGER_NAME || 'TezosApiGateway',

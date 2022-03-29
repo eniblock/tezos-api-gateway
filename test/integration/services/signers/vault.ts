@@ -170,7 +170,9 @@ describe('[services/signers] Vault', () => {
           warnings: null,
         });
 
-      await expect(vaultSigner.sign(forgedOperation)).resolves.toEqual({
+      await expect(
+        vaultSigner.sign(forgedOperation, new Uint8Array([3])),
+      ).resolves.toEqual({
         bytes:
           'aa0f73bccbe62ab8d075f94a4c03583d47c349c1cd5747676e093a70d524fa776c005df8ceced07a0074dc1c3b17de65e19bdb8ce70ca08d068feb4a80ea30d0860300010d6eb7444a321cbddc4787b6a1714ab1789e772d00ffff087472616e736665720000002d07070100000024747a315a51594d4445546f644e42416332585662685a46476d65384b6e697550717253770001',
         sbytes:
@@ -181,6 +183,42 @@ describe('[services/signers] Vault', () => {
       });
       expect(payload).toEqual({
         input: 'jBdhzWHiibMj8MikNGxZZQjLt9U5ijSB698mI55Yn3M=',
+      });
+
+      vaultNock.done();
+    });
+
+    it('should correctly return the sign object without adding any default watermark', async () => {
+      let payload;
+      const vaultNock = nock('http://localhost:8200')
+        .post('/transit/sign/keyName', (_payload) => {
+          payload = _payload;
+          return true;
+        })
+        .reply(200, {
+          request_id: '5fa133ec-ef0f-1779-766e-55f9f54e3893',
+          lease_id: '',
+          lease_duration: 0,
+          renewable: false,
+          data: {
+            key_version: 1,
+            signature:
+              'vault:v1:+xhxtc1p6Z1UHrNknFlhGketCtwfrla6mQ73lyQbMD5RoUOv4wqXje33w21x/vh2R7Nn1xS+SGRCW4fDdw0cDA==',
+          },
+          warnings: null,
+        });
+
+      await expect(vaultSigner.sign(forgedOperation)).resolves.toEqual({
+        bytes:
+          'aa0f73bccbe62ab8d075f94a4c03583d47c349c1cd5747676e093a70d524fa776c005df8ceced07a0074dc1c3b17de65e19bdb8ce70ca08d068feb4a80ea30d0860300010d6eb7444a321cbddc4787b6a1714ab1789e772d00ffff087472616e736665720000002d07070100000024747a315a51594d4445546f644e42416332585662685a46476d65384b6e697550717253770001',
+        sbytes:
+          'aa0f73bccbe62ab8d075f94a4c03583d47c349c1cd5747676e093a70d524fa776c005df8ceced07a0074dc1c3b17de65e19bdb8ce70ca08d068feb4a80ea30d0860300010d6eb7444a321cbddc4787b6a1714ab1789e772d00ffff087472616e736665720000002d07070100000024747a315a51594d4445546f644e42416332585662685a46476d65384b6e697550717253770001fb1871b5cd69e99d541eb3649c59611a47ad0adc1fae56ba990ef797241b303e51a143afe30a978dedf7c36d71fef87647b367d714be4864425b87c3770d1c0c',
+        prefixSig:
+          'edsigu6f646JFgo5XGMevcTu7U6j15RWY3zJVVpf9zEMX36nvhzhnCVViftZ6gGWQqxNJkhsy91vV3RBvTmaj6rK9xHPh8yR5w6',
+        sig: 'sigvqcw35MQrtVDAfdUS3vWoSVJbRc5MRu88uRFtMY2kmyQAmBhbadaqKBdftckVBxKAQMDW98CoE9iyYXShyBmEKbEqkPUh',
+      });
+      expect(payload).toEqual({
+        input: 'ZJWEj0RYf8+69+nl8FsATQE2xLpgxNXZ2691u5ohMs4=',
       });
 
       vaultNock.done();
@@ -234,9 +272,10 @@ describe('[services/signers] Vault', () => {
         })
         .reply(500);
 
-      await expect(vaultSigner.sign(forgedOperation)).rejects.toThrow(
-        UndefinedSignatureError,
-      );
+      await expect(
+        vaultSigner.sign(forgedOperation, new Uint8Array([3])),
+      ).rejects.toThrow(UndefinedSignatureError);
+
       expect(payload).toEqual({
         input: 'jBdhzWHiibMj8MikNGxZZQjLt9U5ijSB698mI55Yn3M=',
       });
