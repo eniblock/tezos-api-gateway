@@ -167,7 +167,7 @@ describe('[processes/web/api/utils/pack-data] Pack Michelson data', () => {
     });
   });
 
-  it('should return 201 and return the packed data', async () => {
+  it('should return 200 and return the packed data', async () => {
     const { body, status } = await request
       .post('/api/utils/pack-data')
       .send(requestBodyParam);

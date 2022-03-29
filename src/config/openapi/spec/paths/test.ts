@@ -34,8 +34,7 @@ export default {
                   description: 'The private key used to sign to operation',
                 },
                 forgedOperation: {
-                  type: 'string',
-                  description: 'The forged operation to sign',
+                  $ref: '#/components/schemas/hex_string',
                 },
               },
             },
@@ -53,10 +52,10 @@ export default {
                 required: ['signedOperation', 'signature'],
                 properties: {
                   signedOperation: {
-                    type: 'string',
+                    $ref: '#/components/schemas/hex_string',
                   },
                   signature: {
-                    type: 'string',
+                    $ref: '#/components/schemas/tezos_signature',
                   },
                 },
               },

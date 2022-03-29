@@ -50,6 +50,12 @@ const components = {
         ],
       },
     },
+    hex_string: {
+      type: 'string',
+      pattern: '^(0x|0X)?([a-fA-F0-9][a-fA-F0-9])+$',
+      description: 'hexadecimal string',
+      example: '0507070a0000001601fcc8bfe353d8b099e0e6e675b4e2',
+    },
     tezos_address: {
       type: 'string',
       pattern: '^tz+[0-9a-zA-Z]{34}$',
@@ -61,6 +67,13 @@ const components = {
       pattern: '^edpk+[0-9a-zA-Z]{50}$',
       description: 'An tezos public key',
       example: 'edpkuJpbmRrKVbXHWmJAU5v9YKiA1PCiy1xo1UyAKeUjpSvkXM5wfe',
+    },
+    tezos_signature: {
+      type: 'string',
+      pattern: '^edsig+[0-9a-zA-Z]{94}$',
+      description: 'A tezos signature',
+      example:
+        'edsigtyMscdmpDVX1P5PetJsdbdbJu1w4jQCF2sr4H2NEW8LL1QbdoJvJTbnViQtrZSPHuYKPK3gyUMCxh83LVmL1Lg6qjgaQe4',
     },
     tezos_contract_address: {
       type: 'string',
