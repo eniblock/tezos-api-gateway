@@ -4,6 +4,7 @@ import { GatewayPool } from '../../../../services/gateway-pool';
 import createUserController from './create-user-controller';
 import userController from './user-controller';
 import getUserByAddressController from './get-user-by-address-controller';
+import userSignerController from './user-signer-controller';
 import getUserInfoController from './get-user-info-controller';
 import userMetadataController from './user-metadata-controller';
 import { IndexerPool } from '../../../../services/indexer-pool';
@@ -15,6 +16,7 @@ import updateUserKeys from './update-user-keys';
  *
  * @param   {Router} router        - The express router.
  * @param   {object} gatewayPool  - the service to interact with tezos
+ * @param indexerPool
  * @returns {void}
  */
 export default function registerUserRoutes(
@@ -71,6 +73,11 @@ export default function registerUserRoutes(
   router.delete(
     '/user/:id/metadata',
     userMetadataController.deleteUserMetadata(),
+  );
+
+  router.post(
+    '/user/:userId/sign',
+    userSignerController.signDataWithUserWallet(),
   );
 
   return router;
