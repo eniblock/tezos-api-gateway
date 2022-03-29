@@ -6,6 +6,8 @@ import { ForgeOperationResult } from '../const/interfaces/forge-operation-result
 import cacheLocal from '../services/cache-local';
 import { OperationContentsReveal } from '@taquito/rpc/dist/types/types';
 import { VaultSigner } from './signers/vault';
+import { TransferParams } from '@taquito/taquito/dist/types/operations/types';
+import { TransactionOperation } from '@taquito/taquito/dist/types/operations/transaction-operation';
 
 export class TezosService {
   private _tezos: TezosToolkit;
@@ -90,6 +92,12 @@ export class TezosService {
         signature,
       },
     ]);
+  }
+
+  public async transfer(
+    transferParams: TransferParams,
+  ): Promise<TransactionOperation> {
+    return this._tezos.contract.transfer(transferParams);
   }
 
   public async injectedOperations(signedOpBytes: string) {
