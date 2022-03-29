@@ -6,6 +6,74 @@
 	},
 	"item": [
 		{
+			"name": "check signature",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"signature\": \"edsigtcTjLrTq1V2sLprMzxSZbkChaFnuUjiobQ5P7WQb3N2yjsTaomrA3pc9jnEfFmegcCBpQ3FUXXEJXNSebhaUjcS51KJRdw\",\n    \"publicKey\": \"edpkvYNexGW6PT5qxvwaahjsFJT72FTvynxMimTwXggTA3yw2ebpMU\",\n    \"hexData\": \"0507070a00000016000072962502e07fb0735e918f3d84c996733c01be2e0707008bc1f1a70c0a000000160000974452a440a4cfe60d550ec6cbb880bbd21f6613\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3333/api/utils/check-signature",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3333",
+					"path": [
+						"api",
+						"utils",
+						"check-signature"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "check operation signature",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"signature\": \"edsigteK42KWYdChLCTKidUQNts9sAru4zPGLrANAvbRuFkj6Va7DqTuGMUMqQS3QjN3qRyjCEZyouzRjkRbQvQdTAzjWNTkrUt\",\n    \"publicKey\": \"edpkvYNexGW6PT5qxvwaahjsFJT72FTvynxMimTwXggTA3yw2ebpMU\",\n    \"hexData\": \"0507070a00000016000072962502e07fb0735e918f3d84c996733c01be2e0707008bc1f1a70c0a000000160000974452a440a4cfe60d550ec6cbb880bbd21f6613\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:3333/api/utils/check-signature?operationPrefix=true",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3333",
+					"path": [
+						"api",
+						"utils",
+						"check-signature"
+					],
+					"query": [
+						{
+							"key": "operationPrefix",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "packData string",
 			"request": {
 				"method": "POST",

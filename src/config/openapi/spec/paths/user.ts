@@ -524,9 +524,7 @@ export default {
               required: ['bytesToSign'],
               properties: {
                 bytesToSign: {
-                  type: 'string',
-                  description:
-                    'The hexadecimal string representation of the payload to sign',
+                  $ref: '#/components/schemas/hex_string',
                 },
               },
             },
@@ -544,10 +542,10 @@ export default {
                 required: ['signedData', 'signature'],
                 properties: {
                   signedData: {
-                    type: 'string',
+                    $ref: '#/components/schemas/hex_string',
                   },
                   signature: {
-                    type: 'string',
+                    $ref: '#/components/schemas/tezos_signature',
                   },
                 },
               },
