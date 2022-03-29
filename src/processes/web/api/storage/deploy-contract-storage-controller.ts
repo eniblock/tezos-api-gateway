@@ -93,8 +93,8 @@ async function compileSmartpy(smartContractCode: string): Promise<string[]> {
   const compilationSmartpyConfModified = {
     ...compilationSmartpyConf,
     contractPath: `${compilationSmartpyConf.contractDirectory}/${compilationSmartpyConf.contractName}`,
-    codeJsonLocalPath: `${compilationSmartpyConf.contractDirectory}/*/step_000_cont_1_contract.json`,
-    storageJsonLocalPath: `${compilationSmartpyConf.contractDirectory}/*/step_000_cont_1_storage.json`,
+    codeJsonLocalPath: `${compilationSmartpyConf.contractDirectory}/*/step_000_cont_0_contract.json`,
+    storageJsonLocalPath: `${compilationSmartpyConf.contractDirectory}/*/step_000_cont_0_storage.json`,
   };
 
   await fs.writeFileSync(
