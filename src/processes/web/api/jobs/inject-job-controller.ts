@@ -10,6 +10,7 @@ import { PostgreService } from '../../../../services/postgre';
 import { selectJobs } from '../../../../models/jobs';
 import { GatewayPool } from '../../../../services/gateway-pool';
 import { injectOperation } from '../../../../lib/jobs/inject-operation';
+import { TezosPreapplyFailureError } from '@taquito/taquito';
 
 function injectOperationAndUpdateJob(
   postgreService: PostgreService,
@@ -55,6 +56,9 @@ function injectOperationAndUpdateJob(
     } catch (err) {
       if (err instanceof JobIdNotFoundError) {
         return next(createHttpError(StatusCodes.NOT_FOUND, err.message));
+      }
+      if (err instanceof TezosPreapplyFailureError) {
+        return next(createHttpError(StatusCodes.BAD_REQUEST, err.message));
       }
 
       return next(err);

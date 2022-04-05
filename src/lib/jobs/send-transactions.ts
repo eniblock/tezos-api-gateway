@@ -33,6 +33,22 @@ const SEND_TRANSACTIONS_KNOWN_ERRORS = [
   'UnSupportedParameterSchema',
   'InvalidVariantObject',
   'InvalidBooleanParameter',
+  'AddressValidationError',
+  'BigMapValidationError',
+  'BytesValidationError',
+  'ChainIDValidationError',
+  'ContractValidationError',
+  'IntValidationError',
+  'KeyHashValidationError',
+  'KeyValidationError',
+  'ListValidationError',
+  'MapValidationError',
+  'MutezValidationError',
+  'NatValidationError',
+  'SetValidationError',
+  'SignatureValidationError',
+  'TezosOperationError',
+  'TezosPreapplyFailureError',
 ];
 
 /**
