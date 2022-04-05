@@ -5,6 +5,7 @@ import {
   amqpConfig,
   postgreConfig,
   serverConfig,
+  tezosNodeUrl,
 } from '../../../../../__fixtures__/config';
 import { resetTable } from '../../../../../__utils__/postgre';
 
@@ -20,6 +21,18 @@ import {
   testAccount2,
 } from '../../../../../__fixtures__/smart-contract';
 import { OpKind } from '@taquito/rpc';
+import {
+  ContractMethod,
+  ContractProvider,
+  TezosOperationError,
+  TezosPreapplyFailureError,
+} from '@taquito/taquito';
+import { TezosService } from '../../../../../../src/services/tezos';
+import {
+  TestContractMethod,
+  TestOperationBatch,
+} from '../../../../../__fixtures__/contract-method';
+import * as libSmartContracts from '../../../../../../src/lib/smart-contracts';
 
 describe('[processes/web/api/jobs] Send job controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -53,7 +66,7 @@ describe('[processes/web/api/jobs] Send job controller', () => {
 
   describe('#sendTransactionsAndCreateJobAsync', () => {
     it('should return 400 when a required parameter is missing', async () => {
-      const { body, status } = await request.post('/api/send/jobs').send({
+      const { body, status } = await request.post('/api/async/send/jobs').send({
         secureKeyName: 'toto',
       });
 
@@ -65,7 +78,7 @@ describe('[processes/web/api/jobs] Send job controller', () => {
     });
 
     it('should return 400 when there is extra parameter in the transactions', async () => {
-      const { body, status } = await request.post('/api/send/jobs').send({
+      const { body, status } = await request.post('/api/async/send/jobs').send({
         secureKeyName: 'toto',
         transactions: [
           {
@@ -95,7 +108,7 @@ describe('[processes/web/api/jobs] Send job controller', () => {
           errors: 'NOT FOUND',
         });
 
-      const { body, status } = await request.post('/api/send/jobs').send({
+      const { body, status } = await request.post('/api/async/send/jobs').send({
         secureKeyName: 'toto',
         transactions: [
           {
@@ -159,34 +172,6 @@ describe('[processes/web/api/jobs] Send job controller', () => {
             },
             warnings: null,
           });
-      });
-
-      it('should return 500 when unexpected error happen', async () => {
-        jest
-          .spyOn(jobsLib, 'sendTransactions')
-          .mockRejectedValue(new Error('Unexpected error'));
-
-        const { body, status } = await request.post('/api/send/jobs').send({
-          secureKeyName: 'toto',
-          transactions: [
-            {
-              contractAddress: flexibleTokenContract,
-              entryPoint: 'transfer',
-              entryPointParams: {
-                tokens: 1,
-                destination: testAccount2,
-              },
-            },
-          ],
-        });
-
-        vaultNock.done();
-
-        expect(status).toEqual(500);
-        expect(body).toEqual({
-          message: 'Internal Server Error',
-          status: 500,
-        });
       });
 
       it('should return 201 and the job with operation hash when', async () => {
@@ -259,6 +244,272 @@ describe('[processes/web/api/jobs] Send job controller', () => {
             'send-transaction',
           ],
         ]);
+      });
+    });
+  });
+
+  describe('#sendTransactions', () => {
+    const tezosService = new TezosService(tezosNodeUrl);
+
+    it('should return 400 when there is a parameter type validation error', async () => {
+      const vaultNock = nock('http://localhost:8300')
+        .get('/v1/transit/keys/toto')
+        .thrice()
+        .reply(200, {
+          request_id: '4e171bc2-6df7-7dab-b10b-d100efca7080',
+          lease_id: '',
+          lease_duration: 0,
+          renewable: false,
+          data: {
+            allow_plaintext_backup: false,
+            deletion_allowed: false,
+            derived: false,
+            exportable: true,
+            keys: {
+              '1': {
+                creation_time: '2021-02-01T10:01:29.097094+01:00',
+                name: 'ed25519',
+                public_key: 'ajwQQUHP/JZ74hoG3UoF+k/9EJPi33/ynxCxubcwYWM=',
+              },
+              '2': {
+                creation_time: '2021-02-02T10:01:29.097094+01:00',
+                name: 'ed25519',
+                public_key: 'L04JMAN9Lph+aSKZz0W/KzYPOa2tnBZhaZLvSwiNzMY=',
+              },
+            },
+            latest_version: 1,
+            min_available_version: 0,
+            min_decryption_version: 1,
+            min_encryption_version: 0,
+            name: 'toto',
+            supports_decryption: false,
+            supports_derivation: true,
+            supports_encryption: false,
+            supports_signing: true,
+            type: 'ed25519',
+          },
+          warnings: null,
+        });
+      jest
+        .spyOn(webProcess.gatewayPool, 'getTezosService')
+        .mockResolvedValue(tezosService);
+
+      const { body, status } = await request.post('/api/send/jobs').send({
+        secureKeyName: 'toto',
+        transactions: [
+          {
+            contractAddress: flexibleTokenContract,
+            entryPoint: 'transfer',
+            entryPointParams: {
+              tokens: 'string',
+              destination: testAccount2,
+            },
+          },
+        ],
+      });
+
+      vaultNock.done();
+
+      expect(status).toEqual(400);
+      expect(body).toEqual({
+        message: '[tokens] Value is not a number: string',
+        status: 400,
+      });
+    });
+
+    describe('the secure key is in vault list', () => {
+      let vaultNock: nock.Scope;
+      const testContractMethod = new TestContractMethod();
+
+      beforeEach(() => {
+        jest
+          .spyOn(webProcess.gatewayPool, 'getTezosService')
+          .mockResolvedValue(tezosService);
+        jest
+          .spyOn(libSmartContracts, 'getContractMethod')
+          .mockReturnValue(
+            testContractMethod as unknown as ContractMethod<ContractProvider>,
+          );
+        jest.spyOn(tezosService, 'getContractFromCache').mockImplementation();
+
+        vaultNock = nock('http://localhost:8300')
+          .get('/v1/transit/keys/toto')
+          .reply(200, {
+            request_id: '4e171bc2-6df7-7dab-b10b-d100efca7080',
+            lease_id: '',
+            lease_duration: 0,
+            renewable: false,
+            data: {
+              allow_plaintext_backup: false,
+              deletion_allowed: false,
+              derived: false,
+              exportable: true,
+              keys: {
+                '1': {
+                  creation_time: '2021-02-01T10:01:29.097094+01:00',
+                  name: 'ed25519',
+                  public_key: 'ajwQQUHP/JZ74hoG3UoF+k/9EJPi33/ynxCxubcwYWM=',
+                },
+                '2': {
+                  creation_time: '2021-02-02T10:01:29.097094+01:00',
+                  name: 'ed25519',
+                  public_key: 'L04JMAN9Lph+aSKZz0W/KzYPOa2tnBZhaZLvSwiNzMY=',
+                },
+              },
+              latest_version: 1,
+              min_available_version: 0,
+              min_decryption_version: 1,
+              min_encryption_version: 0,
+              name: 'toto',
+              supports_decryption: false,
+              supports_derivation: true,
+              supports_encryption: false,
+              supports_signing: true,
+              type: 'ed25519',
+            },
+            warnings: null,
+          });
+      });
+
+      it('should return 400 when an operation error happen', async () => {
+        jest.spyOn(testContractMethod, 'send').mockRejectedValue(
+          new TezosOperationError([
+            {
+              kind: 'temporary',
+              id: 'proto.011-PtHangz2.michelson_v1.script_rejected',
+            },
+          ]),
+        );
+
+        const { body, status } = await request.post('/api/send/jobs').send({
+          secureKeyName: 'toto',
+          transactions: [
+            {
+              contractAddress: flexibleTokenContract,
+              entryPoint: 'transfer',
+              entryPointParams: {
+                tokens: 1,
+                destination: testAccount2,
+              },
+            },
+          ],
+        });
+
+        vaultNock.done();
+
+        expect(status).toEqual(400);
+        expect(body).toEqual({
+          message:
+            '(temporary) proto.011-PtHangz2.michelson_v1.script_rejected',
+          status: 400,
+        });
+      });
+
+      it('[batch transactions] should return 400 when an operation error happen', async () => {
+        const batch = new TestOperationBatch();
+        jest
+          .spyOn(tezosService, 'createBatch')
+          .mockResolvedValue(batch as unknown as never);
+        jest.spyOn(batch, 'withTransfer').mockImplementation();
+        jest.spyOn(batch, 'send').mockRejectedValue(
+          new TezosOperationError([
+            {
+              kind: 'temporary',
+              id: 'proto.011-PtHangz2.michelson_v1.script_rejected',
+            },
+          ]),
+        );
+
+        const { body, status } = await request.post('/api/send/jobs').send({
+          secureKeyName: 'toto',
+          transactions: [
+            {
+              contractAddress: flexibleTokenContract,
+              entryPoint: 'transfer',
+              entryPointParams: {
+                tokens: 1,
+                destination: testAccount2,
+              },
+            },
+            {
+              contractAddress: flexibleTokenContract,
+              entryPoint: 'transfer',
+              entryPointParams: {
+                tokens: 1,
+                destination: testAccount2,
+              },
+            },
+          ],
+        });
+
+        vaultNock.done();
+
+        expect(status).toEqual(400);
+        expect(body).toEqual({
+          message:
+            '(temporary) proto.011-PtHangz2.michelson_v1.script_rejected',
+          status: 400,
+        });
+      });
+
+      it('should return 400 when a preapply error happen', async () => {
+        jest
+          .spyOn(testContractMethod, 'send')
+          .mockRejectedValue(
+            new TezosPreapplyFailureError(
+              'Preapply returned an unexpected result',
+            ),
+          );
+
+        const { body, status } = await request.post('/api/send/jobs').send({
+          secureKeyName: 'toto',
+          transactions: [
+            {
+              contractAddress: flexibleTokenContract,
+              entryPoint: 'transfer',
+              entryPointParams: {
+                tokens: 1,
+                destination: testAccount2,
+              },
+            },
+          ],
+        });
+
+        vaultNock.done();
+
+        expect(status).toEqual(400);
+        expect(body).toEqual({
+          message: 'Preapply returned an unexpected result',
+          status: 400,
+        });
+      });
+
+      it('should return 500 when unexpected error happen', async () => {
+        jest
+          .spyOn(jobsLib, 'sendTransactions')
+          .mockRejectedValue(new Error('Unexpected error'));
+
+        const { body, status } = await request.post('/api/send/jobs').send({
+          secureKeyName: 'toto',
+          transactions: [
+            {
+              contractAddress: flexibleTokenContract,
+              entryPoint: 'transfer',
+              entryPointParams: {
+                tokens: 1,
+                destination: testAccount2,
+              },
+            },
+          ],
+        });
+
+        vaultNock.done();
+
+        expect(status).toEqual(500);
+        expect(body).toEqual({
+          message: 'Internal Server Error',
+          status: 500,
+        });
       });
     });
   });

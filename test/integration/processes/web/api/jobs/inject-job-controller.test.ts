@@ -23,6 +23,8 @@ import { PostgreService } from '../../../../../../src/services/postgre';
 import { forgeOperation } from '../../../../../../src/lib/jobs/forge-operation';
 import { AmqpService } from '../../../../../../src/services/amqp';
 import { TezosService } from '../../../../../../src/services/tezos';
+import { TezosPreapplyFailureError } from '@taquito/taquito';
+import { ForgeOperationParams } from '../../../../../../src/const/interfaces/forge-operation-params';
 
 describe('[processes/web/api/jobs] Inject job controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -104,6 +106,55 @@ describe('[processes/web/api/jobs] Inject job controller', () => {
       expect(body).toEqual({
         message: 'Could not find any jobs with this id 1',
         status: 404,
+      });
+    });
+
+    it('should return 400 when a preapply error happen', async () => {
+      const estimation = [
+        {
+          suggestedFeeMutez: 100,
+          storageLimit: 50,
+          gasLimit: 100,
+        },
+      ];
+      jest
+        .spyOn(tezosService.tezos.estimate, 'batch')
+        .mockResolvedValue(estimation as any);
+      const testForgeOperation: ForgeOperationParams = {
+        transactions: [
+          {
+            contractAddress: flexibleTokenContract,
+            entryPoint: 'lock',
+          },
+        ],
+        callerId: 'myCaller',
+        publicKey: '',
+        sourceAddress: testAccount,
+        useCache: true,
+        reveal: false,
+      };
+      const insertedJob = await forgeOperation(
+        testForgeOperation,
+        tezosService,
+        postgreService,
+      );
+      jest
+        .spyOn(tezosService, 'preapplyOperations')
+        .mockRejectedValue(
+          new TezosPreapplyFailureError(
+            'Preapply returned an unexpected result',
+          ),
+        );
+      const { body, status } = await request.patch('/api/inject/jobs').send({
+        jobId: insertedJob.id,
+        signature,
+        signedTransaction,
+      });
+
+      expect(status).toEqual(400);
+      expect(body).toEqual({
+        message: 'Preapply returned an unexpected result',
+        status: 400,
       });
     });
 

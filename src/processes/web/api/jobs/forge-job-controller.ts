@@ -21,7 +21,23 @@ import { RevealEstimateError } from '../../../../const/errors/reveal-estimate-er
 import { AddressAlreadyRevealedError } from '../../../../const/errors/address-already-revealed';
 import { MaxOperationsPerBatchError } from '../../../../const/errors/max-operations-per-batch-error';
 import { maxOperationsPerBatch } from '../../../../config';
-
+import { TezosOperationError } from '@taquito/taquito';
+import {
+  AddressValidationError,
+  BigMapValidationError,
+  BytesValidationError,
+  ChainIDValidationError,
+  ContractValidationError,
+  IntValidationError,
+  KeyHashValidationError,
+  KeyValidationError,
+  ListValidationError,
+  MapValidationError,
+  MutezValidationError,
+  NatValidationError,
+  SetValidationError,
+  SignatureValidationError,
+} from '@taquito/michelson-encoder';
 type ReqQuery = { useCache: boolean; reveal: boolean };
 
 function forgeOperationAndCreateJob(
@@ -90,7 +106,22 @@ function forgeOperationAndCreateJob(
         err instanceof MissingParameter ||
         err instanceof UnSupportedParameterSchema ||
         err instanceof InvalidVariantObject ||
-        err instanceof InvalidBooleanParameter
+        err instanceof InvalidBooleanParameter ||
+        err instanceof ListValidationError ||
+        err instanceof MapValidationError ||
+        err instanceof SetValidationError ||
+        err instanceof BigMapValidationError ||
+        err instanceof ChainIDValidationError ||
+        err instanceof KeyValidationError ||
+        err instanceof ContractValidationError ||
+        err instanceof SignatureValidationError ||
+        err instanceof AddressValidationError ||
+        err instanceof BytesValidationError ||
+        err instanceof IntValidationError ||
+        err instanceof KeyHashValidationError ||
+        err instanceof MutezValidationError ||
+        err instanceof NatValidationError ||
+        err instanceof TezosOperationError
       ) {
         return next(createHttpError(StatusCodes.BAD_REQUEST, err.message));
       }

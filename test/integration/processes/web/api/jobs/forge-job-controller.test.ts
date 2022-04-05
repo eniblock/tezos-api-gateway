@@ -22,6 +22,8 @@ import { PostgreService } from '../../../../../../src/services/postgre';
 import { TezosService } from '../../../../../../src/services/tezos';
 import { ForgeOperationBodyParams } from '../../../../../../src/const/interfaces/forge-operation-params';
 import { OpKind } from '@taquito/rpc';
+import * as jobsLib from '../../../../../../src/lib/jobs/forge-operation';
+import { TezosOperationError } from '@taquito/taquito';
 
 describe('[processes/web/api/jobs] Forge job controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -147,6 +149,28 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
       });
     });
 
+    it('should return 400 when there is a parameter type validation error', async () => {
+      const { body, status } = await request.post('/api/forge/jobs').send({
+        ...requestBodyParam,
+        transactions: [
+          {
+            contractAddress: flexibleTokenContract,
+            entryPoint: 'transfer',
+            entryPointParams: {
+              tokens: 'string',
+              destination: testAccount2,
+            },
+          },
+        ],
+      });
+
+      expect(status).toEqual(400);
+      expect(body).toEqual({
+        message: '[tokens] Value is not a number: string',
+        status: 400,
+      });
+    });
+
     it('should return 400 when a map parameter does not match the map structure', async () => {
       const { body, status } = await request.post('/api/forge/jobs').send({
         ...requestBodyParam,
@@ -261,19 +285,33 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
       expect(getContractResponseSpy.mock.calls).toEqual([[testAccount]]);
     });
 
+    it('should return 400 when an operation error happen', async () => {
+      jest.spyOn(tezosService.tezos.estimate, 'batch').mockRejectedValue(
+        new TezosOperationError([
+          {
+            kind: 'temporary',
+            id: 'proto.011-PtHangz2.michelson_v1.script_rejected',
+          },
+        ]),
+      );
+
+      const { body } = await request.post('/api/forge/jobs').send({
+        ...requestBodyParam,
+      });
+
+      expect(body).toEqual({
+        message: '(temporary) proto.011-PtHangz2.michelson_v1.script_rejected',
+        status: 400,
+      });
+    });
+
     it('should return 500 when unexpected error happen', async () => {
+      jest
+        .spyOn(jobsLib, 'forgeOperation')
+        .mockRejectedValue(new Error('Unexpected error'));
+
       const { body, status } = await request.post('/api/forge/jobs').send({
         ...requestBodyParam,
-        transactions: [
-          {
-            contractAddress: flexibleTokenContract,
-            entryPoint: 'transfer',
-            entryPointParams: {
-              tokens: 'this is a token',
-              destination: testAccount2,
-            },
-          },
-        ],
       });
 
       expect(status).toEqual(500);
