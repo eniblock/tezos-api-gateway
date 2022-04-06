@@ -27,6 +27,7 @@ import { AddressNotRevealedError } from '../../const/errors/address-not-revealed
 import { AddressAlreadyRevealedError } from '../../const/errors/address-already-revealed';
 import { MaxOperationsPerBatchError } from '../../const/errors/max-operations-per-batch-error';
 import { maxOperationsPerBatch } from '../../config';
+import { TezosOperationError } from '@taquito/taquito';
 
 const FORGE_OPERATION_KNOWN_ERRORS = [
   'AddressAlreadyRevealedError',
@@ -40,6 +41,21 @@ const FORGE_OPERATION_KNOWN_ERRORS = [
   'AddressNotRevealedError',
   'RevealEstimateError',
   'InvalidBooleanParameter',
+  'AddressValidationError',
+  'BigMapValidationError',
+  'BytesValidationError',
+  'ChainIDValidationError',
+  'ContractValidationError',
+  'IntValidationError',
+  'KeyHashValidationError',
+  'KeyValidationError',
+  'ListValidationError',
+  'MapValidationError',
+  'MutezValidationError',
+  'NatValidationError',
+  'SetValidationError',
+  'SignatureValidationError',
+  'TezosOperationError',
 ];
 
 type TransactionsDetailsWithMichelsonParameters = Omit<
@@ -272,7 +288,11 @@ async function getOperationContentsTransactionWithParametersJson(
       { error: err },
       '[lib/jobs/forgeOperation#getOperationContentsTransactionWithParametersJson] Unexpected error happened during estimation',
     );
-    throw new AddressNotRevealedError(sourceAddress);
+    if (err instanceof TezosOperationError) {
+      throw err;
+    } else {
+      throw new AddressNotRevealedError(sourceAddress);
+    }
   }
 
   // Taquito automatically adds the reveal estimation but we don't need it here

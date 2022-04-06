@@ -26,6 +26,26 @@ import {
   UnSupportedParameterSchema,
 } from '../../../../const/errors/invalid-entry-point-params';
 import { OpKind } from '@taquito/rpc';
+import {
+  TezosOperationError,
+  TezosPreapplyFailureError,
+} from '@taquito/taquito';
+import {
+  AddressValidationError,
+  BigMapValidationError,
+  BytesValidationError,
+  ChainIDValidationError,
+  ContractValidationError,
+  IntValidationError,
+  KeyHashValidationError,
+  KeyValidationError,
+  ListValidationError,
+  MapValidationError,
+  MutezValidationError,
+  NatValidationError,
+  SetValidationError,
+  SignatureValidationError,
+} from '@taquito/michelson-encoder';
 
 type ReqQuery = { cache: boolean };
 
@@ -75,16 +95,6 @@ function sendTransactionsAndCreateJobAsync(
     } catch (err) {
       if (err instanceof ClientError) {
         return next(createHttpError(err.status, err.message));
-      } else if (
-        err instanceof InvalidMapStructureParams ||
-        err instanceof InvalidParameterName ||
-        err instanceof InvalidParameter ||
-        err instanceof MissingParameter ||
-        err instanceof UnSupportedParameterSchema ||
-        err instanceof InvalidVariantObject ||
-        err instanceof InvalidBooleanParameter
-      ) {
-        return next(createHttpError(StatusCodes.BAD_REQUEST, err.message));
       }
 
       return next(err);
@@ -152,6 +162,32 @@ function sendTransactionsAndCreateJob(
     } catch (err) {
       if (err instanceof ClientError) {
         return next(createHttpError(err.status, err.message));
+      } else if (
+        err instanceof InvalidMapStructureParams ||
+        err instanceof InvalidParameterName ||
+        err instanceof InvalidParameter ||
+        err instanceof MissingParameter ||
+        err instanceof UnSupportedParameterSchema ||
+        err instanceof InvalidVariantObject ||
+        err instanceof InvalidBooleanParameter ||
+        err instanceof ListValidationError ||
+        err instanceof MapValidationError ||
+        err instanceof SetValidationError ||
+        err instanceof BigMapValidationError ||
+        err instanceof ChainIDValidationError ||
+        err instanceof KeyValidationError ||
+        err instanceof ContractValidationError ||
+        err instanceof SignatureValidationError ||
+        err instanceof AddressValidationError ||
+        err instanceof BytesValidationError ||
+        err instanceof IntValidationError ||
+        err instanceof KeyHashValidationError ||
+        err instanceof MutezValidationError ||
+        err instanceof NatValidationError ||
+        err instanceof TezosOperationError ||
+        err instanceof TezosPreapplyFailureError
+      ) {
+        return next(createHttpError(StatusCodes.BAD_REQUEST, err.message));
       }
 
       return next(err);

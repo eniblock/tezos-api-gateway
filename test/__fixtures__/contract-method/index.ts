@@ -6,7 +6,7 @@ export class TestContractMethod {
     return null;
   }
   send(_params?: unknown) {
-    return { hash: 'hashValue' };
+    return Promise.resolve({ hash: 'hashValue' });
   }
   toTransferParams(_params?: unknown) {
     return 'toTransferParams';

@@ -16,7 +16,10 @@ import { JobStatus } from '../../const/job-status';
 import { GatewayPool } from '../../services/gateway-pool';
 import { OperationContentsReveal } from '@taquito/rpc/dist/types/types';
 
-const INJECT_OPERATION_KNOWN_ERRORS = ['JobIdNotFoundError'];
+const INJECT_OPERATION_KNOWN_ERRORS = [
+  'JobIdNotFoundError',
+  'TezosPreapplyFailureError',
+];
 
 /**
  * This function will store the signed transaction in the database,
