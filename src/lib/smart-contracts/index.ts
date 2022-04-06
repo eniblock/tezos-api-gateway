@@ -125,7 +125,7 @@ export function getTransferToParams(
     contract,
     entryPoint,
     params,
-  ).toTransferParams({ amount });
+  ).toTransferParams({ amount, mutez: true });
 }
 
 /**
