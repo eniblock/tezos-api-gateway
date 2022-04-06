@@ -47,7 +47,7 @@ const tzstatsIndexerConfig: IndexerConfig = {
   pathToContractCalls: 'explorer/contract/',
   keyToOperation: parseInt(0, process.env.TZSTATS_KEY_TO_OPERATION),
   keyToBlockLevel: process.env.TZSTATS_KEY_TO_BLOCK_LEVEL || 'height',
-  keyToBalance: 'total_balance',
+  keyToBalance: 'spendable_balance',
   keyToReveal: 'is_revealed',
 };
 
