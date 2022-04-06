@@ -246,7 +246,7 @@ async function getOperationHashFromTezos(
         tezosService,
         logger,
       )
-    ).send({ amount: transactions[0].amount });
+    ).send({ amount: transactions[0].amount, mutez: true });
   }
 
   const batch = await tezosService.createBatch();
@@ -262,6 +262,7 @@ async function getOperationHashFromTezos(
         )
       ).toTransferParams({
         amount: transactions[0].amount,
+        mutez: true,
       }),
     );
   }
