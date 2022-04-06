@@ -157,24 +157,28 @@ describe('[scripts/activate-tezos-account/lib/index.ts]', () => {
           {
             to: 'tz1UCubRycjt5kqkdBPDvmSSxHG1oZ8AX2Cu',
             amount: 100,
+            mutez: true,
           },
         ],
         [
           {
             to: 'publicKeyHash',
             amount: 1,
+            mutez: true,
           },
         ],
         [
           {
             to: 'tz1YCmopN9D4WgkTvnqkGExwAHSHokvApXJG',
             amount: 100,
+            mutez: true,
           },
         ],
         [
           {
             to: 'publicKeyHash',
             amount: 1,
+            mutez: true,
           },
         ],
       ]);

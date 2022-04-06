@@ -754,7 +754,7 @@ describe('[lib/smart-contracts] Index', () => {
         amount: 0,
         fee: undefined,
         gasLimit: undefined,
-        mutez: false,
+        mutez: true,
         parameter: {
           entrypoint: `${entryPoint}`,
           value: {
@@ -787,7 +787,7 @@ describe('[lib/smart-contracts] Index', () => {
         amount: 0,
         fee: undefined,
         gasLimit: undefined,
-        mutez: false,
+        mutez: true,
         parameter: {
           entrypoint: `${entryPoint}`,
           value: {
@@ -858,7 +858,7 @@ describe('[lib/smart-contracts] Index', () => {
         amount: 0,
         fee: undefined,
         gasLimit: undefined,
-        mutez: false,
+        mutez: true,
         parameter: {
           entrypoint: `${entryPoint}`,
           value: [
@@ -958,7 +958,7 @@ describe('[lib/smart-contracts] Index', () => {
         amount: 0,
         fee: undefined,
         gasLimit: undefined,
-        mutez: false,
+        mutez: true,
         parameter: {
           entrypoint: `${entryPoint}`,
           value: [
@@ -1096,7 +1096,7 @@ describe('[lib/smart-contracts] Index', () => {
         amount: 0,
         fee: undefined,
         gasLimit: undefined,
-        mutez: false,
+        mutez: true,
         parameter: {
           entrypoint: `${entryPoint}`,
           value: [
@@ -1180,7 +1180,7 @@ describe('[lib/smart-contracts] Index', () => {
         amount: 0,
         fee: undefined,
         gasLimit: undefined,
-        mutez: false,
+        mutez: true,
         parameter: {
           entrypoint: `${entryPoint}`,
           value: [
@@ -1274,7 +1274,7 @@ describe('[lib/smart-contracts] Index', () => {
         amount: 0,
         fee: undefined,
         gasLimit: undefined,
-        mutez: false,
+        mutez: true,
         parameter: {
           entrypoint: `${entryPoint}`,
           value: [
@@ -1365,7 +1365,7 @@ describe('[lib/smart-contracts] Index', () => {
         amount: 0,
         fee: undefined,
         gasLimit: undefined,
-        mutez: false,
+        mutez: true,
         parameter: {
           entrypoint: `${entryPoint}`,
           value: {
@@ -1519,7 +1519,7 @@ describe('[lib/smart-contracts] Index', () => {
         amount: 0,
         fee: undefined,
         gasLimit: undefined,
-        mutez: false,
+        mutez: true,
         parameter: {
           entrypoint: `${entryPoint}`,
           value: {

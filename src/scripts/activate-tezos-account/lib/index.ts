@@ -53,6 +53,7 @@ export async function createTezosAccountsByVaultKeys(
     const transactionOperation = await tezosService.tezos.contract.transfer({
       to: pkh,
       amount: transferAmount,
+      mutez: true,
     });
 
     logger.info({ hash: transactionOperation.hash }, 'ACTIVATE ACCOUNT');
@@ -66,6 +67,7 @@ export async function createTezosAccountsByVaultKeys(
     const { hash: operationHash } = await tezosService.tezos.contract.transfer({
       to: faucetAccountPKH,
       amount: 1,
+      mutez: true,
     });
     logger.info({ operationHash }, 'REVEAL ACCOUNT');
   }
