@@ -83,5 +83,10 @@ export default function registerJobsRoutes(
     getJobController.getJobById(postgreService) as Application,
   );
 
+  router.get(
+    '/job/caller-id/:callerId',
+    getJobController.getJobsByCallerId(postgreService) as Application,
+  );
+
   return router;
 }
