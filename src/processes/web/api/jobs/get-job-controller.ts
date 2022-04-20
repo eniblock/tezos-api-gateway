@@ -6,6 +6,8 @@ import { JobIdNotFoundError } from '../../../../const/errors/job-id-not-found-er
 import { selectJobs } from '../../../../models/jobs';
 import { logger } from '../../../../services/logger';
 import { PostgreService } from '../../../../services/postgre';
+import { selectOperation } from '../../../../models/operations';
+import _ from 'lodash';
 
 function getJobById(postgreService: PostgreService) {
   return async (req: Request, res: Response, next: NextFunction) => {
@@ -53,4 +55,62 @@ function getJobById(postgreService: PostgreService) {
   };
 }
 
-export default { getJobById };
+function getJobsByCallerId(postgreService: PostgreService) {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      logger.info('[job/getJobsByCallerId] Get jobs by caller ID');
+
+      // Checking if params is not null
+      if (req.params && req.params.callerId) {
+        // Save the ID passed in request param
+        const callerId = req.params.callerId;
+
+        // Get the corresponding job identifiers in DB
+        const jobIds = await selectOperation(
+          postgreService.pool,
+          'job_id',
+          `caller_id='${callerId}'`,
+        );
+
+        if (_.isEmpty(jobIds)) {
+          // If job id couldn't be found
+          throw new JobIdNotFoundError(
+            `Could not find jobs for this caller id: ${callerId}`,
+          );
+        }
+
+        // Get the corresponding job in DB
+        const jobs = await Promise.all(
+          jobIds.map(async ({ job_id }) => {
+            const [job] = await selectJobs(
+              postgreService.pool,
+              '*',
+              `id=${job_id}`,
+            );
+            if (!job) {
+              throw new JobIdNotFoundError(
+                `Could not find job with this id: ${job_id}`,
+              );
+            }
+            return job;
+          }),
+        );
+
+        return res.status(StatusCodes.OK).json(jobs);
+      } else {
+        return next(
+          createHttpError(StatusCodes.BAD_REQUEST, 'Bad query params'),
+        );
+      }
+    } catch (err) {
+      if (err instanceof JobIdNotFoundError) {
+        return next(createHttpError(StatusCodes.NOT_FOUND, err.message));
+      } else if (err instanceof ClientError) {
+        return next(createHttpError(err.status, err.message));
+      }
+      return next(err);
+    }
+  };
+}
+
+export default { getJobById, getJobsByCallerId };

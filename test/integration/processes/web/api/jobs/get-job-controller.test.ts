@@ -14,6 +14,7 @@ import {
 } from '../../../../../__fixtures__/config';
 import { resetTable } from '../../../../../__utils__/postgre';
 import { OpKind } from '@taquito/rpc';
+import { insertTransaction } from '../../../../../../src/models/operations';
 
 describe('[processes/web/api/jobs] Get job controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -39,6 +40,14 @@ describe('[processes/web/api/jobs] Get job controller', () => {
         operation_kind: OpKind.TRANSACTION,
       })
     ).rows;
+
+    await insertTransaction(postgreService.pool, {
+      jobId: job.id,
+      amount: 0,
+      destination: 'destination address',
+      source: 'source address',
+      callerId: 'caller_app',
+    });
   });
 
   beforeEach(async () => {
@@ -76,11 +85,49 @@ describe('[processes/web/api/jobs] Get job controller', () => {
       });
     });
 
-    it('should return 200 when everithing is fine', async () => {
+    it('should return 200 when everything is fine', async () => {
       const { body, status } = await request.get('/api/job/' + job.id);
 
       expect(status).toEqual(StatusCodes.OK);
       expect(body).toEqual(job);
+    });
+  });
+
+  describe('#getJobsByCallerById', () => {
+    it('should return 404 when caller ID doesn`t exist', async () => {
+      const { body, status } = await request.get(
+        '/api/job/caller-id/fake_caller',
+      );
+
+      expect(status).toEqual(404);
+      expect(body).toEqual({
+        message: `Could not find jobs for this caller id: fake_caller`,
+        status: 404,
+      });
+    });
+
+    it('should return 200 and the caller"s inserted jobs when everything is fine', async () => {
+      const [job2] = (
+        await insertJob(postgreService.pool, {
+          status: JobStatus.CREATED,
+          forged_operation: 'forged_operation',
+          operation_kind: OpKind.TRANSACTION,
+        })
+      ).rows;
+
+      await insertTransaction(postgreService.pool, {
+        jobId: job2.id,
+        amount: 0,
+        destination: 'destination address',
+        source: 'source address',
+        callerId: 'caller_app',
+      });
+      const { body, status } = await request.get(
+        '/api/job/caller-id/' + 'caller_app',
+      );
+
+      expect(status).toEqual(StatusCodes.OK);
+      expect(body).toEqual([job, job2]);
     });
   });
 });
