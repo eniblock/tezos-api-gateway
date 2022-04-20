@@ -75,12 +75,12 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
         },
       ],
       callerId: 'myCaller',
-      sourceAddress: testAccount,
+      sourceAddress: revealedAccount.address,
     };
 
     it('should return 400 when a required parameter is missing', async () => {
       const { body, status } = await request.post('/api/forge/jobs').send({
-        sourceAddress: testAccount,
+        sourceAddress: revealedAccount.address,
       });
 
       expect(status).toEqual(400);
@@ -226,7 +226,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
 
       expect(status).toEqual(400);
       expect(body).toEqual({
-        message: `Ensure that the address ${activatedAccount.address} is activated and is related to the public key edpkukHceEkeLBRj1MyQkZYUZdffCYbQMA8UAedZt8NwtPUXiAgiBe`,
+        message: `Ensure that the address ${activatedAccount.address} is activated and is related to the public key ${revealedAccount.publicKey}`,
         status: 400,
       });
     });
@@ -256,7 +256,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
           transaction,
         ],
         callerId: 'myCaller',
-        sourceAddress: testAccount,
+        sourceAddress: revealedAccount.address,
       });
 
       expect(status).toEqual(400);
@@ -278,11 +278,13 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
 
       expect(status).toEqual(404);
       expect(body).toEqual({
-        message: `Could not find the adress: ${testAccount}`,
+        message: `Could not find the adress: ${revealedAccount.address}`,
         status: 404,
       });
 
-      expect(getContractResponseSpy.mock.calls).toEqual([[testAccount]]);
+      expect(getContractResponseSpy.mock.calls).toEqual([
+        [revealedAccount.address],
+      ]);
     });
 
     it('should return 400 when an operation error happen', async () => {
@@ -333,7 +335,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
             transaction,
           ],
           callerId: 'myCaller',
-          sourceAddress: testAccount,
+          sourceAddress: revealedAccount.address,
           publicKey: revealedAccount.publicKey,
         });
 
@@ -413,10 +415,10 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
             testAccount2 +
             '"}}}',
           amount: 0,
-          fee: 610,
-          source: testAccount,
+          fee: 507,
+          source: revealedAccount.address,
           storage_limit: 0,
-          gas_limit: 3015,
+          gas_limit: 1983,
           branch: insertedForgeParameters[0].branch,
           counter: insertedForgeParameters[0].counter,
           job_id: body.id,
@@ -428,9 +430,9 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
           parameters_json: '{"entrypoint":"lock","value":{"lock":0}}',
           amount: 0,
           fee: 442,
-          source: testAccount,
+          source: revealedAccount.address,
           storage_limit: 0,
-          gas_limit: 1331,
+          gas_limit: 1332,
           branch: insertedForgeParameters[1].branch,
           counter: insertedForgeParameters[1].counter,
           job_id: body.id,

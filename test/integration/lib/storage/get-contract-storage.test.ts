@@ -31,8 +31,8 @@ describe('[lib/storage/get-contract-storage]', () => {
       expect(storage).toBeDefined();
       expect(JSON.stringify(storage)).toEqual(
         '{' +
-          '"allowed":"24360",' +
-          '"balances":"24361",' +
+          '"allowed":"48950",' +
+          '"balances":"48951",' +
           '"decimals":"10",' +
           '"locked":false,' +
           '"name":"name",' +
@@ -137,11 +137,11 @@ describe('[lib/storage/get-contract-storage]', () => {
       expect(storage).toEqual({
         allowed: {
           type: 'big_map',
-          value: '24360',
+          value: '48950',
         },
         balances: {
           type: 'big_map',
-          value: '24361',
+          value: '48951',
         },
         decimals: 10,
         locked: false,
@@ -164,7 +164,7 @@ describe('[lib/storage/get-contract-storage]', () => {
       expect(storage).toEqual({
         allowed: {
           type: 'big_map',
-          value: '24360',
+          value: '48950',
         },
         age: {
           error: 'This data field does not exist in the contract storage',
@@ -185,7 +185,7 @@ describe('[lib/storage/get-contract-storage]', () => {
       expect(storage).toEqual({
         allowed: {
           type: 'big_map',
-          value: '24360',
+          value: '48950',
         },
         age: {
           error: 'This data field does not exist in the contract storage',

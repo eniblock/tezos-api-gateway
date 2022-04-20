@@ -72,7 +72,7 @@ describe('[services/clients] Indexer Client', () => {
         indexerPromises.push(
           expect(
             indexer.getOperationBlockLevel(operationHash),
-          ).resolves.toEqual(157141),
+          ).resolves.toEqual(411813),
         );
       }
       await Promise.all(indexerPromises);
@@ -182,7 +182,6 @@ describe('[services/clients] Indexer Client', () => {
     it('should return the block level of the operation', async () => {
       const indexerPromises: Promise<void>[] = [];
       for (const indexer of indexerClients) {
-        // TZKT doesn't return the origination transaction
         if (indexer.config.name === IndexerEnum.TZKT) {
           indexerPromises.push(
             expect(
