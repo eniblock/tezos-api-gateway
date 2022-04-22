@@ -306,7 +306,11 @@ describe('[lib/jobs/forge-operation]', () => {
 
     it('should correctly create a job and insert data to jobs and operations table when reveal is true and the address is already revealed', async () => {
       const createdJob = await forgeOperation(
-        { ...testForgeOperation, reveal: true },
+        {
+          ...testForgeOperation,
+          reveal: true,
+          publicKey: 'edpkuQNn5hEZ74Td4NBAajjB7NzeBnyYiP3xn2X9VwUysScG8QBR3d',
+        },
         tezosService,
         postgreService,
       );

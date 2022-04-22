@@ -12,6 +12,7 @@ import {
   flexibleTokenContractOwner,
 } from '../../../__fixtures__/smart-contract';
 import { logger } from '../../../__fixtures__/services/logger';
+import { InvalidContractAddressError } from '@taquito/utils';
 
 describe('[lib/storage/get-contract-storage]', () => {
   const tezosService = new TezosService(tezosNodeUrl);
@@ -72,30 +73,9 @@ describe('[lib/storage/get-contract-storage]', () => {
     });
 
     it('should throw ClientError if the contract address is not well-formatted', async () => {
-      const loggerInfoSpy = jest.spyOn(logger, 'info');
-
       await expect(
         getContractStorageFromTezosNode(logger, tezosService, 'toto'),
-      ).rejects.toThrow(
-        new ClientError({
-          message:
-            'Http error response: (400) Failed to parsed an argument in path. After "chains/main/blocks/head/context/contracts/toto", ' +
-            'the value "Cannot parse contract id" is not acceptable for type "contract_id"',
-          status: 400,
-        }),
-      );
-
-      expect(loggerInfoSpy.mock.calls).toEqual([
-        [
-          {
-            contractAddress: 'toto',
-            message:
-              'Http error response: (400) Failed to parsed an argument in path. After "chains/main/blocks/head/context/contracts/toto", ' +
-              'the value "Cannot parse contract id" is not acceptable for type "contract_id"',
-          },
-          '[lib/storage/get-contract-storage/#getContractStorageFromTezosNode] A client error happened while retrieving contract storage from tezos node',
-        ],
-      ]);
+      ).rejects.toThrowError(InvalidContractAddressError);
     });
 
     it('should throw an error and log error if unexpected error happened', async () => {
