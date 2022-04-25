@@ -1,7 +1,7 @@
 const info = {
   title: 'tezos-api-gateway',
   description: 'Webservice responsible to interact with Tezos Blockchain',
-  version: '0.9.1',
+  version: '0.10.0',
 };
 
 export default info;
