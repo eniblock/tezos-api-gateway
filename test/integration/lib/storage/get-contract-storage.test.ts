@@ -12,6 +12,7 @@ import {
   flexibleTokenContractOwner,
 } from '../../../__fixtures__/smart-contract';
 import { logger } from '../../../__fixtures__/services/logger';
+import { InvalidContractAddressError } from '@taquito/utils';
 
 describe('[lib/storage/get-contract-storage]', () => {
   const tezosService = new TezosService(tezosNodeUrl);
@@ -31,8 +32,8 @@ describe('[lib/storage/get-contract-storage]', () => {
       expect(storage).toBeDefined();
       expect(JSON.stringify(storage)).toEqual(
         '{' +
-          '"allowed":"24360",' +
-          '"balances":"24361",' +
+          '"allowed":"48950",' +
+          '"balances":"48951",' +
           '"decimals":"10",' +
           '"locked":false,' +
           '"name":"name",' +
@@ -72,30 +73,9 @@ describe('[lib/storage/get-contract-storage]', () => {
     });
 
     it('should throw ClientError if the contract address is not well-formatted', async () => {
-      const loggerInfoSpy = jest.spyOn(logger, 'info');
-
       await expect(
         getContractStorageFromTezosNode(logger, tezosService, 'toto'),
-      ).rejects.toThrow(
-        new ClientError({
-          message:
-            'Http error response: (400) Failed to parsed an argument in path. After "chains/main/blocks/head/context/contracts/toto", ' +
-            'the value "Cannot parse contract id" is not acceptable for type "contract_id"',
-          status: 400,
-        }),
-      );
-
-      expect(loggerInfoSpy.mock.calls).toEqual([
-        [
-          {
-            contractAddress: 'toto',
-            message:
-              'Http error response: (400) Failed to parsed an argument in path. After "chains/main/blocks/head/context/contracts/toto", ' +
-              'the value "Cannot parse contract id" is not acceptable for type "contract_id"',
-          },
-          '[lib/storage/get-contract-storage/#getContractStorageFromTezosNode] A client error happened while retrieving contract storage from tezos node',
-        ],
-      ]);
+      ).rejects.toThrowError(InvalidContractAddressError);
     });
 
     it('should throw an error and log error if unexpected error happened', async () => {
@@ -137,11 +117,11 @@ describe('[lib/storage/get-contract-storage]', () => {
       expect(storage).toEqual({
         allowed: {
           type: 'big_map',
-          value: '24360',
+          value: '48950',
         },
         balances: {
           type: 'big_map',
-          value: '24361',
+          value: '48951',
         },
         decimals: 10,
         locked: false,
@@ -164,7 +144,7 @@ describe('[lib/storage/get-contract-storage]', () => {
       expect(storage).toEqual({
         allowed: {
           type: 'big_map',
-          value: '24360',
+          value: '48950',
         },
         age: {
           error: 'This data field does not exist in the contract storage',
@@ -185,7 +165,7 @@ describe('[lib/storage/get-contract-storage]', () => {
       expect(storage).toEqual({
         allowed: {
           type: 'big_map',
-          value: '24360',
+          value: '48950',
         },
         age: {
           error: 'This data field does not exist in the contract storage',

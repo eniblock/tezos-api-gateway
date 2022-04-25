@@ -117,7 +117,7 @@ describe('[services/indexer-pool]', () => {
 
       await expect(
         indexerPool.getOperationBlockLevelByRandomIndexer(operationHash, 3),
-      ).resolves.toEqual(157141);
+      ).resolves.toEqual(411813);
 
       indexerNock.done();
       expect(getRandomIndexerSpy).toHaveBeenCalledTimes(2);
@@ -126,7 +126,7 @@ describe('[services/indexer-pool]', () => {
     it('should properly return the block level of the operation', async () => {
       await expect(
         indexerPool.getOperationBlockLevelByRandomIndexer(operationHash, 3),
-      ).resolves.toEqual(157141);
+      ).resolves.toEqual(411813);
     });
   });
 

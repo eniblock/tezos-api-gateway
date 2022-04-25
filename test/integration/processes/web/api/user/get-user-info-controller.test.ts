@@ -77,7 +77,7 @@ describe('[processes/web/api/user] Create user controller', () => {
       expect(body).toEqual({
         account: testAccount,
         balance: body.balance,
-        revealed: true,
+        revealed: false,
         activated: true,
       });
     });

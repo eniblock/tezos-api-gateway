@@ -15,11 +15,11 @@ export const serverConfig = {
 };
 
 export const tezosNodeUrl =
-  process.env.TEZOS_NODE_TEST || 'https://hangzhounet.smartpy.io/';
+  process.env.TEZOS_NODE_TEST || 'https://rpc.ithaca.tzstats.com/';
 
 export const tezosNodeUrls = (
   process.env.TEZOS_NODE_TEST_URLS ||
-  'https://hangzhounet.api.tez.ie,https://hangzhounet.smartpy.io/'
+  'https://ithacanet.ecadinfra.com/,https://rpc.ithaca.tzstats.com/'
 ).split(',');
 
 export const amqpConfig: AmqpConfig = {

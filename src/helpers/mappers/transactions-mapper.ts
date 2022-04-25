@@ -25,14 +25,14 @@ export function mapIndexerTransactionToTransaction(
         status: rawTx.status,
         baker_fee: rawTx.fee,
         storage_fee: rawTx.burned || 0,
-        storage_limit: rawTx.storage_limit,
+        storage_limit: rawTx.storage_limit || 0,
         counter: rawTx.counter,
         hash: rawTx.hash,
         block: rawTx.block,
         type: rawTx.type,
         height: rawTx.height,
-        entrypoint: rawTx.entrypoint,
-        parameters: rawTx.parameters?.value[rawTx.entrypoint] || '',
+        entrypoint: rawTx.parameters.entrypoint,
+        parameters: rawTx.parameters?.value || '',
       };
     case IndexerEnum.TZKT:
       return {
@@ -43,7 +43,7 @@ export function mapIndexerTransactionToTransaction(
         status: rawTx.status,
         baker_fee: rawTx.bakerFee / 1000000,
         storage_fee: rawTx.storageFee / 1000000,
-        storage_limit: rawTx.storageLimit,
+        storage_limit: rawTx.storageLimit || 0,
         counter: rawTx.counter,
         hash: rawTx.hash,
         block: rawTx.block,

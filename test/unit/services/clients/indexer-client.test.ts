@@ -138,10 +138,10 @@ describe('[services/clients] Indexer client Service', () => {
         );
 
       expect(domainAndPath).toEqual(
-        'https://api.hangzhou2net.tzkt.io/v1/operations/transactions/',
+        'https://api.ithacanet.tzkt.io/v1/operations/transactions/',
       );
       expect(queryParams).toEqual(
-        'limit=5&offset=8&target.eq=KT1GYQn8mwSLypyHNPo8d9D151UC8tdo39xR&sort.asc=id&entrypoint.eq=name&parameter.as=*test',
+        `limit=5&offset=8&target.eq=${flexibleTokenContract}&sort.asc=id&entrypoint.eq=name&parameter.as=*test`,
       );
     });
   });

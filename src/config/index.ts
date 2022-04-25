@@ -4,6 +4,7 @@ import { ProcessConfig } from '../processes/abstract-process';
 import { parseInt } from '../utils/parse-int';
 import { IndexerConfig, IndexerEnum } from '../const/interfaces/indexer';
 import { MetricConfig } from '../const/interfaces/metric-config';
+import { flexibleTokenContract } from '../../test/__fixtures__/smart-contract';
 
 export const prod: boolean = (process.env.PROD + '').toUpperCase() !== 'FALSE';
 
@@ -26,7 +27,7 @@ export const serverConfig = {
 
 export const tezosNodeUrls = (
   process.env.TEZOS_NODE_URLS ||
-  'https://hangzhounet.smartpy.io,https://hangzhounet.api.tez.ie,https://rpc.hangzhou.tzstats.com'
+  'https://ithacanet.smartpy.io,https://ithacanet.ecadinfra.com,https://rpc.ithaca.tzstats.com'
 ).split(',');
 
 export const amqpConfig: AmqpConfig = {
@@ -41,7 +42,7 @@ export const webProcessConfig: ProcessConfig = {
 
 const tzstatsIndexerConfig: IndexerConfig = {
   name: IndexerEnum.TZSTATS,
-  apiUrl: process.env.TZSTATS_URL || 'https://api.hangzhou.tzstats.com/',
+  apiUrl: process.env.TZSTATS_URL || 'https://api.ithaca.tzstats.com/',
   pathToOperation: 'explorer/op/',
   pathToUserInfo: 'explorer/account/',
   pathToContractCalls: 'explorer/contract/',
@@ -53,7 +54,7 @@ const tzstatsIndexerConfig: IndexerConfig = {
 
 const tzktIndexerConfig: IndexerConfig = {
   name: IndexerEnum.TZKT,
-  apiUrl: process.env.TZKT_URL || 'https://api.hangzhou2net.tzkt.io/',
+  apiUrl: process.env.TZKT_URL || 'https://api.ithacanet.tzkt.io/',
   pathToOperation: 'v1/operations/',
   pathToContractCalls: 'v1/operations/transactions/',
   pathToUserInfo: 'v1/accounts/',
@@ -80,7 +81,7 @@ export const vaultClientConfig = {
 };
 
 export const contractAddress =
-  process.env.CONTRACT_ADDRESS || 'KT1GYQn8mwSLypyHNPo8d9D151UC8tdo39xR'; // flexibleToken.py
+  process.env.CONTRACT_ADDRESS || flexibleTokenContract; // flexibleToken.py
 
 export const transferAmount = parseInt(2, process.env.TRANSFER_AMOUNT);
 

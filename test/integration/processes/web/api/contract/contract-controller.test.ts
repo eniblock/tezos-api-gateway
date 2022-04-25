@@ -13,10 +13,7 @@ import {
 } from '../../../../../__fixtures__/smart-contract';
 import { resetTable } from '../../../../../__utils__/postgre';
 import { PostgreTables } from '../../../../../../src/const/postgre/postgre-tables';
-import {
-  firstTx,
-  originationOp,
-} from '../../../../../__fixtures__/transactions';
+import { firstTx } from '../../../../../__fixtures__/transactions';
 import { IndexerEnum } from '../../../../../../src/const/interfaces/indexer';
 import { callGetTransactionsWithIndexer } from '../../../../../__utils__';
 import { indexerConfigs } from '../../../../../../src/config';
@@ -24,7 +21,7 @@ import { indexerConfigs } from '../../../../../../src/config';
 describe('[processes/web/api/contract] Contract controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
   const postgreService = new PostgreService(postgreConfig);
-  //
+
   webProcess.postgreService = postgreService;
 
   const request: supertest.SuperTest<supertest.Test> = supertest(
@@ -96,7 +93,7 @@ describe('[processes/web/api/contract] Contract controller', () => {
       );
 
       expect(status).toEqual(200);
-      expect(body.length).toEqual(20);
+      expect(body.length).toEqual(3);
     });
 
     it('should return 200 and the origination operation in the operations list, and use Tzstats indexer when query param "indexer" is set to "tzstats"', async () => {
@@ -105,10 +102,7 @@ describe('[processes/web/api/contract] Contract controller', () => {
       );
 
       expect(status).toEqual(200);
-      expect(body).toEqual([
-        { ...originationOp, indexer: IndexerEnum.TZSTATS },
-        { ...firstTx, indexer: IndexerEnum.TZSTATS },
-      ]);
+      expect(body).toEqual([{ ...firstTx, indexer: IndexerEnum.TZSTATS }]);
     });
 
     it('should return 200 and the operations list without origination operation when using Tzstats indexer without "indexer" query param', async () => {
