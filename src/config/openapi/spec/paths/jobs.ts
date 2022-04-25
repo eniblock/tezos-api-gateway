@@ -468,4 +468,40 @@ export default {
       },
     },
   },
+  '/job/caller-id/{callerId}': {
+    get: {
+      summary: 'Get the list of Jobs by caller ID',
+      description:
+        'Retrieving jobs list whose caller ID is passed as a parameter',
+      parameters: [
+        {
+          name: 'callerId',
+          in: 'path',
+          description: 'The identifier of the calling application',
+          required: true,
+          schema: {
+            type: 'string',
+          },
+        },
+      ],
+      responses: {
+        200: {
+          description: 'successful getting the jobs list by callerID',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: {
+                  $ref: '#/components/schemas/job',
+                },
+              },
+            },
+          },
+        },
+        400: error[400],
+        404: error[404],
+        500: error.default,
+      },
+    },
+  },
 };
