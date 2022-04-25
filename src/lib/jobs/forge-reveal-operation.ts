@@ -3,7 +3,6 @@ import { PostgreService } from '../../services/postgre';
 import { Jobs } from '../../const/interfaces/jobs';
 import { logger } from '../../services/logger';
 import { FakeSigner } from '../../services/signers/fake-signer';
-import { Estimate } from '@taquito/taquito/dist/types/contract/estimate';
 import { AddressAlreadyRevealedError } from '../../const/errors/address-already-revealed';
 import { OperationContentsReveal } from '@taquito/rpc/dist/types/types';
 import { OpKind } from '@taquito/rpc';
@@ -13,6 +12,7 @@ import { insertOperations } from '../../models/operations';
 import { AddressNotFoundError } from '../../const/errors/address-not-found-error';
 import { RevealEstimateError } from '../../const/errors/reveal-estimate-error';
 import { TezosService } from '../../services/tezos';
+import { Estimate } from '@taquito/taquito';
 
 export async function forgeRevealOperation(
   gatewayPool: GatewayPool,

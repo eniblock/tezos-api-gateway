@@ -3,15 +3,15 @@ export const signedTransaction =
 export const signature =
   'edsigtorku6MkHkh8X97m5KofrJjQ18xT94JxjGjsQDsG9xrQ5P2wqHmE9H3FNew7hKMVFBGm8qsdcbtVC8V6g6rhEDQSALZbiA';
 export const branch = 'BLGPF5StvDnNGBpAV9uYNJUiCdw2vz7HRCUwxNEmh61EYYCbGNH';
-export const flexibleTokenContract = 'KT1GYQn8mwSLypyHNPo8d9D151UC8tdo39xR'; // flexibleToken.py
-export const simpleContract = 'KT1PhNVFsajnPvD32xGQrGpCNFE21Cj7aNSD'; // template simple examples calculator
-export const FA2Contract = 'KT1CZ3hoe2WCFn7J7VPe1yCdDPTkQmKbo3Tt'; // template FA2
-export const FA2Contract3 = 'KT1A6AqAjygCnuqR7QiSHfWVCNiwfiBDEUP5'; // smartContractWithComplexedMapAndBigMap.py
-export const FA2Contract4 = 'KT1LtjsjoRavziAgXHkLsMn2UHSdYCJj6mCx'; // simpleMapKeyContract.py
+export const flexibleTokenContract = 'KT1FQYC514saqtqWoEPiPWEpb7wVUjZQwTCY'; // flexibleToken.py
+export const simpleContract = 'KT19V8oSYJFrXvX1Pkpdb8ketWgXoVPhk2zz'; // template simple examples calculator
+export const FA2Contract = 'KT1KM9dKY6tcUbLwM8ms6rkyR3xfHzXvYXsY'; // template FA2
+export const FA2Contract3 = 'KT1SSzDFYLfiMqHQpQK4SUqNHGwzcWj34hdm'; // smartContractWithComplexedMapAndBigMap.py
+export const FA2Contract4 = 'KT1BY1GboNU13PSLL4amri9QNXk2xeThV159'; // simpleMapKeyContract.py
 export const FA2Contract5 = 'KT1938ykzsYS1FR3WAyTa2BUTuTadtV1M9v8'; // Nonexistent contract
 export const FA2Contract7 = 'Bad contract format                '; // Bad contract format
-export const ProxyContract = 'KT1C5k4LJ1mQEGG556yBvMGkAGGfoLEavysd'; // proxyTokenController.py
-export const SingleEntrypointContract = 'KT1BMBACEe8XXLR4XiL3qDdUDX7GxpwA53sU'; // proxyTokenController.py
+export const ProxyContract = 'KT1ASi3SbwR2gWCUWrAQkrpV2PvBo2vb6Qo7'; // proxyTokenController.py
+export const SingleEntrypointContract = 'KT1P9Z2raXbGcanWRC2dRPLA2ty86W4pR8ZF'; // singleEntrypointContract.py
 
 export const testAccount = 'tz1VbHay2YPpiuPYs8SQHynuW3YvGtNuB29z';
 export const testAccount2 = 'tz1Ric9o7YeBvbxXHnxhBMAjaMgKUnHUbYKB'; // Receiver account
@@ -19,8 +19,8 @@ export const flexibleTokenContractOwner =
   'tz1hdQscorfqMzFqYxnrApuS5i6QSTuoAp3w';
 
 export const revealedAccount = {
-  address: 'tz1PbGySK1WQMNMVkaLcwEzmNffG63goVoye',
-  publicKey: 'edpkukHceEkeLBRj1MyQkZYUZdffCYbQMA8UAedZt8NwtPUXiAgiBe',
+  address: 'tz1hb8qHAQfYhDtpr8NH5GPqMbRBwd3C4Fef',
+  publicKey: 'edpkuQNn5hEZ74Td4NBAajjB7NzeBnyYiP3xn2X9VwUysScG8QBR3d',
 };
 export const unActivatedAccount = {
   address: 'tz1QmniYtA8K7HqQgBXvrx3htyFf8Ls5r3Pp',

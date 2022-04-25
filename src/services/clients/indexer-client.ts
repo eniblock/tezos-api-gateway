@@ -208,14 +208,6 @@ export class IndexerClient extends AbstractClient {
       '[IndexerClient/getTransactionListOfSC] Calling the indexer to get the transaction list',
     );
 
-    // If tzstats isn't specifically targeted, and the randomly selected indexer is Tzstats
-    // we increment the offset to remove the origination operation
-    if (
-      params.indexer !== IndexerEnum.TZSTATS &&
-      indexerName === IndexerEnum.TZSTATS
-    )
-      params.offset = (params.offset || 0) + 1;
-
     const { domainAndPath, queryParams } = this.buildURLForTransactionList(
       contractAddress,
       params,

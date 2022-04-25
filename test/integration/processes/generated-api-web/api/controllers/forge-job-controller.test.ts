@@ -14,7 +14,7 @@ import { WebProcess } from '../../../../../../src/processes/generated-api-web/we
 import * as generateTransactionDetailsLib from '../../../../../../src/helpers/generate-transaction-details';
 import {
   flexibleTokenContract,
-  testAccount,
+  revealedAccount,
   testAccount2,
 } from '../../../../../__fixtures__/smart-contract';
 import { OpKind } from '@taquito/rpc';
@@ -56,7 +56,7 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
       const { body, status } = await request
         .post('/api/forge/transferMany')
         .send({
-          sourceAddress: testAccount,
+          sourceAddress: revealedAccount.address,
         });
 
       expect(status).toEqual(404);
@@ -68,7 +68,7 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
 
     it('should return 400 when a required parameter is missing', async () => {
       const { body, status } = await request.post('/api/forge/transfer').send({
-        sourceAddress: testAccount,
+        sourceAddress: revealedAccount.address,
       });
 
       expect(status).toEqual(400);
@@ -84,7 +84,7 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
           tokens: 1,
           destination: testAccount2,
         },
-        sourceAddress: testAccount,
+        sourceAddress: revealedAccount.address,
       });
 
       expect(status).toEqual(400);
@@ -98,9 +98,9 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
       const { body, status } = await request.post('/api/forge/transfer').send({
         parameters: {
           tokens: 1,
-          destination: testAccount.substring(0, 35),
+          destination: testAccount2.substring(0, 35),
         },
-        sourceAddress: testAccount,
+        sourceAddress: revealedAccount.address,
       });
 
       expect(status).toEqual(400);
@@ -118,7 +118,7 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
           destination: testAccount2,
           from: testAccount2,
         },
-        sourceAddress: testAccount,
+        sourceAddress: revealedAccount.address,
       });
 
       expect(status).toEqual(400);
@@ -141,7 +141,7 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
           tokens: 1,
           destination: testAccount2,
         },
-        sourceAddress: testAccount,
+        sourceAddress: revealedAccount.address,
       });
 
       expect(status).toEqual(500);
@@ -157,7 +157,7 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
           tokens: 1,
           destination: testAccount2,
         },
-        sourceAddress: testAccount,
+        sourceAddress: revealedAccount.address,
       });
 
       expect({ body, status }).toEqual({
@@ -197,10 +197,10 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
             testAccount2 +
             '"}}}',
           amount: 0,
-          fee: 650,
-          source: testAccount,
+          fee: 547,
+          source: revealedAccount.address,
           storage_limit: 0,
-          gas_limit: 3015,
+          gas_limit: 1983,
           branch: insertedForgeParameters[0].branch,
           counter: insertedForgeParameters[0].counter,
           job_id: body.id,

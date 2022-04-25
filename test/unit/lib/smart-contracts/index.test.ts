@@ -5,7 +5,6 @@ import {
   ProxyContract,
   SingleEntrypointContract,
   testAccount,
-  testAccount2,
 } from '../../../__fixtures__/smart-contract';
 import {
   formatEntryPointParameters,
@@ -230,39 +229,34 @@ describe('[lib/smart-contracts] Index', () => {
           value: [
             {
               args: [
-                {
-                  args: [
-                    {
-                      string: 'tz1VbHay2YPpiuPYs8SQHynuW3YvGtNuB29z',
-                    },
-                    {
-                      args: [
-                        {
-                          string: 'tz1Ric9o7YeBvbxXHnxhBMAjaMgKUnHUbYKB',
-                        },
-                        {
-                          int: '0',
-                        },
-                      ],
-                      prim: 'Pair',
-                    },
-                  ],
-                  prim: 'Pair',
-                },
+                [
+                  {
+                    args: [
+                      {
+                        string: 'operator',
+                      },
+                      {
+                        string: testAccount,
+                      },
+                    ],
+                    prim: 'Elt',
+                  },
+                ],
               ],
               prim: 'Left',
             },
           ],
         },
-        to: 'KT1BMBACEe8XXLR4XiL3qDdUDX7GxpwA53sU',
+        to: singleEntrypointContract.address,
       };
       const params = [
         {
-          add_operator: {
-            operator: testAccount,
-            owner: testAccount2,
-            token_id: 0,
-          },
+          add: [
+            {
+              key: 'operator',
+              value: testAccount,
+            },
+          ],
         },
       ];
 

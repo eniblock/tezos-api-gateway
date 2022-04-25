@@ -1,4 +1,9 @@
 import { IndexerEnum } from '../../../src/const/interfaces/indexer';
+import {
+  flexibleTokenContract,
+  revealedAccount,
+  testAccount,
+} from '../smart-contract';
 export const originationOp = {
   indexer: IndexerEnum.TZSTATS,
   destination: 'KT1GYQn8mwSLypyHNPo8d9D151UC8tdo39xR',
@@ -18,21 +23,22 @@ export const originationOp = {
 };
 
 export const firstTx = {
-  destination: 'KT1GYQn8mwSLypyHNPo8d9D151UC8tdo39xR',
-  source: 'tz1VbHay2YPpiuPYs8SQHynuW3YvGtNuB29z',
-  timestamp: '2021-12-07T10:06:34Z',
-  status: 'applied',
-  baker_fee: 0.2,
-  storage_fee: 0,
-  storage_limit: 1000,
-  counter: 2607270,
-  hash: 'opQAaDdjoWQF2Y4D8batusuPDEvqdMZgwKqXCYju7y3Jd7sQEu7',
-  block: 'BLD5xTPgbyc1Gip4YF8cCixhRKNFGkgDzNtVus4ANJQFdg5sP29',
-  type: 'transaction',
-  height: 157141,
+  baker_fee: 0.000829,
+  block: 'BLhVTe8x1g9hTViwnCmcJoJ2NAjoWqL4sCa9xGyrDXNeH1xPtQN',
+  counter: 10240821,
+  destination: flexibleTokenContract,
   entrypoint: 'transfer',
+  hash: 'onzemPP7b9MJ8yg59m4Gfsm9ALegQ3aMvik52EgP4cphPBjscUz',
+  height: 422112,
+  indexer: 'tzkt',
   parameters: {
-    destination: 'tz1VbHay2YPpiuPYs8SQHynuW3YvGtNuB29z',
-    tokens: '5',
+    destination: testAccount,
+    tokens: '0',
   },
+  source: revealedAccount.address,
+  status: 'applied',
+  storage_fee: 0,
+  storage_limit: 0,
+  timestamp: '2022-04-21T13:39:30Z',
+  type: 'transaction',
 };

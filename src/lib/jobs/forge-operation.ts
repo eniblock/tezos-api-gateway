@@ -20,14 +20,13 @@ import {
   OperationContentsTransactionWithParametersJson,
   TransactionDetails,
 } from '../../const/interfaces/send-transactions-params';
-import { Estimate } from '@taquito/taquito/dist/types/contract/estimate';
 import { ParamsWithKind } from '@taquito/taquito/dist/types/operations/types';
 import { estimateAndBuildRevealOperation } from './forge-reveal-operation';
 import { AddressNotRevealedError } from '../../const/errors/address-not-revealed';
 import { AddressAlreadyRevealedError } from '../../const/errors/address-already-revealed';
 import { MaxOperationsPerBatchError } from '../../const/errors/max-operations-per-batch-error';
 import { maxOperationsPerBatch } from '../../config';
-import { TezosOperationError } from '@taquito/taquito';
+import { Estimate, TezosOperationError } from '@taquito/taquito';
 
 const FORGE_OPERATION_KNOWN_ERRORS = [
   'AddressAlreadyRevealedError',
