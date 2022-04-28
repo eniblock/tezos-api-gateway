@@ -60,10 +60,6 @@ export class IndexerClient extends AbstractClient {
     );
 
     try {
-      this.logger.info(
-        { getOperationUrl },
-        '[IndexerClient/getOperationBlockLevel] test',
-      );
       const { body: result } = await superagent.get(getOperationUrl);
 
       const operation = result[keyToOperation];

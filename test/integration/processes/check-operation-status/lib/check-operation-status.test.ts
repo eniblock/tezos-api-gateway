@@ -2,6 +2,7 @@ import {
   amqpConfig,
   postgreConfig,
   tezosNodeUrl,
+  tezosNodeUrls,
 } from '../../../../__fixtures__/config';
 import { logger } from '../../../../__fixtures__/services/logger';
 import { resetTable, selectData } from '../../../../__utils__/postgre';
@@ -22,12 +23,15 @@ import { insertTransaction } from '../../../../../src/models/operations';
 import { selectJobs } from '../../../../../src/models/jobs';
 import { Jobs } from '../../../../../src/const/interfaces/jobs';
 import { OpKind } from '@taquito/rpc';
+import { GatewayPool } from '../../../../../src/services/gateway-pool';
+import { OperationExpiredError } from '../../../../../src/const/errors/indexer-error';
 
 describe('[check-operation-status/lib/check-operation-status]', () => {
   const postgreService = new PostgreService(postgreConfig);
   const tezosService = new TezosService(tezosNodeUrl);
   const amqpService = new AmqpService(amqpConfig, logger);
   const indexerPool = new IndexerPool(logger);
+  const gatewayPool = new GatewayPool(tezosNodeUrls, logger);
 
   beforeAll(async () => {
     await postgreService.initializeDatabase();
@@ -64,7 +68,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
         VALUES ('${JobStatus.PUBLISHED}', 'raw_transaction_4', '${notFoundOperationHash}', '${OpKind.TRANSACTION}')`,
       );
       await checkOperationStatus(
-        { postgreService, tezosService, amqpService, indexerPool },
+        { postgreService, tezosService, amqpService, indexerPool, gatewayPool },
         logger,
       );
 
@@ -135,7 +139,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
       });
 
       await checkOperationStatus(
-        { postgreService, tezosService, amqpService, indexerPool },
+        { postgreService, tezosService, amqpService, indexerPool, gatewayPool },
         logger,
       );
 
@@ -190,7 +194,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
         .mockRejectedValue(new Error('Unexpected error'));
 
       await checkOperationStatus(
-        { postgreService, tezosService, amqpService, indexerPool },
+        { postgreService, tezosService, amqpService, indexerPool, gatewayPool },
         logger,
       );
 
@@ -237,6 +241,56 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
           '[lib/checkOperationStatus] Unexpected error happen',
         ],
       ]);
+    });
+
+    it('should remove operation from mempool and set job to ERROR when the operation is expired', async () => {
+      const checkIfOperationIsConfirmedByRandomIndexerSpy = jest
+        .spyOn(indexerPool, 'checkIfOperationIsConfirmedByRandomIndexer')
+        .mockRejectedValue(new OperationExpiredError(operationHash));
+
+      await checkOperationStatus(
+        { postgreService, tezosService, amqpService, indexerPool, gatewayPool },
+        logger,
+      );
+
+      await expect(
+        selectData(postgreService.pool, {
+          tableName: PostgreTables.JOBS,
+          selectFields: 'status, operation_hash, forged_operation',
+        }),
+      ).resolves.toEqual([
+        {
+          status: 'created',
+          forged_operation: 'raw_transaction',
+          operation_hash: null,
+        },
+        {
+          status: 'created',
+          forged_operation: 'raw_transaction_3',
+          operation_hash: operationHash,
+        },
+        {
+          status: 'error',
+          forged_operation: 'raw_transaction_2',
+          operation_hash: operationHash,
+        },
+      ]);
+
+      expect(
+        checkIfOperationIsConfirmedByRandomIndexerSpy,
+      ).toHaveBeenCalledWith(
+        tezosService,
+        {
+          operationHash,
+          nbOfConfirmation,
+          opExpirationInMinutes: 8,
+        },
+        nbOfRetry,
+      );
+      expect(
+        checkIfOperationIsConfirmedByRandomIndexerSpy,
+      ).toHaveBeenCalledTimes(1);
+      expect(loggerErrorSpy).toHaveBeenCalledTimes(0);
     });
   });
 });

@@ -13,7 +13,10 @@ import {
   operationExpirationTimeoutInMinutes,
 } from '../../../../config';
 import { JobStatus } from '../../../../const/job-status';
-import { OperationNotFoundError } from '../../../../const/errors/indexer-error';
+import {
+  OperationExpiredError,
+  OperationNotFoundError,
+} from '../../../../const/errors/indexer-error';
 import { AmqpService } from '../../../../services/amqp';
 import {
   isOperationAReveal,
@@ -24,6 +27,7 @@ import {
   publishEventWhenRevealConfirmed,
   publishEventWhenTransactionsConfirmed,
 } from './publish-confirmed-transaction-event';
+import { GatewayPool } from '../../../../services/gateway-pool';
 
 /**
  * Check the operations (of all the jobs that has status "submitted" and operation hash) has been confirmed
@@ -40,11 +44,13 @@ export async function checkOperationStatus(
     tezosService,
     amqpService,
     indexerPool,
+    gatewayPool,
   }: {
     postgreService: PostgreService;
     tezosService: TezosService;
     amqpService: AmqpService;
     indexerPool: IndexerPool;
+    gatewayPool: GatewayPool;
   },
   logger: Logger,
 ) {
@@ -71,7 +77,7 @@ export async function checkOperationStatus(
           );
           logger.info(
             { updatedJob },
-            '[lib/checkOperationStatus] Successfully update the job',
+            '[lib/checkOperationStatus] Successfully update the job with SUCCESS status',
           );
 
           const operations = await selectOperation(
@@ -127,7 +133,25 @@ export async function checkOperationStatus(
           );
         }
       } catch (err) {
-        if (!(err instanceof OperationNotFoundError)) {
+        if (err instanceof OperationExpiredError) {
+          const updatedJob = await updateJobStatus(
+            postgreService.pool,
+            JobStatus.ERROR,
+            job.id,
+          );
+          logger.info(
+            { updatedJob },
+            '[lib/checkOperationStatus] Successfully update the job to ERROR status',
+          );
+          await gatewayPool.removeOperationFromMempool(
+            job.operation_hash as string,
+          );
+        }
+
+        if (
+          !(err instanceof OperationNotFoundError) &&
+          !(err instanceof OperationExpiredError)
+        ) {
           logger.error(
             { err },
             '[lib/checkOperationStatus] Unexpected error happen',

@@ -42,6 +42,7 @@ describe('[processes/workers/check-operation-status] Check Operation Status Proc
             tezosService,
             amqpService: checkOperationStatusProcess.amqpService,
             indexerPool: checkOperationStatusProcess.indexerPool,
+            gatewayPool: checkOperationStatusProcess.gatewayPool,
           },
           logger,
         ],
