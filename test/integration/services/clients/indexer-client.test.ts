@@ -27,7 +27,7 @@ describe('[services/clients] Indexer Client', () => {
     nock.cleanAll();
   });
 
-  describe('#getOperationBlockLevel', () => {
+  describe('#getOperationDetails', () => {
     it('should return undefined when the indexer throw any errors that is not NOT_FOUND', async () => {
       const loggerInfoSpies: any[] = [];
       const nocks: nock.Scope[] = [];
@@ -41,7 +41,7 @@ describe('[services/clients] Indexer Client', () => {
         nocks.push(indexerNock);
 
         const indexerPromise = expect(
-          indexer.getOperationBlockLevel(operationHash),
+          indexer.getOperationDetails(operationHash),
         ).resolves.toBeUndefined();
         indexerPromises.push(indexerPromise);
       }
@@ -59,20 +59,21 @@ describe('[services/clients] Indexer Client', () => {
       for (const indexer of indexerClients) {
         indexerPromises.push(
           expect(
-            indexer.getOperationBlockLevel(notFoundOperationHash),
+            indexer.getOperationDetails(notFoundOperationHash),
           ).rejects.toThrowError(OperationNotFoundError),
         );
       }
       await Promise.all(indexerPromises);
     }, 8000);
 
-    it('should return the block level of the operation', async () => {
+    it('should return the details of the operation', async () => {
       const indexerPromises: Promise<void>[] = [];
       for (const indexer of indexerClients) {
         indexerPromises.push(
-          expect(
-            indexer.getOperationBlockLevel(operationHash),
-          ).resolves.toEqual(411813),
+          expect(indexer.getOperationDetails(operationHash)).resolves.toEqual({
+            opBlockLevel: 411813,
+            opCreationDate: '2022-04-19T15:14:35Z',
+          }),
         );
       }
       await Promise.all(indexerPromises);
@@ -101,6 +102,7 @@ describe('[services/clients] Indexer Client', () => {
           tezosService,
           operationHash,
           20,
+          8,
         ),
       ).rejects.toThrow(
         Error('Could not find an operation with this hash: ' + operationHash),
@@ -125,6 +127,7 @@ describe('[services/clients] Indexer Client', () => {
           tezosService,
           notFoundOperationHash,
           20,
+          8,
         ),
       ).rejects.toThrow(OperationNotFoundError);
 
@@ -141,8 +144,9 @@ describe('[services/clients] Indexer Client', () => {
           tezosService,
           operationHash,
           20,
+          8,
         ),
-      ).resolves.toBeUndefined();
+      ).resolves.toBeFalsy();
 
       indexerNock.done();
     });
@@ -160,6 +164,7 @@ describe('[services/clients] Indexer Client', () => {
           tezosService,
           operationHash,
           20,
+          8,
         ),
       ).resolves.toEqual(false);
 
@@ -173,6 +178,7 @@ describe('[services/clients] Indexer Client', () => {
           tezosService,
           operationHash,
           17,
+          8,
         ),
       ).resolves.toEqual(true);
     }, 8000);

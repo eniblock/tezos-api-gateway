@@ -3,7 +3,9 @@ import createHttpError from 'http-errors';
 import { StatusCodes } from 'http-status-codes';
 import superagent from 'superagent';
 import url from 'url';
+import { DateTime } from 'luxon';
 import {
+  OperationExpiredError,
   OperationNotFoundError,
   UnsupportedIndexerError,
 } from '../../const/errors/indexer-error';
@@ -28,18 +30,19 @@ export class IndexerClient extends AbstractClient {
   }
 
   /**
-   * Get the operation details
+   * Get some operation details
    *
    * @param {string} operationHash   - the operation hash value
    *
-   * @return {string} the operation block level
+   * @return {string} the operation details
    */
-  public async getOperationBlockLevel(operationHash: string) {
+  public async getOperationDetails(operationHash: string) {
     const {
       name,
       apiUrl: indexerUrl,
       keyToOperation,
       keyToBlockLevel,
+      keyToCreationDate,
       pathToOperation,
     } = this.config;
 
@@ -48,7 +51,7 @@ export class IndexerClient extends AbstractClient {
         operationHash,
         indexerName: name,
       },
-      '[services/indexer] Calling the indexer to get the operation status',
+      '[IndexerClient/getOperationBlockLevel] Calling the indexer to get the operation status',
     );
 
     const getOperationUrl = url.resolve(
@@ -57,6 +60,10 @@ export class IndexerClient extends AbstractClient {
     );
 
     try {
+      this.logger.info(
+        { getOperationUrl },
+        '[IndexerClient/getOperationBlockLevel] test',
+      );
       const { body: result } = await superagent.get(getOperationUrl);
 
       const operation = result[keyToOperation];
@@ -67,16 +74,20 @@ export class IndexerClient extends AbstractClient {
 
       this.logger.info(
         { operation },
-        '[IndexerClient/getOperation] Successfully fetched the operation details',
+        '[IndexerClient/getOperationBlockLevel] Successfully fetched the operation details',
       );
 
-      return operation[keyToBlockLevel];
+      return {
+        opBlockLevel: operation[keyToBlockLevel],
+        opCreationDate: operation[keyToCreationDate],
+      };
     } catch (err) {
       if (err.status === StatusCodes.NOT_FOUND) {
         throw new OperationNotFoundError(operationHash);
       }
 
       this.handleError(err, { operationHash, indexerConfig: this.config });
+      return;
     }
   }
 
@@ -93,22 +104,40 @@ export class IndexerClient extends AbstractClient {
     tezosService: TezosService,
     operationHash: string,
     nbOfConfirmation: number,
-  ) {
+    opExpirationInMinutes: number,
+  ): Promise<boolean | undefined> {
     try {
-      const operationBlockLevel = await this.getOperationBlockLevel(
-        operationHash,
-      );
+      const opDetails = await this.getOperationDetails(operationHash);
 
-      if (!operationBlockLevel) {
-        return;
+      let opBlockLevel;
+      let opCreationDate;
+
+      if (opDetails) {
+        opBlockLevel = opDetails.opBlockLevel;
+        opCreationDate = opDetails.opCreationDate;
+      }
+
+      const opExpiredDate = DateTime.fromISO(opCreationDate)
+        .plus({ minutes: opExpirationInMinutes })
+        .toJSDate();
+
+      if (!opBlockLevel) {
+        // If the operation is still in no block AND is considered expired
+        if (new Date() > opExpiredDate) {
+          throw new OperationExpiredError(operationHash);
+        }
+        return undefined;
       }
 
       const {
         header: { level: currentBlock },
       } = await tezosService.getLatestBlock();
-      return currentBlock - operationBlockLevel >= nbOfConfirmation;
+      return currentBlock - opBlockLevel >= nbOfConfirmation;
     } catch (err) {
-      if (!(err instanceof OperationNotFoundError)) {
+      if (
+        !(err instanceof OperationNotFoundError) &&
+        !(err instanceof OperationExpiredError)
+      ) {
         this.logger.error(
           { err },
           '[IndexerClient/checkIfOperationIsConfirmed] Unexpected error happened',

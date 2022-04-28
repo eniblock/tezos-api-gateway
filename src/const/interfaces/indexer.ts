@@ -6,6 +6,7 @@ export interface IndexerConfig {
   keyToBlockLevel: string;
   pathToOperation: string;
   pathToUserInfo: string;
+  keyToCreationDate: string;
   keyToBalance?: string;
   keyToReveal?: string;
 }

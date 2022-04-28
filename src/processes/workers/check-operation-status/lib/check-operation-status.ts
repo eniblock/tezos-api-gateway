@@ -7,7 +7,11 @@ import {
   updateJobStatus,
 } from '../../../../models/jobs';
 import { IndexerPool } from '../../../../services/indexer-pool';
-import { nbOfConfirmation, nbOfRetry } from '../../../../config';
+import {
+  nbOfConfirmation,
+  nbOfRetry,
+  operationExpirationTimeoutInMinutes,
+} from '../../../../config';
 import { JobStatus } from '../../../../const/job-status';
 import { OperationNotFoundError } from '../../../../const/errors/indexer-error';
 import { AmqpService } from '../../../../services/amqp';
@@ -52,7 +56,11 @@ export async function checkOperationStatus(
         if (
           await indexerPool.checkIfOperationIsConfirmedByRandomIndexer(
             tezosService,
-            { operationHash: job.operation_hash as string, nbOfConfirmation },
+            {
+              operationHash: job.operation_hash as string,
+              nbOfConfirmation,
+              opExpirationInMinutes: operationExpirationTimeoutInMinutes,
+            },
             nbOfRetry,
           )
         ) {

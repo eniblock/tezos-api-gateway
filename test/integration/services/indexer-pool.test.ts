@@ -1,7 +1,11 @@
 import _ from 'lodash';
 import nock from 'nock';
+import { DateTime } from 'luxon';
 import { indexerConfigs } from '../../../src/config';
-import { OperationNotFoundError } from '../../../src/const/errors/indexer-error';
+import {
+  OperationExpiredError,
+  OperationNotFoundError,
+} from '../../../src/const/errors/indexer-error';
 import { IndexerClient } from '../../../src/services/clients/indexer-client';
 import { IndexerPool } from '../../../src/services/indexer-pool';
 import { TezosService } from '../../../src/services/tezos';
@@ -51,6 +55,7 @@ describe('[services/indexer-pool]', () => {
     });
 
     afterEach(() => {
+      jest.restoreAllMocks();
       nock.cleanAll();
     });
 
@@ -81,7 +86,7 @@ describe('[services/indexer-pool]', () => {
           {
             err: Error('Unexpected error'),
           },
-          '[IndexerPool/getOperationByRandomIndexer] Unexpect error happened',
+          '[IndexerPool/getOperationByRandomIndexer] Unexpected error happened',
         ],
       ]);
       expect(getRandomIndexerSpy).toHaveBeenCalledTimes(1);
@@ -157,6 +162,7 @@ describe('[services/indexer-pool]', () => {
           {
             operationHash: notFoundOperationHash,
             nbOfConfirmation: 20,
+            opExpirationInMinutes: 8,
           },
           3,
         ),
@@ -178,6 +184,7 @@ describe('[services/indexer-pool]', () => {
           {
             operationHash,
             nbOfConfirmation: 20,
+            opExpirationInMinutes: 8,
           },
           3,
         ),
@@ -210,6 +217,7 @@ describe('[services/indexer-pool]', () => {
           {
             operationHash,
             nbOfConfirmation: 20,
+            opExpirationInMinutes: 8,
           },
           3,
         ),
@@ -235,6 +243,7 @@ describe('[services/indexer-pool]', () => {
           {
             operationHash,
             nbOfConfirmation: 20,
+            opExpirationInMinutes: 8,
           },
           3,
         ),
@@ -251,6 +260,7 @@ describe('[services/indexer-pool]', () => {
           {
             operationHash,
             nbOfConfirmation: 20,
+            opExpirationInMinutes: 8,
           },
           3,
         ),
@@ -258,6 +268,17 @@ describe('[services/indexer-pool]', () => {
     });
 
     it('should properly return false if the operation is not confirmed', async () => {
+      const indexerClient = indexerPool.getRandomIndexer();
+
+      jest
+        .spyOn(indexerPool, 'getRandomIndexer')
+        .mockReturnValue(indexerClient);
+
+      jest.spyOn(indexerClient, 'getOperationDetails').mockResolvedValue({
+        opBlockLevel: 109646,
+        opCreationDate: new Date(),
+      });
+
       const blockHeader: BlockResponse = {
         header: { level: 109646 },
       } as unknown as BlockResponse;
@@ -271,6 +292,7 @@ describe('[services/indexer-pool]', () => {
           {
             operationHash,
             nbOfConfirmation: 20,
+            opExpirationInMinutes: 8,
           },
           3,
         ),
@@ -278,5 +300,34 @@ describe('[services/indexer-pool]', () => {
 
       expect(getLatestBlockSpy).toHaveBeenCalledTimes(1);
     });
+
+    it('should throw OperationExpiredError without calling logger error when the operation is not confirmed and expired', async () => {
+      const indexerClient = indexerPool.getRandomIndexer();
+
+      jest
+        .spyOn(indexerPool, 'getRandomIndexer')
+        .mockReturnValue(indexerClient);
+
+      jest.spyOn(indexerClient, 'getOperationDetails').mockResolvedValue({
+        opBlockLevel: undefined,
+        opCreationDate: DateTime.fromISO(
+          '2022-04-28T16:08:05.704Z',
+        ).toISODate(),
+      });
+
+      await expect(
+        indexerPool.checkIfOperationIsConfirmedByRandomIndexer(
+          tezosService,
+          {
+            operationHash: notFoundOperationHash,
+            nbOfConfirmation: 20,
+            opExpirationInMinutes: 8,
+          },
+          3,
+        ),
+      ).rejects.toThrowError(OperationExpiredError);
+
+      expect(loggerErrorSpy).toHaveBeenCalledTimes(0);
+    }, 8000);
   });
 });

@@ -224,6 +224,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
         {
           operationHash,
           nbOfConfirmation,
+          opExpirationInMinutes: 8,
         },
         nbOfRetry,
       );

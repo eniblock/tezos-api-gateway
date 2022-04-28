@@ -16,3 +16,10 @@ export class UnsupportedIndexerError extends Error {
     super(`Could not use the indexer ${indexerName} for this action`);
   }
 }
+
+export class OperationExpiredError extends Error {
+  constructor(operationHash: string) {
+    super(`The operation with this hash is now expired: ${operationHash}`);
+    this.name = 'Operation expired';
+  }
+}

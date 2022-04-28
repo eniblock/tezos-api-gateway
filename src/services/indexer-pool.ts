@@ -3,7 +3,10 @@ import Logger from 'bunyan';
 import { IndexerClient } from './clients/indexer-client';
 import { indexerConfigs } from '../config';
 import { generateRandomInt } from '../utils';
-import { OperationNotFoundError } from '../const/errors/indexer-error';
+import {
+  OperationExpiredError,
+  OperationNotFoundError,
+} from '../const/errors/indexer-error';
 import { TezosService } from './tezos';
 import { IndexerEnum } from '../const/interfaces/indexer';
 
@@ -67,23 +70,28 @@ export class IndexerPool {
           '[IndexerPool/getOperationBlockLevelByRandomIndexer] Using this indexer to get the operation block level',
         );
 
-        const blockLevel = await currentIndexer.getOperationBlockLevel(
+        const opDetails = await currentIndexer.getOperationDetails(
           operationHash,
         );
 
-        if (!blockLevel) {
+        let opBlockLevel;
+        if (opDetails) {
+          opBlockLevel = opDetails.opBlockLevel;
+        }
+
+        if (!opBlockLevel) {
           nbOfRetry--;
           continue;
         }
 
-        return blockLevel;
+        return opBlockLevel;
       } catch (err) {
         if (!(err instanceof OperationNotFoundError)) {
           this.logger.error(
             {
               err,
             },
-            '[IndexerPool/getOperationByRandomIndexer] Unexpect error happened',
+            '[IndexerPool/getOperationByRandomIndexer] Unexpected error happened',
           );
         }
 
@@ -103,9 +111,11 @@ export class IndexerPool {
     {
       operationHash,
       nbOfConfirmation,
+      opExpirationInMinutes,
     }: {
       operationHash: string;
       nbOfConfirmation: number;
+      opExpirationInMinutes: number;
     },
     nbOfRetry: number,
   ): Promise<boolean | undefined> {
@@ -127,15 +137,19 @@ export class IndexerPool {
           tezosService,
           operationHash,
           nbOfConfirmation,
+          opExpirationInMinutes,
         );
 
-        if (typeof isConfirmed === 'boolean') {
+        if (isConfirmed !== undefined) {
           return isConfirmed;
         }
 
         nbOfRetry--;
       } catch (err) {
-        if (!(err instanceof OperationNotFoundError)) {
+        if (
+          !(err instanceof OperationNotFoundError) &&
+          !(err instanceof OperationExpiredError)
+        ) {
           this.logger.error(
             {
               err,

@@ -1050,6 +1050,11 @@
   "resolved" "https://registry.npmjs.org/@types/lodash/-/lodash-4.14.166.tgz"
   "version" "4.14.166"
 
+"@types/luxon@^2.3.1":
+  "integrity" "sha512-nAPUltOT28fal2eDZz8yyzNhBjHw1NEymFBP7Q9iCShqpflWPybxHbD7pw/46jQmT+HXOy1QN5hNTms8MOTlOQ=="
+  "resolved" "https://registry.npmjs.org/@types/luxon/-/luxon-2.3.1.tgz"
+  "version" "2.3.1"
+
 "@types/mime@*":
   "integrity" "sha512-Jus9s4CDbqwocc5pOAnh8ShfrnMcPHuJYzVcSUU7lrh8Ni5HuIqX3oilL86p3dlTrk0LzHRCgA/GQ7uNCw6l2Q=="
   "resolved" "https://registry.npmjs.org/@types/mime/-/mime-2.0.3.tgz"
@@ -3326,6 +3331,11 @@
   "version" "6.0.0"
   dependencies:
     "yallist" "^4.0.0"
+
+"luxon@^2.3.2":
+  "integrity" "sha512-MlAQQVMFhGk4WUA6gpfsy0QycnKP0+NlCBJRVRNPxxSIbjrCbQ65nrpJD3FVyJNZLuJ0uoqL57ye6BmDYgHaSw=="
+  "resolved" "https://registry.npmjs.org/luxon/-/luxon-2.3.2.tgz"
+  "version" "2.3.2"
 
 "make-dir@^3.0.0":
   "integrity" "sha512-g3FeP20LNwhALb/6Cz6Dd4F2ngze0jz7tbzrD2wAV+o9FeNHe4rL+yK2md0J/fiSf1sa1ADhXqi5+oVwOM/eGw=="
