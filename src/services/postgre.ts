@@ -71,6 +71,8 @@ export class PostgreService {
         ALTER TABLE ${PostgreTables.OPERATIONS} ADD COLUMN IF NOT EXISTS kind VARCHAR(100);
         ALTER TABLE ${PostgreTables.OPERATIONS} ADD COLUMN IF NOT EXISTS public_key TEXT;
         UPDATE ${PostgreTables.OPERATIONS} SET kind = '${OpKind.TRANSACTION}' WHERE kind IS NULL;
+        ALTER TABLE ${PostgreTables.OPERATIONS} ADD COLUMN IF NOT EXISTS creation_date VARCHAR(100);
+        ALTER TABLE ${PostgreTables.OPERATIONS} ADD COLUMN IF NOT EXISTS update_date VARCHAR(100);
         ALTER TABLE ${PostgreTables.JOBS} ADD COLUMN IF NOT EXISTS operation_kind TEXT;
       `);
 

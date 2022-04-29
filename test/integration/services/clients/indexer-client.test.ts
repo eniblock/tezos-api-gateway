@@ -41,7 +41,7 @@ describe('[services/clients] Indexer Client', () => {
         nocks.push(indexerNock);
 
         const indexerPromise = expect(
-          indexer.getOperationDetails(operationHash),
+          indexer.getOperationBlockLevel(operationHash),
         ).resolves.toBeUndefined();
         indexerPromises.push(indexerPromise);
       }
@@ -59,7 +59,7 @@ describe('[services/clients] Indexer Client', () => {
       for (const indexer of indexerClients) {
         indexerPromises.push(
           expect(
-            indexer.getOperationDetails(notFoundOperationHash),
+            indexer.getOperationBlockLevel(notFoundOperationHash),
           ).rejects.toThrowError(OperationNotFoundError),
         );
       }
@@ -70,10 +70,9 @@ describe('[services/clients] Indexer Client', () => {
       const indexerPromises: Promise<void>[] = [];
       for (const indexer of indexerClients) {
         indexerPromises.push(
-          expect(indexer.getOperationDetails(operationHash)).resolves.toEqual({
-            opBlockLevel: 411813,
-            opCreationDate: '2022-04-19T15:14:35Z',
-          }),
+          expect(
+            indexer.getOperationBlockLevel(operationHash),
+          ).resolves.toEqual(411813),
         );
       }
       await Promise.all(indexerPromises);
@@ -102,7 +101,6 @@ describe('[services/clients] Indexer Client', () => {
           tezosService,
           operationHash,
           20,
-          8,
         ),
       ).rejects.toThrow(
         Error('Could not find an operation with this hash: ' + operationHash),
@@ -127,7 +125,6 @@ describe('[services/clients] Indexer Client', () => {
           tezosService,
           notFoundOperationHash,
           20,
-          8,
         ),
       ).rejects.toThrow(OperationNotFoundError);
 
@@ -144,7 +141,6 @@ describe('[services/clients] Indexer Client', () => {
           tezosService,
           operationHash,
           20,
-          8,
         ),
       ).resolves.toBeFalsy();
 
@@ -164,7 +160,6 @@ describe('[services/clients] Indexer Client', () => {
           tezosService,
           operationHash,
           20,
-          8,
         ),
       ).resolves.toEqual(false);
 
@@ -178,7 +173,6 @@ describe('[services/clients] Indexer Client', () => {
           tezosService,
           operationHash,
           17,
-          8,
         ),
       ).resolves.toEqual(true);
     }, 8000);

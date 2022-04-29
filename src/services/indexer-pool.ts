@@ -3,10 +3,7 @@ import Logger from 'bunyan';
 import { IndexerClient } from './clients/indexer-client';
 import { indexerConfigs } from '../config';
 import { generateRandomInt } from '../utils';
-import {
-  OperationExpiredError,
-  OperationNotFoundError,
-} from '../const/errors/indexer-error';
+import { OperationNotFoundError } from '../const/errors/indexer-error';
 import { TezosService } from './tezos';
 import { IndexerEnum } from '../const/interfaces/indexer';
 
@@ -70,21 +67,16 @@ export class IndexerPool {
           '[IndexerPool/getOperationBlockLevelByRandomIndexer] Using this indexer to get the operation block level',
         );
 
-        const opDetails = await currentIndexer.getOperationDetails(
+        const blockLevel = await currentIndexer.getOperationBlockLevel(
           operationHash,
         );
 
-        let opBlockLevel;
-        if (opDetails) {
-          opBlockLevel = opDetails.opBlockLevel;
-        }
-
-        if (!opBlockLevel) {
+        if (!blockLevel) {
           nbOfRetry--;
           continue;
         }
 
-        return opBlockLevel;
+        return blockLevel;
       } catch (err) {
         if (!(err instanceof OperationNotFoundError)) {
           this.logger.error(
@@ -111,11 +103,9 @@ export class IndexerPool {
     {
       operationHash,
       nbOfConfirmation,
-      opExpirationInMinutes,
     }: {
       operationHash: string;
       nbOfConfirmation: number;
-      opExpirationInMinutes: number;
     },
     nbOfRetry: number,
   ): Promise<boolean | undefined> {
@@ -137,7 +127,6 @@ export class IndexerPool {
           tezosService,
           operationHash,
           nbOfConfirmation,
-          opExpirationInMinutes,
         );
 
         if (isConfirmed !== undefined) {
@@ -146,10 +135,7 @@ export class IndexerPool {
 
         nbOfRetry--;
       } catch (err) {
-        if (
-          !(err instanceof OperationNotFoundError) &&
-          !(err instanceof OperationExpiredError)
-        ) {
+        if (!(err instanceof OperationNotFoundError)) {
           this.logger.error(
             {
               err,

@@ -93,7 +93,7 @@ describe('[processes/web/api/contract] Contract controller', () => {
       );
 
       expect(status).toEqual(200);
-      expect(body.length).toEqual(3);
+      expect(body.length).toEqual(10);
     });
 
     it('should return 200 and the origination operation in the operations list, and use Tzstats indexer when query param "indexer" is set to "tzstats"', async () => {

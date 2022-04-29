@@ -62,7 +62,12 @@ export class GatewayPool {
    */
   public async removeOperationFromMempool(operationHash: string) {
     try {
-      const tezosUrl = this.getRandomNodeURL();
+      // We exlude smartpy from the possibilities as it doesn't handle baning an operation
+      const tezosNodeUrls = this.tezosNodeUrls.filter(
+        (url) => !url.includes('smartpy'),
+      );
+      const index = generateRandomInt(tezosNodeUrls.length);
+      const tezosUrl = tezosNodeUrls[index];
 
       this.logger.info(
         {
@@ -72,14 +77,10 @@ export class GatewayPool {
         '[GatewayPool/removeOperationFromMempool] Using this node to remove this operation',
       );
 
-      const { body: result } = await superagent
+      await superagent
         .post(`${tezosUrl}/chains/main/mempool/ban_operation`)
         .send(`"${operationHash}"`)
         .set('Content-Type', 'application/json');
-
-      this.logger.info(result);
-
-      return;
     } catch (err) {
       this.logger.error(
         err,
