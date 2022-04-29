@@ -7,19 +7,26 @@ import {
   updateJobStatus,
 } from '../../../../models/jobs';
 import { IndexerPool } from '../../../../services/indexer-pool';
-import { nbOfConfirmation, nbOfRetry } from '../../../../config';
+import {
+  nbOfConfirmation,
+  nbOfRetry,
+  operationExpirationTimeoutInMinutes,
+} from '../../../../config';
 import { JobStatus } from '../../../../const/job-status';
 import { OperationNotFoundError } from '../../../../const/errors/indexer-error';
 import { AmqpService } from '../../../../services/amqp';
 import {
   isOperationAReveal,
   selectOperation,
+  updateOperationUpdateDate,
 } from '../../../../models/operations';
 import { TransactionParametersJson } from '../../../../const/interfaces/transaction-parameters-json';
 import {
   publishEventWhenRevealConfirmed,
   publishEventWhenTransactionsConfirmed,
 } from './publish-confirmed-transaction-event';
+import { GatewayPool } from '../../../../services/gateway-pool';
+import { DateTime } from 'luxon';
 
 /**
  * Check the operations (of all the jobs that has status "submitted" and operation hash) has been confirmed
@@ -36,11 +43,13 @@ export async function checkOperationStatus(
     tezosService,
     amqpService,
     indexerPool,
+    gatewayPool,
   }: {
     postgreService: PostgreService;
     tezosService: TezosService;
     amqpService: AmqpService;
     indexerPool: IndexerPool;
+    gatewayPool: GatewayPool;
   },
   logger: Logger,
 ) {
@@ -52,7 +61,10 @@ export async function checkOperationStatus(
         if (
           await indexerPool.checkIfOperationIsConfirmedByRandomIndexer(
             tezosService,
-            { operationHash: job.operation_hash as string, nbOfConfirmation },
+            {
+              operationHash: job.operation_hash as string,
+              nbOfConfirmation,
+            },
             nbOfRetry,
           )
         ) {
@@ -63,7 +75,16 @@ export async function checkOperationStatus(
           );
           logger.info(
             { updatedJob },
-            '[lib/checkOperationStatus] Successfully update the job',
+            '[lib/checkOperationStatus] Successfully update the job with SUCCESS status',
+          );
+
+          const updatedOperations = await updateOperationUpdateDate(
+            postgreService.pool,
+            job.id,
+          );
+          logger.info(
+            { update_time: updatedOperations[0]?.update_time, jobId: job.id },
+            '[lib/checkOperationStatus] Successfully updated update_date of operations with jobId',
           );
 
           const operations = await selectOperation(
@@ -119,6 +140,60 @@ export async function checkOperationStatus(
           );
         }
       } catch (err) {
+        if (err instanceof OperationNotFoundError) {
+          const operations = await selectOperation(
+            postgreService.pool,
+            '*',
+            `job_id=${job.id}`,
+          );
+
+          const opCreationDate = operations[0].creation_date;
+
+          if (!opCreationDate) return;
+
+          const opExpiredDate = DateTime.fromISO(opCreationDate)
+            .plus({ minutes: operationExpirationTimeoutInMinutes })
+            .toString();
+
+          const currentDate = DateTime.now().toString();
+
+          if (currentDate > opExpiredDate) {
+            try {
+              await gatewayPool.removeOperationFromMempool(
+                job.operation_hash as string,
+              );
+              logger.info(
+                { operation_hash: job.operation_hash },
+                '[lib/checkOperationStatus] Successfully removed the operation from the mempool with operation hash',
+              );
+            } catch (e) {
+              logger.info(
+                { operation_hash: job.operation_hash },
+                "[lib/checkOperationStatus] Couldn't removed the operation from the mempool with operation hash",
+              );
+            }
+
+            const updatedJob = await updateJobStatus(
+              postgreService.pool,
+              JobStatus.ERROR,
+              job.id,
+            );
+            logger.info(
+              { updatedJob },
+              '[lib/checkOperationStatus] Successfully updated the job to ERROR status',
+            );
+
+            const updatedOperations = await updateOperationUpdateDate(
+              postgreService.pool,
+              job.id,
+            );
+            logger.info(
+              { update_time: updatedOperations[0].update_time, jobId: job.id },
+              '[lib/checkOperationStatus] Successfully updated update_date of operations with jobId',
+            );
+          }
+        }
+
         if (!(err instanceof OperationNotFoundError)) {
           logger.error(
             { err },

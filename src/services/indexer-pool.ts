@@ -83,7 +83,7 @@ export class IndexerPool {
             {
               err,
             },
-            '[IndexerPool/getOperationByRandomIndexer] Unexpect error happened',
+            '[IndexerPool/getOperationByRandomIndexer] Unexpected error happened',
           );
         }
 
@@ -129,7 +129,7 @@ export class IndexerPool {
           nbOfConfirmation,
         );
 
-        if (typeof isConfirmed === 'boolean') {
+        if (isConfirmed !== undefined) {
           return isConfirmed;
         }
 

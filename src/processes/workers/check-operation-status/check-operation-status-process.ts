@@ -95,6 +95,7 @@ export class CheckOperationStatusProcess extends AbstractProcess {
         tezosService,
         amqpService: this.amqpService,
         indexerPool: this.indexerPool,
+        gatewayPool: this.gatewayPool,
       },
       this.logger,
     );
@@ -106,6 +107,7 @@ export class CheckOperationStatusProcess extends AbstractProcess {
           tezosService,
           amqpService: this.amqpService,
           indexerPool: this.indexerPool,
+          gatewayPool: this.gatewayPool,
         },
         this.logger,
       );

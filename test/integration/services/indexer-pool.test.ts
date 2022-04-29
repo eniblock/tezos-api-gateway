@@ -51,6 +51,7 @@ describe('[services/indexer-pool]', () => {
     });
 
     afterEach(() => {
+      jest.restoreAllMocks();
       nock.cleanAll();
     });
 
@@ -81,7 +82,7 @@ describe('[services/indexer-pool]', () => {
           {
             err: Error('Unexpected error'),
           },
-          '[IndexerPool/getOperationByRandomIndexer] Unexpect error happened',
+          '[IndexerPool/getOperationByRandomIndexer] Unexpected error happened',
         ],
       ]);
       expect(getRandomIndexerSpy).toHaveBeenCalledTimes(1);

@@ -1,5 +1,6 @@
 import { Pool } from 'pg';
 import format from 'pg-format';
+import { DateTime } from 'luxon';
 
 import { PostgreTables } from '../const/postgre/postgre-tables';
 import { TransactionParametersJson } from '../const/interfaces/transaction-parameters-json';
@@ -41,7 +42,7 @@ export function insertOperations(
 
   return pool.query(
     format(
-      `INSERT INTO %s (destination, parameters, parameters_json, amount, fee, source, storage_limit, gas_limit, counter, branch, job_id, caller_id, kind, public_key) 
+      `INSERT INTO %s (destination, parameters, parameters_json, amount, fee, source, storage_limit, gas_limit, counter, branch, job_id, caller_id, kind, public_key, creation_date, update_date) 
     VALUES %L RETURNING *`,
       TABLE_NAME,
       values,
@@ -55,6 +56,8 @@ function mapOperationValues(
   jobId: number,
   callerId: string,
 ): any[] {
+  const currentDate = DateTime.now().toString();
+
   if (isOperationAReveal(op)) {
     return [
       '',
@@ -71,6 +74,8 @@ function mapOperationValues(
       callerId,
       op.kind,
       op.public_key,
+      currentDate,
+      null,
     ];
   }
 
@@ -88,6 +93,8 @@ function mapOperationValues(
     jobId,
     callerId,
     op.kind,
+    null,
+    currentDate,
     null,
   ];
 }
@@ -121,6 +128,7 @@ export async function insertTransaction(
     callerId?: string;
   },
 ) {
+  const currentDate = DateTime.now().toString();
   const values = [
     destination,
     source,
@@ -129,10 +137,11 @@ export async function insertTransaction(
     jobId,
     callerId,
     OpKind.TRANSACTION,
+    currentDate,
   ];
   return pool.query(
     format(
-      `INSERT INTO %s (destination, source, parameters_json, amount, job_id, caller_id, kind)
+      `INSERT INTO %s (destination, source, parameters_json, amount, job_id, caller_id, kind, creation_date)
         VALUES (%L) RETURNING *`,
       TABLE_NAME,
       values,
@@ -174,4 +183,20 @@ export function isOperationAReveal(
   operation: any,
 ): operation is OperationContentsReveal {
   return operation.kind === OpKind.REVEAL;
+}
+
+/**
+ * Update the operations' update_date field linked to a job
+ *
+ * @param {object} pool               - the postgre pool
+ * @param {string} status             - the job id
+ *
+ * @return Promise<object> the updated result
+ */
+export async function updateOperationUpdateDate(pool: Pool, jobId: number) {
+  return (
+    await pool.query(
+      `UPDATE ${TABLE_NAME} SET update_date = '${DateTime.now().toString()}' WHERE job_id = ${jobId} RETURNING *`,
+    )
+  ).rows;
 }

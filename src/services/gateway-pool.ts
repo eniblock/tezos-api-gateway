@@ -3,6 +3,7 @@ import Logger from 'bunyan';
 
 import { generateRandomInt } from '../utils';
 import { TezosService } from './tezos';
+import superagent from 'superagent';
 
 export class GatewayPool {
   private _tezosNodeUrls: string[];
@@ -37,17 +38,56 @@ export class GatewayPool {
   }
 
   public async getTezosService() {
-    let index = generateRandomInt(this.tezosNodeUrls.length);
-    let tezosUrl = this.tezosNodeUrls[index];
+    let tezosUrl = this.getRandomNodeURL();
     let tezosService = new TezosService(tezosUrl);
 
     while (!(await this.healthCheck(tezosService))) {
-      index = generateRandomInt(this.tezosNodeUrls.length);
-      tezosUrl = this.tezosNodeUrls[index];
+      tezosUrl = this.getRandomNodeURL();
 
       tezosService = new TezosService(tezosUrl);
     }
 
     return tezosService;
+  }
+
+  public getRandomNodeURL(): string {
+    const index = generateRandomInt(this.tezosNodeUrls.length);
+    return this.tezosNodeUrls[index];
+  }
+
+  /**
+   * @description         - Get a random indexer then tries to remove an operation from the mempool
+   * @param userAddress   - User address
+   * @param nbOfRetry     - If a indexer fails the number of retry
+   */
+  public async removeOperationFromMempool(operationHash: string) {
+    try {
+      // We exlude smartpy from the possibilities as it doesn't handle baning an operation
+      const tezosNodeUrls = this.tezosNodeUrls.filter(
+        (url) => !url.includes('smartpy'),
+      );
+      const index = generateRandomInt(tezosNodeUrls.length);
+      const tezosUrl = tezosNodeUrls[index];
+
+      this.logger.info(
+        {
+          nodeUrl: tezosUrl,
+          operationHash,
+        },
+        '[GatewayPool/removeOperationFromMempool] Using this node to remove this operation',
+      );
+
+      await superagent
+        .post(`${tezosUrl}/chains/main/mempool/ban_operation`)
+        .send(`"${operationHash}"`)
+        .set('Content-Type', 'application/json');
+    } catch (err) {
+      this.logger.error(
+        err,
+        '[GatewayPool/removeOperationFromMempool] An unexpected error happened',
+      );
+
+      throw err;
+    }
   }
 }
