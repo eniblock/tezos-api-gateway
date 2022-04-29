@@ -535,7 +535,7 @@ describe('[lib/jobs/forge-operation]', () => {
           amount: 0,
           fee: insertedTransactionsParameters[1].fee,
           source: activatedAccount.address,
-          storage_limit: 1,
+          storage_limit: 0,
           gas_limit: insertedTransactionsParameters[1].gas_limit,
           branch: insertedTransactionsParameters[1].branch,
           counter: insertedTransactionsParameters[1].counter,

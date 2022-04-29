@@ -50,6 +50,7 @@ const tzstatsIndexerConfig: IndexerConfig = {
   keyToBlockLevel: process.env.TZSTATS_KEY_TO_BLOCK_LEVEL || 'height',
   keyToBalance: 'spendable_balance',
   keyToReveal: 'is_revealed',
+  keyToCreationDate: 'time',
 };
 
 const tzktIndexerConfig: IndexerConfig = {
@@ -61,6 +62,7 @@ const tzktIndexerConfig: IndexerConfig = {
   keyToOperation: parseInt(0, process.env.TZKT_KEY_TO_OPERATION),
   keyToBlockLevel: process.env.TZKT_KEY_TO_BLOCK_LEVEL || 'level',
   keyToReveal: 'revealed',
+  keyToCreationDate: 'timestamp',
 };
 
 export const indexerConfigs: IndexerConfig[] = [
@@ -71,6 +73,11 @@ export const indexerConfigs: IndexerConfig[] = [
 export const nbOfConfirmation = parseInt(
   3,
   process.env.NUMBER_OF_OPERATION_CONFIRMATION,
+);
+
+export const operationExpirationTimeoutInMinutes = parseInt(
+  8,
+  process.env.OPERATION_EXPIRATION_TIMEOUT_IN_MINUTES,
 );
 
 export const nbOfRetry = parseInt(3, process.env.NUMBER_OF_INDEXERS_RETRY);

@@ -48,7 +48,7 @@ export class IndexerClient extends AbstractClient {
         operationHash,
         indexerName: name,
       },
-      '[services/indexer] Calling the indexer to get the operation status',
+      '[IndexerClient/getOperationBlockLevel] Calling the indexer to get the operation status',
     );
 
     const getOperationUrl = url.resolve(
@@ -67,7 +67,7 @@ export class IndexerClient extends AbstractClient {
 
       this.logger.info(
         { operation },
-        '[IndexerClient/getOperation] Successfully fetched the operation details',
+        '[IndexerClient/getOperationBlockLevel] Successfully fetched the operation details',
       );
 
       return operation[keyToBlockLevel];
@@ -77,6 +77,7 @@ export class IndexerClient extends AbstractClient {
       }
 
       this.handleError(err, { operationHash, indexerConfig: this.config });
+      return;
     }
   }
 
@@ -93,7 +94,7 @@ export class IndexerClient extends AbstractClient {
     tezosService: TezosService,
     operationHash: string,
     nbOfConfirmation: number,
-  ) {
+  ): Promise<boolean | undefined> {
     try {
       const operationBlockLevel = await this.getOperationBlockLevel(
         operationHash,
@@ -106,6 +107,7 @@ export class IndexerClient extends AbstractClient {
       const {
         header: { level: currentBlock },
       } = await tezosService.getLatestBlock();
+
       return currentBlock - operationBlockLevel >= nbOfConfirmation;
     } catch (err) {
       if (!(err instanceof OperationNotFoundError)) {

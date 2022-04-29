@@ -1,4 +1,5 @@
 import { OpKind } from '@taquito/rpc';
+import { Settings } from 'luxon';
 
 import { postgreConfig } from '../../__fixtures__/config';
 import { resetTable, selectData } from '../../__utils__/postgre';
@@ -17,8 +18,10 @@ import { testAccount2 } from '../../__fixtures__/smart-contract';
 describe('[models/operations]', () => {
   const postgreService = new PostgreService(postgreConfig);
   let insertedJob: Jobs;
+  const oldNow = Settings.now;
 
   beforeAll(async () => {
+    Settings.now = () => new Date(2022, 3, 28).valueOf();
     await postgreService.initializeDatabase();
 
     const { rows: result } = await insertJob(postgreService.pool, {
@@ -32,6 +35,7 @@ describe('[models/operations]', () => {
 
   afterAll(async () => {
     await postgreService.disconnect();
+    Settings.now = oldNow;
   });
 
   beforeEach(async () => {
@@ -115,6 +119,7 @@ describe('[models/operations]', () => {
           storage_limit: 1000,
           gas_limit: 10000,
           counter: 1234567,
+          creation_date: '2022-04-28T00:00:00.000+00:00',
           source: 'source',
           parameters:
             '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"' +
@@ -129,6 +134,7 @@ describe('[models/operations]', () => {
           caller_id: 'myCaller',
           kind: OpKind.TRANSACTION,
           public_key: null,
+          update_date: null,
         },
         {
           id: insertedResult[1].id,
@@ -138,6 +144,7 @@ describe('[models/operations]', () => {
           storage_limit: 1000,
           gas_limit: 10000,
           counter: 1234567,
+          creation_date: '2022-04-28T00:00:00.000+00:00',
           source: 'source',
           parameters:
             '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"' +
@@ -152,6 +159,7 @@ describe('[models/operations]', () => {
           caller_id: 'myCaller',
           kind: OpKind.TRANSACTION,
           public_key: null,
+          update_date: null,
         },
       ]);
     });
@@ -237,6 +245,7 @@ describe('[models/operations]', () => {
           storage_limit: null,
           gas_limit: null,
           counter: null,
+          creation_date: '2022-04-28T00:00:00.000+00:00',
           source: 'source',
           parameters: null,
           parameters_json:
@@ -248,6 +257,7 @@ describe('[models/operations]', () => {
           caller_id: 'myCaller',
           kind: OpKind.TRANSACTION,
           public_key: null,
+          update_date: null,
         },
       ]);
     });
@@ -375,6 +385,7 @@ describe('[models/operations]', () => {
           storage_limit: 1000,
           gas_limit: 10000,
           counter: 1234567,
+          creation_date: '2022-04-28T00:00:00.000+00:00',
           source: 'source',
           parameters:
             '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"' +
@@ -389,6 +400,7 @@ describe('[models/operations]', () => {
           caller_id: 'myCaller',
           kind: OpKind.TRANSACTION,
           public_key: null,
+          update_date: null,
         },
         {
           id: result[1].id,
@@ -398,6 +410,7 @@ describe('[models/operations]', () => {
           storage_limit: 1000,
           gas_limit: 10000,
           counter: 1234567,
+          creation_date: '2022-04-28T00:00:00.000+00:00',
           source: 'source',
           parameters:
             '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"' +
@@ -412,6 +425,7 @@ describe('[models/operations]', () => {
           caller_id: 'myCaller',
           kind: OpKind.TRANSACTION,
           public_key: null,
+          update_date: null,
         },
       ]);
     });

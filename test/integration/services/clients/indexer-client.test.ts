@@ -27,7 +27,7 @@ describe('[services/clients] Indexer Client', () => {
     nock.cleanAll();
   });
 
-  describe('#getOperationBlockLevel', () => {
+  describe('#getOperationDetails', () => {
     it('should return undefined when the indexer throw any errors that is not NOT_FOUND', async () => {
       const loggerInfoSpies: any[] = [];
       const nocks: nock.Scope[] = [];
@@ -66,7 +66,7 @@ describe('[services/clients] Indexer Client', () => {
       await Promise.all(indexerPromises);
     }, 8000);
 
-    it('should return the block level of the operation', async () => {
+    it('should return the details of the operation', async () => {
       const indexerPromises: Promise<void>[] = [];
       for (const indexer of indexerClients) {
         indexerPromises.push(
@@ -142,7 +142,7 @@ describe('[services/clients] Indexer Client', () => {
           operationHash,
           20,
         ),
-      ).resolves.toBeUndefined();
+      ).resolves.toBeFalsy();
 
       indexerNock.done();
     });

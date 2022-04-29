@@ -17,6 +17,8 @@ export interface Operation {
   caller_id: string;
   kind: OpKind.REVEAL | OpKind.TRANSACTION;
   public_key?: string;
+  creation_date: string;
+  update_date: string;
 }
 
 export interface IndexerTransaction {
