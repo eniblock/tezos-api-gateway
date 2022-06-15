@@ -7,7 +7,7 @@ import {
 } from '../../../../../__fixtures__/config';
 import { WebProcess } from '../../../../../../src/processes/web/web-process';
 import { PostgreService } from '../../../../../../src/services/postgre';
-import { testAccount } from '../../../../../__fixtures__/smart-contract';
+import { activatedAccount } from '../../../../../__fixtures__/smart-contract';
 
 describe('[processes/web/api/user] Create user controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -70,13 +70,12 @@ describe('[processes/web/api/user] Create user controller', () => {
 
     it('Should return 200 and the user information with a good address', async () => {
       const { body, status } = await request.get(
-        `/api/user/info/${testAccount}`,
+        `/api/user/info/${activatedAccount.address}`,
       );
 
       expect(status).toEqual(200);
-      expect(body).toEqual({
-        account: testAccount,
-        balance: body.balance,
+      expect(body).toMatchObject({
+        account: activatedAccount.address,
         revealed: false,
         activated: true,
       });

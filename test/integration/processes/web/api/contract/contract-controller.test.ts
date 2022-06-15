@@ -89,11 +89,16 @@ describe('[processes/web/api/contract] Contract controller', () => {
 
     it('should use return the correct number of operations when query param limit is set', async () => {
       const { body, status } = await request.get(
-        `/api/contract/${simpleContract}/calls?limit=20`,
+        `/api/contract/${simpleContract}/calls?`,
       );
-
       expect(status).toEqual(200);
       expect(body.length).toEqual(10);
+
+      const { body: body2, status: status2 } = await request.get(
+        `/api/contract/${simpleContract}/calls?limit=5`,
+      );
+      expect(status2).toEqual(200);
+      expect(body2.length).toEqual(5);
     });
 
     it('should return 200 and the origination operation in the operations list, and use Tzstats indexer when query param "indexer" is set to "tzstats"', async () => {

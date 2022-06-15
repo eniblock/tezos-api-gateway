@@ -13,6 +13,7 @@ import {
 } from '../../../__fixtures__/smart-contract';
 import { logger } from '../../../__fixtures__/services/logger';
 import { InvalidContractAddressError } from '@taquito/utils';
+import BigNumber from 'bignumber.js';
 
 describe('[lib/storage/get-contract-storage]', () => {
   const tezosService = new TezosService(tezosNodeUrl);
@@ -30,23 +31,18 @@ describe('[lib/storage/get-contract-storage]', () => {
       );
 
       expect(storage).toBeDefined();
-      expect(JSON.stringify(storage)).toEqual(
-        '{' +
-          '"allowed":"48950",' +
-          '"balances":"48951",' +
-          '"decimals":"10",' +
-          '"locked":false,' +
-          '"name":"name",' +
-          '"newOwner":"' +
-          flexibleTokenContractOwner +
-          '",' +
-          '"owner":"' +
-          flexibleTokenContractOwner +
-          '",' +
-          '"symbol":"symbol",' +
-          '"totalSupply":"40"' +
-          '}',
+      expect(Object.keys(storage)).toEqual(
+        expect.arrayContaining(['allowed', 'balances']),
       );
+      expect(storage).toMatchObject({
+        decimals: new BigNumber(10),
+        locked: false,
+        name: 'name',
+        newOwner: flexibleTokenContractOwner,
+        owner: flexibleTokenContractOwner,
+        symbol: 'symbol',
+        totalSupply: new BigNumber(40),
+      });
     });
 
     it('should throw ClientError if the contract address does not exist', async () => {
@@ -114,14 +110,12 @@ describe('[lib/storage/get-contract-storage]', () => {
         flexibleTokenContract,
       );
 
-      expect(storage).toEqual({
+      expect(storage).toMatchObject({
         allowed: {
           type: 'big_map',
-          value: '48950',
         },
         balances: {
           type: 'big_map',
-          value: '48951',
         },
         decimals: 10,
         locked: false,
@@ -141,10 +135,9 @@ describe('[lib/storage/get-contract-storage]', () => {
         ['allowed', 'age', 'name', 'decimals'],
       );
 
-      expect(storage).toEqual({
+      expect(storage).toMatchObject({
         allowed: {
           type: 'big_map',
-          value: '48950',
         },
         age: {
           error: 'This data field does not exist in the contract storage',
@@ -162,10 +155,9 @@ describe('[lib/storage/get-contract-storage]', () => {
         ['allowed', 'age', 'name', 'decimals', {}, ''],
       );
 
-      expect(storage).toEqual({
+      expect(storage).toMatchObject({
         allowed: {
           type: 'big_map',
-          value: '48950',
         },
         age: {
           error: 'This data field does not exist in the contract storage',

@@ -110,7 +110,7 @@ describe('[models/operations]', () => {
           tableName: PostgreTables.OPERATIONS,
           selectFields: '*',
         }),
-      ).resolves.toEqual([
+      ).resolves.toMatchObject([
         {
           id: insertedResult[0].id,
           destination: 'destination',
@@ -119,7 +119,6 @@ describe('[models/operations]', () => {
           storage_limit: 1000,
           gas_limit: 10000,
           counter: 1234567,
-          creation_date: '2022-04-28T00:00:00.000+00:00',
           source: 'source',
           parameters:
             '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"' +
@@ -144,7 +143,6 @@ describe('[models/operations]', () => {
           storage_limit: 1000,
           gas_limit: 10000,
           counter: 1234567,
-          creation_date: '2022-04-28T00:00:00.000+00:00',
           source: 'source',
           parameters:
             '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"' +
@@ -236,7 +234,7 @@ describe('[models/operations]', () => {
           tableName: PostgreTables.OPERATIONS,
           selectFields: '*',
         }),
-      ).resolves.toEqual([
+      ).resolves.toMatchObject([
         {
           id: insertedResult[0].id,
           destination: 'destination',
@@ -245,7 +243,6 @@ describe('[models/operations]', () => {
           storage_limit: null,
           gas_limit: null,
           counter: null,
-          creation_date: '2022-04-28T00:00:00.000+00:00',
           source: 'source',
           parameters: null,
           parameters_json:
@@ -376,7 +373,7 @@ describe('[models/operations]', () => {
 
     it('should correctly return all data in the database', async () => {
       const result = await selectOperation(postgreService.pool, '*');
-      expect(result).toEqual([
+      expect(result).toMatchObject([
         {
           id: result[0].id,
           destination: 'destination',
@@ -385,7 +382,6 @@ describe('[models/operations]', () => {
           storage_limit: 1000,
           gas_limit: 10000,
           counter: 1234567,
-          creation_date: '2022-04-28T00:00:00.000+00:00',
           source: 'source',
           parameters:
             '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"' +
@@ -410,7 +406,6 @@ describe('[models/operations]', () => {
           storage_limit: 1000,
           gas_limit: 10000,
           counter: 1234567,
-          creation_date: '2022-04-28T00:00:00.000+00:00',
           source: 'source',
           parameters:
             '{"entrypoint":"transfer","value":{"prim":"Pair","args":[{"string":"' +
