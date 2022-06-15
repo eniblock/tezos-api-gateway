@@ -53,7 +53,7 @@ const tzstatsIndexerConfig: IndexerConfig = {
   keyToCreationDate: 'time',
 };
 
-const tzktIndexerConfig: IndexerConfig = {
+/* const tzktIndexerConfig: IndexerConfig = {
   name: IndexerEnum.TZKT,
   apiUrl: process.env.TZKT_URL || 'https://api.jakartanet.tzkt.io/',
   pathToOperation: 'v1/operations/',
@@ -63,11 +63,11 @@ const tzktIndexerConfig: IndexerConfig = {
   keyToBlockLevel: process.env.TZKT_KEY_TO_BLOCK_LEVEL || 'level',
   keyToReveal: 'revealed',
   keyToCreationDate: 'timestamp',
-};
+}; */
 
 export const indexerConfigs: IndexerConfig[] = [
   tzstatsIndexerConfig,
-  tzktIndexerConfig,
+  // tzktIndexerConfig,
 ];
 
 export const nbOfConfirmation = parseInt(

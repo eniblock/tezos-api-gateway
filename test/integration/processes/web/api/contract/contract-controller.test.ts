@@ -48,7 +48,7 @@ describe('[processes/web/api/contract] Contract controller', () => {
   });
 
   describe('#getTransactionListOfSC', () => {
-    it('should return 400 when parameter is set and indexer is set to Tzstats', async () => {
+    /* it('should return 400 when parameter is set and indexer is set to Tzstats', async () => {
       const { body, status } = await request.get(
         `/api/contract/${flexibleTokenContract}/calls?parameter=*tz1VbHay2YPpiuPYs8SQHynuW3YvGtNuB29z*&indexer=tzstats`,
       );
@@ -58,7 +58,7 @@ describe('[processes/web/api/contract] Contract controller', () => {
         'Query param "parameter" shouldn\'t be set when query param "indexer" equals "tzstats".\' +' +
           'Either remove "parameter" to target Tzstats or remove "indexer" to automatically target TZKT',
       );
-    });
+    }); */
 
     it('should return 200 and the operations list', async () => {
       const { body, status } = await request.get(
@@ -69,7 +69,7 @@ describe('[processes/web/api/contract] Contract controller', () => {
       expect(body).toEqual([{ ...firstTx, indexer: body[0].indexer }]);
     });
 
-    it('should use TZKT indexer when query param "parameter" is set', async () => {
+    /* it('should use TZKT indexer when query param "parameter" is set', async () => {
       const { body, status } = await request.get(
         `/api/contract/${flexibleTokenContract}/calls?parameter=*tz1VbHay2YPpiuPYs8SQHynuW3YvGtNuB29z*`,
       );
@@ -85,7 +85,7 @@ describe('[processes/web/api/contract] Contract controller', () => {
 
       expect(status).toEqual(200);
       expect(body).toEqual([{ ...firstTx, indexer: IndexerEnum.TZKT }]);
-    });
+    }); */
 
     it('should use return the correct number of operations when query param limit is set', async () => {
       const { body, status } = await request.get(
