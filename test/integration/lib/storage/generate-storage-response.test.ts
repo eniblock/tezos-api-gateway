@@ -33,14 +33,12 @@ describe('[lib/storage/generateStorageResponse]', () => {
         flexibleTokenContract,
       );
 
-      expect(generateStorageResponse(storage)).toEqual({
+      expect(generateStorageResponse(storage)).toMatchObject({
         allowed: {
           type: 'big_map',
-          value: '48950',
         },
         balances: {
           type: 'big_map',
-          value: '48951',
         },
         decimals: 10,
         locked: false,
@@ -59,10 +57,9 @@ describe('[lib/storage/generateStorageResponse]', () => {
         FA2Contract4,
       );
 
-      expect(generateStorageResponse(storage)).toEqual({
+      expect(generateStorageResponse(storage)).toMatchObject({
         accessRequests: {
           type: 'big_map',
-          value: '45263',
         },
         organizations: [
           {
@@ -92,10 +89,9 @@ describe('[lib/storage/generateStorageResponse]', () => {
         FA2Contract3,
       );
 
-      expect(generateStorageResponse(storage)).toEqual({
+      expect(generateStorageResponse(storage)).toMatchObject({
         accessRequests: {
           type: 'big_map',
-          value: '45336',
         },
         organizations: [
           {

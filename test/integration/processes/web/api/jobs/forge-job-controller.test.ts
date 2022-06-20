@@ -403,7 +403,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
           'destination, parameters, parameters_json, amount, fee, source, storage_limit, gas_limit, counter, branch, job_id, caller_id',
       });
 
-      expect(insertedForgeParameters).toEqual([
+      expect(insertedForgeParameters).toMatchObject([
         {
           destination: flexibleTokenContract,
           parameters:
@@ -415,10 +415,8 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
             testAccount2 +
             '"}}}',
           amount: 0,
-          fee: 789,
           source: revealedAccount.address,
           storage_limit: 0,
-          gas_limit: 4805,
           branch: insertedForgeParameters[0].branch,
           counter: insertedForgeParameters[0].counter,
           job_id: body.id,
@@ -429,10 +427,8 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
           parameters: '{"entrypoint":"lock","value":{"prim":"Unit"}}',
           parameters_json: '{"entrypoint":"lock","value":{"lock":0}}',
           amount: 0,
-          fee: 442,
           source: revealedAccount.address,
           storage_limit: 0,
-          gas_limit: 1332,
           branch: insertedForgeParameters[1].branch,
           counter: insertedForgeParameters[1].counter,
           job_id: body.id,

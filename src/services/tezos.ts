@@ -69,7 +69,7 @@ export class TezosService {
   public async forgeOperations(
     forgeParams: (OperationContentsTransaction | OperationContentsReveal)[],
   ): Promise<ForgeOperationResult> {
-    const { hash: branch } = await this.rpcClient.getBlockHeader();
+    const branch = await this.rpcClient.getBlockHash();
     const forgedOperation = await this.rpcClient.forgeOperations({
       branch,
       contents: forgeParams,

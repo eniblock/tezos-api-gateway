@@ -5,6 +5,7 @@ import {
   ProxyContract,
   SingleEntrypointContract,
   testAccount,
+  testAccount2,
 } from '../../../__fixtures__/smart-contract';
 import {
   formatEntryPointParameters,
@@ -229,19 +230,25 @@ describe('[lib/smart-contracts] Index', () => {
           value: [
             {
               args: [
-                [
-                  {
-                    args: [
-                      {
-                        string: 'operator',
-                      },
-                      {
-                        string: testAccount,
-                      },
-                    ],
-                    prim: 'Elt',
-                  },
-                ],
+                {
+                  args: [
+                    {
+                      string: testAccount,
+                    },
+                    {
+                      args: [
+                        {
+                          string: testAccount2,
+                        },
+                        {
+                          int: '0',
+                        },
+                      ],
+                      prim: 'Pair',
+                    },
+                  ],
+                  prim: 'Pair',
+                },
               ],
               prim: 'Left',
             },
@@ -251,12 +258,11 @@ describe('[lib/smart-contracts] Index', () => {
       };
       const params = [
         {
-          add: [
-            {
-              key: 'operator',
-              value: testAccount,
-            },
-          ],
+          add_operator: {
+            operator: testAccount,
+            owner: testAccount2,
+            token_id: 0,
+          },
         },
       ];
 
@@ -266,7 +272,7 @@ describe('[lib/smart-contracts] Index', () => {
         'single_entry',
         params,
       );
-      expect(contractMethod.toTransferParams()).toEqual(operation);
+      expect(contractMethod.toTransferParams()).toMatchObject(operation);
 
       contractMethod = getContractMethod(
         logger,
@@ -274,7 +280,7 @@ describe('[lib/smart-contracts] Index', () => {
         'default',
         params,
       );
-      expect(contractMethod.toTransferParams()).toEqual(operation);
+      expect(contractMethod.toTransferParams()).toMatchObject(operation);
     });
   });
 

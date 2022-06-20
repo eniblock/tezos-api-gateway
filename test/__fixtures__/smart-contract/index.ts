@@ -3,15 +3,15 @@ export const signedTransaction =
 export const signature =
   'edsigtorku6MkHkh8X97m5KofrJjQ18xT94JxjGjsQDsG9xrQ5P2wqHmE9H3FNew7hKMVFBGm8qsdcbtVC8V6g6rhEDQSALZbiA';
 export const branch = 'BLGPF5StvDnNGBpAV9uYNJUiCdw2vz7HRCUwxNEmh61EYYCbGNH';
-export const flexibleTokenContract = 'KT1FQYC514saqtqWoEPiPWEpb7wVUjZQwTCY'; // flexibleToken.py
-export const simpleContract = 'KT19V8oSYJFrXvX1Pkpdb8ketWgXoVPhk2zz'; // template simple examples calculator
-export const FA2Contract = 'KT1KM9dKY6tcUbLwM8ms6rkyR3xfHzXvYXsY'; // template FA2
-export const FA2Contract3 = 'KT1SSzDFYLfiMqHQpQK4SUqNHGwzcWj34hdm'; // smartContractWithComplexedMapAndBigMap.py
-export const FA2Contract4 = 'KT1BY1GboNU13PSLL4amri9QNXk2xeThV159'; // simpleMapKeyContract.py
+export const flexibleTokenContract = 'KT1GGaoUtAGdYT8nFEE5LpkpyzFhZNKjRDDf'; // flexibleToken.py
+export const simpleContract = 'KT1RYvN4Q5mhPrhhUJ4hD38hwuVQV1RKuk9f'; // Calculator.py from SmartPy simple examples template
+export const FA2Contract = 'KT1XX45mU1BtQL5kcMsNSGdLn4ygCM1n5FR6'; // template FA2
+export const FA2Contract3 = 'KT1Gn5JqAxa5zb1z4hJWPvCegrwvB7V4xqJ1'; // smartContractWithComplexedMapAndBigMap.py
+export const FA2Contract4 = 'KT1N5pZUBJMATaKxyZweA2mrkzfEnZYzSPRC'; // simpleMapKeyContract.py
 export const FA2Contract5 = 'KT1938ykzsYS1FR3WAyTa2BUTuTadtV1M9v8'; // Nonexistent contract
 export const FA2Contract7 = 'Bad contract format                '; // Bad contract format
-export const ProxyContract = 'KT1ASi3SbwR2gWCUWrAQkrpV2PvBo2vb6Qo7'; // proxyTokenController.py
-export const SingleEntrypointContract = 'KT1P9Z2raXbGcanWRC2dRPLA2ty86W4pR8ZF'; // singleEntrypointContract.py
+export const ProxyContract = 'KT1PFMHc21P4GYuhurx5LgLXR4wCTws1vuSH'; // proxyTokenController.py
+export const SingleEntrypointContract = 'KT1GKQ2npEfGb6YKK9UyNP6bDyi1nbre6JJ9'; // singleEntrypointContract.py
 
 export const testAccount = 'tz1VbHay2YPpiuPYs8SQHynuW3YvGtNuB29z';
 export const testAccount2 = 'tz1Ric9o7YeBvbxXHnxhBMAjaMgKUnHUbYKB'; // Receiver account

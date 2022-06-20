@@ -1,6 +1,5 @@
 import { logger } from '../../../__fixtures__/services/logger';
 import { flexibleTokenContract } from '../../../__fixtures__/smart-contract';
-import superagent from 'superagent';
 import { IndexerPool } from '../../../../src/services/indexer-pool';
 import { IndexerEnum } from '../../../../src/const/interfaces/indexer';
 import { IndexerClient } from '../../../../src/services/clients/indexer-client';
@@ -9,14 +8,14 @@ import { UnsupportedIndexerError } from '../../../../src/const/errors/indexer-er
 
 describe('[services/clients] Indexer client Service', () => {
   let randomIndexer: IndexerClient;
-  let indexerClientTZKT: IndexerClient;
+  // let indexerClientTZKT: IndexerClient;
   let indexerClientTzstats: IndexerClient;
 
   beforeAll(async () => {
     const indexerPool = new IndexerPool(logger);
     await indexerPool.initializeIndexers();
     randomIndexer = indexerPool.getRandomIndexer();
-    indexerClientTZKT = indexerPool.getSpecificIndexer(IndexerEnum.TZKT);
+    // indexerClientTZKT = indexerPool.getSpecificIndexer(IndexerEnum.TZKT);
     indexerClientTzstats = indexerPool.getSpecificIndexer(IndexerEnum.TZSTATS);
   });
 
@@ -24,7 +23,7 @@ describe('[services/clients] Indexer client Service', () => {
     jest.restoreAllMocks();
   });
 
-  describe('#getTransactionListOfSC', () => {
+  /*describe('#getTransactionListOfSC', () => {
     it('should call buildURLForTransactionList and superagent', async () => {
       jest.mock('superagent');
       const superagentSpy = jest.spyOn(superagent, 'get');
@@ -38,7 +37,7 @@ describe('[services/clients] Indexer client Service', () => {
       expect(superagentSpy).toHaveBeenCalled();
       expect(buildURLSpy).toHaveBeenCalledWith(flexibleTokenContract, {});
     });
-  });
+  });*/
 
   describe('#buildURLForTransactionList', () => {
     it('should return domain/path and query params', async () => {
@@ -123,7 +122,7 @@ describe('[services/clients] Indexer client Service', () => {
       expect(FUT).toThrow(UnsupportedIndexerError);
     });
 
-    test('that all passed params are built when tzkt is used', () => {
+    /*test('that all passed params are built when tzkt is used', () => {
       const params: ContractTransactionsParams = {
         order: 'asc',
         entrypoint: 'name',
@@ -138,11 +137,11 @@ describe('[services/clients] Indexer client Service', () => {
         );
 
       expect(domainAndPath).toEqual(
-        'https://api.ithacanet.tzkt.io/v1/operations/transactions/',
+        'https://api.jakartanet.tzkt.io/v1/operations/transactions/',
       );
       expect(queryParams).toEqual(
         `limit=5&offset=8&target.eq=${flexibleTokenContract}&sort.asc=id&entrypoint.eq=name&parameter.as=*test`,
       );
-    });
+    });*/
   });
 });

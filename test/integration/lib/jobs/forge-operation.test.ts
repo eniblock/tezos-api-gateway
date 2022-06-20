@@ -328,7 +328,7 @@ describe('[lib/jobs/forge-operation]', () => {
           'destination, parameters, parameters_json, amount, fee, source, storage_limit, gas_limit, counter, branch, job_id',
       });
 
-      expect(insertedForgeParameters).toEqual([
+      expect(insertedForgeParameters).toMatchObject([
         {
           destination: flexibleTokenContract,
           parameters:
@@ -340,10 +340,8 @@ describe('[lib/jobs/forge-operation]', () => {
             testAccount2 +
             '"}}}',
           amount: 0,
-          fee: 813,
           source: revealedAccount.address,
           storage_limit: 0,
-          gas_limit: 4805,
           branch: insertedForgeParameters[0].branch,
           counter: insertedForgeParameters[0].counter,
           job_id: createdJob.id,
@@ -359,10 +357,8 @@ describe('[lib/jobs/forge-operation]', () => {
             testAccount2 +
             '"}}}',
           amount: 0,
-          fee: 531,
           source: revealedAccount.address,
           storage_limit: 0,
-          gas_limit: 1983,
           branch: insertedForgeParameters[1].branch,
           counter: insertedForgeParameters[1].counter,
           job_id: createdJob.id,
@@ -396,7 +392,7 @@ describe('[lib/jobs/forge-operation]', () => {
           'destination, parameters, parameters_json, amount, fee, source, storage_limit, gas_limit, counter, branch, job_id',
       });
 
-      expect(insertedForgeParameters).toEqual([
+      expect(insertedForgeParameters).toMatchObject([
         {
           destination: flexibleTokenContract,
           parameters:
@@ -408,10 +404,8 @@ describe('[lib/jobs/forge-operation]', () => {
             testAccount2 +
             '"}}}',
           amount: 0,
-          fee: 813,
           source: revealedAccount.address,
           storage_limit: 0,
-          gas_limit: 4805,
           branch: insertedForgeParameters[0].branch,
           counter: insertedForgeParameters[0].counter,
           job_id: createdJob.id,
@@ -427,10 +421,8 @@ describe('[lib/jobs/forge-operation]', () => {
             testAccount2 +
             '"}}}',
           amount: 0,
-          fee: 531,
           source: revealedAccount.address,
           storage_limit: 0,
-          gas_limit: 1983,
           branch: insertedForgeParameters[1].branch,
           counter: insertedForgeParameters[1].counter,
           job_id: createdJob.id,
@@ -511,16 +503,13 @@ describe('[lib/jobs/forge-operation]', () => {
         },
       );
 
-      expect(insertedTransactionsParameters).toEqual([
+      expect(insertedTransactionsParameters).toMatchObject([
         {
           destination: '',
           parameters: null,
           parameters_json: null,
           amount: null,
-          fee: 374,
           source: activatedAccount.address,
-          storage_limit: 0,
-          gas_limit: 1100,
           branch: insertedTransactionsParameters[0].branch,
           counter: insertedTransactionsParameters[0].counter,
           job_id: createdJob.id,
@@ -535,7 +524,6 @@ describe('[lib/jobs/forge-operation]', () => {
           amount: 0,
           fee: insertedTransactionsParameters[1].fee,
           source: activatedAccount.address,
-          storage_limit: 0,
           gas_limit: insertedTransactionsParameters[1].gas_limit,
           branch: insertedTransactionsParameters[1].branch,
           counter: insertedTransactionsParameters[1].counter,
@@ -550,10 +538,7 @@ describe('[lib/jobs/forge-operation]', () => {
           parameters_json:
             '{"entrypoint":"squareRoot","value":{"squareRoot":25}}',
           amount: 0,
-          fee: 454,
           source: activatedAccount.address,
-          storage_limit: 0,
-          gas_limit: 1308,
           branch: insertedTransactionsParameters[2].branch,
           counter: insertedTransactionsParameters[2].counter,
           job_id: createdJob.id,

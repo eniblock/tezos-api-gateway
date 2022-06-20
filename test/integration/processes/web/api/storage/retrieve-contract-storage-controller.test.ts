@@ -125,12 +125,11 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
         .set('Content-Type', 'application/json')
         .send();
 
-      expect({ status, body }).toEqual({
+      expect({ status, body }).toMatchObject({
         status: 200,
         body: {
           accessRequests: {
             type: 'big_map',
-            value: '45336',
           },
           organizations: [
             {
@@ -196,12 +195,11 @@ describe('[processes/web/api/storage] Retrieve Contract Storage Controller', () 
           dataFields: ['accessRequests', 'name'],
         });
 
-      expect({ status, body }).toEqual({
+      expect({ status, body }).toMatchObject({
         status: 200,
         body: {
           accessRequests: {
             type: 'big_map',
-            value: '45336',
           },
           name: {
             error: 'This data field does not exist in the contract storage',

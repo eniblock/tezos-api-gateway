@@ -72,7 +72,7 @@ describe('[services/clients] Indexer Client', () => {
         indexerPromises.push(
           expect(
             indexer.getOperationBlockLevel(operationHash),
-          ).resolves.toEqual(411813),
+          ).resolves.toEqual(firstTx.height),
         );
       }
       await Promise.all(indexerPromises);
