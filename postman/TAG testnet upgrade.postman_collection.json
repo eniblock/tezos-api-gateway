@@ -1,0 +1,81 @@
+{
+	"info": {
+		"_postman_id": "b748daea-6adf-49e3-b9db-9d24ebdef9fe",
+		"name": "TAG testnet upgrade",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "flexible token transfer",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"transactions\": [\n        {\n            \"contractAddress\": \"KT1GGaoUtAGdYT8nFEE5LpkpyzFhZNKjRDDf\",\n            \"entryPoint\": \"transfer\",\n            \"entryPointParams\": {\n                \"destination\": \"tz1VbHay2YPpiuPYs8SQHynuW3YvGtNuB29z\",\n                \"tokens\": 0\n            }\n        }\n    ],\n    \"secureKeyName\": \"master9\"\n}\n        ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3333/api/send/jobs?cache=false",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3333",
+					"path": [
+						"api",
+						"send",
+						"jobs"
+					],
+					"query": [
+						{
+							"key": "cache",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "calculator call to run 10 times",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"transactions\": [\n        {\n            \"contractAddress\": \"KT1RYvN4Q5mhPrhhUJ4hD38hwuVQV1RKuk9f\",\n            \"entryPoint\": \"square\",\n            \"entryPointParams\": 2\n        }\n    ],\n    \"secureKeyName\": \"master\"\n}\n        ",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3333/api/send/jobs?cache=false",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3333",
+					"path": [
+						"api",
+						"send",
+						"jobs"
+					],
+					"query": [
+						{
+							"key": "cache",
+							"value": "false"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

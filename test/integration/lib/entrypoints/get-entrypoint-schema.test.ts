@@ -104,11 +104,26 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
                   ],
                 },
                 {
-                  prim: 'map',
-                  args: [{ prim: 'string' }, { prim: 'bytes' }],
-                  annots: ['%metadata'],
+                  args: [
+                    {
+                      annots: ['%metadata'],
+                      args: [
+                        {
+                          prim: 'string',
+                        },
+                        {
+                          prim: 'bytes',
+                        },
+                      ],
+                      prim: 'map',
+                    },
+                    {
+                      annots: ['%token_id'],
+                      prim: 'nat',
+                    },
+                  ],
+                  prim: 'pair',
                 },
-                { prim: 'nat', annots: ['%token_id'] },
               ],
             },
           },
@@ -164,8 +179,19 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
                           prim: 'pair',
                           args: [
                             { prim: 'address', annots: ['%to_'] },
-                            { prim: 'nat', annots: ['%token_id'] },
-                            { prim: 'nat', annots: ['%amount'] },
+                            {
+                              args: [
+                                {
+                                  annots: ['%token_id'],
+                                  prim: 'nat',
+                                },
+                                {
+                                  annots: ['%amount'],
+                                  prim: 'nat',
+                                },
+                              ],
+                              prim: 'pair',
+                            },
                           ],
                         },
                       ],
@@ -202,8 +228,19 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
                       prim: 'pair',
                       args: [
                         { prim: 'address', annots: ['%owner'] },
-                        { prim: 'address', annots: ['%operator'] },
-                        { prim: 'nat', annots: ['%token_id'] },
+                        {
+                          args: [
+                            {
+                              annots: ['%operator'],
+                              prim: 'address',
+                            },
+                            {
+                              annots: ['%token_id'],
+                              prim: 'nat',
+                            },
+                          ],
+                          prim: 'pair',
+                        },
                       ],
                       annots: ['%add_operator'],
                     },
@@ -211,8 +248,19 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
                       prim: 'pair',
                       args: [
                         { prim: 'address', annots: ['%owner'] },
-                        { prim: 'address', annots: ['%operator'] },
-                        { prim: 'nat', annots: ['%token_id'] },
+                        {
+                          args: [
+                            {
+                              annots: ['%operator'],
+                              prim: 'address',
+                            },
+                            {
+                              annots: ['%token_id'],
+                              prim: 'nat',
+                            },
+                          ],
+                          prim: 'pair',
+                        },
                       ],
                       annots: ['%remove_operator'],
                     },
@@ -305,11 +353,26 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
                   ],
                 },
                 {
-                  prim: 'map',
-                  args: [{ prim: 'string' }, { prim: 'bytes' }],
-                  annots: ['%metadata'],
+                  args: [
+                    {
+                      annots: ['%metadata'],
+                      args: [
+                        {
+                          prim: 'string',
+                        },
+                        {
+                          prim: 'bytes',
+                        },
+                      ],
+                      prim: 'map',
+                    },
+                    {
+                      annots: ['%token_id'],
+                      prim: 'nat',
+                    },
+                  ],
+                  prim: 'pair',
                 },
-                { prim: 'nat', annots: ['%token_id'] },
               ],
             },
           },
@@ -361,11 +424,26 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
                   ],
                 },
                 {
-                  prim: 'map',
-                  args: [{ prim: 'string' }, { prim: 'bytes' }],
-                  annots: ['%metadata'],
+                  args: [
+                    {
+                      annots: ['%metadata'],
+                      args: [
+                        {
+                          prim: 'string',
+                        },
+                        {
+                          prim: 'bytes',
+                        },
+                      ],
+                      prim: 'map',
+                    },
+                    {
+                      annots: ['%token_id'],
+                      prim: 'nat',
+                    },
+                  ],
+                  prim: 'pair',
                 },
-                { prim: 'nat', annots: ['%token_id'] },
               ],
             },
           },
@@ -395,8 +473,19 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
                       prim: 'pair',
                       args: [
                         { prim: 'address', annots: ['%owner'] },
-                        { prim: 'address', annots: ['%operator'] },
-                        { prim: 'nat', annots: ['%token_id'] },
+                        {
+                          args: [
+                            {
+                              annots: ['%operator'],
+                              prim: 'address',
+                            },
+                            {
+                              annots: ['%token_id'],
+                              prim: 'nat',
+                            },
+                          ],
+                          prim: 'pair',
+                        },
                       ],
                       annots: ['%add_operator'],
                     },
@@ -404,8 +493,19 @@ describe('[lib/entrypoints/get-entrypoint-schema]', () => {
                       prim: 'pair',
                       args: [
                         { prim: 'address', annots: ['%owner'] },
-                        { prim: 'address', annots: ['%operator'] },
-                        { prim: 'nat', annots: ['%token_id'] },
+                        {
+                          args: [
+                            {
+                              annots: ['%operator'],
+                              prim: 'address',
+                            },
+                            {
+                              annots: ['%token_id'],
+                              prim: 'nat',
+                            },
+                          ],
+                          prim: 'pair',
+                        },
                       ],
                       annots: ['%remove_operator'],
                     },
