@@ -1,6 +1,7 @@
 import { IndexerEnum } from '../../const/interfaces/indexer';
 import { UnsupportedIndexerError } from '../../const/errors/indexer-error';
 import { IndexerTransaction } from '../../const/interfaces/transaction';
+import { deleteObjectSubLevel } from '../filter-object';
 
 /**
  * Convert the transaction returned by any indexer to our IndexerTransaction interface
@@ -32,7 +33,10 @@ export function mapIndexerTransactionToTransaction(
         type: rawTx.type,
         height: rawTx.height,
         entrypoint: rawTx.parameters.entrypoint,
-        parameters: rawTx.parameters?.value || '',
+        parameters: deleteObjectSubLevel(rawTx.parameters?.value || '', [
+          '@or_0',
+          '@or_1',
+        ]),
       };
     case IndexerEnum.TZKT:
       return {
