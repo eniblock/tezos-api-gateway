@@ -13,7 +13,6 @@ import { AbstractClient } from './abstract-client';
 import { ContractTransactionsParams } from '../../const/interfaces/contract/contract-transactions-params';
 import { mapIndexerTransactionToTransaction } from '../../helpers/mappers/transactions-mapper';
 import { IndexerTransaction } from '../../const/interfaces/transaction';
-import { deleteObjectSubLevel } from '../../helpers/filter-object';
 
 export class IndexerClient extends AbstractClient {
   private _config: IndexerConfig;
@@ -221,13 +220,7 @@ export class IndexerClient extends AbstractClient {
         .query(queryParams);
 
       const transactionList = result.map((tx: any) => {
-        const transaction = mapIndexerTransactionToTransaction(tx, indexerName);
-        if (indexerName === IndexerEnum.TZSTATS) {
-          transaction.parameters = {
-            ...deleteObjectSubLevel(transaction.parameters, '@or_0'),
-          };
-        }
-        return transaction;
+        return mapIndexerTransactionToTransaction(tx, indexerName);
       });
 
       this.logger.info(

@@ -29,7 +29,7 @@ describe('[helpers/filter-object]', () => {
     });
 
     it('should remove one sub-level object and replace it with its children', () => {
-      expect(deleteObjectSubLevel(obj, 'd')).toEqual({
+      expect(deleteObjectSubLevel(obj, ['d'])).toEqual({
         a: 'a',
         b: {
           c: 'c',
@@ -47,7 +47,7 @@ describe('[helpers/filter-object]', () => {
     });
 
     it('should remove all occurrences of sub-level object and replace it with its children', () => {
-      expect(deleteObjectSubLevel(obj, 'b')).toEqual({
+      expect(deleteObjectSubLevel(obj, ['b'])).toEqual({
         a: 'a',
         c: 'c',
         d: {
