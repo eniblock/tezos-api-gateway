@@ -37,29 +37,29 @@ export default {
             type: 'string',
           },
         },
-        // {
-        //   name: 'parameter',
-        //   allowReserved: true,
-        //   in: 'query',
-        //   required: false,
-        //   description:
-        //     'Filter the transactions on the parameter passed when calling the smart contract. When this param is set the request will always be handled by TZKT. \n\n' +
-        //     'This query parameter supports wildcards, use \\\\* as an escape symbol.' +
-        //     'If this query parameter is set, the indexer used will be TZKT.',
-        //   schema: {
-        //     type: 'string',
-        //   },
-        //   examples: {
-        //     simple: {
-        //       value: '65',
-        //       summary: 'Simple parameter',
-        //     },
-        //     object: {
-        //       value: '*.csv*',
-        //       summary: 'Query with only a portion of the parameters.',
-        //     },
-        //   },
-        // },
+        {
+          name: 'parameter',
+          allowReserved: true,
+          in: 'query',
+          required: false,
+          description:
+            'Filter the transactions on the parameter passed when calling the smart contract. When this param is set the request will always be handled by TZKT. \n\n' +
+            'This query parameter supports wildcards, use \\\\* as an escape symbol.' +
+            'If this query parameter is set, the indexer used will be TZKT.',
+          schema: {
+            type: 'string',
+          },
+          examples: {
+            simple: {
+              value: '65',
+              summary: 'Simple parameter',
+            },
+            object: {
+              value: '*.csv*',
+              summary: 'Query with only a portion of the parameters.',
+            },
+          },
+        },
         {
           name: 'indexer',
           in: 'query',

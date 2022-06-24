@@ -33,8 +33,7 @@ describe('[processes/workers/check-operation-status] Check Operation Status Proc
       await expect(checkOperationStatusProcess.start()).resolves.toEqual(true);
 
       expect(checkOperationStatusProcess.indexerPool.indexers.length).toEqual(
-        // 2,
-        1,
+        2,
       );
       expect(checkOperationStatusSpy.mock.calls).toEqual([
         [
