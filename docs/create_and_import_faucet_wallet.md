@@ -1,4 +1,4 @@
-###Context
+### Context
 To make the application able to send transactions to the blockchain, you will need a
 wallet. Your wallet is your identity on the Blockchain, it is composed of:
 
@@ -6,7 +6,7 @@ wallet. Your wallet is your identity on the Blockchain, it is composed of:
 - The wallet private key
 - The wallet public key
 
-###Create a wallet
+### Create a wallet
 Tezos provide public testing blockchain network. A _Faucet wallet_ will be used, once created it
 will own directly a lot of tezes token, so it can be used for testing without taking care about
 required gas fee for executing transactions.
@@ -27,7 +27,7 @@ required gas fee for executing transactions.
     the `Account information` tab
     ![smartpy-wallet.png](smartpy-wallet.png)
 
-###Import your wallet in the secured TAG Vault:
+### Import your wallet in the secured TAG Vault:
 
 - Open a terminal
 - Update and execute the following commands with your private and public keys:
