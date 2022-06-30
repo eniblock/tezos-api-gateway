@@ -24,10 +24,10 @@ version: 0.11.1
 appVersion: "0.11.1"
 
 dependencies:
-  - name: postgresql
-    alias: db
-    version: "10.2.5"
-    repository: "https://raw.githubusercontent.com/bitnami/charts/defb094c658024e4aa8245622dab202874880cbc/bitnami/"
+  - alias: db
+    name: postgresql
+    repository: https://charts.bitnami.com/bitnami
+    version: 11.1.6
   - name: rabbitmq
     version: "8.20.2"
     repository: "https://raw.githubusercontent.com/bitnami/charts/defb094c658024e4aa8245622dab202874880cbc/bitnami/"

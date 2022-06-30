@@ -1,2 +1,8 @@
+.helm
+README.md
+.gitlab-ci.yaml
+.gitignore
+.history
+Tiltfile
 helm
-node_modules
+Dockerfile

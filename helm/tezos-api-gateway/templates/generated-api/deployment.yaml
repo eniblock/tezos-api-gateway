@@ -45,14 +45,14 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: DB_USERNAME
-              value: {{ .Values.db.postgresqlUsername | quote }}
+              value: {{ .Values.db.auth.username | quote }}
             - name: DB_NAME
-              value: {{ .Values.db.postgresqlDatabase | quote }}
+              value: {{ .Values.db.auth.database | quote }}
             - name: DB_PWD
               valueFrom:
                 secretKeyRef:
                   name: "{{ .Release.Name }}-{{ .Values.db.nameOverride }}"
-                  key: postgresql-password
+                  key: password
             - name: DB_HOST
               value: "{{ .Release.Name }}-{{ .Values.db.nameOverride }}"
             - name: AMQP_PASSWORD

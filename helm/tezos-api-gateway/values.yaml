@@ -292,27 +292,27 @@ injectionWorker:
 
 db:
   nameOverride: db
-  postgresqlDatabase: tezos_api_gateway
-  postgresqlUsername: tezos-service
-  existingSecret: "{{ .Release.Name }}-{{ .Values.nameOverride }}"
+  auth:
+    existingSecret: "{{ .Release.Name }}-{{ .Values.nameOverride }}"
+    database: tezos_api_gateway
+    username: tezos-service
   persistence:
     enabled: true
     size: 1Gi
-  image:
-    tag: 12.6.0-debian-10-r14
   resources:
     requests:
-      memory: 256Mi
+      memory: 50Mi
       cpu: 50m
   primary:
+    service:
+      ports:
+        postgresql: 5432
     annotations:
       reloader.stakater.com/auto: "true"
-    podAnnotations:
-      "cluster-autoscaler.kubernetes.io/safe-to-evict": "true"
   rbac:
     create: true
   serviceAccount:
-    enabled: true
+    create: true
   metrics:
     enabled: true
     serviceMonitor:
@@ -323,7 +323,11 @@ db:
         cpu: 10m
   networkPolicy:
     enabled: true
-    allowExternal: false
+    ingressRules:
+      primaryAccessOnlyFrom:
+        enabled: true
+        podSelector:
+          '{{ template "common.names.fullname" . }}-client': "true"
 
 rabbitmq:
   nameOverride: rabbitmq
