@@ -15,11 +15,11 @@ export const serverConfig = {
 };
 
 export const tezosNodeUrl =
-  process.env.TEZOS_NODE_TEST || 'https://rpc.jakarta.tzstats.com/';
+  process.env.TEZOS_NODE_TEST || 'https://rpc.ghost.tzstats.com/';
 
 export const tezosNodeUrls = (
   process.env.TEZOS_NODE_TEST_URLS ||
-  'https://jakartanet.ecadinfra.com/,https://rpc.jakarta.tzstats.com/'
+  'https://ghostnet.ecadinfra.com/,https://rpc.ghost.tzstats.com/'
 ).split(',');
 
 export const amqpConfig: AmqpConfig = {

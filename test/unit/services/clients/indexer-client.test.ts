@@ -138,7 +138,7 @@ describe('[services/clients] Indexer client Service', () => {
         );
 
       expect(domainAndPath).toEqual(
-        'https://api.jakartanet.tzkt.io/v1/operations/transactions/',
+        'https://api.ghostnet.tzkt.io/v1/operations/transactions/',
       );
       expect(queryParams).toEqual(
         `limit=5&offset=8&target.eq=${flexibleTokenContract}&sort.asc=id&entrypoint.eq=name&parameter.as=*test`,

@@ -6,10 +6,7 @@ import { IndexerClient } from '../../../src/services/clients/indexer-client';
 import { IndexerPool } from '../../../src/services/indexer-pool';
 import { TezosService } from '../../../src/services/tezos';
 import { tezosNodeUrl } from '../../__fixtures__/config';
-import {
-  notFoundOperationHash,
-  operationHash,
-} from '../../__fixtures__/operation';
+import { notFoundOperationHash } from '../../__fixtures__/operation';
 import { logger } from '../../__fixtures__/services/logger';
 import { BlockResponse } from '@taquito/rpc';
 import { firstTx } from '../../__fixtures__/transactions';
@@ -75,7 +72,7 @@ describe('[services/indexer-pool]', () => {
         });
 
       await expect(
-        indexerPool.getOperationBlockLevelByRandomIndexer(operationHash, 3),
+        indexerPool.getOperationBlockLevelByRandomIndexer(firstTx.hash, 3),
       ).rejects.toThrowError(Error('Unexpected error'));
 
       expect(loggerErrorSpy.mock.calls).toEqual([
@@ -95,12 +92,12 @@ describe('[services/indexer-pool]', () => {
         .mockReturnValue(firstIndexer);
 
       const indexerNock = nock(firstIndexer.config.apiUrl)
-        .get(`/${firstIndexer.config.pathToOperation}${operationHash}`)
+        .get(`/${firstIndexer.config.pathToOperation}${firstTx.hash}`)
         .times(3)
         .reply(500);
 
       await expect(
-        indexerPool.getOperationBlockLevelByRandomIndexer(operationHash, 3),
+        indexerPool.getOperationBlockLevelByRandomIndexer(firstTx.hash, 3),
       ).resolves.toBeUndefined();
 
       indexerNock.done();
@@ -114,11 +111,11 @@ describe('[services/indexer-pool]', () => {
         .mockReturnValueOnce(indexerPool.indexers[1]);
 
       const indexerNock = nock(firstIndexer.config.apiUrl)
-        .get(`/${firstIndexer.config.pathToOperation}${operationHash}`)
+        .get(`/${firstIndexer.config.pathToOperation}${firstTx.hash}`)
         .reply(500);
 
       await expect(
-        indexerPool.getOperationBlockLevelByRandomIndexer(operationHash, 3),
+        indexerPool.getOperationBlockLevelByRandomIndexer(firstTx.hash, 3),
       ).resolves.toEqual(firstTx.height);
 
       indexerNock.done();
@@ -127,7 +124,7 @@ describe('[services/indexer-pool]', () => {
 
     it('should properly return the block level of the operation', async () => {
       await expect(
-        indexerPool.getOperationBlockLevelByRandomIndexer(operationHash, 3),
+        indexerPool.getOperationBlockLevelByRandomIndexer(firstTx.hash, 3),
       ).resolves.toEqual(firstTx.height);
     });
   });
@@ -178,7 +175,7 @@ describe('[services/indexer-pool]', () => {
         indexerPool.checkIfOperationIsConfirmedByRandomIndexer(
           tezosService,
           {
-            operationHash,
+            operationHash: firstTx.hash,
             nbOfConfirmation: 20,
           },
           3,
@@ -202,7 +199,7 @@ describe('[services/indexer-pool]', () => {
         .mockReturnValue(firstIndexer);
 
       const indexerNock = nock(firstIndexer.config.apiUrl)
-        .get(`/${firstIndexer.config.pathToOperation}${operationHash}`)
+        .get(`/${firstIndexer.config.pathToOperation}${firstTx.hash}`)
         .times(3)
         .reply(500);
 
@@ -210,7 +207,7 @@ describe('[services/indexer-pool]', () => {
         indexerPool.checkIfOperationIsConfirmedByRandomIndexer(
           tezosService,
           {
-            operationHash,
+            operationHash: firstTx.hash,
             nbOfConfirmation: 20,
           },
           3,
@@ -228,14 +225,14 @@ describe('[services/indexer-pool]', () => {
         .mockReturnValueOnce(indexerPool.indexers[1]);
 
       const indexerNock = nock(firstIndexer.config.apiUrl)
-        .get(`/${firstIndexer.config.pathToOperation}${operationHash}`)
+        .get(`/${firstIndexer.config.pathToOperation}${firstTx.hash}`)
         .reply(500);
 
       await expect(
         indexerPool.checkIfOperationIsConfirmedByRandomIndexer(
           tezosService,
           {
-            operationHash,
+            operationHash: firstTx.hash,
             nbOfConfirmation: 20,
           },
           3,
@@ -251,7 +248,7 @@ describe('[services/indexer-pool]', () => {
         indexerPool.checkIfOperationIsConfirmedByRandomIndexer(
           tezosService,
           {
-            operationHash,
+            operationHash: firstTx.hash,
             nbOfConfirmation: 20,
           },
           3,
@@ -271,7 +268,7 @@ describe('[services/indexer-pool]', () => {
         indexerPool.checkIfOperationIsConfirmedByRandomIndexer(
           tezosService,
           {
-            operationHash,
+            operationHash: firstTx.hash,
             nbOfConfirmation: 20,
           },
           3,

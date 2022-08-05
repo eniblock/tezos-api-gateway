@@ -4,6 +4,7 @@ import Logger from 'bunyan';
 import { generateRandomInt } from '../utils';
 import { TezosService } from './tezos';
 import superagent from 'superagent';
+import url from 'url';
 
 export class GatewayPool {
   private _tezosNodeUrls: string[];
@@ -64,7 +65,7 @@ export class GatewayPool {
     try {
       // We exlude smartpy from the possibilities as it doesn't handle baning an operation
       const tezosNodeUrls = this.tezosNodeUrls.filter(
-        (url) => !url.includes('smartpy'),
+        (nodeUrl) => !nodeUrl.includes('smartpy'),
       );
       const index = generateRandomInt(tezosNodeUrls.length);
       const tezosUrl = tezosNodeUrls[index];
@@ -77,8 +78,12 @@ export class GatewayPool {
         '[GatewayPool/removeOperationFromMempool] Using this node to remove this operation',
       );
 
+      const banOperationUrl = url.resolve(
+        tezosUrl,
+        '/chains/main/mempool/ban_operation',
+      );
       await superagent
-        .post(`${tezosUrl}/chains/main/mempool/ban_operation`)
+        .post(banOperationUrl)
         .send(`"${operationHash}"`)
         .set('Content-Type', 'application/json');
     } catch (err) {
