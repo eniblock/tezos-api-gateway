@@ -66,7 +66,13 @@ describe('[processes/web/api/contract] Contract controller', () => {
       );
 
       expect(status).toEqual(200);
-      expect(body).toEqual([{ ...firstTx, indexer: body[0].indexer }]);
+      expect(body).toEqual([
+        {
+          ...firstTx,
+          indexer: body[0].indexer,
+          block: body[0].indexer === IndexerEnum.TZSTATS ? '' : firstTx.block,
+        }, // TZSTATS: block is empty for testnet
+      ]); // TODO remove empty block verification when tzstats problem is fixed
     });
 
     it('should use TZKT indexer when query param "parameter" is set', async () => {
@@ -107,7 +113,9 @@ describe('[processes/web/api/contract] Contract controller', () => {
       );
 
       expect(status).toEqual(200);
-      expect(body).toEqual([{ ...firstTx, indexer: IndexerEnum.TZSTATS }]);
+      expect(body).toEqual([
+        { ...firstTx, indexer: IndexerEnum.TZSTATS, block: '' },
+      ]); // TODO remove empty block verification when tzstats problem is fixed
     });
 
     it('should return 200 and the operations list without origination operation when using Tzstats indexer without "indexer" query param', async () => {
@@ -130,6 +138,7 @@ describe('[processes/web/api/contract] Contract controller', () => {
           request,
         );
         delete body[0].indexer;
+        delete body[0].block; // TODO remove empty block verification when tzstats problem is fixed
 
         indexersResponses.push(body);
       }

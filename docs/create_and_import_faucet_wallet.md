@@ -1,4 +1,5 @@
 ### Context
+
 To make the application able to send transactions to the blockchain, you will need a
 wallet. Your wallet is your identity on the Blockchain, it is composed of:
 
@@ -7,6 +8,7 @@ wallet. Your wallet is your identity on the Blockchain, it is composed of:
 - The wallet public key
 
 ### Create a wallet
+
 Tezos provide public testing blockchain network. A _Faucet wallet_ will be used, once created it
 will own directly a lot of tezes token, so it can be used for testing without taking care about
 required gas fee for executing transactions.
