@@ -193,6 +193,7 @@ describe('[services/clients] Indexer Client', () => {
               {
                 ...firstTx,
                 indexer: IndexerEnum.TZSTATS,
+                block: '', // TODO remove empty block verification when tzstats problem is fixed
               },
             ]),
           );
