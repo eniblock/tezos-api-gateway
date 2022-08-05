@@ -23,13 +23,13 @@ export const originationOp = {
 };
 
 export const firstTx = {
-  baker_fee: 0.000628,
-  block: 'BL8HMatjGuGXmhHLqKHnomyVrLM14FRBeePJtqWRcpmqwkBoMWP',
-  counter: 293364,
+  baker_fee: 0.2,
+  block: 'BM1sYMLUVrpSVBzpdtzwtYSXkUsZLrpi2k2teYjy1ACfUxu7nvb',
+  counter: 10240854,
   destination: flexibleTokenContract,
   entrypoint: 'transfer',
-  hash: 'ookxXc2qFf9EpaXT7eMfapybiJ9oGPQjp6sgs1SzXGrjuSakLRP',
-  height: 263228,
+  hash: 'opNH9hXDU5tRfkuqQBjAsEizNWV71QJqZnY2bx6UJ2Zj9qC6zZF',
+  height: 961974,
   indexer: 'tzkt',
   parameters: {
     destination: testAccount,
@@ -38,7 +38,7 @@ export const firstTx = {
   source: revealedAccount.address,
   status: 'applied',
   storage_fee: 0,
-  storage_limit: 0,
-  timestamp: '2022-06-14T12:33:45Z',
+  storage_limit: 50000,
+  timestamp: '2022-08-04T14:12:00Z',
   type: 'transaction',
 };
