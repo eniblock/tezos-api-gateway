@@ -27,7 +27,7 @@ export const serverConfig = {
 
 export const tezosNodeUrls = (
   process.env.TEZOS_NODE_URLS ||
-  'https://jakartanet.smartpy.io,https://jakartanet.ecadinfra.com,https://rpc.jakarta.tzstats.com'
+  'https://ghostnet.smartpy.io,https://ghostnet.ecadinfra.com,https://rpc.ghost.tzstats.com'
 ).split(',');
 
 export const amqpConfig: AmqpConfig = {
@@ -42,7 +42,7 @@ export const webProcessConfig: ProcessConfig = {
 
 const tzstatsIndexerConfig: IndexerConfig = {
   name: IndexerEnum.TZSTATS,
-  apiUrl: process.env.TZSTATS_URL || 'https://api.jakarta.tzstats.com/',
+  apiUrl: process.env.TZSTATS_URL || 'https://api.ghost.tzstats.com/',
   pathToOperation: 'explorer/op/',
   pathToUserInfo: 'explorer/account/',
   pathToContractCalls: 'explorer/contract/',
@@ -55,7 +55,7 @@ const tzstatsIndexerConfig: IndexerConfig = {
 
 const tzktIndexerConfig: IndexerConfig = {
   name: IndexerEnum.TZKT,
-  apiUrl: process.env.TZKT_URL || 'https://api.jakartanet.tzkt.io/',
+  apiUrl: process.env.TZKT_URL || 'https://api.ghostnet.tzkt.io/',
   pathToOperation: 'v1/operations/',
   pathToContractCalls: 'v1/operations/transactions/',
   pathToUserInfo: 'v1/accounts/',
