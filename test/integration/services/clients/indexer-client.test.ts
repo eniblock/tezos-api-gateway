@@ -1,10 +1,7 @@
 import nock from 'nock';
 import { BlockResponse } from '@taquito/rpc';
 
-import {
-  notFoundOperationHash,
-  operationHash,
-} from '../../../__fixtures__/operation';
+import { notFoundOperationHash } from '../../../__fixtures__/operation';
 import { logger } from '../../../__fixtures__/services/logger';
 import { tezosNodeUrl } from '../../../__fixtures__/config';
 
@@ -36,12 +33,12 @@ describe('[services/clients] Indexer Client', () => {
         loggerInfoSpies.push(jest.spyOn(indexer.logger, 'info'));
 
         const indexerNock = nock(indexer.config.apiUrl)
-          .get(`/${indexer.config.pathToOperation}${operationHash}`)
+          .get(`/${indexer.config.pathToOperation}${firstTx.hash}`)
           .reply(500);
         nocks.push(indexerNock);
 
         const indexerPromise = expect(
-          indexer.getOperationBlockLevel(operationHash),
+          indexer.getOperationBlockLevel(firstTx.hash),
         ).resolves.toBeUndefined();
         indexerPromises.push(indexerPromise);
       }
@@ -70,9 +67,9 @@ describe('[services/clients] Indexer Client', () => {
       const indexerPromises: Promise<void>[] = [];
       for (const indexer of indexerClients) {
         indexerPromises.push(
-          expect(
-            indexer.getOperationBlockLevel(operationHash),
-          ).resolves.toEqual(firstTx.height),
+          expect(indexer.getOperationBlockLevel(firstTx.hash)).resolves.toEqual(
+            firstTx.height,
+          ),
         );
       }
       await Promise.all(indexerPromises);
@@ -92,18 +89,18 @@ describe('[services/clients] Indexer Client', () => {
         .spyOn(tezosService, 'getLatestBlock')
         .mockRejectedValue(
           new Error(
-            'Could not find an operation with this hash: ' + operationHash,
+            'Could not find an operation with this hash: ' + firstTx.hash,
           ),
         );
 
       await expect(
         indexerClient.checkIfOperationIsConfirmed(
           tezosService,
-          operationHash,
+          firstTx.hash,
           20,
         ),
       ).rejects.toThrow(
-        Error('Could not find an operation with this hash: ' + operationHash),
+        Error('Could not find an operation with this hash: ' + firstTx.hash),
       );
 
       expect(getLatestBlockSpy).toHaveBeenCalledTimes(1);
@@ -111,7 +108,7 @@ describe('[services/clients] Indexer Client', () => {
         [
           {
             err: Error(
-              'Could not find an operation with this hash: ' + operationHash,
+              'Could not find an operation with this hash: ' + firstTx.hash,
             ),
           },
           '[IndexerClient/checkIfOperationIsConfirmed] Unexpected error happened',
@@ -133,13 +130,13 @@ describe('[services/clients] Indexer Client', () => {
 
     it('should return undefined the block level is undefined', async () => {
       const indexerNock = nock(indexerClient.config.apiUrl)
-        .get(`/${indexerClient.config.pathToOperation}${operationHash}`)
+        .get(`/${indexerClient.config.pathToOperation}${firstTx.hash}`)
         .reply(500);
 
       await expect(
         indexerClient.checkIfOperationIsConfirmed(
           tezosService,
-          operationHash,
+          firstTx.hash,
           20,
         ),
       ).resolves.toBeFalsy();
@@ -158,7 +155,7 @@ describe('[services/clients] Indexer Client', () => {
       await expect(
         indexerClient.checkIfOperationIsConfirmed(
           tezosService,
-          operationHash,
+          firstTx.hash,
           20,
         ),
       ).resolves.toEqual(false);
@@ -171,7 +168,7 @@ describe('[services/clients] Indexer Client', () => {
       await expect(
         indexerClient.checkIfOperationIsConfirmed(
           tezosService,
-          operationHash,
+          firstTx.hash,
           17,
         ),
       ).resolves.toEqual(true);

@@ -2,7 +2,6 @@ import {
   amqpConfig,
   postgreConfig,
   tezosNodeUrl,
-  tezosNodeUrls,
 } from '../../../../__fixtures__/config';
 import { logger } from '../../../../__fixtures__/services/logger';
 import { resetTable, selectData } from '../../../../__utils__/postgre';
@@ -11,7 +10,6 @@ import { PostgreService } from '../../../../../src/services/postgre';
 import { TezosService } from '../../../../../src/services/tezos';
 import { PostgreTables } from '../../../../../src/const/postgre/postgre-tables';
 import { JobStatus } from '../../../../../src/const/job-status';
-import { operationHash } from '../../../../__fixtures__/operation';
 import { checkOperationStatus } from '../../../../../src/processes/workers/check-operation-status/lib/check-operation-status';
 import { IndexerPool } from '../../../../../src/services/indexer-pool';
 import { nbOfConfirmation, nbOfRetry } from '../../../../../src/config';
@@ -23,13 +21,14 @@ import { OpKind } from '@taquito/rpc';
 import { GatewayPool } from '../../../../../src/services/gateway-pool';
 import { OperationNotFoundError } from '../../../../../src/const/errors/indexer-error';
 import { Settings } from 'luxon';
+import { firstTx } from '../../../../__fixtures__/transactions';
 
 describe('[check-operation-status/lib/check-operation-status]', () => {
   const postgreService = new PostgreService(postgreConfig);
   const tezosService = new TezosService(tezosNodeUrl);
   const amqpService = new AmqpService(amqpConfig, logger);
   const indexerPool = new IndexerPool(logger);
-  const gatewayPool = new GatewayPool(tezosNodeUrls, logger);
+  const gatewayPool = new GatewayPool([tezosNodeUrl], logger);
   const oldNow = Settings.now;
 
   beforeAll(async () => {
@@ -56,8 +55,8 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
       await postgreService.pool.query(
         `INSERT INTO ${PostgreTables.JOBS} (status,forged_operation,operation_hash,operation_kind)
         VALUES('${JobStatus.CREATED}', 'raw_transaction', NULL, '${OpKind.TRANSACTION}'),
-        ('${JobStatus.PUBLISHED}', 'raw_transaction_2', '${operationHash}', '${OpKind.TRANSACTION}'),
-        ('${JobStatus.CREATED}', 'raw_transaction_3', '${operationHash}', '${OpKind.TRANSACTION}')`,
+        ('${JobStatus.PUBLISHED}', 'raw_transaction_2', '${firstTx.hash}', '${OpKind.TRANSACTION}'),
+        ('${JobStatus.CREATED}', 'raw_transaction_3', '${firstTx.hash}', '${OpKind.TRANSACTION}')`,
       );
     });
 
@@ -82,12 +81,12 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
         {
           status: 'done',
           forged_operation: 'raw_transaction_2',
-          operation_hash: operationHash,
+          operation_hash: firstTx.hash,
         },
         {
           status: 'created',
           forged_operation: 'raw_transaction_3',
-          operation_hash: operationHash,
+          operation_hash: firstTx.hash,
         },
       ]);
 
@@ -202,12 +201,12 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
         {
           status: 'published',
           forged_operation: 'raw_transaction_2',
-          operation_hash: operationHash,
+          operation_hash: firstTx.hash,
         },
         {
           status: 'created',
           forged_operation: 'raw_transaction_3',
-          operation_hash: operationHash,
+          operation_hash: firstTx.hash,
         },
       ]);
 
@@ -216,7 +215,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
       ).toHaveBeenCalledWith(
         tezosService,
         {
-          operationHash,
+          operationHash: firstTx.hash,
           nbOfConfirmation,
         },
         nbOfRetry,
@@ -266,7 +265,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
 
       const checkIfOperationIsConfirmedByRandomIndexerSpy = jest
         .spyOn(indexerPool, 'checkIfOperationIsConfirmedByRandomIndexer')
-        .mockRejectedValue(new OperationNotFoundError(operationHash));
+        .mockRejectedValue(new OperationNotFoundError(firstTx.hash));
 
       const removeOperationFromMempoolSpy = jest.spyOn(
         gatewayPool,
@@ -292,12 +291,12 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
         {
           status: 'created',
           forged_operation: 'raw_transaction_3',
-          operation_hash: operationHash,
+          operation_hash: firstTx.hash,
         },
         {
           status: 'error',
           forged_operation: 'raw_transaction_2',
-          operation_hash: operationHash,
+          operation_hash: firstTx.hash,
         },
       ]);
 
@@ -306,7 +305,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
       ).toHaveBeenCalledWith(
         tezosService,
         {
-          operationHash,
+          operationHash: firstTx.hash,
           nbOfConfirmation,
         },
         nbOfRetry,
