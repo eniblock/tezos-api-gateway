@@ -329,3 +329,17 @@ helm install tezos-api-gateway ./helm/tezos-api-gateway --values ./helm/tezos-ap
 [11]: src/scripts/activate-tezos-account/README.md
 [12]: src/scripts/sign-transaction-with-InMemorySigner/README.md
 [13]: docs/retrieve-contract-storage.md
+
+## Metrics - Prometheus
+### Express
+
+We use the `express-prom-bundle` package to collect various metrics about TAG usage :
+- endpoints called and requests duration
+- nodejs information about the process, eventloop, memory usage, ...
+
+These metrics are available on `http://localhost:3333/metrics`
+
+### Custom
+
+We defined a custom metrics to track any call made to a smart contract entrypoint
+This metric is available on `http://localhost:9464/metrics`

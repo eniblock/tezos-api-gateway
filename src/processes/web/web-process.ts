@@ -5,6 +5,7 @@ import bodyParser from 'body-parser';
 import compression from 'compression';
 import * as OpenApiValidator from 'express-openapi-validator';
 import { OpenAPIV3 } from 'express-openapi-validator/dist/framework/types';
+import promBundle from 'express-prom-bundle';
 
 import { logger } from '../../services/logger';
 import setupRoutes from './api';
@@ -205,6 +206,19 @@ export class WebProcess extends AbstractProcess {
    */
   protected expressSetup() {
     this.appPreConfig();
+
+    // Add the options to the prometheus middleware, most options are for http_request_duration_seconds histogram metric
+    const metricsMiddleware = promBundle({
+      includeMethod: true,
+      includePath: true,
+      includeStatusCode: true,
+      includeUp: true,
+      promClient: {
+        collectDefaultMetrics: {},
+      },
+    });
+    // add the prometheus middleware to all routes
+    this._app.use(metricsMiddleware);
 
     this._app.use(
       '/api',

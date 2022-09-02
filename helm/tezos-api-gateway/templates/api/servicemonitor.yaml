@@ -2,7 +2,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: {{ include "tezos-api-gateway.fullname" . }}-api
+  name: {{ include "tezos-api-gateway.fullname" . }}-smartcontract
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tezos-api-gateway.labels" . | nindent 4 }}
@@ -14,6 +14,31 @@ spec:
       app.kubernetes.io/component: api
   endpoints:
     - port: prometheus
+      {{- if .Values.api.metrics.interval }}
+      interval: {{ .Values.api.metrics.interval }}
+      {{- end }}
+      {{- if .Values.api.metrics.scrapeTimeout }}
+      scrapeTimeout: {{ .Values.api.metrics.scrapeTimeout }}
+      {{- end }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "tezos-api-gateway.fullname" . }}-api
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tezos-api-gateway.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+spec:
+  selector:
+    matchLabels:
+      {{- include "tezos-api-gateway.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: api
+  endpoints:
+    - port: http
       {{- if .Values.api.metrics.interval }}
       interval: {{ .Values.api.metrics.interval }}
       {{- end }}

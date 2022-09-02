@@ -202,7 +202,8 @@ function addTransactionsToMetric(
   transactions.forEach(
     ({ contractAddress, entryPoint }: TransactionDetails) => {
       metricPrometheusService.entryPointCounter.add(1, {
-        [contractAddress]: entryPoint,
+        ['contractAddress']: contractAddress,
+        ['entrypoint']: entryPoint,
       });
     },
   );

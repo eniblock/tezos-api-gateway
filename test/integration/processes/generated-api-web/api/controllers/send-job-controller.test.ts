@@ -22,6 +22,7 @@ import {
 import { OpKind } from '@taquito/rpc';
 
 describe('[processes/generated-api-web/api/controllers] Send job controller', () => {
+  jest.setTimeout(10000);
   const webProcess = new WebProcess({ server: serverConfig });
   const postgreService = new PostgreService(postgreConfig);
   const amqpService = new AmqpService(amqpConfig, logger);

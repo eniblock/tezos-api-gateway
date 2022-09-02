@@ -92,7 +92,7 @@ describe('[processes/web/api/contract] Contract controller', () => {
         `/api/contract/${simpleContract}/calls?`,
       );
       expect(status).toEqual(200);
-      expect(body.length).toEqual(10);
+      expect(body.length).toEqual(20);
 
       const { body: body2, status: status2 } = await request.get(
         `/api/contract/${simpleContract}/calls?limit=5`,
