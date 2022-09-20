@@ -62,20 +62,23 @@ export default {
             schema: {
               type: 'object',
               additionalProperties: false,
-              required: ['smartContractCode', 'secureKeyName'],
+              required: ['codeJson', 'secureKeyName'],
               properties: {
                 secureKeyName: {
                   type: 'string',
                   description:
                     'The key name which contains public key and perform action sign',
                 },
-                smartContractCode: {
-                  type: 'string',
-                  description:
-                    'The code of smart contract to be upload in Base64, a sp.add_compilation_target should be added in the contract otherwise compilation will fail',
+                codeJson: {
+                  oneOf: [{ type: 'object' }, { type: 'array' }],
+                  description: 'The JSON code of the smart contract',
+                },
+                storageJson: {
+                  oneOf: [{ type: 'object' }, { type: 'array' }],
+                  description: 'The JSON storage of the smart contract',
                 },
                 storageObj: {
-                  description: 'Storage object',
+                  description: 'Optional Storage object',
                 },
               },
             },

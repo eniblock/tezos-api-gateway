@@ -123,12 +123,12 @@ export class TezosService {
   ) {
     const originationParams = storageObj
       ? {
-          code: JSON.parse(codeJson),
+          code: codeJson,
           storage: storageObj,
         }
       : {
-          code: JSON.parse(codeJson),
-          init: JSON.parse(storageJson!!),
+          code: codeJson,
+          init: storageJson!!,
         };
     const operation: OriginationOperation =
       await this._tezos.contract.originate(originationParams);

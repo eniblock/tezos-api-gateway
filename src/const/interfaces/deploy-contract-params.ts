@@ -1,5 +1,6 @@
 export interface DeployContractParams {
   secureKeyName: string;
-  smartContractCode: string;
+  codeJson: any;
+  storageJson: any;
   storageObj?: string;
 }

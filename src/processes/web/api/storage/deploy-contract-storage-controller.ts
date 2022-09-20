@@ -27,16 +27,15 @@ function compileAndDeployContract(
     try {
       const {
         secureKeyName,
-        smartContractCode,
+        codeJson,
+        storageJson,
         storageObj,
       }: DeployContractParams = req.body;
 
       logger.info(
-        { secureKeyName, smartContractCode, storageObj },
+        { secureKeyName, codeJson, storageJson, storageObj },
         '[api/storage/deploy-job-controller] properties received',
       );
-
-      const [codeJson, storageJson] = await compileSmartpy(smartContractCode);
 
       const tezosService = await gatewayPool.getTezosService();
 
@@ -174,4 +173,4 @@ async function getFileContents(path: string) {
   }
 }
 
-export default { compileAndDeployContract };
+export default { compileAndDeployContract, compileSmartpy };
