@@ -25,11 +25,14 @@ function compileAndDeployContract(
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { secureKeyName, smartContractCode }: DeployContractParams =
-        req.body;
+      const {
+        secureKeyName,
+        smartContractCode,
+        storageObj,
+      }: DeployContractParams = req.body;
 
       logger.info(
-        { secureKeyName, smartContractCode },
+        { secureKeyName, smartContractCode, storageObj },
         '[api/storage/deploy-job-controller] properties received',
       );
 
@@ -67,10 +70,9 @@ function compileAndDeployContract(
         });
       }
 
-      const contractData = await tezosService.deployContract(
-        codeJson,
-        storageJson,
-      );
+      const contractData = storageObj
+        ? await tezosService.deployContract(codeJson, undefined, storageObj)
+        : await tezosService.deployContract(codeJson, storageJson);
 
       return res.status(StatusCodes.CREATED).json(contractData);
     } catch (err) {

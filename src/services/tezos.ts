@@ -114,13 +114,24 @@ export class TezosService {
    * @param {string} codeJson - The compiled contract code in JSON.
    *
    * @param {string} storageJson - The compiled contract storage in JSON.
+   * @param storageObj
    */
-  public async deployContract(codeJson: string, storageJson: string) {
+  public async deployContract(
+    codeJson: string,
+    storageJson?: string,
+    storageObj?: any,
+  ) {
+    const originationParams = storageObj
+      ? {
+          code: JSON.parse(codeJson),
+          storage: storageObj,
+        }
+      : {
+          code: JSON.parse(codeJson),
+          init: JSON.parse(storageJson!!),
+        };
     const operation: OriginationOperation =
-      await this._tezos.contract.originate({
-        code: JSON.parse(codeJson),
-        init: JSON.parse(storageJson),
-      });
+      await this._tezos.contract.originate(originationParams);
     const operationHash = operation.hash;
     const contract = await operation.contract();
 

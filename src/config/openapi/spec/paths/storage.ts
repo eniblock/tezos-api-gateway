@@ -74,6 +74,9 @@ export default {
                   description:
                     'The code of smart contract to be upload in Base64, a sp.add_compilation_target should be added in the contract otherwise compilation will fail',
                 },
+                storageObj: {
+                  description: 'Storage object',
+                },
               },
             },
           },
