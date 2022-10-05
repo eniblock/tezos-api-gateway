@@ -79,13 +79,11 @@ spec:
               containerPort: 9466
               protocol: TCP
           livenessProbe:
-            httpGet:
-              path: /metrics
-              port: prometheus
+            exec:
+              command: ['pidof', 'node']
           readinessProbe:
-            httpGet:
-              path: /metrics
-              port: prometheus
+            exec:
+              command: ['pidof', 'node']
           resources:
             {{- toYaml .Values.sendTransactionsWorker.resources | nindent 12 }}
       {{- with .Values.sendTransactionsWorker.nodeSelector }}
