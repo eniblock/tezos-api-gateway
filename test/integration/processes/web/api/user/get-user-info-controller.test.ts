@@ -7,7 +7,10 @@ import {
 } from '../../../../../__fixtures__/config';
 import { WebProcess } from '../../../../../../src/processes/web/web-process';
 import { PostgreService } from '../../../../../../src/services/postgre';
-import { activatedAccount } from '../../../../../__fixtures__/smart-contract';
+import {
+  activatedAccount,
+  unActivatedAccount,
+} from '../../../../../__fixtures__/smart-contract';
 
 describe('[processes/web/api/user] Create user controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -56,12 +59,12 @@ describe('[processes/web/api/user] Create user controller', () => {
 
     it('Should return 200 when the address does not exist', async () => {
       const { body, status } = await request.get(
-        '/api/user/info/tz1hdQscorfqMzFqYxnrApuS5i6QSTuoAp3a',
+        `/api/user/info/${unActivatedAccount.address}`,
       );
 
       expect(status).toEqual(200);
       expect(body).toEqual({
-        account: 'tz1hdQscorfqMzFqYxnrApuS5i6QSTuoAp3a',
+        account: unActivatedAccount.address,
         balance: 0,
         revealed: false,
         activated: false,

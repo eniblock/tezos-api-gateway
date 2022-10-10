@@ -13,6 +13,9 @@ import { AbstractClient } from './abstract-client';
 import { ContractTransactionsParams } from '../../const/interfaces/contract/contract-transactions-params';
 import { mapIndexerTransactionToTransaction } from '../../helpers/mappers/transactions-mapper';
 import { IndexerTransaction } from '../../const/interfaces/transaction';
+import { TokenBalanceParams } from '../../const/interfaces/user/token-balance/get-user-token-balance-params';
+import { mapTzktTokenBalance } from '../../helpers/mappers/token-balance-mapper';
+import { TokenBalance } from '../../const/interfaces/user/token-balance/token-balance';
 
 export class IndexerClient extends AbstractClient {
   private _config: IndexerConfig;
@@ -242,6 +245,50 @@ export class IndexerClient extends AbstractClient {
   }
 
   /**
+   * @description                       - Call the indexer api to retrieve an account token balance
+   * @param account                     - owner address to query token balance for
+   * @param   {Object} params           - the query parameters
+   * @return  {Object}
+   */
+  public async getTokenBalance(
+    account: string,
+    params: TokenBalanceParams,
+  ): Promise<TokenBalance[] | null> {
+    const { name: indexerName } = this.config;
+
+    this.logger.info(
+      {
+        indexerName,
+      },
+      '[IndexerClient/getTokenBalance] Calling the indexer to get the token balance',
+    );
+
+    const { domainAndPath, queryParams } = this.buildURLForTokenBalance(
+      account,
+      params,
+    );
+
+    try {
+      const { body: result } = await superagent
+        .get(domainAndPath)
+        .query(queryParams);
+
+      const tokenbalanceList = result.map((tx: any) => {
+        return mapTzktTokenBalance(tx);
+      });
+
+      this.logger.info(
+        '[IndexerClient/getTokenBalance] Successfully fetched the token balance list',
+      );
+
+      return tokenbalanceList;
+    } catch (err) {
+      this.handleError(err, { account, indexerConfig: this.config });
+      return null;
+    }
+  }
+
+  /**
    * @description                       - Build the domain, path et query parameters for retrieving transaction list
    *                                      from the configured indexer and params
    * @param   {string} contractAddress  - Contract address
@@ -291,6 +338,33 @@ export class IndexerClient extends AbstractClient {
       default:
         throw new UnsupportedIndexerError(indexerName);
     }
+
+    return { domainAndPath, queryParams };
+  }
+
+  /**
+   * @description                       - Build the domain, path et query parameters for retrieving token balance
+   *                                      from the configured indexer and params
+   * @param account                     - token owner address
+   * @param   {Object} params           - the query parameters
+   * @return  {Object}
+   */
+  public buildURLForTokenBalance(
+    account: string,
+    params: TokenBalanceParams,
+  ): { domainAndPath: string; queryParams: string } {
+    const { apiUrl: indexerUrl, pathToTokenBalance } = this.config;
+    const limit = params.limit || 20;
+    const offset = params.offset || 0;
+
+    const domainAndPath = `${indexerUrl}${pathToTokenBalance!!}`;
+    const queryParams =
+      `account.eq=${account}&limit=${limit}&offset=${offset}` +
+      (params.order ? `&sort.${params.order}=id` : '') +
+      (params.tokenId ? `&token.tokenId.eq=${params.tokenId}` : '') +
+      (params.contract ? `&token.contract.eq=${params.contract}` : '') +
+      (params.standard ? `&token.standard.eq=${params.standard}` : '') +
+      (params.balance ? `&balance.eq=${params.balance}` : '');
 
     return { domainAndPath, queryParams };
   }

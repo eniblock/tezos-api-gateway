@@ -224,7 +224,7 @@ export async function convertStorage(
             return handleObjectDataField(logger, dataField, storage);
           }
 
-          if (_.get(storage, dataField) == null) {
+          if (!_.has(storage, dataField)) {
             // If dataField is null or undefined
             return [
               `${dataField}`,

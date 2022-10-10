@@ -285,6 +285,161 @@ export default {
       },
     },
   },
+  '/user/token-balance/{account}': {
+    get: {
+      summary: 'Get token balance by owner address',
+      description:
+        'Return the list of fa2 and fa1.2 tokens for a given owner account address ',
+      parameters: [
+        {
+          name: 'account',
+          in: 'path',
+          required: true,
+          schema: {
+            $ref: '#/components/schemas/tezos_address',
+          },
+        },
+        {
+          name: 'contract',
+          in: 'query',
+          required: false,
+          description: 'The smart contract hash to search against',
+          schema: {
+            $ref: '#/components/schemas/tezos_contract_address',
+          },
+        },
+        {
+          name: 'order',
+          in: 'query',
+          required: false,
+          description: 'Specifies how the returned transactions are ordered',
+          schema: {
+            $ref: '#/components/schemas/order',
+          },
+        },
+        {
+          name: 'standard',
+          in: 'query',
+          required: false,
+          description:
+            'Filter the transactions by token standard (either fa2 or fa1.2)',
+          schema: {
+            type: 'string',
+            pattern: '^\\bfa2\\b|\\bfa1.2\\b$',
+            description: 'The token standard',
+            enum: ['fa2', 'fa1.2'],
+          },
+        },
+        {
+          name: 'tokenId',
+          in: 'query',
+          required: false,
+          description:
+            'Filter by tokenId (for FA1.2 tokens tokenId is always "0")',
+          schema: {
+            type: 'integer',
+            minimum: 0,
+          },
+        },
+        {
+          name: 'balance',
+          in: 'query',
+          required: false,
+          description: 'Filter by token balance',
+          schema: {
+            type: 'integer',
+            minimum: 0,
+          },
+        },
+        {
+          name: 'limit',
+          in: 'query',
+          required: false,
+          description: 'The numbers of items to return',
+          schema: {
+            type: 'integer',
+            default: 20,
+            minimum: 1,
+            maximum: 500,
+          },
+        },
+        {
+          name: 'offset',
+          in: 'query',
+          required: false,
+          description:
+            'The number of items to skip before starting to collect the result set',
+          schema: {
+            type: 'integer',
+            default: 0,
+            minimum: 0,
+            maximum: 500,
+          },
+        },
+      ],
+      responses: {
+        200: {
+          description: 'User information fetched from tzkt',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                description: 'The transaction list',
+                items: {
+                  type: 'object',
+                  description: 'User properties',
+                  properties: {
+                    account: {
+                      nullable: true,
+                      type: 'string',
+                      description: 'public key hash of the user account',
+                    },
+                    balance: {
+                      nullable: true,
+                      type: 'number',
+                      description: 'the token balance of the user',
+                    },
+                    token: {
+                      nullable: true,
+                      type: 'object',
+                      description: 'Token info',
+                      properties: {
+                        contract: {
+                          nullable: true,
+                          description: 'contract address',
+                          type: 'string',
+                        },
+                        tokenId: {
+                          nullable: true,
+                          description:
+                            'token id (for FA1.2 tokens tokenId is always "0")',
+                          type: 'integer',
+                        },
+                        standard: {
+                          nullable: true,
+                          type: 'string',
+                          description: 'The token standard',
+                        },
+                        totalSupply: {
+                          nullable: true,
+                          description: 'Total number of existing tokens',
+                          type: 'integer',
+                        },
+                        metadata: {
+                          nullable: true,
+                          description: 'Token metadata',
+                        },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
   '/user/add': {
     post: {
       summary: 'Associate an user id with a public key hash into Vault',
