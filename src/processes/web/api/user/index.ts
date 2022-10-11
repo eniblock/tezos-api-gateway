@@ -7,6 +7,7 @@ import getUserByAddressController from './get-user-by-address-controller';
 import userTransferController from './user-transfer-controller';
 import userSignerController from './user-signer-controller';
 import getUserInfoController from './get-user-info-controller';
+import getUserTokenBalanceController from './get-user-token-balance-controller';
 import userMetadataController from './user-metadata-controller';
 import { IndexerPool } from '../../../../services/indexer-pool';
 import addUserWithPublicKeyController from './add-user-with-public-key';
@@ -48,6 +49,11 @@ export default function registerUserRoutes(
   router.get(
     '/user/info/:address',
     getUserInfoController.getUserInfo(indexerPool),
+  );
+
+  router.get(
+    '/user/token-balance/:account',
+    getUserTokenBalanceController.getUserTokenBalance(indexerPool),
   );
 
   router.post(

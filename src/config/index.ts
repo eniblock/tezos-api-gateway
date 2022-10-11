@@ -58,6 +58,7 @@ const tzktIndexerConfig: IndexerConfig = {
   apiUrl: process.env.TZKT_URL || 'https://api.ghostnet.tzkt.io/',
   pathToOperation: 'v1/operations/',
   pathToContractCalls: 'v1/operations/transactions/',
+  pathToTokenBalance: 'v1/tokens/balances/',
   pathToUserInfo: 'v1/accounts/',
   keyToOperation: parseInt(0, process.env.TZKT_KEY_TO_OPERATION),
   keyToBlockLevel: process.env.TZKT_KEY_TO_BLOCK_LEVEL || 'level',
