@@ -7,11 +7,14 @@ import { tezosNodeUrl } from '../../../__fixtures__/config';
 
 import { IndexerClient } from '../../../../src/services/clients/indexer-client';
 import { indexerConfigs } from '../../../../src/config';
-import { OperationNotFoundError } from '../../../../src/const/errors/indexer-error';
+import {
+  OperationFailedError,
+  OperationNotFoundError,
+} from '../../../../src/const/errors/indexer-error';
 import { TezosService } from '../../../../src/services/tezos';
 import { flexibleTokenContract } from '../../../__fixtures__/smart-contract';
 import { IndexerEnum } from '../../../../src/const/interfaces/indexer';
-import { firstTx } from '../../../__fixtures__/transactions';
+import { failedTx, firstTx } from '../../../__fixtures__/transactions';
 
 describe('[services/clients] Indexer Client', () => {
   const indexerClient = new IndexerClient(indexerConfigs[0], logger);
@@ -58,6 +61,18 @@ describe('[services/clients] Indexer Client', () => {
           expect(
             indexer.getOperationBlockLevel(notFoundOperationHash),
           ).rejects.toThrowError(OperationNotFoundError),
+        );
+      }
+      await Promise.all(indexerPromises);
+    }, 8000);
+
+    it('should throw OperationFailed', async () => {
+      const indexerPromises: Promise<void>[] = [];
+      for (const indexer of indexerClients) {
+        indexerPromises.push(
+          expect(
+            indexer.getOperationBlockLevel(failedTx.hash),
+          ).rejects.toThrowError(OperationFailedError),
         );
       }
       await Promise.all(indexerPromises);
@@ -124,6 +139,18 @@ describe('[services/clients] Indexer Client', () => {
           20,
         ),
       ).rejects.toThrow(OperationNotFoundError);
+
+      expect(loggerErrorSpy.mock.calls).toEqual([]);
+    }, 8000);
+
+    it('should throw when OperationFailedError happened but do not log error', async () => {
+      await expect(
+        indexerClient.checkIfOperationIsConfirmed(
+          tezosService,
+          failedTx.hash,
+          20,
+        ),
+      ).rejects.toThrow(OperationFailedError);
 
       expect(loggerErrorSpy.mock.calls).toEqual([]);
     }, 8000);

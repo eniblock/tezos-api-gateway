@@ -5,6 +5,13 @@ export class OperationNotFoundError extends Error {
   }
 }
 
+export class OperationFailedError extends Error {
+  constructor(operationHash: string) {
+    super(`The operation "${operationHash}" failed`);
+    this.name = 'Operation failed';
+  }
+}
+
 export class UserNotFoundError extends Error {
   constructor(userAddress: string) {
     super(`Could not find an user with this address: ${userAddress}`);

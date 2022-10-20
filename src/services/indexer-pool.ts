@@ -3,7 +3,10 @@ import Logger from 'bunyan';
 import { IndexerClient } from './clients/indexer-client';
 import { indexerConfigs } from '../config';
 import { generateRandomInt } from '../utils';
-import { OperationNotFoundError } from '../const/errors/indexer-error';
+import {
+  OperationFailedError,
+  OperationNotFoundError,
+} from '../const/errors/indexer-error';
 import { TezosService } from './tezos';
 import { IndexerEnum } from '../const/interfaces/indexer';
 
@@ -78,7 +81,12 @@ export class IndexerPool {
 
         return blockLevel;
       } catch (err) {
-        if (!(err instanceof OperationNotFoundError)) {
+        if (
+          !(
+            err instanceof OperationNotFoundError ||
+            err instanceof OperationFailedError
+          )
+        ) {
           this.logger.error(
             {
               err,
@@ -135,7 +143,12 @@ export class IndexerPool {
 
         nbOfRetry--;
       } catch (err) {
-        if (!(err instanceof OperationNotFoundError)) {
+        if (
+          !(
+            err instanceof OperationNotFoundError ||
+            err instanceof OperationFailedError
+          )
+        ) {
           this.logger.error(
             {
               err,

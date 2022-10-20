@@ -40,7 +40,7 @@ export const webProcessConfig: ProcessConfig = {
   exitTimeout: parseInt(3000, process.env.WEB_PROCESS_TIMEOUT),
 };
 
-const tzstatsIndexerConfig: IndexerConfig = {
+export const tzstatsIndexerConfig: IndexerConfig = {
   name: IndexerEnum.TZSTATS,
   apiUrl: process.env.TZSTATS_URL || 'https://api.ghost.tzstats.com/',
   pathToOperation: 'explorer/op/',
@@ -48,6 +48,8 @@ const tzstatsIndexerConfig: IndexerConfig = {
   pathToContractCalls: 'explorer/contract/',
   keyToOperation: parseInt(0, process.env.TZSTATS_KEY_TO_OPERATION),
   keyToBlockLevel: process.env.TZSTATS_KEY_TO_BLOCK_LEVEL || 'height',
+  keyToOperationStatus: 'status',
+  successStatus: 'applied',
   keyToBalance: 'spendable_balance',
   keyToReveal: 'is_revealed',
   keyToCreationDate: 'time',
@@ -62,6 +64,8 @@ const tzktIndexerConfig: IndexerConfig = {
   pathToUserInfo: 'v1/accounts/',
   keyToOperation: parseInt(0, process.env.TZKT_KEY_TO_OPERATION),
   keyToBlockLevel: process.env.TZKT_KEY_TO_BLOCK_LEVEL || 'level',
+  keyToOperationStatus: 'status',
+  successStatus: 'applied',
   keyToReveal: 'revealed',
   keyToCreationDate: 'timestamp',
 };
@@ -72,7 +76,7 @@ export const indexerConfigs: IndexerConfig[] = [
 ];
 
 export const nbOfConfirmation = parseInt(
-  3,
+  1,
   process.env.NUMBER_OF_OPERATION_CONFIRMATION,
 );
 
