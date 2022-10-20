@@ -1,7 +1,10 @@
 import _ from 'lodash';
 import nock from 'nock';
 import { indexerConfigs } from '../../../src/config';
-import { OperationNotFoundError } from '../../../src/const/errors/indexer-error';
+import {
+  OperationFailedError,
+  OperationNotFoundError,
+} from '../../../src/const/errors/indexer-error';
 import { IndexerClient } from '../../../src/services/clients/indexer-client';
 import { IndexerPool } from '../../../src/services/indexer-pool';
 import { TezosService } from '../../../src/services/tezos';
@@ -9,7 +12,7 @@ import { tezosNodeUrl } from '../../__fixtures__/config';
 import { notFoundOperationHash } from '../../__fixtures__/operation';
 import { logger } from '../../__fixtures__/services/logger';
 import { BlockResponse } from '@taquito/rpc';
-import { firstTx } from '../../__fixtures__/transactions';
+import { failedTx, firstTx } from '../../__fixtures__/transactions';
 
 describe('[services/indexer-pool]', () => {
   afterEach(() => {
@@ -60,6 +63,14 @@ describe('[services/indexer-pool]', () => {
           3,
         ),
       ).rejects.toThrowError(OperationNotFoundError);
+
+      expect(loggerErrorSpy).toHaveBeenCalledTimes(0);
+    }, 8000);
+
+    it('should throw OperationFailedError without calling logger error', async () => {
+      await expect(
+        indexerPool.getOperationBlockLevelByRandomIndexer(failedTx.hash, 3),
+      ).rejects.toThrowError(OperationFailedError);
 
       expect(loggerErrorSpy).toHaveBeenCalledTimes(0);
     }, 8000);
@@ -276,6 +287,21 @@ describe('[services/indexer-pool]', () => {
       ).resolves.toEqual(false);
 
       expect(getLatestBlockSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should throw OperationFailed error if the operation exist but failed', async () => {
+      await expect(
+        indexerPool.checkIfOperationIsConfirmedByRandomIndexer(
+          tezosService,
+          {
+            operationHash: failedTx.hash,
+            nbOfConfirmation: 20,
+          },
+          3,
+        ),
+      ).rejects.toThrowError(OperationFailedError);
+
+      expect(loggerErrorSpy).toHaveBeenCalledTimes(0);
     });
   });
 });

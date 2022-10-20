@@ -4,6 +4,7 @@ import { StatusCodes } from 'http-status-codes';
 import superagent from 'superagent';
 import url from 'url';
 import {
+  OperationFailedError,
   OperationNotFoundError,
   UnsupportedIndexerError,
 } from '../../const/errors/indexer-error';
@@ -30,18 +31,17 @@ export class IndexerClient extends AbstractClient {
   }
 
   /**
-   * Get the operation details
+   * Get the operation details by hash
    *
    * @param {string} operationHash   - the operation hash value
    *
-   * @return {string} the operation block level
+   * @return {any} the operation object
    */
-  public async getOperationBlockLevel(operationHash: string) {
+  public async getOperationByHash(operationHash: string) {
     const {
       name,
       apiUrl: indexerUrl,
       keyToOperation,
-      keyToBlockLevel,
       pathToOperation,
     } = this.config;
 
@@ -50,7 +50,7 @@ export class IndexerClient extends AbstractClient {
         operationHash,
         indexerName: name,
       },
-      '[IndexerClient/getOperationBlockLevel] Calling the indexer to get the operation status',
+      '[IndexerClient/getOperationByHash] Calling the indexer to get the operation details by hash',
     );
 
     const getOperationUrl = url.resolve(
@@ -62,9 +62,35 @@ export class IndexerClient extends AbstractClient {
       const { body: result } = await superagent.get(getOperationUrl);
 
       const operation = result[keyToOperation];
-
       if (!operation) {
         throw createHttpError(StatusCodes.NOT_FOUND);
+      }
+      return operation;
+    } catch (err) {
+      if (err.status === StatusCodes.NOT_FOUND) {
+        throw new OperationNotFoundError(operationHash);
+      }
+
+      this.handleError(err, { operationHash, indexerConfig: this.config });
+      return;
+    }
+  }
+
+  /**
+   * Get the operation block level
+   *
+   * @param {string} operationHash   - the operation hash value
+   *
+   * @return {string} the operation block level
+   */
+  public async getOperationBlockLevel(operationHash: string) {
+    const { keyToBlockLevel, keyToOperationStatus, successStatus } =
+      this.config;
+    try {
+      const operation = await this.getOperationByHash(operationHash);
+
+      if (!operation) {
+        return;
       }
 
       this.logger.info(
@@ -72,10 +98,17 @@ export class IndexerClient extends AbstractClient {
         '[IndexerClient/getOperationBlockLevel] Successfully fetched the operation details',
       );
 
+      if (operation[keyToOperationStatus] !== successStatus) {
+        throw new OperationFailedError(operationHash);
+      }
+
       return operation[keyToBlockLevel];
     } catch (err) {
-      if (err.status === StatusCodes.NOT_FOUND) {
-        throw new OperationNotFoundError(operationHash);
+      if (
+        err instanceof OperationNotFoundError ||
+        err instanceof OperationFailedError
+      ) {
+        throw err;
       }
 
       this.handleError(err, { operationHash, indexerConfig: this.config });
@@ -112,7 +145,12 @@ export class IndexerClient extends AbstractClient {
 
       return currentBlock - operationBlockLevel >= nbOfConfirmation;
     } catch (err) {
-      if (!(err instanceof OperationNotFoundError)) {
+      if (
+        !(
+          err instanceof OperationNotFoundError ||
+          err instanceof OperationFailedError
+        )
+      ) {
         this.logger.error(
           { err },
           '[IndexerClient/checkIfOperationIsConfirmed] Unexpected error happened',
