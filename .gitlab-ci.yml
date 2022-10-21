@@ -10,22 +10,10 @@ variables:
 
 test:
   stage: test
-  image: node:14.15.4-alpine3.12
-  services:
-    - postgres:13.1-alpine
-    - rabbitmq:3-management-alpine
-  variables:
-    POSTGRES_DB: tezos_api_gateway_test
-    POSTGRES_USER: tezos-service
-    POSTGRES_PASSWORD: randompwd
-    DB_HOST_TEST: postgres
-    AMQP_URL: amqp://rabbitmq
-  before_script:
-    - apk add curl bash python3
-    - curl -s https://smartpy.io/cli/install.sh | bash -s -- --yes --prefix /usr/local/smartpy/
-    - npm i
+  image:
+    name: registry.gitlab.com/xdev-tech/build/earthly:develop
   script:
-    - npm test
+    - earthly-daemonless --strict --no-output --push +test
   only:
     changes:
       - src/**/*
