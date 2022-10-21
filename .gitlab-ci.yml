@@ -13,7 +13,7 @@ test:
   image:
     name: registry.gitlab.com/xdev-tech/build/earthly:develop
   script:
-    - earthly-daemonless --strict --no-output +test
+    - earthly-daemonless --strict --no-output -P +test
   only:
     changes:
       - src/**/*
