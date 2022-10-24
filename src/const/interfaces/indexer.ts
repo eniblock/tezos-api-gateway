@@ -5,6 +5,8 @@ export interface IndexerConfig {
   pathToTokenBalance?: string;
   keyToOperation: number | string;
   keyToBlockLevel: string;
+  keyToOperationStatus: string;
+  successStatus: string;
   pathToOperation: string;
   pathToUserInfo: string;
   keyToCreationDate: string;
