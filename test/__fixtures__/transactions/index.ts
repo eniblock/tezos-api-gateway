@@ -42,3 +42,20 @@ export const firstTx = {
   timestamp: '2022-08-04T14:12:00Z',
   type: 'transaction',
 };
+
+export const failedTx = {
+  hash: 'opRaqsDcCbHTUepcfMsYwLp1tGRLvAVuNomHUu9syETeE7wQesN',
+  errors: [
+    {
+      id: 'proto.014-PtKathma.michelson_v1.runtime_error',
+      kind: 'temporary',
+      contract_handle: 'KT1MCPemFmjPP7G1F7GhgUcNKDyD6hYdy638',
+    },
+    {
+      id: 'proto.014-PtKathma.michelson_v1.script_rejected',
+      kind: 'temporary',
+      location: 1369,
+      with: { string: 'INVALID_AUCTION_ID' },
+    },
+  ],
+};
