@@ -114,7 +114,7 @@ describe('[lib/jobs/forge-operation]', () => {
     });
 
     it('should correctly create a job and insert data to jobs table', async () => {
-      const job = await forgeRevealOperation(
+      const { gas, fee, ...job } = await forgeRevealOperation(
         gatewayPool,
         postgreService,
         activatedAccount.address,
@@ -149,6 +149,60 @@ describe('[lib/jobs/forge-operation]', () => {
           caller_id: 'callerId',
         },
       ]);
+    }, 10000);
+
+    it('should correctly create a job with the specified fee, when fee parameter is set', async () => {
+      const { gas, fee, ...job } = await forgeRevealOperation(
+        gatewayPool,
+        postgreService,
+        activatedAccount.address,
+        activatedAccount.publicKey,
+        'callerId',
+        500,
+      );
+
+      expect(fee).toEqual(500);
+      await expect(
+        selectData(postgreService.pool, {
+          tableName: PostgreTables.JOBS,
+          selectFields: '*',
+        }),
+      ).resolves.toEqual([job]);
+
+      const operation = await selectData(postgreService.pool, {
+        tableName: PostgreTables.OPERATIONS,
+        selectFields:
+          'fee, source, storage_limit, gas_limit, counter, branch, job_id, public_key, kind, caller_id',
+      });
+
+      expect(operation[0].fee).toEqual(500);
+    }, 10000);
+
+    it('should correctly create a job with estimated fee, when fee parameter is set to 0', async () => {
+      const { gas, fee, ...job } = await forgeRevealOperation(
+        gatewayPool,
+        postgreService,
+        activatedAccount.address,
+        activatedAccount.publicKey,
+        'callerId',
+        0,
+      );
+
+      expect(fee).toBeGreaterThan(0);
+      await expect(
+        selectData(postgreService.pool, {
+          tableName: PostgreTables.JOBS,
+          selectFields: '*',
+        }),
+      ).resolves.toEqual([job]);
+
+      const operation = await selectData(postgreService.pool, {
+        tableName: PostgreTables.OPERATIONS,
+        selectFields:
+          'fee, source, storage_limit, gas_limit, counter, branch, job_id, public_key, kind, caller_id',
+      });
+
+      expect(operation[0].fee).toBeGreaterThan(0);
     }, 10000);
   });
 });

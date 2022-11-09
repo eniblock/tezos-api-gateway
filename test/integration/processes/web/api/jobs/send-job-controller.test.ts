@@ -101,6 +101,29 @@ describe('[processes/web/api/jobs] Send job controller', () => {
       });
     });
 
+    it('should return 400 when fee is set to zero', async () => {
+      const { body, status } = await request.post('/api/async/send/jobs').send({
+        secureKeyName: 'toto',
+        transactions: [
+          {
+            contractAddress: flexibleTokenContract,
+            entryPoint: 'transfer',
+            entryPointParams: {
+              tokens: 1,
+              destination: testAccount2,
+            },
+            fee: 0,
+          },
+        ],
+      });
+
+      expect(status).toEqual(400);
+      expect(body).toEqual({
+        message: 'request.body.transactions[0].fee should be >= 1',
+        status: 400,
+      });
+    });
+
     it('should return 404 when vault signer return 404', async () => {
       const vaultNock = nock('http://localhost:8300')
         .get('/v1/transit/keys/toto')

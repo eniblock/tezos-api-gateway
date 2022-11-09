@@ -88,6 +88,13 @@ const components = {
       description:
         'Amount of XTZ tokens transferred in the transaction, in mutez (1 XTZ = 10⁶ mutez)',
     },
+    fee: {
+      type: 'integer',
+      nullable: true,
+      minimum: 1,
+      description:
+        'Amount of XTZ Tez to pay the transaction gas fee, in mutez (1 XTZ = 10⁶ mutez)',
+    },
     callerId: {
       nullable: true,
       type: 'string',
@@ -114,6 +121,26 @@ const components = {
       pattern: '^\\basc\\b|\\bdesc\\b$',
       default: 'asc',
       enum: ['asc', 'desc'],
+    },
+    extended_job: {
+      type: 'object',
+      allOf: [
+        {
+          $ref: '#/components/schemas/job',
+        },
+        {
+          properties: {
+            fee: {
+              $ref: '#/components/schemas/fee',
+            },
+            gas: {
+              type: 'integer',
+              nullable: true,
+              description: 'Gas consumption estimation',
+            },
+          },
+        },
+      ],
     },
     job: {
       type: 'object',

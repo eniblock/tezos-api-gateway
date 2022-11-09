@@ -2,7 +2,7 @@ import Logger from 'bunyan';
 
 import { getContractMethod } from '../smart-contracts';
 import { PostgreService } from '../../services/postgre';
-import { Jobs } from '../../const/interfaces/jobs';
+import { Jobs, TransactionJobsResults } from '../../const/interfaces/jobs';
 import { TezosService } from '../../services/tezos';
 import {
   insertJob,
@@ -68,7 +68,7 @@ export async function sendTransactionsAsync(
   postgreService: PostgreService,
   amqpService: AmqpService,
   logger: Logger,
-) {
+): Promise<Jobs> {
   try {
     const {
       rows: [insertedJob],
@@ -96,7 +96,7 @@ export async function sendTransactionsAsync(
       '[lib/jobs/sendTransactionsAsync] Successfully publish send transactions request to the queue',
     );
 
-    return insertedJob as Jobs;
+    return insertedJob;
   } catch (err) {
     logger.error(
       { error: err.message },
@@ -131,7 +131,7 @@ export async function sendTransactions(
   gatewayPool: GatewayPool,
   postgreService: PostgreService,
   logger: Logger,
-) {
+): Promise<TransactionJobsResults> {
   try {
     const tezosService = await gatewayPool.getTezosService();
 
@@ -155,7 +155,11 @@ export async function sendTransactions(
 
     tezosService.setSigner(vaultSigner);
 
-    const { hash: operationHash } = await getOperationHashFromTezos(
+    const {
+      hash: operationHash,
+      fee,
+      consumedMilliGas,
+    } = await getOperationHashFromTezos(
       transactions,
       useCache,
       tezosService,
@@ -163,7 +167,7 @@ export async function sendTransactions(
     );
 
     logger.info(
-      { operationHash },
+      { operationHash, fee, consumedMilliGas },
       '[lib/jobs/send-transactions/#sendTransactions] Successfully send the transactions to Tezos',
     );
 
@@ -198,7 +202,11 @@ export async function sendTransactions(
       '[lib/jobs/send-transactions/#sendTransactions] Successfully update job status and operation hash',
     );
 
-    return result[0] as Jobs;
+    return {
+      ...result[0],
+      fee,
+      gas: Math.floor(Number(consumedMilliGas) / 1000),
+    };
   } catch (err) {
     if (!(err instanceof JobIdNotFoundError)) {
       await updateJobStatusAndErrorMessage(
@@ -246,7 +254,11 @@ async function getOperationHashFromTezos(
         tezosService,
         logger,
       )
-    ).send({ amount: transactions[0].amount, mutez: true });
+    ).send({
+      amount: transactions[0].amount,
+      fee: transactions[0].fee,
+      mutez: true,
+    });
   }
 
   const batch = await tezosService.createBatch();
@@ -261,7 +273,8 @@ async function getOperationHashFromTezos(
           logger,
         )
       ).toTransferParams({
-        amount: transactions[0].amount,
+        amount: transaction.amount,
+        fee: transaction.fee,
         mutez: true,
       }),
     );

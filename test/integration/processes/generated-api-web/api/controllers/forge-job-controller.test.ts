@@ -160,6 +160,8 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
         sourceAddress: revealedAccount.address,
       });
 
+      const { gas, fee, ...job } = body;
+
       expect({ body, status }).toEqual({
         status: 201,
         body: {
@@ -169,6 +171,8 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
           operation_kind: OpKind.TRANSACTION,
           status: 'created',
           error_message: null,
+          fee,
+          gas,
         },
       });
 
@@ -177,7 +181,7 @@ describe('[processes/generated-api-web/api/controllers] Forge job controller', (
           tableName: PostgreTables.JOBS,
           selectFields: '*',
         }),
-      ).resolves.toEqual([body]);
+      ).resolves.toEqual([job]);
 
       const insertedForgeParameters = await selectData(postgreService.pool, {
         tableName: PostgreTables.OPERATIONS,

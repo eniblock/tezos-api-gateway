@@ -102,6 +102,16 @@ export class SendTransactionsConsumerProcess extends AbstractProcess {
                   { type: 'array' },
                 ],
               },
+              amount: {
+                type: 'integer',
+                description:
+                  'Amount of Tez (XTZ) transferred in the transaction, in mutez (1 XTZ = 10⁶ mutez)',
+              },
+              fee: {
+                type: 'integer',
+                description:
+                  'Amount of Tez (XTZ) to pay the transaction gas fee, in mutez (1 XTZ = 10⁶ mutez)',
+              },
             },
           },
         },

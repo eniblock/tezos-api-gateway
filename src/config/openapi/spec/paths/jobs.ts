@@ -64,6 +64,9 @@ export default {
                       amount: {
                         $ref: '#/components/schemas/amount',
                       },
+                      fee: {
+                        $ref: '#/components/schemas/fee',
+                      },
                     },
                   },
                 },
@@ -121,6 +124,9 @@ export default {
                 callerId: {
                   $ref: '#/components/schemas/callerId',
                 },
+                fee: {
+                  $ref: '#/components/schemas/fee',
+                },
               },
             },
           },
@@ -133,7 +139,7 @@ export default {
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/job',
+                $ref: '#/components/schemas/extended_job',
               },
             },
           },
@@ -315,6 +321,9 @@ export default {
                       amount: {
                         $ref: '#/components/schemas/amount',
                       },
+                      fee: {
+                        $ref: '#/components/schemas/fee',
+                      },
                     },
                   },
                 },
@@ -338,7 +347,7 @@ export default {
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/job',
+                $ref: '#/components/schemas/extended_job',
               },
             },
           },
@@ -402,6 +411,9 @@ export default {
                       amount: {
                         $ref: '#/components/schemas/amount',
                       },
+                      fee: {
+                        $ref: '#/components/schemas/fee',
+                      },
                     },
                   },
                 },
@@ -425,7 +437,7 @@ export default {
           content: {
             'application/json': {
               schema: {
-                $ref: '#/components/schemas/job',
+                $ref: '#/components/schemas/extended_job',
               },
             },
           },

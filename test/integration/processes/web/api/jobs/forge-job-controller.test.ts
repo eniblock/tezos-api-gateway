@@ -24,6 +24,7 @@ import { ForgeOperationBodyParams } from '../../../../../../src/const/interfaces
 import { OpKind } from '@taquito/rpc';
 import * as jobsLib from '../../../../../../src/lib/jobs/forge-operation';
 import { TezosOperationError } from '@taquito/taquito';
+import _ from 'lodash';
 
 describe('[processes/web/api/jobs] Forge job controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
@@ -307,6 +308,20 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
       });
     });
 
+    it('should return 400 when fee parameters is set to zero', async () => {
+      const customRequestBodyParam = _.cloneDeep(requestBodyParam);
+      customRequestBodyParam.transactions[0].fee = 0;
+      const { body, status } = await request.post('/api/forge/jobs').send({
+        ...customRequestBodyParam,
+      });
+
+      expect(status).toEqual(400);
+      expect(body).toEqual({
+        message: 'request.body.transactions[0].fee should be >= 1',
+        status: 400,
+      });
+    });
+
     it('should return 500 when unexpected error happen', async () => {
       jest
         .spyOn(jobsLib, 'forgeOperation')
@@ -348,6 +363,8 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
           status: 'created',
           error_message: null,
           operation_kind: OpKind.TRANSACTION,
+          fee: body.fee,
+          gas: body.gas,
         },
       });
     }, 10000);
@@ -369,6 +386,8 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
           status: 'created',
           error_message: null,
           operation_kind: OpKind.TRANSACTION,
+          fee: body.fee,
+          gas: body.gas,
         },
       });
     }, 10000);
@@ -377,6 +396,8 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
       const { body, status } = await request
         .post('/api/forge/jobs')
         .send(requestBodyParam);
+
+      const { gas, fee, ...job } = body;
 
       expect({ body, status }).toEqual({
         status: 201,
@@ -387,6 +408,8 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
           status: 'created',
           error_message: null,
           operation_kind: OpKind.TRANSACTION,
+          fee,
+          gas,
         },
       });
 
@@ -395,7 +418,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
           tableName: PostgreTables.JOBS,
           selectFields: '*',
         }),
-      ).resolves.toEqual([body]);
+      ).resolves.toEqual([job]);
 
       const insertedForgeParameters = await selectData(postgreService.pool, {
         tableName: PostgreTables.OPERATIONS,
@@ -444,12 +467,15 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
     }, 8000);
 
     it('should return 201 and correctly insert data in the database when amount is specified', async () => {
-      requestBodyParam.transactions[0].amount = 10;
-      requestBodyParam.transactions[1].amount = 100;
+      const customRequestBodyParam = _.cloneDeep(requestBodyParam);
+      customRequestBodyParam.transactions[0].amount = 10;
+      customRequestBodyParam.transactions[1].amount = 100;
 
       const { body, status } = await request
         .post('/api/forge/jobs')
-        .send(requestBodyParam);
+        .send(customRequestBodyParam);
+
+      const { gas, fee, ...job } = body;
 
       expect({ body, status }).toEqual({
         status: 201,
@@ -460,6 +486,8 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
           status: 'created',
           error_message: null,
           operation_kind: OpKind.TRANSACTION,
+          fee,
+          gas,
         },
       });
 
@@ -468,7 +496,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
           tableName: PostgreTables.JOBS,
           selectFields: '*',
         }),
-      ).resolves.toEqual([body]);
+      ).resolves.toEqual([job]);
 
       const insertedForgeParameters = await selectData(postgreService.pool, {
         tableName: PostgreTables.OPERATIONS,
@@ -478,6 +506,48 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
 
       expect(insertedForgeParameters[0].amount).toEqual(10);
       expect(insertedForgeParameters[1].amount).toEqual(100);
+    }, 8000);
+
+    it('should return 201 and correctly insert data in the database fee parameter is specified', async () => {
+      const customRequestBodyParam = _.cloneDeep(requestBodyParam);
+      customRequestBodyParam.transactions[0].fee = 1000;
+      customRequestBodyParam.transactions[1].fee = 500;
+
+      const { body, status } = await request
+        .post('/api/forge/jobs')
+        .send(customRequestBodyParam);
+
+      const { gas, fee, ...job } = body;
+
+      expect({ body, status }).toEqual({
+        status: 201,
+        body: {
+          id: body.id,
+          forged_operation: body.forged_operation,
+          operation_hash: null,
+          status: 'created',
+          error_message: null,
+          operation_kind: OpKind.TRANSACTION,
+          fee,
+          gas,
+        },
+      });
+
+      await expect(
+        selectData(postgreService.pool, {
+          tableName: PostgreTables.JOBS,
+          selectFields: '*',
+        }),
+      ).resolves.toEqual([job]);
+
+      const insertedForgeParameters = await selectData(postgreService.pool, {
+        tableName: PostgreTables.OPERATIONS,
+        selectFields:
+          'destination, parameters, parameters_json, amount, fee, source, storage_limit, gas_limit, counter, branch, job_id, caller_id',
+      });
+
+      expect(insertedForgeParameters[0].fee).toEqual(1000);
+      expect(insertedForgeParameters[1].fee).toEqual(500);
     }, 8000);
   });
 });

@@ -19,7 +19,7 @@ import { PostgreService } from '../../../../src/services/postgre';
 import { PostgreTables } from '../../../../src/const/postgre/postgre-tables';
 import { TezosService } from '../../../../src/services/tezos';
 import { ForgeOperationParams } from '../../../../src/const/interfaces/forge-operation-params';
-import { Jobs } from '../../../../src/const/interfaces/jobs';
+import { TransactionJobsResults } from '../../../../src/const/interfaces/jobs';
 import { injectOperation } from '../../../../src/lib/jobs/inject-operation';
 import * as jobModel from '../../../../src/models/jobs';
 import { selectOperation } from '../../../../src/models/operations';
@@ -75,7 +75,7 @@ describe('[lib/jobs/inject-operation]', () => {
       reveal: false,
     };
 
-    let insertedJob: Jobs;
+    let insertedJob: TransactionJobsResults;
     let tezosInjectOperationSpy: jest.SpyInstance;
     let tezosPreapplyOperationSpy: jest.SpyInstance;
 
@@ -83,13 +83,13 @@ describe('[lib/jobs/inject-operation]', () => {
       const estimation = [
         {
           suggestedFeeMutez: 50,
-          storageLimit: 50,
-          gasLimit: 50,
+          storageLimit: 500,
+          gasLimit: 500,
         },
         {
           suggestedFeeMutez: 100,
-          storageLimit: 50,
-          gasLimit: 100,
+          storageLimit: 500,
+          gasLimit: 1000,
         },
       ];
 
@@ -97,11 +97,12 @@ describe('[lib/jobs/inject-operation]', () => {
         .spyOn(tezosService.tezos.estimate, 'batch')
         .mockResolvedValue(estimation as any);
 
-      insertedJob = await forgeOperation(
+      const { gas, fee, ...forgeResult } = await forgeOperation(
         testForgeOperation,
         tezosService,
         postgreService,
       );
+      insertedJob = forgeResult;
 
       tezosInjectOperationSpy = jest
         .spyOn(tezosService, 'injectedOperations')
@@ -179,8 +180,8 @@ describe('[lib/jobs/inject-operation]', () => {
               amount: '0',
               fee: '50',
               source: testAccount,
-              storage_limit: '50',
-              gas_limit: '50',
+              storage_limit: '500',
+              gas_limit: '500',
               counter: transactions[0].counter!.toString(),
             },
             {
@@ -195,8 +196,8 @@ describe('[lib/jobs/inject-operation]', () => {
               amount: '0',
               fee: '100',
               source: testAccount,
-              storage_limit: '50',
-              gas_limit: '100',
+              storage_limit: '500',
+              gas_limit: '1000',
               counter: transactions[1].counter!.toString(),
             },
           ],
@@ -256,8 +257,8 @@ describe('[lib/jobs/inject-operation]', () => {
               amount: '0',
               fee: '50',
               source: testAccount,
-              storage_limit: '50',
-              gas_limit: '50',
+              storage_limit: '500',
+              gas_limit: '500',
               counter: transactions[0].counter!.toString(),
             },
             {
@@ -272,8 +273,8 @@ describe('[lib/jobs/inject-operation]', () => {
               amount: '0',
               fee: '100',
               source: testAccount,
-              storage_limit: '50',
-              gas_limit: '100',
+              storage_limit: '500',
+              gas_limit: '1000',
               counter: transactions[1].counter!.toString(),
             },
           ],

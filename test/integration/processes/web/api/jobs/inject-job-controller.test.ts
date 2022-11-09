@@ -113,8 +113,8 @@ describe('[processes/web/api/jobs] Inject job controller', () => {
       const estimation = [
         {
           suggestedFeeMutez: 100,
-          storageLimit: 50,
-          gasLimit: 100,
+          storageLimit: 500,
+          gasLimit: 1000,
         },
       ];
       jest
@@ -181,13 +181,13 @@ describe('[processes/web/api/jobs] Inject job controller', () => {
     it('should return 200 and the hash operation, correctly updated the data in database', async () => {
       jest.spyOn(tezosService.tezos.estimate, 'batch').mockResolvedValue([
         {
-          suggestedFeeMutez: 50,
-          storageLimit: 50,
-          gasLimit: 50,
+          suggestedFeeMutez: 500,
+          storageLimit: 500,
+          gasLimit: 500,
         },
       ] as any);
 
-      const createdJob = await forgeOperation(
+      const { gas, fee, ...createdJob } = await forgeOperation(
         {
           transactions: [
             {

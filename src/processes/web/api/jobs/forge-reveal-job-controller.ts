@@ -14,12 +14,13 @@ function forgeRevealOperationAndCreateJob(
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { address, publicKey, callerId } = req.body;
+      const { address, publicKey, callerId, fee } = req.body;
       logger.info(
         '[jobs/forge-reveal-job-controller] %s wants to reveal the address %s with the public key %s',
         callerId,
         address,
         publicKey,
+        fee,
       );
 
       const accounts = await forgeRevealOperation(
@@ -28,6 +29,7 @@ function forgeRevealOperationAndCreateJob(
         address,
         publicKey,
         callerId,
+        fee,
       );
 
       return res.status(StatusCodes.CREATED).json(accounts);

@@ -1,6 +1,6 @@
 import { GatewayPool } from '../../services/gateway-pool';
 import { PostgreService } from '../../services/postgre';
-import { Jobs } from '../../const/interfaces/jobs';
+import { Jobs, TransactionJobsResults } from '../../const/interfaces/jobs';
 import { logger } from '../../services/logger';
 import { FakeSigner } from '../../services/signers/fake-signer';
 import { AddressAlreadyRevealedError } from '../../const/errors/address-already-revealed';
@@ -13,6 +13,7 @@ import { AddressNotFoundError } from '../../const/errors/address-not-found-error
 import { RevealEstimateError } from '../../const/errors/reveal-estimate-error';
 import { TezosService } from '../../services/tezos';
 import { Estimate } from '@taquito/taquito';
+import { gasLimitMargin } from '../../config';
 
 export async function forgeRevealOperation(
   gatewayPool: GatewayPool,
@@ -20,7 +21,8 @@ export async function forgeRevealOperation(
   address: string,
   publicKey: string,
   callerId: string,
-): Promise<Jobs> {
+  fee?: number,
+): Promise<TransactionJobsResults> {
   const tezosService = await gatewayPool.getTezosService();
 
   logger.info(
@@ -36,7 +38,12 @@ export async function forgeRevealOperation(
   tezosService.setSigner(signerToGetPKH);
 
   const revealOperation: OperationContentsReveal =
-    await estimateAndBuildRevealOperation(tezosService, address, publicKey);
+    await estimateAndBuildRevealOperation(
+      tezosService,
+      address,
+      publicKey,
+      fee,
+    );
 
   const { branch, forgedOperation } = await tezosService.forgeOperations([
     revealOperation,
@@ -67,13 +74,18 @@ export async function forgeRevealOperation(
     '[lib/jobs/forgeOperation] Successfully saved parameters of forge function',
   );
 
-  return result.rows[0] as Jobs;
+  return {
+    ...result.rows[0],
+    fee: Number(revealOperation.fee),
+    gas: Number(revealOperation.gas_limit) - gasLimitMargin,
+  };
 }
 
 export async function estimateAndBuildRevealOperation(
   tezosService: TezosService,
   address: string,
   publicKey: string,
+  fee?: number,
 ): Promise<OperationContentsReveal> {
   let estimation: Estimate | undefined;
   try {
@@ -118,7 +130,7 @@ export async function estimateAndBuildRevealOperation(
   const revealOperation: OperationContentsReveal = {
     kind: OpKind.REVEAL,
     source: address,
-    fee: estimation.suggestedFeeMutez.toString(),
+    fee: fee ? `${fee}` : estimation.suggestedFeeMutez.toString(),
     counter: (counter + 1).toString(),
     gas_limit: estimation.gasLimit.toString(),
     storage_limit: estimation.storageLimit.toString(),

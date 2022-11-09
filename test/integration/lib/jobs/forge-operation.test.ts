@@ -25,6 +25,7 @@ import {
 import { AddressNotRevealedError } from '../../../../src/const/errors/address-not-revealed';
 import { RevealEstimateError } from '../../../../src/const/errors/reveal-estimate-error';
 import { MaxOperationsPerBatchError } from '../../../../src/const/errors/max-operations-per-batch-error';
+import _ from 'lodash';
 
 describe('[lib/jobs/forge-operation]', () => {
   const postgreService = new PostgreService(postgreConfig);
@@ -305,7 +306,7 @@ describe('[lib/jobs/forge-operation]', () => {
     });
 
     it('should correctly create a job and insert data to jobs and operations table when reveal is true and the address is already revealed', async () => {
-      const createdJob = await forgeOperation(
+      const { fee, gas, ...createdJob } = await forgeOperation(
         {
           ...testForgeOperation,
           reveal: true,
@@ -373,7 +374,7 @@ describe('[lib/jobs/forge-operation]', () => {
     });
 
     it('should correctly create a job and insert data to jobs and operations table', async () => {
-      const createdJob = await forgeOperation(
+      const { fee, gas, ...createdJob } = await forgeOperation(
         testForgeOperation,
         tezosService,
         postgreService,
@@ -437,10 +438,11 @@ describe('[lib/jobs/forge-operation]', () => {
     }, 8000);
 
     it('should correctly create a job and insert data to jobs and operations table, when amount is specified', async () => {
-      testForgeOperation.transactions[0].amount = 10;
-      testForgeOperation.transactions[1].amount = 100;
-      const createdJob = await forgeOperation(
-        testForgeOperation,
+      const customTestForgeOperation = _.cloneDeep(testForgeOperation);
+      customTestForgeOperation.transactions[0].amount = 10;
+      customTestForgeOperation.transactions[1].amount = 100;
+      const { fee, gas, ...createdJob } = await forgeOperation(
+        customTestForgeOperation,
         tezosService,
         postgreService,
       );
@@ -463,7 +465,7 @@ describe('[lib/jobs/forge-operation]', () => {
     }, 8000);
 
     it('should correctly create a job and insert data to jobs and operations table for the transaction and the reveal', async () => {
-      const createdJob = await forgeOperation(
+      const { fee, gas, ...createdJob } = await forgeOperation(
         {
           transactions: [
             {
@@ -547,6 +549,64 @@ describe('[lib/jobs/forge-operation]', () => {
           caller_id: 'TAG',
         },
       ]);
+    }, 150000);
+
+    it('should correctly create a job with the specified fee, when transaction fee parameter is set', async () => {
+      const customTestForgeOperation = _.cloneDeep(testForgeOperation);
+      customTestForgeOperation.transactions[0].fee = 1000;
+      customTestForgeOperation.transactions[1].fee = 500;
+      const { fee, gas, ...createdJob } = await forgeOperation(
+        customTestForgeOperation,
+        tezosService,
+        postgreService,
+      );
+
+      await expect(
+        selectData(postgreService.pool, {
+          tableName: PostgreTables.JOBS,
+          selectFields: '*',
+        }),
+      ).resolves.toEqual([createdJob]);
+
+      expect(fee).toEqual(1500);
+
+      const insertedForgeParameters = await selectData(postgreService.pool, {
+        tableName: PostgreTables.OPERATIONS,
+        selectFields:
+          'destination, parameters, parameters_json, amount, fee, source, storage_limit, gas_limit, counter, branch, job_id',
+      });
+
+      expect(insertedForgeParameters[0].fee).toEqual(1000);
+      expect(insertedForgeParameters[1].fee).toEqual(500);
+    }, 150000);
+
+    it('should correctly create a job with estimated fee, when transaction fee parameter is set to 0', async () => {
+      const customTestForgeOperation = _.cloneDeep(testForgeOperation);
+      customTestForgeOperation.transactions[0].fee = 0;
+      customTestForgeOperation.transactions[1].fee = 0;
+      const { fee, gas, ...createdJob } = await forgeOperation(
+        customTestForgeOperation,
+        tezosService,
+        postgreService,
+      );
+
+      await expect(
+        selectData(postgreService.pool, {
+          tableName: PostgreTables.JOBS,
+          selectFields: '*',
+        }),
+      ).resolves.toEqual([createdJob]);
+
+      expect(fee).toBeGreaterThan(0);
+
+      const insertedForgeParameters = await selectData(postgreService.pool, {
+        tableName: PostgreTables.OPERATIONS,
+        selectFields:
+          'destination, parameters, parameters_json, amount, fee, source, storage_limit, gas_limit, counter, branch, job_id',
+      });
+
+      expect(insertedForgeParameters[0].fee).toBeGreaterThan(0);
+      expect(insertedForgeParameters[1].fee).toBeGreaterThan(0);
     }, 150000);
   });
 });
