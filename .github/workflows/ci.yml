@@ -6,6 +6,7 @@ on:
 
 env:
   FORCE_COLOR: 1
+  EARTHLY_STRICT: "true"
 
 jobs:
 
@@ -20,7 +21,7 @@ jobs:
         dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: Run api tests
       run: |
-         earthly --strict +test
+        earthly --allow-privileged +test
 
   lint-helm:
     runs-on: ubuntu-latest
@@ -30,8 +31,7 @@ jobs:
       with:
         dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
     - run: |
-         earthly --strict \
-         ./helm+lint
+        earthly ./helm+lint
 
 
   ############################ docker ############################
@@ -47,8 +47,7 @@ jobs:
         dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: Build the asset image
       run: |
-         earthly --strict --push +docker \
-         --tag=${{ steps.setup.outputs.tag }}
+        earthly --push +docker --tag=${{ steps.setup.outputs.tag }}
 
 
   ############################ helm ############################
@@ -64,8 +63,8 @@ jobs:
         dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
     - name: Build/Publish the helm charts
       run: |
-         earthly \
-         --secret registry_username=notused \
-         --secret registry_password=${{ github.token }} \
-         --strict ./helm+publish \
-         --tag=${{ steps.setup.outputs.tag }}
+        earthly \
+          --secret registry_username=notused \
+          --secret registry_password=${{ github.token }} \
+          ./helm+publish \
+          --tag=${{ steps.setup.outputs.tag }}
