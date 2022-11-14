@@ -5,7 +5,9 @@ on:
       - "**"
 
 env:
-  FORCE_COLOR: 1
+  EARTHLY_REMOTE_CACHE: cache.registry/${{ github.repository }}/${{ github.job }}/${{ github.ref_name }}:cache
+  EARTHLY_CACHE_FROM: cache.registry/${{ github.repository }}/${{ github.job }}/develop:cache
+  EARTHLY_PUSH: "true"
   EARTHLY_STRICT: "true"
 
 jobs:
@@ -13,7 +15,7 @@ jobs:
   ############################ tests ############################
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted]
     steps:
     - uses: eniblock/build/actions/setup@develop
       id: setup
@@ -24,7 +26,7 @@ jobs:
         earthly --allow-privileged +test
 
   lint-helm:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted]
     steps:
     - uses: eniblock/build/actions/setup@develop
       id: setup
@@ -37,7 +39,7 @@ jobs:
   ############################ docker ############################
 
   docker:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted]
     needs: [test, lint-helm]
     steps:
     - uses: eniblock/build/actions/setup@develop
@@ -53,7 +55,7 @@ jobs:
   ############################ helm ############################
 
   helm-publish:
-    runs-on: ubuntu-latest
+    runs-on: [self-hosted]
     needs: [docker]
     steps:
     - uses: eniblock/build/actions/setup@develop
