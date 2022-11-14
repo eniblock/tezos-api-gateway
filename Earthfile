@@ -1,12 +1,26 @@
 VERSION 0.6
 
-test:
-    FROM node:14.15.4-alpine3.12
-    RUN apk add curl bash python3
+deps:
+    FROM node:14-alpine3.12
+    WORKDIR /usr/src/app
+    RUN apk add curl bash python3 make
     RUN curl -s https://smartpy.io/cli/install.sh | bash -s -- --yes --prefix /usr/local/smartpy/
-    WORKDIR /app
-    COPY --dir package*.json ./
+    COPY package.json package-lock.json ./
     RUN npm i
+
+docker:
+    FROM +deps
+    COPY tsconfig.json .
+    COPY test test
+    COPY src src
+    RUN npm run build
+    CMD ["node", "build/src/processes/web/index.js"]
+    ARG tag=latest
+    ARG ref=eniblock/tezos-api-gateway:${tag}
+    SAVE IMAGE --push ${ref}
+
+test:
+    FROM +deps
     COPY --dir .nvmrc .prettierrc.json LICENSE.txt jest.config.js src test tsconfig.json tslint.json yarn.lock ./
     COPY docker-compose-test.yml ./
     WITH DOCKER --compose docker-compose-test.yml

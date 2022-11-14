@@ -5,10 +5,6 @@ cfg = config.parse()
 
 clk_k8s = 'clk -a --force-color k8s -c ' + k8s_context() + ' '
 
-load('ext://kubectl_build', 'image_build', 'kubectl_build_registry_secret', 'kubectl_build_enable')
-kubectl_build_registry_secret('gitlab-registry')
-kubectl_build_enable(local(clk_k8s + 'features --field value --format plain kubectl_build'))
-
 if config.tilt_subcommand == 'up':
     # update the helm package dependencies a first time at startup, so helm can load the helm chart
     local(clk_k8s + 'helm-dependency-update helm/tezos-api-gateway')
@@ -25,7 +21,11 @@ k8s_yaml(
         name="tag",
     )
 )
-image_build('registry.gitlab.com/xdev-tech/xdev-enterprise-business-network/tezos-api-gateway', '.')
+custom_build(
+    'eniblock/tezos-api-gateway',
+    'earthly +docker --ref=$EXPECTED_REF',
+    ['.'],
+)
 k8s_resource('tag-rabbitmq', port_forwards=['15672', '5672'])
 k8s_resource('tag-api', port_forwards='3333', resource_deps=['tag-rabbitmq'])
 k8s_resource('tag-vault', port_forwards='8300')

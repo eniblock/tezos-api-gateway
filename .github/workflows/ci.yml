@@ -1,0 +1,71 @@
+name: ci
+on:
+  push:
+    branches:
+      - "**"
+
+env:
+  FORCE_COLOR: 1
+
+jobs:
+
+  ############################ tests ############################
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: eniblock/build/actions/setup@develop
+      id: setup
+      with:
+        dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Run api tests
+      run: |
+         earthly --strict +test
+
+  lint-helm:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: eniblock/build/actions/setup@develop
+      id: setup
+      with:
+        dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
+    - run: |
+         earthly --strict \
+         ./helm+lint
+
+
+  ############################ docker ############################
+
+  docker:
+    runs-on: ubuntu-latest
+    needs: [test, lint-helm]
+    steps:
+    - uses: eniblock/build/actions/setup@develop
+      id: setup
+      with:
+        helmdir: helm/tezos-api-gateway
+        dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Build the asset image
+      run: |
+         earthly --strict --push +docker \
+         --tag=${{ steps.setup.outputs.tag }}
+
+
+  ############################ helm ############################
+
+  helm-publish:
+    runs-on: ubuntu-latest
+    needs: [docker]
+    steps:
+    - uses: eniblock/build/actions/setup@develop
+      id: setup
+      with:
+        helmdir: helm/tezos-api-gateway
+        dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Build/Publish the helm charts
+      run: |
+         earthly \
+         --secret registry_username=notused \
+         --secret registry_password=${{ github.token }} \
+         --strict ./helm+publish \
+         --tag=${{ steps.setup.outputs.tag }}
