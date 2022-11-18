@@ -88,6 +88,15 @@ describe('[processes/web/api/user/info] Get Token Balance controller', () => {
       expect(status).toEqual(200);
     });
 
+    it('should return 200 and the token balance list if the account is a contract', async () => {
+      const { body, status } = await request.get(
+        `/api/user/token-balance/KT19tyXiSuMGV36B2F6q1oYjchFx3p4ndBdz`,
+      );
+
+      expect(status).toEqual(200);
+      expect(body.length).toEqual(2);
+    });
+
     it('Should return 200 when the address does not exist', async () => {
       const { body, status } = await request.get(
         `/api/user/token-balance/${unActivatedAccount.address}`,
