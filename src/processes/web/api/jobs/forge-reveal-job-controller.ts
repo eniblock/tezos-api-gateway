@@ -7,6 +7,7 @@ import { AddressAlreadyRevealedError } from '../../../../const/errors/address-al
 import createHttpError from 'http-errors';
 import { forgeRevealOperation } from '../../../../lib/jobs/forge-reveal-operation';
 import { RevealEstimateError } from '../../../../const/errors/reveal-estimate-error';
+import { ForgeRevealOperationParams } from '../../../../const/interfaces/forge-reveal-operation-params';
 
 function forgeRevealOperationAndCreateJob(
   gatewayPool: GatewayPool,
@@ -14,7 +15,8 @@ function forgeRevealOperationAndCreateJob(
 ) {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const { address, publicKey, callerId, fee } = req.body;
+      const { address, publicKey, callerId, fee }: ForgeRevealOperationParams =
+        req.body;
       logger.info(
         '[jobs/forge-reveal-job-controller] %s wants to reveal the address %s with the public key %s',
         callerId,
