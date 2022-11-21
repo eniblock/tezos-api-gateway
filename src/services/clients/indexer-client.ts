@@ -208,9 +208,15 @@ export class IndexerClient extends AbstractClient {
         account: userAddress,
         balance: keyToBalance
           ? userInfo[keyToBalance]
-          : userInfo.balance / 1000000,
-        revealed: keyToReveal ? userInfo[keyToReveal] : null,
-        activated: true,
+            ? userInfo[keyToBalance]
+            : 0
+          : userInfo.balance
+          ? userInfo.balance / 1000000
+          : 0,
+        revealed: userAddress.startsWith('KT1')
+          ? undefined
+          : userInfo[keyToReveal],
+        activated: userAddress.startsWith('KT1') ? undefined : true,
       };
     } catch (err) {
       if (
@@ -220,8 +226,8 @@ export class IndexerClient extends AbstractClient {
         return {
           account: userAddress,
           balance: 0,
-          revealed: false,
-          activated: false,
+          revealed: userAddress.startsWith('KT1') ? undefined : false,
+          activated: userAddress.startsWith('KT1') ? undefined : false,
         };
       }
 

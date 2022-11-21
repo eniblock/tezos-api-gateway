@@ -8,6 +8,8 @@ import supertest from 'supertest';
 import nock from 'nock';
 import {
   activatedAccount,
+  contractWithTokenBalance,
+  nonValidContract,
   unActivatedAccount,
 } from '../../../../../__fixtures__/smart-contract';
 import { resetTable } from '../../../../../__utils__/postgre';
@@ -68,7 +70,9 @@ describe('[processes/web/api/user/info] Get Token Balance controller', () => {
       expect(status).toEqual(400);
       expect(body).toEqual({
         message:
-          'request.params.account should match pattern "^tz+[0-9a-zA-Z]{34}$"',
+          'request.params.account should match pattern "^tz+[0-9a-zA-Z]{34}$",' +
+          ' request.params.account should match pattern "^KT+[0-9a-zA-Z]{34}$",' +
+          ' request.params.account should match exactly one schema in oneOf',
         status: 400,
       });
     });
@@ -90,7 +94,7 @@ describe('[processes/web/api/user/info] Get Token Balance controller', () => {
 
     it('should return 200 and the token balance list if the account is a contract', async () => {
       const { body, status } = await request.get(
-        `/api/user/token-balance/KT19tyXiSuMGV36B2F6q1oYjchFx3p4ndBdz`,
+        `/api/user/token-balance/${contractWithTokenBalance}`,
       );
 
       expect(status).toEqual(200);
@@ -100,6 +104,15 @@ describe('[processes/web/api/user/info] Get Token Balance controller', () => {
     it('Should return 200 when the address does not exist', async () => {
       const { body, status } = await request.get(
         `/api/user/token-balance/${unActivatedAccount.address}`,
+      );
+
+      expect(body).toEqual([]);
+      expect(status).toEqual(200);
+    });
+
+    it('Should return 200 when the contract address does not exist', async () => {
+      const { body, status } = await request.get(
+        `/api/user/token-balance/${nonValidContract}`,
       );
 
       expect(body).toEqual([]);

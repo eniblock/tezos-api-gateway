@@ -244,7 +244,14 @@ export default {
           in: 'path',
           required: true,
           schema: {
-            $ref: '#/components/schemas/tezos_address',
+            oneOf: [
+              {
+                $ref: '#/components/schemas/tezos_address',
+              },
+              {
+                $ref: '#/components/schemas/tezos_contract_address',
+              },
+            ],
           },
         },
       ],

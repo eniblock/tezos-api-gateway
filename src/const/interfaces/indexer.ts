@@ -11,7 +11,7 @@ export interface IndexerConfig {
   pathToUserInfo: string;
   keyToCreationDate: string;
   keyToBalance?: string;
-  keyToReveal?: string;
+  keyToReveal: string;
 }
 
 export enum IndexerEnum {

@@ -12,6 +12,8 @@ export const FA2Contract5 = 'KT1938ykzsYS1FR3WAyTa2BUTuTadtV1M9v8'; // Nonexiste
 export const FA2Contract7 = 'Bad contract format                '; // Bad contract format
 export const ProxyContract = 'KT1ASi3SbwR2gWCUWrAQkrpV2PvBo2vb6Qo7'; // proxyTokenController.py
 export const SingleEntrypointContract = 'KT1P351JRzcgVTr6y9JXPWZiGp3kbHgW3fnd'; // singleEntrypointContract.py
+export const contractWithTokenBalance = 'KT19tyXiSuMGV36B2F6q1oYjchFx3p4ndBdz';
+export const nonValidContract = 'KT19tyXjSuMGV46B2F6q1oYjchFx3p4ndBjh';
 
 export const testAccount = 'tz1VbHay2YPpiuPYs8SQHynuW3YvGtNuB29z';
 export const testAccount2 = 'tz1Ric9o7YeBvbxXHnxhBMAjaMgKUnHUbYKB'; // Receiver account
