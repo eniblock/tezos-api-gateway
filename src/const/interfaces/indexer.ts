@@ -3,6 +3,7 @@ export interface IndexerConfig {
   apiUrl: string;
   pathToContractCalls: string;
   pathToTokenBalance?: string;
+  pathToEvents?: string;
   keyToOperation: number | string;
   keyToBlockLevel: string;
   keyToOperationStatus: string;

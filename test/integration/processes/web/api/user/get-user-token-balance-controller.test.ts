@@ -22,7 +22,7 @@ import {
   tokenFA2NFT3,
 } from '../../../../../__fixtures__/tokens';
 
-describe('[processes/web/api/user/info] Get Token Balance controller', () => {
+describe('[processes/web/api/user/token-balance] Get Token Balance controller', () => {
   const webProcess = new WebProcess({ server: serverConfig });
   const postgreService = new PostgreService(postgreConfig);
 

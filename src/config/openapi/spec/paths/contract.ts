@@ -175,4 +175,128 @@ export default {
       },
     },
   },
+  '/contract/events': {
+    get: {
+      summary: '',
+      description: '',
+      parameters: [
+        {
+          name: 'contract',
+          in: 'query',
+          required: false,
+          description: 'The smart contract hash to search against',
+          schema: {
+            $ref: '#/components/schemas/tezos_contract_address',
+          },
+        },
+        {
+          name: 'tag',
+          in: 'query',
+          required: false,
+          description: 'Filter by event tag',
+          schema: {
+            type: 'string',
+          },
+        },
+        {
+          name: 'blockLevel',
+          in: 'query',
+          required: false,
+          description:
+            'Filter by the level of the block where the event was emitted',
+          schema: {
+            type: 'integer',
+          },
+        },
+        {
+          name: 'operationHash',
+          in: 'query',
+          required: false,
+          description: 'Filter by the operation where the event was emitted',
+          schema: {
+            $ref: '#/components/schemas/tezos_operation_hash',
+          },
+        },
+        {
+          name: 'order',
+          in: 'query',
+          required: false,
+          description: 'Specifies how the returned transactions are ordered',
+          schema: {
+            $ref: '#/components/schemas/order',
+          },
+        },
+        {
+          name: 'limit',
+          in: 'query',
+          required: false,
+          description: 'The numbers of items to return',
+          schema: {
+            type: 'integer',
+            default: 20,
+            minimum: 1,
+            maximum: 500,
+          },
+        },
+        {
+          name: 'offset',
+          in: 'query',
+          required: false,
+          description:
+            'The number of items to skip before starting to collect the result set',
+          schema: {
+            type: 'integer',
+            default: 0,
+            minimum: 0,
+            maximum: 500,
+          },
+        },
+        {
+          name: 'indexer',
+          in: 'query',
+          required: false,
+          description:
+            'Target a specific indexer. Only tzkt is available for contract events',
+          schema: {
+            $ref: '#/components/schemas/only_tzkt_indexer',
+          },
+        },
+      ],
+      responses: {
+        200: {
+          description: 'The list of requested events',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                description: 'The events list',
+                items: {
+                  type: 'object',
+                  additionalProperties: false,
+                  properties: {
+                    tag: {
+                      type: 'string',
+                    },
+                    payload: {},
+                    timestamp: {
+                      type: 'string',
+                    },
+                    contract: {
+                      type: 'string',
+                    },
+                    indexer: {
+                      type: 'string',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        400: error[400],
+        404: error[404],
+        500: error.default,
+      },
+    },
+  },
 };

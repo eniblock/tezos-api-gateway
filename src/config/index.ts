@@ -62,6 +62,7 @@ const tzktIndexerConfig: IndexerConfig = {
   pathToOperation: 'v1/operations/',
   pathToContractCalls: 'v1/operations/transactions/',
   pathToTokenBalance: 'v1/tokens/balances/',
+  pathToEvents: 'v1/contracts/events/',
   pathToUserInfo: 'v1/accounts/',
   keyToOperation: parseInt(0, process.env.TZKT_KEY_TO_OPERATION),
   keyToBlockLevel: process.env.TZKT_KEY_TO_BLOCK_LEVEL || 'level',

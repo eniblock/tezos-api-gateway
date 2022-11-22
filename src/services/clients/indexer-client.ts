@@ -17,6 +17,9 @@ import { IndexerTransaction } from '../../const/interfaces/transaction';
 import { TokenBalanceParams } from '../../const/interfaces/user/token-balance/get-user-token-balance-params';
 import { mapTzktTokenBalance } from '../../helpers/mappers/token-balance-mapper';
 import { TokenBalance } from '../../const/interfaces/user/token-balance/token-balance';
+import { EventsResult } from '../../const/interfaces/contract/events/events-result';
+import { GetEventsQueryParams } from '../../const/interfaces/contract/events/get-events-query-params';
+import { mapTzktContractEvents } from '../../helpers/mappers/events-mapper';
 
 export class IndexerClient extends AbstractClient {
   private _config: IndexerConfig;
@@ -328,6 +331,70 @@ export class IndexerClient extends AbstractClient {
   }
 
   /**
+   * @description                       - Call the indexer api to retrieve contract events
+   * @param   {Object} params           - the query parameters
+   * @return  {Object}
+   */
+  public async getContractEvents(
+    params: GetEventsQueryParams,
+  ): Promise<EventsResult[]> {
+    const { name: indexerName } = this.config;
+
+    this.logger.info(
+      {
+        indexerName,
+      },
+      '[IndexerClient/getContractEvents] Calling the indexer to get the contract events',
+    );
+
+    let operation;
+    try {
+      operation = params.operationHash
+        ? await this.getOperationByHash(params.operationHash)
+        : undefined;
+    } catch (err) {
+      if (err instanceof OperationNotFoundError) {
+        return [];
+      }
+    }
+    if (operation) {
+      this.logger.info(
+        {
+          id: operation.id,
+        },
+        '[IndexerClient/getContractEvents] filter by tzkt internal transaction id',
+      );
+    }
+
+    const { domainAndPath, queryParams } = this.buildURLForContractEvents(
+      params,
+      operation?.id,
+    );
+
+    try {
+      const { body: result } = await superagent
+        .get(domainAndPath)
+        .query(queryParams);
+
+      const eventsList = result.map((tx: any) => {
+        return mapTzktContractEvents(tx);
+      });
+
+      this.logger.info(
+        '[IndexerClient/getContractEvents] Successfully fetched the events list',
+      );
+
+      return eventsList;
+    } catch (err) {
+      this.handleError(err, {
+        queryParams: params,
+        indexerConfig: this.config,
+      });
+      return [];
+    }
+  }
+
+  /**
    * @description                       - Build the domain, path et query parameters for retrieving transaction list
    *                                      from the configured indexer and params
    * @param   {string} contractAddress  - Contract address
@@ -404,6 +471,36 @@ export class IndexerClient extends AbstractClient {
       (params.contract ? `&token.contract.eq=${params.contract}` : '') +
       (params.standard ? `&token.standard.eq=${params.standard}` : '') +
       (params.balance ? `&balance.eq=${params.balance}` : '');
+
+    return { domainAndPath, queryParams };
+  }
+
+  /**
+   * @description                       - Build the domain, path et query parameters for retrieving contract events
+   *                                      from the configured indexer and params
+   * @param   {Object} params           - the query parameters
+   * @param transactionId
+   * @return  {Object}
+   */
+  public buildURLForContractEvents(
+    params: GetEventsQueryParams,
+    transactionId?: number,
+  ): {
+    domainAndPath: string;
+    queryParams: string;
+  } {
+    const { apiUrl: indexerUrl, pathToEvents } = this.config;
+    const limit = params.limit || 20;
+    const offset = params.offset || 0;
+
+    const domainAndPath = `${indexerUrl}${pathToEvents!!}`;
+    const queryParams =
+      `limit=${limit}&offset=${offset}` +
+      (params.order ? `&sort.${params.order}=id` : '') +
+      (params.blockLevel ? `&level.eq=${params.blockLevel}` : '') +
+      (params.contract ? `&contract.eq=${params.contract}` : '') +
+      (params.tag ? `&tag.eq=${params.tag}` : '') +
+      (transactionId ? `&transactionId.eq=${transactionId}` : '');
 
     return { domainAndPath, queryParams };
   }
