@@ -1,8 +1,14 @@
 # TEZOS API GATEWAY
 
-[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/dashboard?id=xdev-tech_tezos-api-gateway) [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=xdev-tech_tezos-api-gateway&metric=alert_status)](https://sonarcloud.io/dashboard?id=xdev-tech_tezos-api-gateway)
-
-![snyk logo](https://res.cloudinary.com/snyk/image/upload/v1468845142/favicon/favicon.ico)[To see snyk reports click here](https://app.snyk.io/org/bxdev/projects)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=eniblock_tezos-api-gateway&metric=bugs)](https://sonarcloud.io/dashboard?id=eniblock_tezos-api-gateway)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=eniblock_tezos-api-gateway&metric=code_smells)](https://sonarcloud.io/dashboard?id=eniblock_tezos-api-gateway)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=eniblock_tezos-api-gateway&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=eniblock_tezos-api-gateway)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=eniblock_tezos-api-gateway&metric=ncloc)](https://sonarcloud.io/dashboard?id=eniblock_tezos-api-gateway)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=eniblock_tezos-api-gateway&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=eniblock_tezos-api-gateway)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=eniblock_tezos-api-gateway&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=eniblock_tezos-api-gateway)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=eniblock_tezos-api-gateway&metric=security_rating)](https://sonarcloud.io/dashboard?id=eniblock_tezos-api-gateway)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=eniblock_tezos-api-gateway&metric=sqale_index)](https://sonarcloud.io/dashboard?id=eniblock_tezos-api-gateway)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=eniblock_tezos-api-gateway&metric=vulnerabilities)](https://sonarcloud.io/dashboard?id=eniblock_tezos-api-gateway)
 
 ## Introduction
 

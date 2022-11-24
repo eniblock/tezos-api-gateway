@@ -26,3 +26,16 @@ test:
     WITH DOCKER --compose docker-compose-test.yml
         RUN npm test
     END
+
+sonar:
+    FROM sonarsource/sonar-scanner-cli
+    RUN apk add yq
+    RUN git config --global --add safe.directory /usr/src
+    COPY . ./
+    COPY --if-exists .git .git
+    RUN echo sonar.projectVersion=$(yq eval .version helm/tezos-api-gateway/Chart.yaml) >> sonar-project.properties
+    ENV SONAR_HOST_URL=https://sonarcloud.io
+    RUN --mount=type=cache,target=/opt/sonar-scanner/.sonar/cache \
+        --secret GITHUB_TOKEN \
+        --secret SONAR_TOKEN \
+        sonar-scanner
