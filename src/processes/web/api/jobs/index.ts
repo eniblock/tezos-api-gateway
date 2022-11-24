@@ -1,6 +1,7 @@
 import { Application, Router } from 'express';
 
 import forgeJobController from './forge-job-controller';
+import estimateJobController from './estimate-job-controller';
 import forgeRevealJobController from './forge-reveal-job-controller';
 import injectJobController from './inject-job-controller';
 import sendJobController from './send-job-controller';
@@ -86,6 +87,11 @@ export default function registerJobsRoutes(
   router.get(
     '/job/caller-id/:callerId',
     getJobController.getJobsByCallerId(postgreService) as Application,
+  );
+
+  router.get(
+    '/estimate/jobs',
+    estimateJobController.estimateOperation(gatewayPool) as Application,
   );
 
   return router;
