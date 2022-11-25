@@ -7,3 +7,8 @@ export interface Jobs {
   operation_hash?: string;
   status: JobStatus;
 }
+
+export type TransactionJobsResults = Jobs & {
+  fee?: number;
+  gas?: number;
+};

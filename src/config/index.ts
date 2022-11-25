@@ -111,3 +111,4 @@ export const metricConfig: MetricConfig = {
 };
 
 export const maxOperationsPerBatch = 5;
+export const gasLimitMargin = 100;

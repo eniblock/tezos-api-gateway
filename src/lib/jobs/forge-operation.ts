@@ -9,7 +9,7 @@ import { ForgeOperationParams } from '../../const/interfaces/forge-operation-par
 import { logger } from '../../services/logger';
 import { getTransferToParams } from '../smart-contracts';
 import { PostgreService } from '../../services/postgre';
-import { Jobs } from '../../const/interfaces/jobs';
+import { Jobs, TransactionJobsResults } from '../../const/interfaces/jobs';
 import { AddressNotFoundError } from '../../const/errors/address-not-found-error';
 import { TezosService } from '../../services/tezos';
 import { insertJob } from '../../models/jobs';
@@ -25,7 +25,7 @@ import { estimateAndBuildRevealOperation } from './forge-reveal-operation';
 import { AddressNotRevealedError } from '../../const/errors/address-not-revealed';
 import { AddressAlreadyRevealedError } from '../../const/errors/address-already-revealed';
 import { MaxOperationsPerBatchError } from '../../const/errors/max-operations-per-batch-error';
-import { maxOperationsPerBatch } from '../../config';
+import { gasLimitMargin, maxOperationsPerBatch } from '../../config';
 import { Estimate, TezosOperationError } from '@taquito/taquito';
 
 const FORGE_OPERATION_KNOWN_ERRORS = [
@@ -80,7 +80,7 @@ export async function forgeOperation(
   forgeOperationParams: ForgeOperationParams,
   tezosService: TezosService,
   postgreService: PostgreService,
-): Promise<Jobs> {
+): Promise<TransactionJobsResults> {
   try {
     logger.info(
       {
@@ -115,6 +115,13 @@ export async function forgeOperation(
       { params },
       '[lib/jobs/forgeOperation] Form parameters to forge the operation',
     );
+
+    const fee = operationsToForge.reduce((acc, op) => {
+      return acc + Number(op.fee);
+    }, 0);
+    const gas = operationsToForge.reduce((acc, op) => {
+      return acc + Number(op.gas_limit) - gasLimitMargin;
+    }, 0);
 
     const { branch, forgedOperation } = await tezosService.forgeOperations(
       operationsToForge,
@@ -154,7 +161,7 @@ export async function forgeOperation(
       '[lib/jobs/forgeOperation] Successfully save parameters of forge function',
     );
 
-    return result.rows[0] as Jobs;
+    return { ...result.rows[0], fee, gas };
   } catch (err) {
     if (FORGE_OPERATION_KNOWN_ERRORS.includes(err.constructor.name)) {
       throw err;
@@ -311,7 +318,9 @@ async function getOperationContentsTransactionWithParametersJson(
         : '0',
       source: sourceAddress,
       counter: (++counter).toString(),
-      fee: estimation.suggestedFeeMutez.toString(),
+      fee: parametersList[index].fee
+        ? `${parametersList[index].fee}`
+        : estimation.suggestedFeeMutez.toString(),
       storage_limit: estimation.storageLimit.toString(),
       gas_limit: estimation.gasLimit.toString(),
     };
@@ -325,12 +334,20 @@ async function getOperationContentsTransactionWithParametersJson(
  * @param {string} contractAddress                     - the smart contract address on Tezos
  * @param {object | string | number} entryPointParams  - (optional) the parameters of the entry point
  * @param {string} entryPoint                          - the entry point name
- *
+ * @param amount
+ * @param fee
+ * @param useCache
  * @return {object} the parameters of a transaction as Michelson type
  */
 async function getATransactionParameters(
   tezosService: TezosService,
-  { contractAddress, entryPoint, entryPointParams, amount }: TransactionDetails,
+  {
+    contractAddress,
+    entryPoint,
+    entryPointParams,
+    amount,
+    fee,
+  }: TransactionDetails,
   useCache: boolean,
 ) {
   const contract = useCache
@@ -343,6 +360,7 @@ async function getATransactionParameters(
     entryPoint,
     entryPointParams,
     amount,
+    fee,
   );
 }
 

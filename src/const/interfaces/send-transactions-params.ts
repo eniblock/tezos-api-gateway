@@ -7,6 +7,7 @@ export interface TransactionDetails {
   entryPoint: string;
   entryPointParams?: EntryPointParams;
   amount?: number;
+  fee?: number;
 }
 
 export interface SendTransactionsParams {

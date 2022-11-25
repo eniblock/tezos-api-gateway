@@ -110,6 +110,8 @@ export function getContractMethod(
  * @param {object} contract                     - the smart contract containing the entry point
  * @param {string} entryPoint                   - the entry point's name
  * @param {object | string | number } params    - (optional) the entry point parameter given by the API
+ * @param amount                                - amount
+ * @param fee
  *
  * @return {object} the transfer parameter to Tezos Blockchain
  */
@@ -119,13 +121,14 @@ export function getTransferToParams(
   entryPoint: string,
   params?: EntryPointParams,
   amount?: number,
+  fee?: number,
 ) {
   return getContractMethod(
     logger,
     contract,
     entryPoint,
     params,
-  ).toTransferParams({ amount, mutez: true });
+  ).toTransferParams({ amount, mutez: true, fee });
 }
 
 /**
