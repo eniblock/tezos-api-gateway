@@ -51,6 +51,7 @@ export const tzstatsIndexerConfig: IndexerConfig = {
   keyToOperationStatus: 'status',
   successStatus: 'applied',
   keyToBalance: 'spendable_balance',
+  balanceUnit: 1,
   keyToReveal: 'is_revealed',
   keyToCreationDate: 'time',
 };
@@ -66,6 +67,8 @@ const tzktIndexerConfig: IndexerConfig = {
   keyToBlockLevel: process.env.TZKT_KEY_TO_BLOCK_LEVEL || 'level',
   keyToOperationStatus: 'status',
   successStatus: 'applied',
+  keyToBalance: 'balance',
+  balanceUnit: 1000000,
   keyToReveal: 'revealed',
   keyToCreationDate: 'timestamp',
 };
