@@ -172,6 +172,7 @@ export class IndexerClient extends AbstractClient {
       name,
       apiUrl: indexerUrl,
       keyToBalance,
+      balanceUnit,
       pathToUserInfo,
       keyToReveal,
     } = this.config;
@@ -206,11 +207,11 @@ export class IndexerClient extends AbstractClient {
 
       return {
         account: userAddress,
-        balance: keyToBalance
-          ? userInfo[keyToBalance]
-          : userInfo.balance / 1000000,
-        revealed: keyToReveal ? userInfo[keyToReveal] : null,
-        activated: true,
+        balance: userInfo[keyToBalance] / balanceUnit || 0,
+        revealed: userAddress.startsWith('KT1')
+          ? undefined
+          : userInfo[keyToReveal],
+        activated: userAddress.startsWith('KT1') ? undefined : true,
       };
     } catch (err) {
       if (
@@ -220,8 +221,8 @@ export class IndexerClient extends AbstractClient {
         return {
           account: userAddress,
           balance: 0,
-          revealed: false,
-          activated: false,
+          revealed: userAddress.startsWith('KT1') ? undefined : false,
+          activated: userAddress.startsWith('KT1') ? undefined : false,
         };
       }
 
