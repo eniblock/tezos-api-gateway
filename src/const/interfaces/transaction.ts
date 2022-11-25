@@ -37,4 +37,5 @@ export interface IndexerTransaction {
   height: number;
   entrypoint: string;
   parameters: object | string;
+  amount: number;
 }

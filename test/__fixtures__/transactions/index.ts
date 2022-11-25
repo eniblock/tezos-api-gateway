@@ -4,24 +4,6 @@ import {
   revealedAccount,
   testAccount,
 } from '../smart-contract';
-export const originationOp = {
-  indexer: IndexerEnum.TZSTATS,
-  destination: 'KT1GYQn8mwSLypyHNPo8d9D151UC8tdo39xR',
-  source: 'tz1VbHay2YPpiuPYs8SQHynuW3YvGtNuB29z',
-  timestamp: '2021-12-07T09:52:15Z',
-  status: 'applied',
-  baker_fee: 0.002814,
-  storage_fee: 0.6425,
-  storage_limit: 2570,
-  counter: 2607269,
-  hash: 'opQ6NJpBrArif2Ls9ajpaXciULzo5cFru8DPXFH3UAmubi93irY',
-  block: 'BMaSYNHvVFkPJTqJjv9fpDB8NPT5sX9BqYZSPTsx4XGvnN6tC7X',
-  type: 'origination',
-  height: 157089,
-  parameters: {},
-  entrypoint: undefined,
-};
-
 export const firstTx = {
   baker_fee: 0.2,
   block: 'BM1sYMLUVrpSVBzpdtzwtYSXkUsZLrpi2k2teYjy1ACfUxu7nvb',
@@ -30,7 +12,7 @@ export const firstTx = {
   entrypoint: 'transfer',
   hash: 'opNH9hXDU5tRfkuqQBjAsEizNWV71QJqZnY2bx6UJ2Zj9qC6zZF',
   height: 961974,
-  indexer: 'tzkt',
+  indexer: IndexerEnum.TZKT,
   parameters: {
     destination: testAccount,
     tokens: '0',
@@ -41,7 +23,41 @@ export const firstTx = {
   storage_limit: 50000,
   timestamp: '2022-08-04T14:12:00Z',
   type: 'transaction',
+  amount: 0,
 };
+export const contractWithTezBalance = 'KT1NvPCUreZQvhVTHYVvAfSYMTiCPjYzu8e8';
+export const tezTransferTransactions = [
+  {
+    destination: contractWithTezBalance,
+    source: 'tz1fwKAB7wY37zZ71qLeScSk5X5PVZdTczoS',
+    timestamp: '2022-11-25T10:34:30Z',
+    status: 'applied',
+    baker_fee: 0.00142,
+    storage_fee: 0,
+    storage_limit: 496,
+    counter: 11402135,
+    hash: 'opJeFd3ubfWynWpjtu1qN5vFqWLcqZzvH5ngxUA1jsLHiSUNLVX',
+    block: 'BKk4N8LqkhQYfLkmxmm3yiR9eZDdfuZmhtgZsGNkaNTA93cKP7H',
+    type: 'transaction',
+    height: 1558557,
+    amount: 13,
+  },
+  {
+    destination: contractWithTezBalance,
+    source: 'tz1dAbb66qRJndGMD4KKDxzBebQursit5pfT',
+    timestamp: '2022-11-25T11:26:30Z',
+    status: 'applied',
+    baker_fee: 0.000421,
+    storage_fee: 0,
+    storage_limit: 0,
+    counter: 10240820,
+    hash: 'opNB5bFeRGefGVi1XqYHq2bo3HaDyygvF85f9VbGFXZqcBrEPTu',
+    block: 'BLnKBxJVHXjKDoktZe7jtuMPZZAhP4jgtgdL5A1En3ZMjPuBeES',
+    type: 'transaction',
+    height: 1558753,
+    amount: 0.001,
+  },
+];
 
 export const failedTx = {
   hash: 'opRaqsDcCbHTUepcfMsYwLp1tGRLvAVuNomHUu9syETeE7wQesN',

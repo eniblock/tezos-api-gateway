@@ -11,7 +11,11 @@ import {
   flexibleTokenContract,
   simpleContract,
 } from '../../../../../__fixtures__/smart-contract';
-import { firstTx } from '../../../../../__fixtures__/transactions';
+import {
+  contractWithTezBalance,
+  firstTx,
+  tezTransferTransactions,
+} from '../../../../../__fixtures__/transactions';
 import { IndexerEnum } from '../../../../../../src/const/interfaces/indexer';
 import { callGetTransactionsWithIndexer } from '../../../../../__utils__';
 import { indexerConfigs } from '../../../../../../src/config';
@@ -59,6 +63,15 @@ describe('[processes/web/api/contract] Contract controller', () => {
 
       expect(status).toEqual(200);
       expect(body).toEqual([{ ...firstTx, indexer: body[0].indexer }]);
+    });
+
+    it('should return 200 and the Tez transfer operation(s) for contract with Tez balance', async () => {
+      const { body, status } = await request.get(
+        `/api/contract/${contractWithTezBalance}/calls`,
+      );
+
+      expect(status).toEqual(200);
+      expect(body).toMatchObject(tezTransferTransactions);
     });
 
     it('should use TZKT indexer when query param "parameter" is set', async () => {
