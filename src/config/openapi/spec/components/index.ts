@@ -81,6 +81,12 @@ const components = {
       description: 'A tezos smart contract address',
       example: flexibleTokenContract,
     },
+    tezos_operation_hash: {
+      type: 'string',
+      pattern: '^o+[0-9a-zA-Z]{50}$',
+      description: 'A tezos operation hash',
+      example: 'oomTc6iifGUafAGriqHwsqcKre8fty6Y9hRbseCzWk74syy9rPd',
+    },
     amount: {
       type: 'integer',
       default: 0,
@@ -105,6 +111,13 @@ const components = {
       pattern: '^\\btzstats\\b|\\btzkt\\b$',
       description: 'The indexer to target',
       enum: ['tzstats', 'tzkt'],
+    },
+    only_tzkt_indexer: {
+      type: 'string',
+      pattern: '^|\\btzkt\\b$',
+      description: 'The indexer to target',
+      enum: ['tzkt'],
+      default: 'tzkt',
     },
     page: {
       type: 'integer',
