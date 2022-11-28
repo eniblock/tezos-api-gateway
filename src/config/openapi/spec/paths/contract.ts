@@ -163,6 +163,9 @@ export default {
                         },
                       ],
                     },
+                    amount: {
+                      type: 'number',
+                    },
                   },
                 },
               },

@@ -32,11 +32,12 @@ export function mapIndexerTransactionToTransaction(
         block: rawTx.block,
         type: rawTx.type,
         height: rawTx.height,
-        entrypoint: rawTx.parameters.entrypoint,
+        entrypoint: rawTx.parameters?.entrypoint,
         parameters: deleteObjectSubLevel(rawTx.parameters?.value || '', [
           '@or_0',
           '@or_1',
         ]),
+        amount: rawTx.volume || 0,
       };
     case IndexerEnum.TZKT:
       return {
@@ -53,8 +54,9 @@ export function mapIndexerTransactionToTransaction(
         block: rawTx.block,
         type: rawTx.type,
         height: rawTx.level,
-        entrypoint: rawTx.parameter.entrypoint,
-        parameters: rawTx.parameter.value,
+        entrypoint: rawTx.parameter?.entrypoint,
+        parameters: rawTx.parameter?.value,
+        amount: rawTx.amount / 1000000 || 0,
       };
     default:
       throw new UnsupportedIndexerError(indexerName);
