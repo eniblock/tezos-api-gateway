@@ -85,7 +85,7 @@ describe('[lib/jobs/forge-operation]', () => {
           selectFields: '*',
         }),
       ).resolves.toEqual([]);
-    });
+    }, 8000);
 
     it("should throw RevealEstimateError when address isn't related to the public key", async () => {
       await expect(
