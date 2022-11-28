@@ -231,7 +231,7 @@ describe('[lib/jobs/forge-operation]', () => {
           selectFields: '*',
         }),
       ).resolves.toEqual([]);
-    });
+    }, 8000);
 
     it('should throw MaxOperationsPerBatchError when number of transactions is 5 and reveal is needed', async () => {
       await expect(

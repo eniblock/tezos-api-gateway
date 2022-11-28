@@ -170,7 +170,7 @@ describe('[processes/web/api/jobs] Forge job controller', () => {
         message: '[tokens] Value is not a number: string',
         status: 400,
       });
-    });
+    }, 8000);
 
     it('should return 400 when a map parameter does not match the map structure', async () => {
       const { body, status } = await request.post('/api/forge/jobs').send({
