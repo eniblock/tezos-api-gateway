@@ -11,8 +11,6 @@ import {
   flexibleTokenContract,
   simpleContract,
 } from '../../../../../__fixtures__/smart-contract';
-import { resetTable } from '../../../../../__utils__/postgre';
-import { PostgreTables } from '../../../../../../src/const/postgre/postgre-tables';
 import { firstTx } from '../../../../../__fixtures__/transactions';
 import { IndexerEnum } from '../../../../../../src/const/interfaces/indexer';
 import { callGetTransactionsWithIndexer } from '../../../../../__utils__';
@@ -30,12 +28,6 @@ describe('[processes/web/api/contract] Contract controller', () => {
 
   beforeAll(async () => {
     await webProcess.start();
-    await webProcess.amqpService.channel.waitForConnect();
-  });
-
-  beforeEach(async () => {
-    await resetTable(postgreService.pool, PostgreTables.OPERATIONS);
-    await resetTable(postgreService.pool, PostgreTables.JOBS);
   });
 
   afterEach(() => {

@@ -516,4 +516,165 @@ export default {
       },
     },
   },
+  '/estimate/jobs': {
+    get: {
+      summary: 'Get estimation for an operation',
+      description: 'Get fee and gas estimation of an operation based on nodes',
+      parameters: [
+        {
+          name: 'cache',
+          in: 'query',
+          schema: {
+            type: 'boolean',
+            default: true,
+          },
+          required: false,
+          description: 'Uses the cache to retrieve the contract information',
+        },
+        {
+          name: 'reveal',
+          in: 'query',
+          schema: {
+            type: 'boolean',
+            default: false,
+          },
+          required: false,
+          description:
+            'Adds a reveal operation if the tezos address is not revealed. Note that an error will be returned if the total number of operations (reveal + transactions) exceeds 5.',
+        },
+      ],
+      requestBody: {
+        description: 'Necessary information to estimate an operation',
+        required: true,
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              additionalProperties: false,
+              required: ['transactions', 'sourceAddress'],
+              properties: {
+                transactions: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    additionalProperties: false,
+                    required: ['contractAddress', 'entryPoint'],
+                    properties: {
+                      contractAddress: {
+                        $ref: '#/components/schemas/tezos_contract_address',
+                      },
+                      entryPoint: {
+                        type: 'string',
+                        description: "The entry point's name of the contract",
+                      },
+                      entryPointParams: {
+                        oneOf: [
+                          { nullable: true, type: 'object' },
+                          { type: 'string' },
+                          { type: 'array' },
+                          { type: 'number' },
+                          { type: 'boolean' },
+                        ],
+                      },
+                      amount: {
+                        $ref: '#/components/schemas/amount',
+                      },
+                    },
+                  },
+                },
+                sourceAddress: {
+                  $ref: '#/components/schemas/tezos_address',
+                },
+                publicKey: {
+                  $ref: '#/components/schemas/tezos_public_key',
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: 'successfully fetched estimation',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                description: 'The transaction list',
+                items: {
+                  type: 'object',
+                  additionalProperties: false,
+                  required: [
+                    'kind',
+                    'source',
+                    'counter',
+                    'suggestedFee',
+                    'minimalFee',
+                    'gasEstimation',
+                    'gasLimit',
+                    'storageLimit',
+                    'storageAndAllocationFee',
+                  ],
+                  properties: {
+                    kind: {
+                      type: 'string',
+                    },
+                    source: {
+                      type: 'string',
+                    },
+                    destination: {
+                      type: 'string',
+                    },
+                    public_key: {
+                      type: 'string',
+                    },
+                    parameters: {},
+                    parametersJson: {},
+                    amount: {
+                      type: 'number',
+                    },
+                    counter: {
+                      type: 'number',
+                    },
+                    suggestedFee: {
+                      description:
+                        'The suggested fee for the operation includes minimal fees and a small buffer',
+                      type: 'number',
+                    },
+                    minimalFee: {
+                      description:
+                        'Minimum fees for the operation according to baker defaults',
+                      type: 'number',
+                    },
+                    gasEstimation: {
+                      description:
+                        'Estimation of the gas that operation will consume',
+                      type: 'number',
+                    },
+                    gasLimit: {
+                      description:
+                        'The limit on the amount of gas a given operation can consume',
+                      type: 'number',
+                    },
+                    storageLimit: {
+                      description:
+                        'The limit on the amount of storage an operation can use',
+                      type: 'number',
+                    },
+                    storageAndAllocationFee: {
+                      description:
+                        'The number of Mutez that will be burned for the allocation and storage of the operation',
+                      type: 'number',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        400: error[400],
+        500: error.default,
+      },
+    },
+  },
 };

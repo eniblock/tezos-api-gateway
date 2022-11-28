@@ -28,7 +28,7 @@ import { MaxOperationsPerBatchError } from '../../const/errors/max-operations-pe
 import { gasLimitMargin, maxOperationsPerBatch } from '../../config';
 import { Estimate, TezosOperationError } from '@taquito/taquito';
 
-const FORGE_OPERATION_KNOWN_ERRORS = [
+export const FORGE_OPERATION_KNOWN_ERRORS = [
   'AddressAlreadyRevealedError',
   'AddressNotFoundError',
   'InvalidMapStructureParams',
@@ -184,7 +184,7 @@ export async function forgeOperation(
  *
  * @return {object} the parameter as json type
  */
-function createParametersJson({
+export function createParametersJson({
   entryPointParams,
   entryPoint,
 }: TransactionDetails) {
@@ -207,7 +207,7 @@ function createParametersJson({
  *
  * @return Promise<object[]> the details about fee, storage limit and gas limit of a group of transactions
  */
-function getEstimationForNode(
+export function getEstimationForNode(
   tezosService: TezosService,
   transactionDetails: TransactionsDetailsWithMichelsonParameters[],
 ): Promise<Estimate[]> {
@@ -339,7 +339,7 @@ async function getOperationContentsTransactionWithParametersJson(
  * @param useCache
  * @return {object} the parameters of a transaction as Michelson type
  */
-async function getATransactionParameters(
+export async function getATransactionParameters(
   tezosService: TezosService,
   {
     contractAddress,
