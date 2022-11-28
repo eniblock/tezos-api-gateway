@@ -135,7 +135,7 @@ describe('[processes/web/api/jobs] Estimate job controller', () => {
     ];
 
     it('should return 400 when a required parameter is missing', async () => {
-      const { body, status } = await request.get('/api/estimate/jobs').send({
+      const { body, status } = await request.post('/api/estimate/jobs').send({
         sourceAddress: revealedAccount.address,
       });
 
@@ -147,7 +147,7 @@ describe('[processes/web/api/jobs] Estimate job controller', () => {
     });
 
     it('should return 400 when there is an extra parameter in request param', async () => {
-      const { body, status } = await request.get('/api/estimate/jobs').send({
+      const { body, status } = await request.post('/api/estimate/jobs').send({
         ...requestBodyParam,
         extra: 'extra',
       });
@@ -160,7 +160,7 @@ describe('[processes/web/api/jobs] Estimate job controller', () => {
     });
 
     it('should return 400 when there is a parameter not match the format', async () => {
-      const { body, status } = await request.get('/api/estimate/jobs').send({
+      const { body, status } = await request.post('/api/estimate/jobs').send({
         ...requestBodyParam,
         transactions: [
           {
@@ -183,7 +183,7 @@ describe('[processes/web/api/jobs] Estimate job controller', () => {
     });
 
     it('should return 400 when entry point parameters does not match entry schema', async () => {
-      const { body, status } = await request.get('/api/estimate/jobs').send({
+      const { body, status } = await request.post('/api/estimate/jobs').send({
         ...requestBodyParam,
         transactions: [
           {
@@ -206,7 +206,7 @@ describe('[processes/web/api/jobs] Estimate job controller', () => {
     });
 
     it('should return 400 when there is a parameter type validation error', async () => {
-      const { body, status } = await request.get('/api/estimate/jobs').send({
+      const { body, status } = await request.post('/api/estimate/jobs').send({
         ...requestBodyParam,
         transactions: [
           {
@@ -228,7 +228,7 @@ describe('[processes/web/api/jobs] Estimate job controller', () => {
     });
 
     it('should return 400 when a map parameter does not match the map structure', async () => {
-      const { body, status } = await request.get('/api/estimate/jobs').send({
+      const { body, status } = await request.post('/api/estimate/jobs').send({
         ...requestBodyParam,
         transactions: [
           {
@@ -258,7 +258,7 @@ describe('[processes/web/api/jobs] Estimate job controller', () => {
 
     it('should return 400 when reveal is false and the address is not revealed', async () => {
       const { body, status } = await request
-        .get('/api/estimate/jobs?reveal=false')
+        .post('/api/estimate/jobs?reveal=false')
         .send({
           ...requestBodyParam,
           sourceAddress: activatedAccount.address,
@@ -273,7 +273,7 @@ describe('[processes/web/api/jobs] Estimate job controller', () => {
 
     it("should return 400 when reveal is true and the address isn't related to the publicKey", async () => {
       const { body, status } = await request
-        .get('/api/estimate/jobs?reveal=true')
+        .post('/api/estimate/jobs?reveal=true')
         .send({
           ...requestBodyParam,
           sourceAddress: activatedAccount.address,
@@ -289,7 +289,7 @@ describe('[processes/web/api/jobs] Estimate job controller', () => {
 
     it('should return 400 when publicKey is undefined when reveal is true', async () => {
       const { body, status } = await request
-        .get('/api/estimate/jobs?reveal=true')
+        .post('/api/estimate/jobs?reveal=true')
         .send({
           ...requestBodyParam,
         });
@@ -302,7 +302,7 @@ describe('[processes/web/api/jobs] Estimate job controller', () => {
     });
 
     it('should return 400 when number of transactions exceeds 5 with no reveal', async () => {
-      const { body, status } = await request.get('/api/estimate/jobs').send({
+      const { body, status } = await request.post('/api/estimate/jobs').send({
         transactions: [
           transaction,
           transaction,
@@ -328,7 +328,7 @@ describe('[processes/web/api/jobs] Estimate job controller', () => {
         .mockResolvedValue({} as any);
 
       const { body, status } = await request
-        .get('/api/estimate/jobs')
+        .post('/api/estimate/jobs')
         .send(requestBodyParam);
 
       expect(status).toEqual(404);
@@ -352,7 +352,7 @@ describe('[processes/web/api/jobs] Estimate job controller', () => {
         ]),
       );
 
-      const { body } = await request.get('/api/estimate/jobs').send({
+      const { body } = await request.post('/api/estimate/jobs').send({
         ...requestBodyParam,
       });
 
@@ -367,7 +367,7 @@ describe('[processes/web/api/jobs] Estimate job controller', () => {
         .spyOn(estimateLib, 'estimateOperation')
         .mockRejectedValue(new Error('Unexpected error'));
 
-      const { body, status } = await request.get('/api/estimate/jobs').send({
+      const { body, status } = await request.post('/api/estimate/jobs').send({
         ...requestBodyParam,
       });
 
@@ -380,7 +380,7 @@ describe('[processes/web/api/jobs] Estimate job controller', () => {
 
     it('should return 200 and the estimation result', async () => {
       const { body, status } = await request
-        .get('/api/estimate/jobs')
+        .post('/api/estimate/jobs')
         .send(requestBodyParam);
 
       expect({ body, status }).toEqual({
@@ -391,7 +391,7 @@ describe('[processes/web/api/jobs] Estimate job controller', () => {
 
     it('should return 200 and the operation estimation when reveal is true and the address is already revealed', async () => {
       const { body, status } = await request
-        .get('/api/estimate/jobs?reveal=true')
+        .post('/api/estimate/jobs?reveal=true')
         .send({
           ...requestBodyParam,
           publicKey: revealedAccount.publicKey,
@@ -405,7 +405,7 @@ describe('[processes/web/api/jobs] Estimate job controller', () => {
 
     it('should return 200 and include the reveal operation estimation when reveal is true and the address is not revealed', async () => {
       const { body, status } = await request
-        .get('/api/estimate/jobs?reveal=true')
+        .post('/api/estimate/jobs?reveal=true')
         .send({
           ...requestBodyParam,
           sourceAddress: activatedAccount.address,
@@ -447,7 +447,7 @@ describe('[processes/web/api/jobs] Estimate job controller', () => {
 
     it('should return 200 when number of transactions equals 5 and reveal=true, but with address already revealed', async () => {
       const { body, status } = await request
-        .get('/api/estimate/jobs?reveal=true')
+        .post('/api/estimate/jobs?reveal=true')
         .send({
           transactions: [
             transaction,
@@ -469,7 +469,7 @@ describe('[processes/web/api/jobs] Estimate job controller', () => {
       requestBodyParam.transactions[1].amount = 100;
 
       const { body, status } = await request
-        .get('/api/estimate/jobs')
+        .post('/api/estimate/jobs')
         .send(requestBodyParam);
 
       expect({ body, status }).toEqual({

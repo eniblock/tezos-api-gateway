@@ -517,7 +517,7 @@ export default {
     },
   },
   '/estimate/jobs': {
-    get: {
+    post: {
       summary: 'Get estimation for an operation',
       description: 'Get fee and gas estimation of an operation based on nodes',
       parameters: [

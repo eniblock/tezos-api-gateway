@@ -89,7 +89,7 @@ export default function registerJobsRoutes(
     getJobController.getJobsByCallerId(postgreService) as Application,
   );
 
-  router.get(
+  router.post(
     '/estimate/jobs',
     estimateJobController.estimateOperation(gatewayPool) as Application,
   );
