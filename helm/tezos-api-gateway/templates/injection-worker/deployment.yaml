@@ -38,7 +38,7 @@ spec:
       securityContext:
         {{- toYaml .Values.injectionWorker.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: injection-worker
           securityContext:
             {{- toYaml .Values.injectionWorker.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
