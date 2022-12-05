@@ -19,7 +19,7 @@ jobs:
   test:
     runs-on: [self-hosted]
     steps:
-    - uses: eniblock/build/actions/setup@develop
+    - uses: eniblock/build/actions/setup@4.0
       id: setup
       with:
         dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -30,7 +30,7 @@ jobs:
   lint-helm:
     runs-on: [self-hosted]
     steps:
-    - uses: eniblock/build/actions/setup@develop
+    - uses: eniblock/build/actions/setup@4.0
       id: setup
       with:
         dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
@@ -44,7 +44,7 @@ jobs:
     runs-on: [self-hosted]
     needs: [test, lint-helm]
     steps:
-    - uses: eniblock/build/actions/setup@develop
+    - uses: eniblock/build/actions/setup@4.0
       id: setup
       with:
         helmdir: helm/tezos-api-gateway
@@ -60,7 +60,7 @@ jobs:
     runs-on: [self-hosted]
     needs: [docker]
     steps:
-    - uses: eniblock/build/actions/setup@develop
+    - uses: eniblock/build/actions/setup@4.0
       id: setup
       with:
         helmdir: helm/tezos-api-gateway
