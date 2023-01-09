@@ -54,7 +54,7 @@
     "http-status-codes": "^2.1.4",
     "libsodium-wrappers": "^0.7.8",
     "lodash": "^4.17.21",
-    "luxon": "^2.3.2",
+    "luxon": "^2.5.2",
     "node-cache": "^5.1.2",
     "pg": "^8.5.1",
     "pg-format": "^1.0.4",
