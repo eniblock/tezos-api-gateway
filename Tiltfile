@@ -7,11 +7,11 @@ clk_k8s = 'clk -a --force-color k8s -c ' + k8s_context() + ' '
 
 if config.tilt_subcommand == 'up':
     # update the helm package dependencies a first time at startup, so helm can load the helm chart
-    local(clk_k8s + 'helm-dependency-update helm/tezos-api-gateway')
+    local(clk_k8s + 'helm dependency-update helm/tezos-api-gateway')
 
 # manually download the dependencies
 local_resource('helm dependencies',
-               clk_k8s + 'helm-dependency-update helm/tezos-api-gateway -ft Tiltfile',
+               clk_k8s + 'helm dependency-update helm/tezos-api-gateway -ft Tiltfile',
                trigger_mode=TRIGGER_MODE_MANUAL, auto_init=False)
 
 k8s_yaml(
