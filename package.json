@@ -45,7 +45,7 @@
     "bunyan": "^1.8.15",
     "compression": "^1.7.4",
     "cron": "^1.8.2",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "express-openapi": "^7.2.0",
     "express-openapi-validator": "^4.10.1",
     "express-prom-bundle": "^6.5.0",
