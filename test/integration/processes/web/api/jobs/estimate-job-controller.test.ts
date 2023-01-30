@@ -73,12 +73,12 @@ describe('[processes/web/api/jobs] Estimate job controller', () => {
     const estimationResults = [
       {
         amount: 0,
-        counter: 10240865,
+        counter: 10240873,
         destination: flexibleTokenContract,
-        gasEstimation: 2703,
-        gasLimit: 2804,
+        gasEstimation: 2706,
+        gasLimit: 2806,
         kind: 'transaction',
-        minimalFee: 489,
+        minimalFee: 490,
         parameters: {
           entrypoint: 'transfer',
           value: {
@@ -105,14 +105,14 @@ describe('[processes/web/api/jobs] Estimate job controller', () => {
         source: revealedAccount.address,
         storageAndAllocationFee: 0,
         storageLimit: 0,
-        suggestedFee: 589,
+        suggestedFee: 590,
       },
       {
         amount: 0,
-        counter: 10240866,
+        counter: 10240874,
         destination: flexibleTokenContract,
-        gasEstimation: 1212,
-        gasLimit: 1313,
+        gasEstimation: 1215,
+        gasLimit: 1315,
         kind: 'transaction',
         minimalFee: 340,
         parameters: {
@@ -431,8 +431,8 @@ describe('[processes/web/api/jobs] Estimate job controller', () => {
             ...estimationResults[0],
             counter: 10240928,
             source: activatedAccount.address,
-            minimalFee: 521,
-            suggestedFee: 621,
+            minimalFee: 522,
+            suggestedFee: 622,
           },
           {
             ...estimationResults[1],
@@ -478,8 +478,8 @@ describe('[processes/web/api/jobs] Estimate job controller', () => {
           {
             ...estimationResults[0],
             amount: 10,
-            minimalFee: 492,
-            suggestedFee: 592,
+            minimalFee: 493,
+            suggestedFee: 593,
           },
           {
             ...estimationResults[1],

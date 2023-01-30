@@ -1,5 +1,5 @@
 import { Signer, TezosToolkit } from '@taquito/taquito';
-import { BlockResponse, OperationContentsTransaction } from '@taquito/rpc';
+import { OperationContentsTransaction } from '@taquito/rpc';
 import { OriginationOperation } from '@taquito/taquito/dist/types/operations/origination-operation';
 
 import { ForgeOperationResult } from '../const/interfaces/forge-operation-result';
@@ -62,7 +62,7 @@ export class TezosService {
     return this.rpcClient.getContract(address);
   }
 
-  public getLatestBlock(): Promise<BlockResponse> {
+  public getLatestBlock(): Promise<any> {
     return this.rpcClient.getBlock();
   }
 
