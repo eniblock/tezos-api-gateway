@@ -48,6 +48,7 @@ export const FORGE_RESPONSE_SCHEMA: OpenAPIV3.ResponsesObject = {
     },
   },
   400: error[400] as OpenAPIV3.ResponseObject,
+  404: error[404] as OpenAPIV3.ResponseObject,
   500: error.default,
 };
 

@@ -1,5 +1,5 @@
 import Ajv, { ErrorObject } from 'ajv';
-import { Schema } from 'ajv/lib/types/index';
+import { Schema } from 'ajv/dist/types';
 
 export class ValidationError extends Error {
   private _errors: ErrorObject[];

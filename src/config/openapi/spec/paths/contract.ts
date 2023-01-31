@@ -180,8 +180,10 @@ export default {
   },
   '/contract/events': {
     get: {
-      summary: '',
-      description: '',
+      summary: 'Get the list of events of a smart contract',
+      description:
+        'Get the list of events of the specified smart contract.\n\n' +
+        "Note that the TZKT indexer will return an empty array if it doesn't find any result (instead of an error). ",
       parameters: [
         {
           name: 'contract',
