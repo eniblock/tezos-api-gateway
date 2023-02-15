@@ -11,11 +11,11 @@ kubectl_build_enable(local(clk_k8s + 'features --field value --format plain kube
 
 if config.tilt_subcommand == 'up':
     # update the helm package dependencies a first time at startup, so helm can load the helm chart
-    local(clk_k8s + 'helm-dependency-update helm/tezos-api-gateway')
+    local(clk_k8s + 'helm dependency-update helm/tezos-api-gateway')
 
 # manually download the dependencies
 local_resource('helm dependencies',
-               clk_k8s + 'helm-dependency-update helm/tezos-api-gateway -ft Tiltfile',
+               clk_k8s + 'helm dependency-update helm/tezos-api-gateway -ft Tiltfile',
                trigger_mode=TRIGGER_MODE_MANUAL, auto_init=False)
 
 k8s_yaml(
