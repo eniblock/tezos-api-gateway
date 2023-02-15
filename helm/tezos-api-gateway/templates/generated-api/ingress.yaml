@@ -2,9 +2,9 @@
 {{- $fullName := include "tezos-api-gateway.fullname" . -}}
 {{- $svcPort := .Values.generatedApi.service.port -}}
 {{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: networking.k8s.io/v1
 {{- else -}}
-apiVersion: extensions/v1beta1
+apiVersion: extensions/v1
 {{- end }}
 kind: Ingress
 metadata:
@@ -34,9 +34,12 @@ spec:
         paths:
           {{- range .paths }}
           - path: {{ .path }}
+            pathType: Prefix
             backend:
-              serviceName: {{ $fullName }}-generated-api
-              servicePort: {{ $svcPort }}
+              service:
+                name: {{ $fullName }}-generated-api
+                port:
+                  number: {{ $svcPort }}
           {{- end }}
     {{- end }}
 {{- end }}
