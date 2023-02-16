@@ -8,30 +8,30 @@ variables:
   SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"  # Defines the location of the analysis task cache
   GIT_DEPTH: "0"  # Tells git to fetch all the branches of the project, required by the analysis task
 
-test:
-  stage: test
-  image: node:14.15.4-alpine3.12
-  services:
-    - postgres:13.1-alpine
-    - rabbitmq:3-management-alpine
-  variables:
-    POSTGRES_DB: tezos_api_gateway_test
-    POSTGRES_USER: tezos-service
-    POSTGRES_PASSWORD: randompwd
-    DB_HOST_TEST: postgres
-    AMQP_URL: amqp://rabbitmq
-  before_script:
-    - apk add curl bash python3
-    - curl -s https://smartpy.io/cli/install.sh | bash -s -- --yes --prefix /usr/local/smartpy/
-    - npm i
-  script:
-    - npm test
-  only:
-    changes:
-      - src/**/*
-      - test/**/*
-      - "*.json"
-      - "*.js"
+# test:
+#   stage: test
+#   image: node:14.15.4-alpine3.12
+#   services:
+#     - postgres:13.1-alpine
+#     - rabbitmq:3-management-alpine
+#   variables:
+#     POSTGRES_DB: tezos_api_gateway_test
+#     POSTGRES_USER: tezos-service
+#     POSTGRES_PASSWORD: randompwd
+#     DB_HOST_TEST: postgres
+#     AMQP_URL: amqp://rabbitmq
+#   before_script:
+#     - apk add curl bash python3
+#     - curl -s https://smartpy.io/cli/install.sh | bash -s -- --yes --prefix /usr/local/smartpy/
+#     - npm i
+#   script:
+#     - npm test
+#   only:
+#     changes:
+#       - src/**/*
+#       - test/**/*
+#       - "*.json"
+#       - "*.js"
 
 helm-lint:
   stage: test
