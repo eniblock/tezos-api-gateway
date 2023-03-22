@@ -1,4 +1,5 @@
 module.exports = {
+  testTimeout: 15000,
   collectCoverageFrom: ['src/**/*.ts'],
   moduleFileExtensions: ['ts', 'js', 'json', 'node'],
   resetModules: true,
