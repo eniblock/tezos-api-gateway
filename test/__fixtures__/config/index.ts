@@ -19,7 +19,7 @@ export const tezosNodeUrl =
 
 export const tezosNodeUrls = (
   process.env.TEZOS_NODE_TEST_URLS ||
-  'https://ghostnet.ecadinfra.com/,https://rpc.ghost.tzstats.com/'
+  'https://ghostnet.tezos.marigold.dev/,https://rpc.ghost.tzstats.com/'
 ).split(',');
 
 export const amqpConfig: AmqpConfig = {

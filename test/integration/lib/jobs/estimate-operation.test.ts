@@ -56,7 +56,7 @@ describe('[lib/jobs/estimate-operation]', () => {
         counter: 10240873,
         destination: flexibleTokenContract,
         gasEstimation: 2706,
-        gasLimit: 2806,
+        gasLimit: 2807,
         kind: 'transaction',
         minimalFee: 490,
         parameters: {
