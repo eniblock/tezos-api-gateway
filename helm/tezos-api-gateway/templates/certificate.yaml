@@ -1,6 +1,6 @@
 {{- if .Values.rabbitmq.auth.tls.enabled }}
 kind: Certificate
-apiVersion: cert-manager.io/v1alpha2
+apiVersion: cert-manager.io/v1
 metadata:
   name: {{ include "tezos-api-gateway.serviceAccountName" . }}-rabbitmq
   namespace: {{ .Release.Namespace }}
