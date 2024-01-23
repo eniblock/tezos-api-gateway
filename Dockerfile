@@ -4,7 +4,7 @@ WORKDIR /usr/src/app
 
 RUN apk add curl bash python3 make
 
-RUN curl -s https://smartpy.io/cli/install.sh | bash -s -- --yes --prefix /usr/local/smartpy/
+RUN curl -s https://legacy.smartpy.io/cli/install.sh | bash -s -- --yes --prefix /usr/local/smartpy/
 
 COPY package.json package-lock.json ./
 
