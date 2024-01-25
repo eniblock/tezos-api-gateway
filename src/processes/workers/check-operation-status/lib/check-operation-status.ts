@@ -204,7 +204,7 @@ export async function checkOperationStatus(
         }
 
         if (err instanceof OperationFailedError) {
-          let errorMsg = 'runtime_error';
+          const errorMsg = 'runtime_error';
           // try {
           //   const indexer = indexerPool.getSpecificIndexer(IndexerEnum.TZSTATS);
           //   const operation = await indexer.getOperationByHash(

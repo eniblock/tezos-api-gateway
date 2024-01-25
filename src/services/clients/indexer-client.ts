@@ -414,7 +414,7 @@ export class IndexerClient extends AbstractClient {
     const limit = params.limit || 20;
     const offset = params.offset || 0;
 
-    let domainAndPath = `${indexerUrl}${pathToContractCalls}`;
+    const domainAndPath = `${indexerUrl}${pathToContractCalls}`;
     let queryParams = `limit=${limit}&offset=${offset}`;
 
     switch (indexerName) {
