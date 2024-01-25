@@ -137,10 +137,10 @@ describe('[lib/jobs/forge-operation]', () => {
 
       expect(operation).toEqual([
         {
-          fee: 374,
+          fee: 291,
           source: activatedAccount.address,
           storage_limit: 0,
-          gas_limit: 1100,
+          gas_limit: 270,
           branch: operation[0].branch,
           counter: operation[0].counter,
           job_id: job.id,

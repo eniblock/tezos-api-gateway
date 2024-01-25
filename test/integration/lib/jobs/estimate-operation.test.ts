@@ -55,10 +55,10 @@ describe('[lib/jobs/estimate-operation]', () => {
         amount: 0,
         counter: 10240873,
         destination: flexibleTokenContract,
-        gasEstimation: 2706,
-        gasLimit: 2807,
+        gasEstimation: 1879,
+        gasLimit: 1980,
         kind: 'transaction',
-        minimalFee: 490,
+        minimalFee: 407,
         parameters: {
           entrypoint: 'transfer',
           value: {
@@ -85,16 +85,16 @@ describe('[lib/jobs/estimate-operation]', () => {
         source: revealedAccount.address,
         storageAndAllocationFee: 0,
         storageLimit: 0,
-        suggestedFee: 590,
+        suggestedFee: 507,
       },
       {
         amount: 0,
         counter: 10240874,
         destination: flexibleTokenContract,
-        gasEstimation: 1215,
-        gasLimit: 1315,
+        gasEstimation: 315,
+        gasLimit: 415,
         kind: 'transaction',
-        minimalFee: 340,
+        minimalFee: 250,
         parameters: {
           entrypoint: 'lock',
           value: {
@@ -110,7 +110,7 @@ describe('[lib/jobs/estimate-operation]', () => {
         source: revealedAccount.address,
         storageAndAllocationFee: 0,
         storageLimit: 0,
-        suggestedFee: 440,
+        suggestedFee: 350,
       },
     ];
 
@@ -271,15 +271,15 @@ describe('[lib/jobs/estimate-operation]', () => {
       );
       expect(estimations[0]).toEqual({
         counter: 10240927,
-        gasEstimation: 1000,
-        gasLimit: 1100,
+        gasEstimation: 175,
+        gasLimit: 276,
         kind: 'reveal',
-        minimalFee: 274,
+        minimalFee: 192,
         public_key: activatedAccount.publicKey,
         source: activatedAccount.address,
         storageAndAllocationFee: 0,
         storageLimit: 0,
-        suggestedFee: 374,
+        suggestedFee: 292,
       });
     });
 
@@ -294,14 +294,14 @@ describe('[lib/jobs/estimate-operation]', () => {
         {
           ...estimationResults[0],
           amount: 10,
-          minimalFee: 493,
-          suggestedFee: 593,
+          minimalFee: 410,
+          suggestedFee: 510,
         },
         {
           ...estimationResults[1],
           amount: 100,
-          minimalFee: 343,
-          suggestedFee: 443,
+          minimalFee: 253,
+          suggestedFee: 353,
         },
       ]);
     }, 8000);

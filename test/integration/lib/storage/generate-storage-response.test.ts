@@ -43,7 +43,9 @@ describe('[lib/storage/generateStorageResponse]', () => {
         decimals: 10,
         locked: false,
         name: 'name',
-        newOwner: flexibleTokenContractOwner,
+        newOwner: {
+          Some: flexibleTokenContractOwner,
+        },
         owner: flexibleTokenContractOwner,
         symbol: 'symbol',
         totalSupply: 40,

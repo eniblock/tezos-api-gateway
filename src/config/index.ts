@@ -27,7 +27,7 @@ export const serverConfig = {
 
 export const tezosNodeUrls = (
   process.env.TEZOS_NODE_URLS ||
-  'https://ghostnet.smartpy.io,https://ghostnet.ecadinfra.com,https://rpc.ghost.tzstats.com'
+  'https://ghostnet.tezos.marigold.dev/,https://ghostnet.smartpy.io/,https://ghostnet.ecadinfra.com	/'
 ).split(',');
 
 export const amqpConfig: AmqpConfig = {
@@ -40,23 +40,23 @@ export const webProcessConfig: ProcessConfig = {
   exitTimeout: parseInt(3000, process.env.WEB_PROCESS_TIMEOUT),
 };
 
-export const tzstatsIndexerConfig: IndexerConfig = {
-  name: IndexerEnum.TZSTATS,
-  apiUrl: process.env.TZSTATS_URL || 'https://api.ghost.tzstats.com/',
-  pathToOperation: 'explorer/op/',
-  pathToUserInfo: 'explorer/account/',
-  pathToContractCalls: 'explorer/contract/',
-  keyToOperation: parseInt(0, process.env.TZSTATS_KEY_TO_OPERATION),
-  keyToBlockLevel: process.env.TZSTATS_KEY_TO_BLOCK_LEVEL || 'height',
-  keyToOperationStatus: 'status',
-  successStatus: 'applied',
-  keyToBalance: 'spendable_balance',
-  balanceUnit: 1,
-  keyToReveal: 'is_revealed',
-  keyToCreationDate: 'time',
-};
+// export const tzstatsIndexerConfig: IndexerConfig = {
+//   name: IndexerEnum.TZSTATS,
+//   apiUrl: process.env.TZSTATS_URL || 'https://api.ghost.tzstats.com/',
+//   pathToOperation: 'explorer/op/',
+//   pathToUserInfo: 'explorer/account/',
+//   pathToContractCalls: 'explorer/contract/',
+//   keyToOperation: parseInt(0, process.env.TZSTATS_KEY_TO_OPERATION),
+//   keyToBlockLevel: process.env.TZSTATS_KEY_TO_BLOCK_LEVEL || 'height',
+//   keyToOperationStatus: 'status',
+//   successStatus: 'applied',
+//   keyToBalance: 'spendable_balance',
+//   balanceUnit: 1,
+//   keyToReveal: 'is_revealed',
+//   keyToCreationDate: 'time',
+// };
 
-const tzktIndexerConfig: IndexerConfig = {
+export const tzktIndexerConfig: IndexerConfig = {
   name: IndexerEnum.TZKT,
   apiUrl: process.env.TZKT_URL || 'https://api.ghostnet.tzkt.io/',
   pathToOperation: 'v1/operations/',
@@ -75,7 +75,7 @@ const tzktIndexerConfig: IndexerConfig = {
 };
 
 export const indexerConfigs: IndexerConfig[] = [
-  tzstatsIndexerConfig,
+  // tzstatsIndexerConfig,
   tzktIndexerConfig,
 ];
 

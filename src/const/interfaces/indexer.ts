@@ -17,6 +17,6 @@ export interface IndexerConfig {
 }
 
 export enum IndexerEnum {
-  TZSTATS = 'tzstats',
+  // TZSTATS = 'tzstats',
   TZKT = 'tzkt',
 }

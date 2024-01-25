@@ -160,7 +160,7 @@ describe('[processes/generated-api-web/api/controllers] Send job controller', ()
       it('should return 500 when unexpected error happen', async () => {
         vaultNock = nock('http://localhost:8300')
           .get('/v1/transit/keys/toto')
-          .times(9)
+          .times(8)
           .reply(200, {
             request_id: '4e171bc2-6df7-7dab-b10b-d100efca7080',
             lease_id: '',

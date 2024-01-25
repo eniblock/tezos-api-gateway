@@ -212,7 +212,7 @@ describe('[services/clients] Indexer Client', () => {
               indexer.getTransactionListOfSC(flexibleTokenContract, {}),
             ).resolves.toEqual([{ ...firstTx, indexer: IndexerEnum.TZKT }]),
           );
-        } else if (indexer.config.name === IndexerEnum.TZSTATS) {
+        } /*else if (indexer.config.name === IndexerEnum.TZSTATS) {
           indexerPromises.push(
             expect(
               indexer.getTransactionListOfSC(flexibleTokenContract, {}),
@@ -223,7 +223,7 @@ describe('[services/clients] Indexer Client', () => {
               },
             ]),
           );
-        }
+        }*/
       }
       await Promise.all(indexerPromises);
     });

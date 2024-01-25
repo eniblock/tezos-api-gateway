@@ -15,11 +15,11 @@ export const serverConfig = {
 };
 
 export const tezosNodeUrl =
-  process.env.TEZOS_NODE_TEST || 'https://rpc.ghost.tzstats.com/';
+  process.env.TEZOS_NODE_TEST || 'https://ghostnet.tezos.marigold.dev/';
 
 export const tezosNodeUrls = (
   process.env.TEZOS_NODE_TEST_URLS ||
-  'https://ghostnet.tezos.marigold.dev/,https://rpc.ghost.tzstats.com/'
+  'https://ghostnet.tezos.marigold.dev/,https://ghostnet.smartpy.io/,https://ghostnet.ecadinfra.com	/'
 ).split(',');
 
 export const amqpConfig: AmqpConfig = {

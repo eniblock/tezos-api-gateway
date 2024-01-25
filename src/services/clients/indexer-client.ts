@@ -418,18 +418,18 @@ export class IndexerClient extends AbstractClient {
     let queryParams = `limit=${limit}&offset=${offset}`;
 
     switch (indexerName) {
-      case IndexerEnum.TZSTATS: {
-        if (params.parameter !== undefined)
-          throw new UnsupportedIndexerError(IndexerEnum.TZSTATS);
+      // case IndexerEnum.TZSTATS: {
+      //   if (params.parameter !== undefined)
+      //     throw new UnsupportedIndexerError(IndexerEnum.TZSTATS);
 
-        domainAndPath += `${contractAddress}/calls`;
-        const order = params.order ? `&order=${params.order}` : '';
-        const entrypoint = params.entrypoint
-          ? `&entrypoint=${params.entrypoint}`
-          : '';
-        queryParams += `${order}${entrypoint}`;
-        break;
-      }
+      //   domainAndPath += `${contractAddress}/calls`;
+      //   const order = params.order ? `&order=${params.order}` : '';
+      //   const entrypoint = params.entrypoint
+      //     ? `&entrypoint=${params.entrypoint}`
+      //     : '';
+      //   queryParams += `${order}${entrypoint}`;
+      //   break;
+      // }
       case IndexerEnum.TZKT: {
         const order = params.order ? `&sort.${params.order}=id` : '';
         const entrypoint = params.entrypoint

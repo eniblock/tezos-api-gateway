@@ -31,7 +31,7 @@ import {
 } from './publish-confirmed-transaction-event';
 import { GatewayPool } from '../../../../services/gateway-pool';
 import { DateTime } from 'luxon';
-import { IndexerEnum } from '../../../../const/interfaces/indexer';
+// import { IndexerEnum } from '../../../../const/interfaces/indexer';
 
 /**
  * Check the operations (of all the jobs that has status "submitted" and operation hash) has been confirmed
@@ -63,6 +63,9 @@ export async function checkOperationStatus(
   await Promise.all(
     jobs.map(async (job) => {
       try {
+        // quick fix not used gatewayPool
+        if (!gatewayPool) logger.info('gatewayPool is not used');
+
         if (
           await indexerPool.checkIfOperationIsConfirmedByRandomIndexer(
             tezosService,
@@ -163,20 +166,21 @@ export async function checkOperationStatus(
           const currentDate = DateTime.now().toString();
 
           if (currentDate > opExpiredDate) {
-            try {
-              await gatewayPool.removeOperationFromMempool(
-                job.operation_hash as string,
-              );
-              logger.info(
-                { operation_hash: job.operation_hash },
-                '[lib/checkOperationStatus] Successfully removed the operation from the mempool with operation hash',
-              );
-            } catch (e) {
-              logger.info(
-                { operation_hash: job.operation_hash },
-                "[lib/checkOperationStatus] Couldn't removed the operation from the mempool with operation hash",
-              );
-            }
+            // removeOperationFromMempool forbidden now TODO: inspect
+            // try {
+            //   await gatewayPool.removeOperationFromMempool(
+            //     job.operation_hash as string,
+            //   );
+            //   logger.info(
+            //     { operation_hash: job.operation_hash },
+            //     '[lib/checkOperationStatus] Successfully removed the operation from the mempool with operation hash',
+            //   );
+            // } catch (e) {
+            //   logger.info(
+            //     { operation_hash: job.operation_hash },
+            //     "[lib/checkOperationStatus] Couldn't removed the operation from the mempool with operation hash",
+            //   );
+            // }
 
             const updatedJob = await updateJobStatus(
               postgreService.pool,
@@ -201,17 +205,17 @@ export async function checkOperationStatus(
 
         if (err instanceof OperationFailedError) {
           let errorMsg = 'runtime_error';
-          try {
-            const indexer = indexerPool.getSpecificIndexer(IndexerEnum.TZSTATS);
-            const operation = await indexer.getOperationByHash(
-              job.operation_hash!,
-            );
-            errorMsg = operation.errors[1].with.string;
-          } catch (e) {
-            logger.info(
-              '[lib/checkOperationStatus] Cannot find error msg for failed operation',
-            );
-          }
+          // try {
+          //   const indexer = indexerPool.getSpecificIndexer(IndexerEnum.TZSTATS);
+          //   const operation = await indexer.getOperationByHash(
+          //     job.operation_hash!,
+          //   );
+          //   errorMsg = operation.errors[1].with.string;
+          // } catch (e) {
+          //   logger.info(
+          //     '[lib/checkOperationStatus] Cannot find error msg for failed operation',
+          //   );
+          // }
           const updatedJob = await updateJobStatusAndErrorMessage(
             postgreService.pool,
             JobStatus.ERROR,

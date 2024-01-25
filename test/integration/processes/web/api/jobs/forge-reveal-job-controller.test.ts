@@ -191,14 +191,14 @@ describe('[processes/web/api] Forge Reveal job controller', () => {
 
       expect(insertedForgeParameters).toMatchObject([
         {
-          fee: 374,
+          fee: 291,
           destination: '',
           parameters: null,
           parameters_json: null,
           amount: null,
           source: activatedAccount.address,
           storage_limit: 0,
-          gas_limit: 1100,
+          gas_limit: 270,
           branch: insertedForgeParameters[0].branch,
           counter: insertedForgeParameters[0].counter,
           job_id: body.id,

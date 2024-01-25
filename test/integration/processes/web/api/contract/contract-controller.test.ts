@@ -44,17 +44,17 @@ describe('[processes/web/api/contract] Contract controller', () => {
   });
 
   describe('#getTransactionListOfSC', () => {
-    it('should return 400 when parameter is set and indexer is set to Tzstats', async () => {
-      const { body, status } = await request.get(
-        `/api/contract/${flexibleTokenContract}/calls?parameter=*tz1VbHay2YPpiuPYs8SQHynuW3YvGtNuB29z*&indexer=tzstats`,
-      );
+    // it('should return 400 when parameter is set and indexer is set to Tzstats', async () => {
+    //   const { body, status } = await request.get(
+    //     `/api/contract/${flexibleTokenContract}/calls?parameter=*tz1VbHay2YPpiuPYs8SQHynuW3YvGtNuB29z*&indexer=tzstats`,
+    //   );
 
-      expect(status).toEqual(400);
-      expect(body.message).toEqual(
-        'Query param "parameter" shouldn\'t be set when query param "indexer" equals "tzstats".\' +' +
-          'Either remove "parameter" to target Tzstats or remove "indexer" to automatically target TZKT',
-      );
-    });
+    //   expect(status).toEqual(400);
+    //   expect(body.message).toEqual(
+    //     'Query param "parameter" shouldn\'t be set when query param "indexer" equals "tzstats".\' +' +
+    //       'Either remove "parameter" to target Tzstats or remove "indexer" to automatically target TZKT',
+    //   );
+    // });
 
     it('should return 200 and the operations list', async () => {
       const { body, status } = await request.get(
@@ -106,25 +106,25 @@ describe('[processes/web/api/contract] Contract controller', () => {
       expect(body2.length).toEqual(5);
     });
 
-    it('should return 200 and the origination operation in the operations list, and use Tzstats indexer when query param "indexer" is set to "tzstats"', async () => {
-      const { body, status } = await request.get(
-        `/api/contract/${flexibleTokenContract}/calls?indexer=tzstats`,
-      );
+    // it('should return 200 and the origination operation in the operations list, and use Tzstats indexer when query param "indexer" is set to "tzstats"', async () => {
+    //   const { body, status } = await request.get(
+    //     `/api/contract/${flexibleTokenContract}/calls?indexer=tzstats`,
+    //   );
 
-      expect(status).toEqual(200);
-      expect(body).toEqual([{ ...firstTx, indexer: IndexerEnum.TZSTATS }]);
-    });
+    //   expect(status).toEqual(200);
+    //   expect(body).toEqual([{ ...firstTx, indexer: IndexerEnum.TZSTATS }]);
+    // });
 
-    it('should return 200 and the operations list without origination operation when using Tzstats indexer without "indexer" query param', async () => {
-      const { body, status } = await callGetTransactionsWithIndexer(
-        `/api/contract/${flexibleTokenContract}/calls`,
-        IndexerEnum.TZSTATS,
-        request,
-      );
+    // it('should return 200 and the operations list without origination operation when using Tzstats indexer without "indexer" query param', async () => {
+    //   const { body, status } = await callGetTransactionsWithIndexer(
+    //     `/api/contract/${flexibleTokenContract}/calls`,
+    //     IndexerEnum.TZSTATS,
+    //     request,
+    //   );
 
-      expect(status).toEqual(200);
-      expect(body[0].type).toEqual('transaction');
-    });
+    //   expect(status).toEqual(200);
+    //   expect(body[0].type).toEqual('transaction');
+    // });
 
     test('that all indexers returns the same operation list when using pagination and without "indexer" query param', async () => {
       const indexersResponses = [];

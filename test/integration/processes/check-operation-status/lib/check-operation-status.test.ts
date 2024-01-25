@@ -15,7 +15,7 @@ import { IndexerPool } from '../../../../../src/services/indexer-pool';
 import {
   nbOfConfirmation,
   nbOfRetry,
-  tzstatsIndexerConfig,
+  tzktIndexerConfig,
 } from '../../../../../src/config';
 import { AmqpService } from '../../../../../src/services/amqp';
 import { insertTransaction } from '../../../../../src/models/operations';
@@ -25,7 +25,7 @@ import { OpKind } from '@taquito/rpc';
 import { GatewayPool } from '../../../../../src/services/gateway-pool';
 import {
   OperationFailedError,
-  OperationNotFoundError,
+  // OperationNotFoundError,
 } from '../../../../../src/const/errors/indexer-error';
 import { Settings } from 'luxon';
 import { failedTx, firstTx } from '../../../../__fixtures__/transactions';
@@ -37,7 +37,7 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
   const amqpService = new AmqpService(amqpConfig, logger);
   const indexerPool = new IndexerPool(logger);
   const gatewayPool = new GatewayPool([tezosNodeUrl], logger);
-  const oldNow = Settings.now;
+  // const oldNow = Settings.now;
 
   beforeAll(async () => {
     await postgreService.initializeDatabase();
@@ -240,94 +240,96 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
       ]);
     });
 
-    it('should remove operation from mempool and set job to ERROR when the operation is expired', async () => {
-      const [publishedJob] = (await selectJobs(
-        postgreService.pool,
-        'id',
-        `status='${JobStatus.PUBLISHED}'`,
-      )) as Jobs[];
-      Settings.now = () => new Date(2022, 3, 28).valueOf();
+    // removeOperationFromMempool is now forbidden
+    //
+    // it('should remove operation from mempool and set job to ERROR when the operation is expired', async () => {
+    //   const [publishedJob] = (await selectJobs(
+    //     postgreService.pool,
+    //     'id',
+    //     `status='${JobStatus.PUBLISHED}'`,
+    //   )) as Jobs[];
+    //   Settings.now = () => new Date(2022, 3, 28).valueOf();
 
-      await insertTransaction(postgreService.pool, {
-        destination: 'destination',
-        source: 'source',
-        parameters_json: {
-          entrypoint: 'entrypoint',
-          value: { entrypoint: { name: 'toto' } },
-        },
-        amount: 0,
-        callerId: 'myCaller',
-        jobId: publishedJob.id,
-      });
-      await insertTransaction(postgreService.pool, {
-        destination: 'destination2',
-        source: 'source2',
-        parameters_json: {
-          entrypoint: 'entrypoint2',
-          value: { entrypoint2: { name: 'tata' } },
-        },
-        amount: 0,
-        callerId: 'myCaller2',
-        jobId: publishedJob.id,
-      });
-      Settings.now = oldNow;
+    //   await insertTransaction(postgreService.pool, {
+    //     destination: 'destination',
+    //     source: 'source',
+    //     parameters_json: {
+    //       entrypoint: 'entrypoint',
+    //       value: { entrypoint: { name: 'toto' } },
+    //     },
+    //     amount: 0,
+    //     callerId: 'myCaller',
+    //     jobId: publishedJob.id,
+    //   });
+    //   await insertTransaction(postgreService.pool, {
+    //     destination: 'destination2',
+    //     source: 'source2',
+    //     parameters_json: {
+    //       entrypoint: 'entrypoint2',
+    //       value: { entrypoint2: { name: 'tata' } },
+    //     },
+    //     amount: 0,
+    //     callerId: 'myCaller2',
+    //     jobId: publishedJob.id,
+    //   });
+    //   Settings.now = oldNow;
 
-      const checkIfOperationIsConfirmedByRandomIndexerSpy = jest
-        .spyOn(indexerPool, 'checkIfOperationIsConfirmedByRandomIndexer')
-        .mockRejectedValue(new OperationNotFoundError(firstTx.hash));
+    //   const checkIfOperationIsConfirmedByRandomIndexerSpy = jest
+    //     .spyOn(indexerPool, 'checkIfOperationIsConfirmedByRandomIndexer')
+    //     .mockRejectedValue(new OperationNotFoundError(firstTx.hash));
 
-      const removeOperationFromMempoolSpy = jest.spyOn(
-        gatewayPool,
-        'removeOperationFromMempool',
-      );
+    //   const removeOperationFromMempoolSpy = jest.spyOn(
+    //     gatewayPool,
+    //     'removeOperationFromMempool',
+    //   );
 
-      await checkOperationStatus(
-        { postgreService, tezosService, amqpService, indexerPool, gatewayPool },
-        logger,
-      );
+    //   await checkOperationStatus(
+    //     { postgreService, tezosService, amqpService, indexerPool, gatewayPool },
+    //     logger,
+    //   );
 
-      await expect(
-        selectData(postgreService.pool, {
-          tableName: PostgreTables.JOBS,
-          selectFields: 'status, operation_hash, forged_operation',
-        }),
-      ).resolves.toEqual([
-        {
-          status: 'created',
-          forged_operation: 'raw_transaction',
-          operation_hash: null,
-        },
-        {
-          status: 'created',
-          forged_operation: 'raw_transaction_3',
-          operation_hash: firstTx.hash,
-        },
-        {
-          status: 'error',
-          forged_operation: 'raw_transaction_2',
-          operation_hash: firstTx.hash,
-        },
-      ]);
+    //   await expect(
+    //     selectData(postgreService.pool, {
+    //       tableName: PostgreTables.JOBS,
+    //       selectFields: 'status, operation_hash, forged_operation',
+    //     }),
+    //   ).resolves.toEqual([
+    //     {
+    //       status: 'created',
+    //       forged_operation: 'raw_transaction',
+    //       operation_hash: null,
+    //     },
+    //     {
+    //       status: 'created',
+    //       forged_operation: 'raw_transaction_3',
+    //       operation_hash: firstTx.hash,
+    //     },
+    //     {
+    //       status: 'error',
+    //       forged_operation: 'raw_transaction_2',
+    //       operation_hash: firstTx.hash,
+    //     },
+    //   ]);
 
-      expect(
-        checkIfOperationIsConfirmedByRandomIndexerSpy,
-      ).toHaveBeenCalledWith(
-        tezosService,
-        {
-          operationHash: firstTx.hash,
-          nbOfConfirmation,
-        },
-        nbOfRetry,
-      );
+    //   expect(
+    //     checkIfOperationIsConfirmedByRandomIndexerSpy,
+    //   ).toHaveBeenCalledWith(
+    //     tezosService,
+    //     {
+    //       operationHash: firstTx.hash,
+    //       nbOfConfirmation,
+    //     },
+    //     nbOfRetry,
+    //   );
 
-      expect(
-        checkIfOperationIsConfirmedByRandomIndexerSpy,
-      ).toHaveBeenCalledTimes(1);
+    //   expect(
+    //     checkIfOperationIsConfirmedByRandomIndexerSpy,
+    //   ).toHaveBeenCalledTimes(1);
 
-      expect(removeOperationFromMempoolSpy).toHaveBeenCalledTimes(1);
+    //   expect(removeOperationFromMempoolSpy).toHaveBeenCalledTimes(1);
 
-      expect(loggerErrorSpy).toHaveBeenCalledTimes(0);
-    });
+    //   expect(loggerErrorSpy).toHaveBeenCalledTimes(0);
+    // });
 
     it('should set job to ERROR with the when the operation is failed', async () => {
       const [publishedJob] = (await selectJobs(
@@ -353,8 +355,8 @@ describe('[check-operation-status/lib/check-operation-status]', () => {
         .spyOn(indexerPool, 'checkIfOperationIsConfirmedByRandomIndexer')
         .mockRejectedValue(new OperationFailedError(firstTx.hash));
 
-      const indexerNock = nock(tzstatsIndexerConfig.apiUrl)
-        .get('/' + tzstatsIndexerConfig.pathToOperation + firstTx.hash)
+      const indexerNock = nock(tzktIndexerConfig.apiUrl)
+        .get('/' + tzktIndexerConfig.pathToOperation + firstTx.hash)
         .reply(200, [{ hash: firstTx.hash, errors: failedTx.errors }]);
 
       await checkOperationStatus(

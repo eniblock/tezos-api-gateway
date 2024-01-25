@@ -51,7 +51,9 @@ describe('[lib/storage/convert-storage]', () => {
                 requesterAddress: testAccount2,
               },
               createdAt: '2019-10-22T16:27:54.000Z',
-              jwtToken: 'jwtToken',
+              jwtToken: {
+                Some: 'jwtToken',
+              },
             },
           },
         ],
@@ -89,7 +91,9 @@ describe('[lib/storage/convert-storage]', () => {
                 requesterAddress: testAccount2,
               },
               createdAt: '2019-10-22T16:27:54.000Z',
-              jwtToken: 'jwtToken',
+              jwtToken: {
+                Some: 'jwtToken',
+              },
             },
           },
           {
@@ -169,7 +173,9 @@ describe('[lib/storage/convert-storage]', () => {
               'address.provider': {
                 error: 'This data field does not exist in the contract storage',
               },
-              jwtToken: 'jwtToken',
+              jwtToken: {
+                Some: 'jwtToken',
+              },
               'jwtToken.createdAt': {
                 error: 'This data field does not exist in the contract storage',
               },

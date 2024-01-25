@@ -5,19 +5,19 @@ import { IndexerPool } from '../../../../src/services/indexer-pool';
 import { IndexerEnum } from '../../../../src/const/interfaces/indexer';
 import { IndexerClient } from '../../../../src/services/clients/indexer-client';
 import { ContractTransactionsParams } from '../../../../src/const/interfaces/contract/contract-transactions-params';
-import { UnsupportedIndexerError } from '../../../../src/const/errors/indexer-error';
+// import { UnsupportedIndexerError } from '../../../../src/const/errors/indexer-error';
 
 describe('[services/clients] Indexer client Service', () => {
   let randomIndexer: IndexerClient;
   let indexerClientTZKT: IndexerClient;
-  let indexerClientTzstats: IndexerClient;
+  // let indexerClientTzstats: IndexerClient;
 
   beforeAll(async () => {
     const indexerPool = new IndexerPool(logger);
     await indexerPool.initializeIndexers();
     randomIndexer = indexerPool.getRandomIndexer();
     indexerClientTZKT = indexerPool.getSpecificIndexer(IndexerEnum.TZKT);
-    indexerClientTzstats = indexerPool.getSpecificIndexer(IndexerEnum.TZSTATS);
+    // indexerClientTzstats = indexerPool.getSpecificIndexer(IndexerEnum.TZSTATS);
   });
 
   afterEach(() => {
@@ -77,7 +77,7 @@ describe('[services/clients] Indexer client Service', () => {
         offset: 8,
       };
 
-      const { queryParams } = indexerClientTzstats.buildURLForTransactionList(
+      const { queryParams } = indexerClientTZKT.buildURLForTransactionList(
         flexibleTokenContract,
         params,
       );
@@ -85,43 +85,43 @@ describe('[services/clients] Indexer client Service', () => {
       expect(queryParams).toMatch(/^limit=5&offset=8/);
     });
 
-    test('that domainAndPath contains the contract address when tzstats is used', () => {
-      const { domainAndPath } = indexerClientTzstats.buildURLForTransactionList(
-        flexibleTokenContract,
-        {},
-      );
+    // test('that domainAndPath contains the contract address when tzstats is used', () => {
+    //   const { domainAndPath } = indexerClientTzstats.buildURLForTransactionList(
+    //     flexibleTokenContract,
+    //     {},
+    //   );
 
-      expect(domainAndPath).toMatch(new RegExp(`${flexibleTokenContract}?`));
-    });
+    //   expect(domainAndPath).toMatch(new RegExp(`${flexibleTokenContract}?`));
+    // });
 
-    test('that all passed params are built when tzstats is used', () => {
-      const params: ContractTransactionsParams = {
-        order: 'asc',
-        entrypoint: 'name',
-        limit: 5,
-        offset: 8,
-      };
-      const { queryParams } = indexerClientTzstats.buildURLForTransactionList(
-        flexibleTokenContract,
-        params,
-      );
+    // test('that all passed params are built when tzstats is used', () => {
+    //   const params: ContractTransactionsParams = {
+    //     order: 'asc',
+    //     entrypoint: 'name',
+    //     limit: 5,
+    //     offset: 8,
+    //   };
+    //   const { queryParams } = indexerClientTzstats.buildURLForTransactionList(
+    //     flexibleTokenContract,
+    //     params,
+    //   );
 
-      expect(queryParams).toEqual('limit=5&offset=8&order=asc&entrypoint=name');
-    });
+    //   expect(queryParams).toEqual('limit=5&offset=8&order=asc&entrypoint=name');
+    // });
 
-    it('should throw an UnsupportedIndexerError when tzstats is used and parameter is defined', () => {
-      const params: ContractTransactionsParams = {
-        parameter: '*test',
-      };
+    // it('should throw an UnsupportedIndexerError when tzstats is used and parameter is defined', () => {
+    //   const params: ContractTransactionsParams = {
+    //     parameter: '*test',
+    //   };
 
-      const FUT = () =>
-        indexerClientTzstats.buildURLForTransactionList(
-          flexibleTokenContract,
-          params,
-        );
+    //   const FUT = () =>
+    //     indexerClientTzstats.buildURLForTransactionList(
+    //       flexibleTokenContract,
+    //       params,
+    //     );
 
-      expect(FUT).toThrow(UnsupportedIndexerError);
-    });
+    //   expect(FUT).toThrow(UnsupportedIndexerError);
+    // });
 
     test('that all passed params are built when tzkt is used', () => {
       const params: ContractTransactionsParams = {

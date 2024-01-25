@@ -9,7 +9,7 @@ import {
   OperationNotFoundError,
   UnsupportedIndexerError,
 } from '../../../../const/errors/indexer-error';
-import { ClientError } from '../../../../const/errors/client-error';
+// import { ClientError } from '../../../../const/errors/client-error';
 
 export default { getTransactionListOfSC };
 
@@ -32,17 +32,17 @@ function getTransactionListOfSC(indexerPool: IndexerPool) {
         '[contract/contract-controller] Requesting transactions made on this contract ',
       );
 
-      if (
-        params.indexer === IndexerEnum.TZSTATS &&
-        params.parameter !== undefined
-      ) {
-        throw new ClientError({
-          status: 400,
-          message:
-            'Query param "parameter" shouldn\'t be set when query param "indexer" equals "tzstats".\' +' +
-            'Either remove "parameter" to target Tzstats or remove "indexer" to automatically target TZKT',
-        });
-      }
+      // if (
+      //   params.indexer === IndexerEnum.TZSTATS &&
+      //   params.parameter !== undefined
+      // ) {
+      //   throw new ClientError({
+      //     status: 400,
+      //     message:
+      //       'Query param "parameter" shouldn\'t be set when query param "indexer" equals "tzstats".\' +' +
+      //       'Either remove "parameter" to target Tzstats or remove "indexer" to automatically target TZKT',
+      //   });
+      // }
 
       let currentIndexer;
 
