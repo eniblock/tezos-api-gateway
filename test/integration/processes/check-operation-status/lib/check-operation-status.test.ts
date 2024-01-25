@@ -15,7 +15,7 @@ import { IndexerPool } from '../../../../../src/services/indexer-pool';
 import {
   nbOfConfirmation,
   nbOfRetry,
-  tzktIndexerConfig,
+  // tzktIndexerConfig,
 } from '../../../../../src/config';
 import { AmqpService } from '../../../../../src/services/amqp';
 import { insertTransaction } from '../../../../../src/models/operations';
@@ -23,12 +23,13 @@ import { selectJobs } from '../../../../../src/models/jobs';
 import { Jobs } from '../../../../../src/const/interfaces/jobs';
 import { OpKind } from '@taquito/rpc';
 import { GatewayPool } from '../../../../../src/services/gateway-pool';
-import {
-  OperationFailedError,
-  // OperationNotFoundError,
-} from '../../../../../src/const/errors/indexer-error';
-import { Settings } from 'luxon';
-import { failedTx, firstTx } from '../../../../__fixtures__/transactions';
+// import {
+//   OperationFailedError,
+//   // OperationNotFoundError,
+// } from '../../../../../src/const/errors/indexer-error';
+// import { Settings } from 'luxon';
+import { firstTx } from '../../../../__fixtures__/transactions';
+// import { failedTx, firstTx } from '../../../../__fixtures__/transactions';
 import nock from 'nock';
 
 describe('[check-operation-status/lib/check-operation-status]', () => {
